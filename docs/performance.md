@@ -1,6 +1,6 @@
 # Compilation performance
 
-Papilot should compile about as fast as running `latexmk` (or `make`) in the paper's folder. Each build still gets its own folder, because reviews compare immutable versions and SyncTeX has to point to the version being shown. The goal is that this isolation costs about a second, not a clean rebuild.
+StudyBuddy should compile about as fast as running `latexmk` (or `make`) in the paper's folder. Each build still gets its own folder, because reviews compare immutable versions and SyncTeX has to point to the version being shown. The goal is that this isolation costs about a second, not a clean rebuild.
 
 ## How a build runs
 
@@ -14,9 +14,9 @@ Papilot should compile about as fast as running `latexmk` (or `make`) in the pap
 
 ## When builds start
 
-The manuscript compiles after a task is committed or applied, or after a Git action changes the paper. Individual task decisions and notes do not trigger a manuscript refresh. Older tasks that write accepted changes directly to the manuscript refresh once the last pending change is decided. A build started meanwhile is followed right away by one of the newest files. The view learns that a build started or finished from the server's event stream and reloads at once; edits saved in another editor are noticed within five seconds while the manuscript is open, and immediately when Papilot's window regains focus.
+The manuscript compiles after a task is committed or applied, or after a Git action changes the paper. Individual task decisions and notes do not trigger a manuscript refresh. Older tasks that write accepted changes directly to the manuscript refresh once the last pending change is decided. A build started meanwhile is followed right away by one of the newest files. The view learns that a build started or finished from the server's event stream and reloads at once; edits saved in another editor are noticed within five seconds while the manuscript is open, and immediately when StudyBuddy's window regains focus.
 
-A task that waits to be applied (the default) saves each acceptance, rejection and undo without refreshing the manuscript. Once every change is decided, Papilot predicts the manuscript with the final choices in the background. Applying the result starts one manuscript refresh, which reuses that prediction or joins it if it is still building. Generating a new comparison after an agent revision or an explicit source edit remains a separate operation.
+A task that waits to be applied (the default) saves each acceptance, rejection and undo without refreshing the manuscript. Once every change is decided, StudyBuddy predicts the manuscript with the final choices in the background. Applying the result starts one manuscript refresh, which reuses that prediction or joins it if it is still building. Generating a new comparison after an agent revision or an explicit source edit remains a separate operation.
 
 ## The review's full paper
 
@@ -36,7 +36,7 @@ Neither server waits for Git, the file system or a compiler on its event loop wh
 
 Accepting, rejecting and undoing changes, applying or committing a task, preparing a merge review and finishing a task run Git asynchronously as well (accepting took ten Git commands in a row, committing thirty-five). They used to be atomic because they never yielded; the engine now runs every write through one queue (`App.exclusive`), publishing takes its turn for the snapshot it compares and for recording the new round, and writes interrupted by a restart finish before the server listens.
 
-Before the server listens it also loads what would otherwise stall the first requests: the agent SDKs already installed (evaluating the Cursor SDK takes about 300 ms) and the PDF engine, run once on the example paper to compile its WebAssembly and set up color conversion. Placing compilation problems reads a page's text only to search it for a missing reference or citation; every other problem needs only the page's size. When Papilot quits it stops the compilers it started, paused ones included.
+Before the server listens it also loads what would otherwise stall the first requests: the agent SDKs already installed (evaluating the Cursor SDK takes about 300 ms) and the PDF engine, run once on the example paper to compile its WebAssembly and set up color conversion. Placing compilation problems reads a page's text only to search it for a missing reference or citation; every other problem needs only the page's size. When StudyBuddy quits it stops the compilers it started, paused ones included.
 
 Preparing an AI review reads and hashes the PDF and extracts its text in a worker thread, so a long paper does not hold up the server's HTTP requests or agent messages. The extraction keeps the original line IDs, text and highlight rectangles, without computing the glyph appearances needed for visual diffs. It retains the same text-extraction flags: removing vector information can merge lines around mathematical overbars and change the annotation anchors. Pages are released as they are read. One PDF is extracted at a time per server; each worker exits after its result or failure, releasing its WebAssembly heap, and shutdown rejects queued work and stops the active worker. Saving the review's PDF copy is asynchronous, with writes to the same task serialized so retries retain the original. This isolates review preparation; it does not move every PDF operation to a worker.
 
@@ -46,16 +46,16 @@ Preparing an AI review reads and hashes the PDF and extracts its text in a worke
 
 Paper used for testing: 2,239 tracked files (240 MB), XeLaTeX, BibTeX with back-references, minted and `\include`d chapters. Measured on an Apple Silicon MacBook on 2026-11-02, compared with `latexmk -norc -r latexmkrc` on the main file in a copy of the same commit. Both columns in each table were run alternately under the same load. Other sessions kept the load average at 7–9, which is why one pass took 69 s here, compared with 43–51 s on an idle machine.
 
-| Change | `latexmk` in the folder | Papilot, before | Papilot, now |
+| Change | `latexmk` in the folder | StudyBuddy, before | StudyBuddy, now |
 |---|---|---|---|
 | Open or import the paper | 0.2 s, nothing to do | 230 s: 5 XeLaTeX passes, 4 BibTeX runs | 71.3 s: 1 pass |
 | Edit a chapter | 69.2 s: 1 pass | 230 s: clean build | 71.2 s: 1 pass |
 | Edit a file TeX does not read | 0.2 s, nothing to do | 230 s: clean build | 1.9 s, no TeX run |
 | Clean build | 253 s: 5 passes, 4 BibTeX runs | 230 s | 230 s, only for **Recompile PDF** |
 
-The same TeX pass costs the same in both folders. With the folder and `SOURCE_DATE_EPOCH` varied separately, the times were 51.4 s (author's folder), 44.4 s (Papilot folder), 42.7 s and 44.5 s (both with Papilot's date variables). All runs were single passes, and the spread is noise.
+The same TeX pass costs the same in both folders. With the folder and `SOURCE_DATE_EPOCH` varied separately, the times were 51.4 s (author's folder), 44.4 s (StudyBuddy folder), 42.7 s and 44.5 s (both with StudyBuddy's date variables). All runs were single passes, and the spread is noise.
 
-Papilot's own work per build, outside latexmk:
+StudyBuddy's own work per build, outside latexmk:
 
 | Step | Before | Now |
 |---|---|---|
@@ -78,7 +78,7 @@ When the import dialog compiled a paper, it used to force a clean build under a 
 
 ### Committing a reviewed task
 
-The paper's seven commits of 2026-11-02, each built by continuing from the previous one as the manuscript does, needed 4, 2, 1, 1, 3, 4 and 2 XeLaTeX passes (330, 98, 88, 65, 163, 183 and 92 s at a load average of 5–25). These counts are LaTeX's own: an edit that moves a label, a cited page (back-references) or the bibliography needs another pass for each round of changes, exactly as with latexmk in the author's folder. What Papilot controls is when that work starts and when its pages appear.
+The paper's seven commits of 2026-11-02, each built by continuing from the previous one as the manuscript does, needed 4, 2, 1, 1, 3, 4 and 2 XeLaTeX passes (330, 98, 88, 65, 163, 183 and 92 s at a load average of 5–25). These counts are LaTeX's own: an edit that moves a label, a cited page (back-references) or the bibliography needs another pass for each round of changes, exactly as with latexmk in the author's folder. What StudyBuddy controls is when that work starts and when its pages appear.
 
 End to end with `scripts/profile-commit.ts` on a copy of the paper: a deferred task adds a paragraph to chapter 4, its round is published, everything is accepted after a review, and 15 s later the task is committed to the manuscript. Measured on 2026-11-03 on an Apple M1 at a load average of 11–26; the manuscript's build after the commit took two passes in every run.
 
@@ -96,17 +96,17 @@ Before, the manuscript started compiling when its view next asked, and "before" 
 
 #### Through a running server
 
-The same flow through two Papilot servers, the previous version and this one, each started on its own data folder with the agent SDKs installed, driven only through the HTTP routes the web app uses: publish the task's round, accept it on the review page after 60 s, commit it 15 s later, then open the manuscript as the app does. Meanwhile `/api/state`, which the app polls, and the review engine's `/api/info` were asked every 100 ms how long they take to answer, and a 2 ms timer preloaded into the server recorded every gap in its event loop over 50 ms. Four runs each, alternated, at a load average of 6–9 on 2026-11-03, the event-loop timer in the last two; the manuscript's build after the commit took two passes every time.
+The same flow through two StudyBuddy servers, the previous version and this one, each started on its own data folder with the agent SDKs installed, driven only through the HTTP routes the web app uses: publish the task's round, accept it on the review page after 60 s, commit it 15 s later, then open the manuscript as the app does. Meanwhile `/api/state`, which the app polls, and the review engine's `/api/info` were asked every 100 ms how long they take to answer, and a 2 ms timer preloaded into the server recorded every gap in its event loop over 50 ms. Four runs each, alternated, at a load average of 6–9 on 2026-11-03, the event-loop timer in the last two; the manuscript's build after the commit took two passes every time.
 
 | | Before | Now |
 |---|---|---|
 | New pages after the commit | 95.0–99.6 s | 2.6–2.7 s |
 | The whole PDF after the commit | 95.0–99.6 s | 21.6–26.7 s |
-| Gaps in Papilot's event loop over 50 ms, publish to PDF | 4–5, up to 276 ms | 0–1, at most 80 ms |
+| Gaps in StudyBuddy's event loop over 50 ms, publish to PDF | 4–5, up to 276 ms | 0–1, at most 80 ms |
 | Review engine's slowest answer while the round is published | 2,408–2,736 ms | 10–84 ms |
 | Review engine's slowest answer while the task is committed | 193–284 ms | 5–58 ms |
 
-Papilot's own event loop, measured as the longest gap between ticks of a 2 ms timer while the manuscript compiles an edit of the paper (one pass, 47–49 s): 106 ms before, with seven gaps over 50 ms, and 34 ms now, with none. Placing a text note from an earlier version on the new PDF searches every page's text; on the 324-page paper that held the event loop for 1,076 ms after every build, and now for at most 42 ms at a time.
+StudyBuddy's own event loop, measured as the longest gap between ticks of a 2 ms timer while the manuscript compiles an edit of the paper (one pass, 47–49 s): 106 ms before, with seven gaps over 50 ms, and 34 ms now, with none. Placing a text note from an earlier version on the new PDF searches every page's text; on the 324-page paper that held the event loop for 1,076 ms after every build, and now for at most 42 ms at a time.
 
 ## Reproducing
 

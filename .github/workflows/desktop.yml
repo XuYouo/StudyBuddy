@@ -125,7 +125,7 @@ jobs:
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: npm run desktop:build${{ inputs.quick && ' -- --dir' || '' }}
-      # Papilot's own code for in-place updates of installers with the same
+      # StudyBuddy's own code for in-place updates of installers with the same
       # shell. The smoke test builds its own copy.
       - name: Build the update layer
         if: ${{ !inputs.quick }}
@@ -134,7 +134,7 @@ jobs:
         if: runner.os == 'macOS'
         timeout-minutes: 10
         env:
-          PAPILOT_DESKTOP_EXECUTABLE: ${{ github.workspace }}/release/desktop/${{ matrix.target == 'mac-x64' && 'mac' || 'mac-arm64' }}/Papilot.app/Contents/MacOS/Papilot
+          PAPILOT_DESKTOP_EXECUTABLE: ${{ github.workspace }}/release/desktop/${{ matrix.target == 'mac-x64' && 'mac' || 'mac-arm64' }}/StudyBuddy.app/Contents/MacOS/StudyBuddy
         run: npm run test:desktop
       - name: Check Windows paths, commands and process cleanup
         if: runner.os == 'Windows'
@@ -148,7 +148,7 @@ jobs:
         if: runner.os == 'Windows'
         timeout-minutes: 15
         env:
-          PAPILOT_DESKTOP_EXECUTABLE: ${{ github.workspace }}/release/desktop/win-unpacked/Papilot.exe
+          PAPILOT_DESKTOP_EXECUTABLE: ${{ github.workspace }}/release/desktop/win-unpacked/StudyBuddy.exe
         run: |
           npm run test:desktop
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
@@ -161,7 +161,7 @@ jobs:
         if: ${{ !inputs.quick }}
         uses: actions/upload-artifact@v4
         with:
-          name: Papilot-${{ matrix.target }}
+          name: StudyBuddy-${{ matrix.target }}
           path: |
             release/desktop/*.dmg
             release/desktop/*.zip
@@ -174,7 +174,7 @@ jobs:
         if: ${{ !inputs.quick && matrix.target == 'linux-x64' }}
         uses: actions/upload-artifact@v4
         with:
-          name: Papilot-app
+          name: StudyBuddy-app
           path: |
             release/desktop/papilot-app-*.tgz
             release/desktop/desktop.json

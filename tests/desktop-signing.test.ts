@@ -7,6 +7,25 @@ import { createRequire } from 'node:module';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
+test('local signing never uses a hyphenated certificate name selected by the builder', async () => {
+  const require = createRequire(import.meta.url);
+  const builderRequire = createRequire(require.resolve('electron-builder'));
+  const appBuilderRequire = createRequire(builderRequire.resolve('app-builder-lib'));
+  const modulePath = appBuilderRequire.resolve('@electron/osx-sign');
+  const original = appBuilderRequire('@electron/osx-sign');
+  let signed: any;
+  require.cache[modulePath]!.exports = { ...original, signAsync: async (options: unknown) => { signed = options; } };
+  try {
+    const optionsForFile = () => ({ hardenedRuntime: true, entitlements: 'desktop/entitlements.mac.plist' });
+    await require('../scripts/sign-macos.cjs').default({ app: '/tmp/StudyBuddy.app', identity: 'Apple Development: developer-name', optionsForFile });
+    assert.equal(signed.app, '/tmp/StudyBuddy.app');
+    assert.equal(signed.identity, '-');
+    assert.equal(signed.identityValidation, false);
+    assert.equal(signed.timestamp, 'none');
+    assert.equal(signed.optionsForFile, optionsForFile, 'Keep the builder entitlements and hardened runtime');
+  } finally { require.cache[modulePath]!.exports = original; }
+});
+
 test('the macOS signer scans unpacked dependencies with only 256 file descriptors', { skip: process.platform === 'win32' }, t => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'papilot-signing-'));
   t.after(() => fs.rmSync(directory, { recursive: true, force: true }));

@@ -53,7 +53,7 @@ const printServer = `console.log((await client.get('/api/info')).pid);`;
 
 test('the desktop app owns the review server it starts, so even a crash stops it', { timeout: 90000, skip: process.platform === 'win32' && 'inspects processes with POSIX ps' }, () => withPaper(async (root, clients) => {
   const { child, pid: server } = await client(root, clients, `${desktop}\n${printServer}`, { desktop: true });
-  assert.match(ps('command', server), /^Papilot review server /);
+  assert.match(ps('command', server), /^StudyBuddy review server /);
   assert.notEqual(ps('pgid', server), ps('pgid', child.pid!), 'Killing the app\'s process group leaves the server to clean up');
   child.kill('SIGKILL'); await once(child, 'exit');
   assert.ok(await exited(server), 'The review server stops when its app is killed');
@@ -91,7 +91,7 @@ test('a review server started by the CLI outlives the desktop app that reused it
   const started = await client(root, clients, `${cli}\n${printServer}`, { exit: true });
   if (started.child.exitCode === null) await once(started.child, 'exit');
   assert.ok(running(started.pid), 'A CLI command leaves its review server running');
-  assert.match(ps('command', started.pid), /^Papilot review server /);
+  assert.match(ps('command', started.pid), /^StudyBuddy review server /);
   const { child, pid: server } = await client(root, clients, `${desktop}\n${printServer}`, { desktop: true });
   assert.equal(server, started.pid, 'The app reuses the running server');
   child.kill('SIGKILL'); await once(child, 'exit');

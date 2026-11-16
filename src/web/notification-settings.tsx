@@ -18,7 +18,7 @@ export function NotificationSettings() {
   const [testing, setTesting] = useState(false);
   const on = notifications.on && notifications.permission === 'granted';
   const blocked = notifications.permission === 'unsupported' ? t('This browser cannot show notifications.')
-    : notifications.permission === 'insecure' ? t('Browsers show notifications only on HTTPS or localhost. Open Papilot at a secure address to use them.')
+    : notifications.permission === 'insecure' ? t('Browsers show notifications only on HTTPS or localhost. Open StudyBuddy at a secure address to use them.')
     : notifications.permission === 'denied' ? t('Notifications are blocked for this site. Allow them in the browser’s site settings, then turn them on here.') : '';
   async function toggle(value: boolean) {
     setAsking(true); setTest(''); setError('');
@@ -36,7 +36,7 @@ export function NotificationSettings() {
       <div className="settings-row settings-notifications">
         <div className="settings-text">
           <label className="settings-name" htmlFor="settings-notify">{t('Notifications')}</label>
-          <p id="settings-notify-detail">{blocked || t('Show desktop notifications while Papilot is in the background.')}</p>
+          <p id="settings-notify-detail">{blocked || t('Show desktop notifications while StudyBuddy is in the background.')}</p>
         </div>
         <input id="settings-notify" type="checkbox" role="switch" className="switch" aria-describedby="settings-notify-detail" checked={on} disabled={asking || (Boolean(blocked) && !on)} onChange={event => void toggle(event.target.checked)}/>
       </div>
@@ -57,7 +57,7 @@ export function NotificationSettings() {
       {on && <div className="settings-test">
         <button type="button" className="button secondary compact" disabled={testing} onClick={() => void sendTest()}><Icon name="bell" size={14}/>{t('Send a test notification')}</button>
         {test && <span role="status">{nativeNotifications
-          ? test === 'sent' ? t('Sent. If nothing appeared, allow notifications and sounds for Papilot in your system settings.') : t('Papilot could not show the notification. Check your system notification settings.')
+          ? test === 'sent' ? t('Sent. If nothing appeared, allow notifications and sounds for StudyBuddy in your system settings.') : t('StudyBuddy could not show the notification. Check your system notification settings.')
           : test === 'sent' ? t('Sent. If nothing appeared, allow notifications for this browser in your system settings.') : t('This browser could not show the notification.')}</span>}
       </div>}
     </section>

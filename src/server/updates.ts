@@ -8,10 +8,10 @@ import { download, installLayer, installRelease, loaderFor, npmCli, type Desktop
 import type { UpdateChannel, UpdateStatus } from '../shared.ts';
 
 const activePhases = new Set(['installing', 'waiting', 'restarting']);
-const managedError = (method: 'nix' | 'managed') => new Error(method === 'nix' ? 'Updates are managed by Nix.' : 'Updates are managed outside Papilot.');
+const managedError = (method: 'nix' | 'managed') => new Error(method === 'nix' ? 'Updates are managed by Nix.' : 'Updates are managed outside StudyBuddy.');
 export const alive = (pid: number) => { try { process.kill(pid, 0); return true; } catch { return false; } };
 async function releaseInfo(url: string, fetcher: typeof fetch, limit = 256000) {
-  const response = await fetcher(url, { signal: AbortSignal.timeout(10000), redirect: 'error', headers: { Accept: 'application/json', 'User-Agent': 'Papilot' } });
+  const response = await fetcher(url, { signal: AbortSignal.timeout(10000), redirect: 'error', headers: { Accept: 'application/json', 'User-Agent': 'StudyBuddy' } });
   if (!response.ok) throw new Error('Could not check for updates.');
   const text = await response.text();
   if (text.length > limit) throw new Error('Invalid release information.');
@@ -20,24 +20,24 @@ async function releaseInfo(url: string, fetcher: typeof fetch, limit = 256000) {
 // The package.json of the newest release on a channel.
 export async function latestManifest(channel: UpdateChannel = 'stable', fetcher = fetch): Promise<Record<string, any>> {
   if (channel === 'dev') {
-    const commit = await releaseInfo('https://api.github.com/repos/PapilotAI/papilot/git/ref/heads/main', fetcher);
+    const commit = await releaseInfo('https://api.github.com/repos/XuYouo/StudyBuddy/git/ref/heads/main', fetcher);
     const revision = commit.object?.sha;
     if (!/^[a-f0-9]{40}$/.test(revision)) throw new Error('Invalid development revision.');
-    const pkg = await releaseInfo(`https://raw.githubusercontent.com/PapilotAI/papilot/${revision}/package.json`, fetcher);
-    if (pkg.name !== 'papilot' || !stableVersion(pkg.version)) throw new Error('Invalid development version.');
+    const pkg = await releaseInfo(`https://raw.githubusercontent.com/XuYouo/StudyBuddy/${revision}/package.json`, fetcher);
+    if (pkg.name !== 'studybuddy' || !stableVersion(pkg.version)) throw new Error('Invalid development version.');
     return { ...pkg, version: `${pkg.version}-dev.${revision}` };
   }
-  const pkg = await releaseInfo('https://registry.npmjs.org/papilot/latest', fetcher);
-  if (pkg.name !== 'papilot' || !stableVersion(pkg.version)) throw new Error('Invalid release information.');
+  const pkg = await releaseInfo('https://registry.npmjs.org/studybuddy/latest', fetcher);
+  if (pkg.name !== 'studybuddy' || !stableVersion(pkg.version)) throw new Error('Invalid release information.');
   return pkg;
 }
 export const latestRelease = async (channel: UpdateChannel = 'stable', fetcher = fetch) => (await latestManifest(channel, fetcher)).version as string;
-export const DESKTOP_RELEASES = 'https://github.com/PapilotAI/papilot/releases';
+export const DESKTOP_RELEASES = 'https://github.com/XuYouo/StudyBuddy/releases';
 // Nightly builds of main replace the assets of this one prerelease.
 export const DESKTOP_DEV_TAG = 'desktop-dev';
 // Release downloads, not the rate-limited REST API. The smoke test serves
 // them locally.
-const desktopDownloads = () => (process.env.PAPILOT_DESKTOP_UPDATE_SOURCE ? process.env.PAPILOT_DESKTOP_UPDATE_SOURCE.replace(/\/+$/, '') + '/PapilotAI/papilot/releases' : DESKTOP_RELEASES);
+const desktopDownloads = () => (process.env.PAPILOT_DESKTOP_UPDATE_SOURCE ? process.env.PAPILOT_DESKTOP_UPDATE_SOURCE.replace(/\/+$/, '') + '/XuYouo/StudyBuddy/releases' : DESKTOP_RELEASES);
 export interface DesktopRelease { version: string; downloadUrl: string; layer?: DesktopLayer }
 // desktop.json (written by scripts/desktop-layer.mjs, uploaded after every
 // other asset of its release) names the version, its update layer and the
@@ -63,6 +63,7 @@ const validTarget = (version: unknown, channel: UpdateChannel): version is strin
 const available = (next: string, current: string, channel: UpdateChannel) => validTarget(next, channel)
   && (channel === 'dev' || devRevision(current) ? next !== current : newerVersion(next, current));
 interface Options {
+  enabled?: boolean;
   desktop?: boolean;
   // A packaged desktop app: its bundled server and shell fingerprint.
   bundle?: { root: string; version: string; fingerprint: string };
@@ -101,12 +102,13 @@ export class Updates {
     let supported = options.desktop ? this.layers : options.supported ?? true;
     if (!options.desktop && options.supported === undefined) try { npmCli(); } catch { supported = false; }
     this.state = { currentVersion: options.version, latestVersion: null, phase: 'idle', checkedAt: null, error: null, canUpdate: supported };
-    const saved = managedInstall() || options.desktop && !this.layers ? null : readJson(this.file);
+    const saved = this.management() || options.desktop && !this.layers ? null : readJson(this.file);
     if (saved && ['failed', 'updated', 'installing', 'waiting', 'restarting'].includes(saved.phase)) this.state = { ...this.state, ...saved, currentVersion: options.version, canUpdate: supported };
     if (saved && activePhases.has(saved.phase) && !alive(saved.pid)) this.change({ phase: 'failed', checkedAt: Date.now(), error: 'The update was interrupted. Your current installation is still available; retry the update.' });
   }
+  private management() { return managedInstall() || (this.options.enabled === false ? 'managed' : null); }
   snapshot(): UpdateStatus {
-    const method = managedInstall();
+    const method = this.management();
     if (method) return { currentVersion: this.options.version, latestVersion: null, phase: 'idle', checkedAt: null, error: null, canUpdate: false, packageManager: method };
     const saved = readJson(this.file);
     if (saved && activePhases.has(this.state.phase) && ['updated', 'failed'].includes(saved.phase)) this.state = { ...this.state, ...saved, currentVersion: this.options.version };
@@ -126,7 +128,7 @@ export class Updates {
     };
   }
   start() {
-    if (managedInstall()) return;
+    if (this.management()) return;
     if (this.state.phase !== 'failed') void this.check();
     this.timer = setInterval(() => {
       if (this.state.phase === 'waiting') void this.activate();
@@ -139,7 +141,7 @@ export class Updates {
     writeJson(this.file, { ...this.state, pid: process.pid });
   }
   setChannel(channel: unknown) {
-    const method = managedInstall();
+    const method = this.management();
     if (method) throw managedError(method);
     if (this.options.desktop && !this.layers) throw new Error('Download desktop updates from GitHub Releases.');
     if (channel !== 'stable' && channel !== 'dev') throw new Error('Choose a valid update channel.');
@@ -153,7 +155,7 @@ export class Updates {
     return this.check();
   }
   check(): Promise<UpdateStatus> {
-    if (managedInstall()) return Promise.resolve(this.snapshot());
+    if (this.management()) return Promise.resolve(this.snapshot());
     if (this.checking) return this.checking;
     if (activePhases.has(this.state.phase)) return Promise.resolve(this.snapshot());
     this.change({ phase: 'checking' });
@@ -202,16 +204,16 @@ export class Updates {
     return (this.options.installLayer || installLayer)(this.options.data, version, release.layer, bundle);
   }
   install(version: unknown) {
-    const method = managedInstall();
+    const method = this.management();
     if (method) throw managedError(method);
     if (this.options.desktop && !this.layers) throw new Error('Download desktop updates from GitHub Releases.');
     if (activePhases.has(this.state.phase)) return this.snapshot();
     if (this.options.desktop && this.downloadUrl) throw new Error('Download desktop updates from GitHub Releases.');
-    if (!this.state.canUpdate) throw new Error('npm is unavailable to Papilot.');
+    if (!this.state.canUpdate) throw new Error('npm is unavailable to StudyBuddy.');
     if (!validTarget(version, this.channel) || version !== this.state.latestVersion || !available(version, this.options.version, this.channel)) throw new Error('Check for a newer release before updating.');
     fs.mkdirSync(path.dirname(this.lock), { recursive: true, mode: 0o700 });
     const previous = readJson(this.lock);
-    if (previous && alive(previous.pid)) throw new Error('Another Papilot instance is already updating.');
+    if (previous && alive(previous.pid)) throw new Error('Another StudyBuddy instance is already updating.');
     if (previous) fs.rmSync(this.lock);
     const fd = fs.openSync(this.lock, 'wx', 0o600); fs.writeFileSync(fd, JSON.stringify({ pid: process.pid })); fs.closeSync(fd);
     this.change({ phase: 'installing', error: null });
@@ -229,13 +231,13 @@ export class Updates {
     if (this.closed || this.state.phase !== 'waiting' || !this.prepared || this.inFlight || this.options.busy()) return;
     this.change({ phase: 'restarting' });
     try { await (this.options.restart || this.restart.bind(this))(this.prepared, this.state.latestVersion!); }
-    catch (error) { this.change({ phase: 'failed', error: error instanceof Error ? error.message : 'Could not restart Papilot.' }); this.release(); }
+    catch (error) { this.change({ phase: 'failed', error: error instanceof Error ? error.message : 'Could not restart StudyBuddy.' }); this.release(); }
   }
   private release() { const lock = readJson(this.lock); if (lock?.pid === process.pid) fs.rmSync(this.lock, { force: true }); }
   private restart(root: string, version: string) {
     const folder = path.dirname(this.file), job = path.join(folder, 'restart.json');
     writeJson(job, { id: randomUUID(), root, version, channel: this.channel, previousRoot: this.options.root, previousVersion: this.options.version, data: this.options.data, port: this.options.port, parent: process.pid,
-      service: process.env.PAPILOT_SERVICE_MANAGER === 'launchd' || process.env.XPC_SERVICE_NAME === 'local.papilot' });
+      service: process.env.PAPILOT_SERVICE_MANAGER === 'launchd' || process.env.XPC_SERVICE_NAME === 'local.studybuddy' });
     const log = fs.openSync(path.join(folder, 'restart.log'), 'a', 0o600);
     const child = spawn(process.execPath, ['--import', importLoader(loaderFor(this.options.root)), path.join(this.options.root, 'src/server/update-worker.ts'), job], { cwd: this.options.root, env: process.env, detached: true, stdio: ['ignore', log, log, 'ipc'] });
     fs.closeSync(log);

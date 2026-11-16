@@ -7,7 +7,7 @@ import { _electron as electron, expect } from './playwright.mjs';
 
 if (process.platform !== 'win32') throw new Error('Run this test on Windows.');
 const data = fs.mkdtempSync(path.join(os.tmpdir(), 'papilot-environments-test-'));
-const executablePath = process.env.PAPILOT_DESKTOP_EXECUTABLE || path.resolve('release/desktop/win-unpacked/Papilot.exe');
+const executablePath = process.env.PAPILOT_DESKTOP_EXECUTABLE || path.resolve('release/desktop/win-unpacked/StudyBuddy.exe');
 const env = { ...process.env, PAPILOT_DESKTOP_DATA: data, PAPILOT_UPDATE_PROBE: '1' };
 delete env.ELECTRON_RUN_AS_NODE;
 let app;

@@ -574,10 +574,10 @@
     "textHash": "a3c72a51500a828d69ce20a261c4a0e28d7cb047610759ba0a7397e9a56f6bed",
     "model": "gemini-4-argon-medium"
   },
-  "Pause this task in Papilot before accepting, rejecting, or undoing changes. You can still add comments.": {
-    "revision": "9b57318b297b9c744dd74f99861982cd5556177fe14ef9f11999d9435931de97",
-    "textHash": "63d9d61aec0858d9e14804826d5cc52f93e7f52a6a79b501aeadab15bdeed81d",
-    "model": "gemini-4-argon-medium"
+  "Pause this task in StudyBuddy before accepting, rejecting, or undoing changes. You can still add comments.": {
+    "revision": "bf89942fd52e11776894353c8637e586d653642bddc61a4618652e3a386af5b3",
+    "textHash": "3755325651deb70632d1ffbb30a714608c17a396d457b73567ea50bd09812496",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Pending": {
     "revision": "dadec7325a14eb255e735fb2e4bc254203b31cd6cb1d3119d4348b80002d7b1f",
@@ -744,10 +744,10 @@
     "textHash": "ef6fd3e9f1631e8b6f419522f6942d0c55f648221439cdf179dc975f4d46c0d0",
     "model": "gemini-4-argon-medium"
   },
-  "Select Check status in Papilot before accepting, rejecting, or undoing changes. You can still add comments.": {
-    "revision": "51a675cb4077513adf5590d942000aaf63040e88fc06b304730e389cfb4d48ec",
-    "textHash": "a238fd83833d52afb98b759111bdb00ea0eb476b9c8077844278bd1f66c515a4",
-    "model": "gemini-4-argon-medium"
+  "Select Check status in StudyBuddy before accepting, rejecting, or undoing changes. You can still add comments.": {
+    "revision": "8abcbde52aa85d24b433908e38434c5349d9138f457c1f7ae604275c99c784bc",
+    "textHash": "ffab8bae906e9855a409afe41216d905c61e15d6cabce152ad0e0c79a3afdbcc",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Select text directly in the PDF preview. Copy reference includes the selection and its file, line numbers and page. Review shortcuts pause while text is selected.": {
     "revision": "60c2e65cae0807bc8916ad2f71fa1752ffed1c9e77cca2412090f7acb5a40949",
@@ -944,10 +944,10 @@
     "textHash": "790ec3e6fa75b59739aff02daa09dfc0166b1b0697b49ed865852118dcdc53da",
     "model": "gemini-4-argon-medium"
   },
-  "This task is no longer available in Papilot. Return to the workspace.": {
-    "revision": "39a2f4df77f34ab9a25a178d1ce87f294a7f3e8a11cd72c2451fd9003fbea668",
-    "textHash": "5b0834d1e644e19b426a6398a3855c56a96f4c0af73e2fc3e0d772db7dcbf7c3",
-    "model": "gemini-4-argon-medium"
+  "This task is no longer available in StudyBuddy. Return to the workspace.": {
+    "revision": "36783ca8dc2ebd0f6af1f111c501f5fbca219f1f77888974994c52cd227cdbe0",
+    "textHash": "491737e2ed8f1858a4035b51caa2ff8201bf8da7945461c5cf1f78548e1bbe24",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Title": {
     "revision": "6a7eeb7a79c5e8954fc14fb00e8cc3420e86defb138e1d4f28d7f1a95adaa71a",

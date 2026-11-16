@@ -27,7 +27,7 @@ test('the shell fingerprint changes exactly when an update would need a new inst
     assert.match(base, /^[a-f0-9]{64}$/);
     assert.equal(shellFingerprint(root, '24.12.1'), base, 'Node patch releases keep the shell');
     const same = (change: () => void, message: string) => { change(); assert.equal(shellFingerprint(root, '24.11.0'), base, message); };
-    same(() => write(path.join(root, 'src/server/start.ts'), 'changed server'), 'Papilot code ships in the layer');
+    same(() => write(path.join(root, 'src/server/start.ts'), 'changed server'), 'StudyBuddy code ships in the layer');
     same(() => write(path.join(root, 'desktop/README.md'), 'changed docs'), 'Documentation is not part of the shell');
     const lock = JSON.parse(fs.readFileSync(path.join(root, 'package-lock.json'), 'utf8'));
     same(() => { lock.packages['node_modules/typescript'].version = '7.1.0'; write(path.join(root, 'package-lock.json'), lock); }, 'Development dependencies are not installed');
@@ -56,7 +56,7 @@ test('main builds carry their commit in the version', () => {
 });
 
 test('a dev build reuses the published installers only for the same shell', () => {
-  const fingerprint = 'f'.repeat(64), installers = INSTALLER_SUFFIXES.map(suffix => `Papilot-0.9.0-dev.abcdef1-${suffix}`);
+  const fingerprint = 'f'.repeat(64), installers = INSTALLER_SUFFIXES.map(suffix => `StudyBuddy-0.9.0-dev.abcdef1-${suffix}`);
   const previous = { format: 1, version: '0.9.0-dev.' + 'a'.repeat(40), fingerprint, installers };
   const assets = ['desktop.json', 'papilot-app-x.tgz', ...installers];
   assert.deepEqual(reusableInstallers(previous, assets, fingerprint), installers);

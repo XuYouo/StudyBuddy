@@ -21,8 +21,8 @@ test('a managed installation starts its own version and ignores releases install
   const dir = temporary('papilot-managed-layers-'), app = path.join(dir, 'app'), data = path.join(dir, 'data');
   const release = path.join(data, 'updates/releases/0.10.0');
   try {
-    writeJson(path.join(app, 'package.json'), { name: 'papilot', version: '0.9.0' });
-    writeJson(path.join(release, 'package.json'), { name: 'papilot', version: '0.10.0' });
+    writeJson(path.join(app, 'package.json'), { name: 'studybuddy', version: '0.9.0' });
+    writeJson(path.join(release, 'package.json'), { name: 'studybuddy', version: '0.10.0' });
     fs.mkdirSync(path.join(release, 'src/server'), { recursive: true }); fs.writeFileSync(path.join(release, 'src/server/start.ts'), '');
     writeJson(path.join(data, 'updates/active.json'), { version: '0.10.0', channel: 'stable', root: release });
     assert.equal(await withMethod(undefined, () => activeInstallation(app, data)), release, 'the fixture is a valid installed release');
@@ -37,7 +37,7 @@ test('a managed installation starts its own version and ignores releases install
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });
 
-test('a managed installation never checks, installs or changes channels, and says updates are managed outside Papilot', async () => {
+test('a managed installation never checks, installs or changes channels, and says updates are managed outside StudyBuddy', async () => {
   const data = temporary('papilot-managed-update-');
   try {
     await withMethod('managed', async () => {
@@ -46,8 +46,8 @@ test('a managed installation never checks, installs or changes channels, and say
       const updates = new Updates({ data, version: '0.8.9', supported: true, latest: async () => { requests++; return '0.9.0'; }, install: async () => { throw new Error('must not install'); }, root: data, port: 7274, busy: () => false, shutdown: () => {}, restart: async () => {} });
       updates.start();
       assert.deepEqual(await updates.check(), { currentVersion: '0.8.9', latestVersion: null, phase: 'idle', checkedAt: null, error: null, canUpdate: false, packageManager: 'managed' });
-      assert.throws(() => updates.install('0.9.0'), /^Error: Updates are managed outside Papilot\.$/);
-      assert.throws(() => updates.setChannel('dev'), /^Error: Updates are managed outside Papilot\.$/);
+      assert.throws(() => updates.install('0.9.0'), /^Error: Updates are managed outside StudyBuddy\.$/);
+      assert.throws(() => updates.setChannel('dev'), /^Error: Updates are managed outside StudyBuddy\.$/);
       updates.close();
       assert.equal(requests, 0);
       assert.equal(fs.existsSync(path.join(data, 'updates/install.lock')), false);
@@ -56,7 +56,7 @@ test('a managed installation never checks, installs or changes channels, and say
   } finally { fs.rmSync(data, { recursive: true, force: true }); }
 });
 
-test('agent SDKs outside Papilot\'s dependencies come from the data folder, the Nix runtime, or nowhere in a managed installation', async () => {
+test('agent SDKs outside StudyBuddy\'s dependencies come from the data folder, the Nix runtime, or nowhere in a managed installation', async () => {
   const app = path.join(os.tmpdir(), 'papilot-app'), data = path.join(os.tmpdir(), 'papilot-data');
   assert.equal(await withMethod(undefined, () => agentSdkFolder(app, data)), path.join(data, 'agents'));
   assert.equal(await withMethod('nix', () => agentSdkFolder(app, data)), path.join(app, 'nix-agent-runtime'));
@@ -64,28 +64,28 @@ test('agent SDKs outside Papilot\'s dependencies come from the data folder, the 
   assert.equal(await withMethod('docker', () => agentSdkFolder(app, data)), path.join(data, 'agents'), 'only known methods change behavior');
 });
 
-test('a managed installation loads agent SDKs only from Papilot\'s own dependencies and never downloads one', async () => {
+test('a managed installation loads agent SDKs only from StudyBuddy\'s own dependencies and never downloads one', async () => {
   const data = temporary('papilot-managed-sdk-'), previousData = process.env.PAPILOT_DATA;
   // A copy an unmanaged run downloaded into the data folder earlier.
-  const sdk = path.join(data, 'agents/node_modules/papilot-test-sdk');
+  const sdk = path.join(data, 'agents/node_modules/studybuddy-test-sdk');
   fs.mkdirSync(sdk, { recursive: true });
-  fs.writeFileSync(path.join(sdk, 'package.json'), JSON.stringify({ name: 'papilot-test-sdk', version: '1.0.0', type: 'module', main: 'index.js' }));
+  fs.writeFileSync(path.join(sdk, 'package.json'), JSON.stringify({ name: 'studybuddy-test-sdk', version: '1.0.0', type: 'module', main: 'index.js' }));
   fs.writeFileSync(path.join(sdk, 'index.js'), 'export const loaded = true;\n');
   process.env.PAPILOT_DATA = data;
   try {
     const { loadPackage, packageFile } = await import('../src/server/agents.ts');
     await withMethod(undefined, async () => {
-      assert.equal(packageFile('papilot-test-sdk'), path.join(sdk, 'index.js'));
-      assert.equal((await loadPackage('papilot-test-sdk', '1.0.0', 'the test SDK')).loaded, true);
+      assert.equal(packageFile('studybuddy-test-sdk'), path.join(sdk, 'index.js'));
+      assert.equal((await loadPackage('studybuddy-test-sdk', '1.0.0', 'the test SDK')).loaded, true);
     });
     await withMethod('managed', async () => {
-      assert.equal(packageFile('papilot-test-sdk'), null);
-      assert.ok(packageFile('fastify'), 'Papilot\'s own dependencies are still found');
+      assert.equal(packageFile('studybuddy-test-sdk'), null);
+      assert.ok(packageFile('fastify'), 'StudyBuddy\'s own dependencies are still found');
       let ready = 0;
-      await assert.rejects(loadPackage('papilot-test-sdk', '1.0.0', 'the test SDK', () => { ready++; }),
-        { message: 'This installation does not include the test SDK. Install papilot-test-sdk@1.0.0 into Papilot\'s node_modules, then restart Papilot.' });
+      await assert.rejects(loadPackage('studybuddy-test-sdk', '1.0.0', 'the test SDK', () => { ready++; }),
+        { message: 'This installation does not include the test SDK. Install studybuddy-test-sdk@1.0.0 into StudyBuddy\'s node_modules, then restart StudyBuddy.' });
       assert.equal(ready, 1);
-      await assert.rejects(loadPackage('papilot-test-sdk', '1.0.0', 'the test SDK', () => { throw new Error('The agent is not configured.'); }), /not configured/, 'configuration errors come first');
+      await assert.rejects(loadPackage('studybuddy-test-sdk', '1.0.0', 'the test SDK', () => { throw new Error('The agent is not configured.'); }), /not configured/, 'configuration errors come first');
     });
     assert.deepEqual(fs.readdirSync(path.join(data, 'agents')), ['node_modules'], 'nothing was installed');
   } finally {

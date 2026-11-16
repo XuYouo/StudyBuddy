@@ -12,7 +12,7 @@ test('WSL setup requires supported Linux Node and npm even with an existing runt
   assert.equal(report.checks[2].detail, 'latexmk synctex');
 });
 
-test('a complete probe distinguishes tool readiness from Papilot preparation', () => {
+test('a complete probe distinguishes tool readiness from StudyBuddy preparation', () => {
   const output = 'PAPILOT_CHECK:node=24.22.2\r\nPAPILOT_CHECK:npm=yes\r\nPAPILOT_CHECK:git=yes\r\nPAPILOT_CHECK:tex=\r\n';
   const report = wslReport(output);
   assert.equal(report.canPrepare, true);

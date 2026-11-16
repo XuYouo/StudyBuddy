@@ -600,7 +600,7 @@ async function run(root: string, port: number, idle: number, owner?: Owner) {
   process.chdir(root);
   // Losing the server lock means another engine now serves this paper. Stop,
   // closing open requests, rather than write its review state beside it;
-  // Papilot's next request connects to that engine.
+  // StudyBuddy's next request connects to that engine.
   let lost = false, stop = () => {};
   const home = serverHome(root),
     release = await acquireLock(path.join(home, "server.lock"), false, { onLost: () => { lost = true; stop(); } }),

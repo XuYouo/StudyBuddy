@@ -3,7 +3,7 @@
 The website's **Try online demo** link opens the static **Demo** at `/demo` (served
 from `/demo/` by the static host). It uses the same React
 entrypoint, PDF viewer, annotation tools, task list, composers and settings as
-the installed app. There is no Papilot server, agent process, API endpoint or
+the installed app. There is no StudyBuddy server, agent process, API endpoint or
 service worker to deploy.
 
 The homepage has one Demo text link in the right-hand controls, immediately
@@ -12,7 +12,7 @@ with a subtle color transition on hover or keyboard focus. The link has no
 underline, filled background, gradient, icon or idle animation. Reduced-motion
 preferences disable the transition.
 
-The two-page **Meet Papilot** tour uses the official wordmark (including the
+The two-page **Meet StudyBuddy** tour uses the official wordmark (including the
 product icon), product illustrations and supported-agent artwork from
 `docs/assets/`. It explains three design principles: review the rendered page,
 keep the author in control, and retain ownership of files and tools.
@@ -62,7 +62,7 @@ static example models and GPT-6 Astra / xhigh selected by default. The existing
 effort slider, Fast mode switch and permissions controls work locally, including in sample tasks;
 no settings change starts an agent. A compact notice with a subtle theme accent links directly
 to download and says “This is a static demo without LaTeX or LLM agent backends.
-To experience the full workflow, please download Papilot.” The download link is
+To experience the full workflow, please download StudyBuddy.” The download link is
 part of the sentence. “static demo” is bold; macOS, Windows and Linux download
 menus use platform icons and the app's shared action menu. Each offers the same
 installer choices and versioned URLs as the website, using `package.json` for

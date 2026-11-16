@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const repository = 'PapilotAI/papilot';
+const repository = 'XuYouo/StudyBuddy';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const output = path.join(root, 'docs/assets/readme-contributors');
 const headers: Record<string, string> = { Accept: 'application/vnd.github+json', 'User-Agent': 'papilot-readme' };

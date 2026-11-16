@@ -4,7 +4,7 @@ import remarkGfm from 'remark-gfm';
 import type { MathPlugins } from './math-plugins.ts';
 import { t, useLanguage } from './i18n.ts';
 
-// Host paths are references, not routes on the Papilot web server. Clicking
+// Host paths are references, not routes on the StudyBuddy web server. Clicking
 // copies the path, including line numbers, even over Tailscale HTTP.
 function FileReference({ path, children }: { path: string; children: ReactNode }) {
   // The reply around it is memoized, so its label follows the language itself.

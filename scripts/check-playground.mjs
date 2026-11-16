@@ -5,7 +5,7 @@ import http from 'node:http';
 import { chromium, expect } from './playwright.mjs';
 import { checkPdfLifecycle } from './check-pdf-lifecycle.mjs';
 
-// A plain file server, with no Papilot server, route mocking or API handlers.
+// A plain file server, with no StudyBuddy server, route mocking or API handlers.
 const root = path.resolve('_site');
 const version = JSON.parse(fs.readFileSync('package.json', 'utf8')).version;
 const mathRound = JSON.parse(fs.readFileSync('examples/playground-paper/preview/example-math/round.json', 'utf8'));
@@ -52,11 +52,11 @@ try {
   await page.goto(origin + '/demo');
   assert.ok(['/demo', '/demo/'].includes(new URL(page.url()).pathname));
   await expect(page.getByRole('region', { name: 'Demo', exact: true })).toBeVisible();
-  await expect(page).toHaveTitle('Papilot Demo');
+  await expect(page).toHaveTitle('StudyBuddy Demo');
   await expect(page.locator('.brand-version')).toHaveText(`v${version}`);
   const banner = page.getByRole('region', { name: 'Demo', exact: true });
-  await expect(banner).toContainText('This is a static demo without LaTeX or LLM agent backends. To experience the full workflow, please download Papilot.');
-  await expect(banner.getByRole('link', { name: 'Download Papilot', exact: true })).toHaveAttribute('href', 'https://papilot.ai/#download');
+  await expect(banner).toContainText('This is a static demo without LaTeX or LLM agent backends. To experience the full workflow, please download StudyBuddy.');
+  await expect(banner.getByRole('link', { name: 'Download StudyBuddy', exact: true })).toHaveAttribute('href', 'https://github.com/XuYouo/StudyBuddy#downloads');
   await expect(banner.locator('nav, p')).toHaveCount(0);
   await expect(banner.locator('strong')).toHaveText('static demo');
   for (const platform of ['macOS', 'Windows', 'Linux']) await expect(banner.getByRole('button', { name: `Download for ${platform}`, exact: true })).toBeVisible();
@@ -69,15 +69,15 @@ try {
   const modelMenu = page.getByRole('dialog', { name: 'Agent settings', exact: true });
   const modelTrigger = page.getByRole('button', { name: 'Agent settings', exact: true });
   await expect(modelTrigger).toContainText('GPT-6 Astra');
-  await expect(modelTrigger).toHaveAttribute('title', /Papilot Writer.*GPT-6 Astra.*High/);
+  await expect(modelTrigger).toHaveAttribute('title', /StudyBuddy Writer.*GPT-6 Astra.*High/);
   await modelTrigger.click();
-  for (const name of ['Papilot Writer', 'Codex', 'Claude', 'Cursor', 'Copilot', 'Grok', 'Antigravity', 'Kimi', 'GLM', 'DeepSeek', 'Qwen', 'OpenCode']) await expect(modelMenu.getByRole('group', { name, exact: true })).toHaveCount(1);
+  for (const name of ['StudyBuddy Writer', 'Codex', 'Claude', 'Cursor', 'Copilot', 'Grok', 'Antigravity', 'Kimi', 'GLM', 'DeepSeek', 'Qwen', 'OpenCode']) await expect(modelMenu.getByRole('group', { name, exact: true })).toHaveCount(1);
   const effort = modelMenu.getByRole('slider', { name: 'Reasoning effort', exact: true });
   const fast = modelMenu.getByRole('switch', { name: 'Fast mode', exact: true });
   await expect(effort).toHaveAttribute('aria-valuetext', 'High');
   await expect(modelMenu.getByRole('radio', { name: 'Paper edits', exact: true })).toBeChecked();
   await expect(fast).toHaveCount(0);
-  await expect(modelMenu.getByRole('option', { name: 'GPT-6 Astra · ChatGPT Plus or Pro · Papilot Writer', exact: true })).toHaveAttribute('aria-selected', 'true');
+  await expect(modelMenu.getByRole('option', { name: 'GPT-6 Astra · ChatGPT Plus or Pro · StudyBuddy Writer', exact: true })).toHaveAttribute('aria-selected', 'true');
   // Existing agents retain their own model, permission and fast-mode controls.
   await modelMenu.getByRole('option', { name: 'GPT-6 Astra · Codex', exact: true }).click();
   await expect(effort).toHaveAttribute('aria-valuetext', 'Xhigh');
@@ -117,9 +117,9 @@ try {
   const input = page.getByRole('textbox', { name: 'Describe the revision', exact: true });
   await input.fill('Make the design philosophy more concrete.');
   await page.getByRole('button', { name: 'Start task', exact: true }).click();
-  const download = page.getByRole('dialog', { name: 'Make it your paper with Papilot' });
+  const download = page.getByRole('dialog', { name: 'Make it your paper with StudyBuddy' });
   await expect(download).toBeVisible();
-  await expect(download.getByRole('link', { name: 'Download Papilot' })).toHaveAttribute('href', 'https://papilot.ai/#download');
+  await expect(download.getByRole('link', { name: 'Download StudyBuddy' })).toHaveAttribute('href', 'https://github.com/XuYouo/StudyBuddy#downloads');
   await download.getByRole('button', { name: 'Close', exact: true }).click();
   await expect(input).toHaveValue('Make the design philosophy more concrete.');
   await expect(page.locator('.task-row')).toHaveCount(3);
@@ -332,7 +332,7 @@ try {
   await git.getByRole('button', { name: 'Stage main.tex', exact: true }).click();
   await expect(git.getByRole('group', { name: 'Staged changes', exact: true }).locator('.git-file')).toHaveCount(2);
   await git.getByRole('group', { name: 'Staged changes', exact: true }).getByRole('button', { name: 'main.tex', exact: true }).click();
-  await expect(git.locator('.git-file-preview')).toContainText('Papilot brings PDF notes');
+  await expect(git.locator('.git-file-preview')).toContainText('StudyBuddy brings PDF notes');
   await page.screenshot({ path: 'test-results/demo-git-diff.png' });
   await git.getByRole('button', { name: 'Unstage main.tex', exact: true }).click();
   await git.locator('.git-detail-switcher').getByRole('button', { name: 'Version history', exact: true }).click();
@@ -370,7 +370,7 @@ try {
   await expect(banner).toBeVisible();
   await expect(reset).toBeInViewport();
   await expect(page.locator('.sidebar')).toBeHidden();
-  assert.ok(await banner.getByRole('link', { name: 'Download Papilot', exact: true }).evaluate(element => element.getBoundingClientRect().right <= innerWidth));
+  assert.ok(await banner.getByRole('link', { name: 'Download StudyBuddy', exact: true }).evaluate(element => element.getBoundingClientRect().right <= innerWidth));
   await page.screenshot({ path: 'test-results/demo-banner-mobile.png', animations: 'disabled' });
   const beforeDismiss = await page.locator('.app-shell').evaluate(element => element.getBoundingClientRect().height);
   await banner.getByRole('button', { name: 'Dismiss demo notice', exact: true }).click();

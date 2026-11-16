@@ -1,12 +1,12 @@
-# Contributing to Papilot
+# Contributing to StudyBuddy
 
-Thanks for helping. Papilot is young, so every bug report, idea and pull request shapes it.
+Thanks for helping. StudyBuddy is young, so every bug report, idea and pull request shapes it.
 
 ## Ways to help
 
-- **Try it and tell us what broke.** Open an [issue](https://github.com/PapilotAI/papilot/issues/new/choose) with your Papilot version (`papilot --version`), your OS, Node.js and TeX distribution, and the steps to reproduce.
-- **Share ideas and questions** in [Discussions](https://github.com/PapilotAI/papilot/discussions), including how you use Papilot on your own papers.
-- **Pick up an issue.** Issues labelled [good first issue](https://github.com/PapilotAI/papilot/labels/good%20first%20issue) are small and well described; [help wanted](https://github.com/PapilotAI/papilot/labels/help%20wanted) ones are larger.
+- **Try it and tell us what broke.** Open an [issue](https://github.com/XuYouo/StudyBuddy/issues/new/choose) with your StudyBuddy version (`studybuddy --version`), your OS, Node.js and TeX distribution, and the steps to reproduce.
+- **Share ideas and questions** in [Discussions](https://github.com/XuYouo/StudyBuddy/discussions), including how you use StudyBuddy on your own papers.
+- **Pick up an issue.** Issues labelled [good first issue](https://github.com/XuYouo/StudyBuddy/labels/good%20first%20issue) are small and well described; [help wanted](https://github.com/XuYouo/StudyBuddy/labels/help%20wanted) ones are larger.
 - **Improve the docs**: the [README](../README.md), its [Chinese version](../docs/readme/README.zh-CN.md) and the [guide](../docs/guide.md).
 
 ## Set up
@@ -16,7 +16,7 @@ You need Node.js 22.22+, Git and a full TeX distribution. An agent is only neede
 With [Nix](../docs/nix.md), run `nix develop` inside the checkout to provide these tools, then follow the npm steps below.
 
 ```sh
-git clone https://github.com/PapilotAI/papilot && cd papilot
+git clone https://github.com/XuYouo/StudyBuddy && cd StudyBuddy
 npm ci
 npm run setup:review   # install and build the review engine
 npm run build
@@ -36,7 +36,7 @@ npm run build
 PAPILOT_PORT=7276 PAPILOT_DATA="$HOME/.papilot-dev" PAPILOT_PUBLIC_ORIGIN= npm run dev
 ```
 
-Open `http://127.0.0.1:7276`. For the latest committed development version without running a checkout, use **Settings → Updates → Dev (GitHub main)** in an installed Papilot.
+Open `http://127.0.0.1:7276`. For the latest committed development version without running a checkout, use **Settings → Updates → Dev (GitHub main)** in an installed StudyBuddy.
 
 ## Where things are
 
@@ -51,7 +51,7 @@ Open `http://127.0.0.1:7276`. For the latest committed development version witho
 | `.github/` | Workflows, contribution guide, security policy and community files |
 | `engine/` | The review engine that builds and compares the PDFs, with its own tests |
 | `bin/papilot.mjs` | The `papilot` command installed by npm |
-| `examples/papilot-paper` | The example paper used by `papilot demo` |
+| `examples/papilot-paper` | The example paper used by `studybuddy demo` |
 | `tests`, `scripts/check-ui.mjs` | Unit tests and the browser checks |
 
 ## Before you open a pull request

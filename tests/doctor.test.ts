@@ -31,7 +31,7 @@ function fixture() {
     // Node treats extensionless entry points as CJS unless their package is ESM.
     fs.writeFileSync(path.join(tools, 'package.json'), '{"type":"module"}');
     // Windows cannot start an extensionless script, so a .cmd shim runs Node
-    // on it. Papilot spawns .cmd files through a shell.
+    // on it. StudyBuddy spawns .cmd files through a shell.
     if (process.platform === 'win32') {
       const shim = path.join(tools, `${name}.cmd`);
       fs.writeFileSync(shim, `@echo off\r\n"${process.execPath}" "${file}" %*\r\n`);
@@ -77,13 +77,13 @@ test('doctor reports missing tools and actionable fixes without installing or st
     assert.equal(result.code, 1); assert.equal(result.report.ok, false);
     for (const name of ['git', 'latexmk', 'synctex']) {
       // A tool installed in a standard location off PATH is still found, so
-      // only require a fix for tools Papilot cannot see at all.
+      // only require a fix for tools StudyBuddy cannot see at all.
       if (findExecutable(name, { ...process.env, PATH: f.env.PATH })) continue;
       assert.equal(item(result.report, name).ok, false); assert.ok(item(result.report, name).fix);
     }
     assert.equal(item(result.report, 'agents').severity, 'warn');
     assert.equal(fs.existsSync(f.log), false); assert.equal(fs.existsSync(f.data), false);
-    assert.equal(fs.existsSync(path.join(f.dir, '.papilot')), false);
+    assert.equal(fs.existsSync(path.join(f.dir, '.studybuddy')), false);
   } finally { f.cleanup(); }
 });
 
@@ -91,11 +91,14 @@ test('optional agents do not block reading, and human output includes fixes and 
   const f = fixture();
   try {
     f.baseTools();
-    const result = await f.run(['--json']);
+    // Isolate this missing-agents case from CLIs in standard host directories.
+    const absent = Object.fromEntries(['CODEX', 'CLAUDE', 'AGY', 'COPILOT', 'GROK', 'KIMI', 'DSH', 'QWEN', 'OPENCODE']
+      .map(name => [`PAPILOT_${name}_BIN`, path.join(f.dir, 'missing-' + name)]));
+    const result = await f.run(['--json'], absent);
     assert.equal(result.code, 0, result.stdout); assert.equal(result.report.ok, true);
-    assert.equal(item(result.report, 'agents').ok, false);
-    const human = await f.run();
-    assert.match(human.stdout, /Papilot .* doctor/); assert.match(human.stdout, /Fix: /); assert.match(human.stdout, /0 blocking error/);
+    assert.equal(item(result.report, 'agents').ok, false, JSON.stringify(result.report.checks.filter(check => check.id.startsWith('agent.')), null, 2));
+    const human = await f.run([], absent);
+    assert.match(human.stdout, /StudyBuddy .* doctor/); assert.match(human.stdout, /Fix: /); assert.match(human.stdout, /0 blocking error/);
     assert.equal(fs.existsSync(f.data), false);
   } finally { f.cleanup(); }
 });
@@ -121,7 +124,7 @@ test('doctor compares installed macOS service paths and honors the selected data
   const f = fixture();
   try {
     f.baseTools();
-    const plist = path.join(f.env.HOME!, 'Library/LaunchAgents/local.papilot.plist');
+    const plist = path.join(f.env.HOME!, 'Library/LaunchAgents/local.studybuddy.plist');
     fs.mkdirSync(path.dirname(plist), { recursive: true });
     const settings = { ProgramArguments: ['/usr/bin/caffeinate', '-i', process.execPath], WorkingDirectory: f.app,
       EnvironmentVariables: { PATH: f.tools, PAPILOT_DATA: f.data } };
@@ -158,7 +161,7 @@ test('doctor uses the supported managed Codex and never leaks login output or kn
     const signedOut = f.tool('signed-out', 'if (process.argv.includes("--version")) console.log("codex-cli 0.164.0"); else { console.error("Not logged in top-secret-login"); process.exitCode = 1; }');
     const unavailable = await f.run(['--json'], { PAPILOT_CODEX_BIN: signedOut });
     assert.equal(item(unavailable.report, 'agent.codex').ok, false);
-    assert.match(item(unavailable.report, 'agent.codex').fix!, /papilot codex login/);
+    assert.match(item(unavailable.report, 'agent.codex').fix!, /studybuddy codex login/);
     assert.doesNotMatch(unavailable.stdout + unavailable.stderr, /top-secret-login/);
     // The desktop app uses any installed Codex that runs, whatever its version.
     fs.rmSync(managed, { recursive: true, force: true });
@@ -169,7 +172,7 @@ test('doctor uses the supported managed Codex and never leaks login output or kn
   } finally { f.cleanup(); }
 });
 
-test('doctor in an installation that pins its version never suggests downloads and checks SDKs where Papilot loads them', async () => {
+test('doctor in an installation that pins its version never suggests downloads and checks SDKs where StudyBuddy loads them', async () => {
   const f = fixture();
   try {
     f.baseTools();
@@ -179,14 +182,14 @@ test('doctor in an installation that pins its version never suggests downloads a
     sdk(path.join(f.data, 'agents'));
     const keys = { CURSOR_API_KEY: 'cursor-test-key' };
     const unmanaged = (await f.run(['--json'], keys)).report;
-    assert.equal(item(unmanaged, 'agent.codex').fix, 'Run papilot codex login; it installs the supported Codex when needed.');
+    assert.equal(item(unmanaged, 'agent.codex').fix, 'Run studybuddy codex login; it installs the supported Codex when needed.');
     assert.equal(item(unmanaged, 'agent.cursor').ok, true);
     const managed = (await f.run(['--json'], { ...keys, PAPILOT_INSTALL_METHOD: 'managed' })).report;
     assert.equal(item(managed, 'agent.codex').fix, 'Install a supported Codex separately or set PAPILOT_CODEX_BIN to an existing installation.');
     const cursor = item(managed, 'agent.cursor');
     assert.equal(cursor.ok, false);
     assert.equal(cursor.detail, 'Cursor SDK credentials detected; the SDK is not installed.');
-    assert.equal(cursor.fix, 'Install @cursor/sdk into Papilot\'s node_modules, then restart Papilot.');
+    assert.equal(cursor.fix, 'Install @cursor/sdk into StudyBuddy\'s node_modules, then restart StudyBuddy.');
     // Nix ships its SDKs in a locked runtime beside the application.
     sdk(path.join(f.app, 'nix-agent-runtime'));
     const nix = (await f.run(['--json'], { ...keys, PAPILOT_INSTALL_METHOD: 'nix' })).report;
@@ -388,7 +391,7 @@ test('doctor checks real repository configuration without changing files or maki
 test('doctor distinguishes a healthy local server from an occupied port and validates remote settings', async () => {
   const f = fixture();
   let healthy = true;
-  const server = createServer((_req, res) => { res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(healthy ? { name: 'Papilot', ok: true } : { name: 'Other app' })); });
+  const server = createServer((_req, res) => { res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(healthy ? { name: 'StudyBuddy', ok: true } : { name: 'Other app' })); });
   await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
   try {
     f.baseTools();

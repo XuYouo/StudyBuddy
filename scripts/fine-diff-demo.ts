@@ -1,4 +1,4 @@
-// A real review round in a disposable paper, using the normal Papilot UI.
+// A real review round in a disposable paper, using the normal StudyBuddy UI.
 // Run with Node >= 22.22: npx tsx scripts/fine-diff-demo.ts
 import fs from 'node:fs';
 import path from 'node:path';
@@ -15,7 +15,7 @@ const source = String.raw`\documentclass{article}
 \usepackage[margin=1in]{geometry}
 \usepackage{hyperref}
 \title{Independent revisions}
-\author{Papilot}
+\author{StudyBuddy}
 \date{}
 \begin{document}
 \maketitle
@@ -30,7 +30,7 @@ fs.writeFileSync(path.join(root, '.gitignore'), '*.aux\n*.log\n*.out\n*.pdf\n*.s
 const repo = new Repo(root);
 repo.run(['init', '-q']);
 repo.run(['add', '.']);
-repo.run(['-c', 'user.name=Papilot Demo', '-c', 'user.email=demo@localhost', 'commit', '-qm', 'Original paragraph']);
+repo.run(['-c', 'user.name=StudyBuddy Demo', '-c', 'user.email=demo@localhost', 'commit', '-qm', 'Original paragraph']);
 const app = new App(root);
 try {
   const task = app.tasks.create('fine-diff', '按批注聚焦修改', [], [], true);

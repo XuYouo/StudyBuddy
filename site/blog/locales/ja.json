@@ -1,6 +1,6 @@
 {
   "ui": {
-    "author": "Papilot チーム",
+    "author": "StudyBuddy チーム",
     "back": "すべての記事",
     "blog": "ブログ",
     "breadcrumb": "パンくずリスト",
@@ -12,10 +12,10 @@
     "footerNavigation": "フッターナビゲーション",
     "indexDescription": "AI、LaTeX、そして論文執筆について。",
     "indexSeoDescription": "PDF を中心とした AI と LaTeX の協業執筆。原稿に直接注釈を付け、組版後の変更をその場で確認し、学術的な判断を著者の手に取り戻します。",
-    "indexSeoTitle": "Papilot ブログ：AI と LaTeX による論文執筆",
+    "indexSeoTitle": "StudyBuddy ブログ：AI と LaTeX による論文執筆",
     "indexTitle": "ブログ",
     "languageLabel": "言語",
-    "latest": "Papilot チームより",
+    "latest": "StudyBuddy チームより",
     "mainNavigation": "メインナビゲーション",
     "minutes": "分で読めます",
     "privacy": "プライバシーポリシー",
@@ -44,7 +44,7 @@
     "comparison": "対話の重心を原稿へ戻す",
     "comparisonDesc": "左側はソースコードと PDF が分離した作業画面、右側は PDF を主作業領域とし、原稿に直接注釈を付ける画面です。",
     "flow": "修正は紙面に始まり、紙面に還る",
-    "flowDesc": "著者が原稿に注釈を付け、AI がローカルの LaTeX を修正し、Papilot がコンパイルして、著者が PDF 上で確認します。必要に応じて改訂を続けます。",
+    "flowDesc": "著者が原稿に注釈を付け、AI がローカルの LaTeX を修正し、StudyBuddy がコンパイルして、著者が PDF 上で確認します。必要に応じて改訂を続けます。",
     "newPath": "読む・注釈する・確認する",
     "now": "原稿中心",
     "old": "ソース中心",
@@ -67,7 +67,7 @@
         "ローカルのソースを特定し修正。"
       ],
       [
-        "Papilot",
+        "StudyBuddy",
         "コンパイル",
         "組版済みの原稿を生成する。"
       ],

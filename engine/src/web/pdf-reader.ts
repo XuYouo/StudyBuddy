@@ -28,7 +28,7 @@ export async function readOutline(document: PDFDocumentProxy) {
   return items;
 }
 
-// The embedded review supplies a reader adapter; Papilot renders exactly the
+// The embedded review supplies a reader adapter; StudyBuddy renders exactly the
 // same controls as for the manuscript. No PDF or review data crosses origins.
 export const PDF_READER_STATE = 'papilot:review:pdf-reader-state';
 export const PDF_READER_COMMAND = 'papilot:review:pdf-reader-command';

@@ -1,4 +1,4 @@
-# npm reads this instead of .gitignore. Papilot's package ships the built viewer in dist/.
+# npm reads this instead of .gitignore. StudyBuddy's package ships the built viewer in dist/.
 .DS_Store
 node_modules/
 .cache/

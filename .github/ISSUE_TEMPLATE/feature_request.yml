@@ -1,12 +1,12 @@
 name: Feature request
-description: Suggest something Papilot should do.
+description: Suggest something StudyBuddy should do.
 labels: [enhancement, needs-triage]
 body:
   - type: textarea
     id: problem
     attributes:
       label: What are you trying to do?
-      description: The paper-writing situation where Papilot falls short today.
+      description: The paper-writing situation where StudyBuddy falls short today.
     validations:
       required: true
   - type: textarea

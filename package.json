@@ -1,6 +1,6 @@
 {
-  "name": "papilot",
-  "version": "0.10.4",
+  "name": "studybuddy",
+  "version": "0.1.0",
   "description": "A Cursor-like workspace for your papers: annotate and review PDFs directly without ever touching LaTeX.",
   "keywords": [
     "latex",
@@ -18,19 +18,19 @@
     "academic",
     "manuscript"
   ],
-  "homepage": "https://papilot.ai",
+  "homepage": "https://github.com/XuYouo/StudyBuddy",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PapilotAI/papilot.git"
+    "url": "git+https://github.com/XuYouo/StudyBuddy.git"
   },
   "bugs": {
-    "url": "https://github.com/PapilotAI/papilot/issues"
+    "url": "https://github.com/XuYouo/StudyBuddy/issues"
   },
   "license": "MIT",
   "author": "Cui Chen",
   "type": "module",
   "bin": {
-    "papilot": "bin/papilot.mjs"
+    "studybuddy": "bin/papilot.mjs"
   },
   "files": [
     "bin",
@@ -89,7 +89,8 @@
     "build:playground": "tsc --noEmit && vite build --mode playground",
     "build:playground-example": "tsx scripts/build-playground-example.ts",
     "dev:playground": "vite --mode playground",
-    "test:playground": "npm run build:playground && node --import tsx --test tests/playground.test.ts && node scripts/check-playground.mjs"
+    "test:playground": "npm run build:playground && node --import tsx --test tests/playground.test.ts && node scripts/check-playground.mjs",
+    "desktop:install": "./dev.local.sh"
   },
   "dependencies": {
     "@fastify/compress": "^9.2.2",
@@ -148,5 +149,7 @@
     },
     "katex": "$katex",
     "minimatch@>=7 <11.0.1": "^11.0.4"
-  }
+  },
+  "private": true,
+  "updatesEnabled": false
 }

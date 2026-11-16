@@ -17,7 +17,7 @@ import { paperPlan, type Cut, type PlacedChange } from "./paper.ts";
 import { cMapData } from "./pdf-cmaps.ts";
 import { fullPaperReader } from './full-paper-reader.ts';
 
-// Built assets share one folder, and a host such as Papilot serves the viewer
+// Built assets share one folder, and a host such as StudyBuddy serves the viewer
 // under its own prefix: find the worker and CMaps next to this chunk, not at /assets.
 const besideChunk = (url: string) =>
   import.meta.env.DEV ? url : new URL(url.split("/").pop()!, import.meta.url).href;

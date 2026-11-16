@@ -31,7 +31,7 @@ interface Candidate {
 }
 type Lookup<T> = T | "unavailable";
 
-const AGENT = "Papilot bibliography check (+https://github.com/PapilotAI/papilot)";
+const AGENT = "StudyBuddy bibliography check (+https://github.com/XuYouo/StudyBuddy)";
 // Milliseconds between two requests to a host. arXiv asks for one request
 // every three seconds; DBLP for restraint.
 const PACE: Record<string, number> = {

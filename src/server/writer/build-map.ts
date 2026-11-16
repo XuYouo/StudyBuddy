@@ -3,7 +3,7 @@ import path from 'node:path';
 import { diffArrays } from 'diff';
 import { blankComments, contentsEntry, onlyInput } from './plain-text.ts';
 
-// What a build of the paper says about its structure. Every build Papilot
+// What a build of the paper says about its structure. Every build StudyBuddy
 // runs records how TeX read the paper (engine/src/core/build.ts writes the
 // trace, <job>.papilot): the files TeX entered and left, and the file and
 // line of each contents entry, label, the title and the abstract. The .aux
@@ -304,7 +304,7 @@ export function lineMap(before: string[], after: string[]) {
   });
 }
 
-/** The build of the paper to map: the task's own last full build, else the one in Papilot's preview. */
+/** The build of the paper to map: the task's own last full build, else the one in StudyBuddy's preview. */
 export async function compiledPaper(host: { papilot(tool: 'paper_build', args: Record<string, unknown>): Promise<{ success: boolean; text: string }> }): Promise<CompiledPaper | null> {
   try {
     const found = await host.papilot('paper_build', {});

@@ -21,13 +21,13 @@ export function writeJson(file, value) {
 }
 // Installations that pin their own version, such as Nix, container images,
 // server deployments and system packages, set PAPILOT_INSTALL_METHOD to nix or
-// managed. Papilot then never checks for or activates its own updates and
+// managed. StudyBuddy then never checks for or activates its own updates and
 // never downloads Codex or agent SDKs.
 export function managedInstall() {
   const method = process.env.PAPILOT_INSTALL_METHOD;
   return method === 'nix' || method === 'managed' ? method : null;
 }
-// Where an agent SDK that is not among Papilot's own dependencies comes from:
+// Where an agent SDK that is not among StudyBuddy's own dependencies comes from:
 // the Nix package's locked runtime, nowhere in another managed installation,
 // or the copy downloaded into the data folder on first use.
 export function agentSdkFolder(root, data) {
@@ -37,7 +37,7 @@ export function agentSdkFolder(root, data) {
 // Updates live beside the database, never over a global installation or checkout.
 // All launch methods (CLI, npm start, launchd) enter through main.ts.
 export function activeInstallation(root, data) {
-  if (managedInstall()) return root;
+  if (managedInstall() || readJson(path.join(root, 'package.json'))?.updatesEnabled === false) return root;
   const active = readJson(path.join(data, 'updates/active.json'));
   const version = readJson(path.join(root, 'package.json'))?.version;
   if (!active || !releaseVersion(active.version)) return root;
@@ -51,7 +51,7 @@ export function activeInstallation(root, data) {
     if (!fs.realpathSync(active.root).startsWith(releases)) return root;
   } catch { return root; }
   const pkg = readJson(path.join(active.root, 'package.json'));
-  if (pkg?.name !== 'papilot' || pkg.version !== active.version || !fs.existsSync(path.join(active.root, 'src/server/start.ts'))) return root;
+  if (pkg?.name !== 'studybuddy' || pkg.version !== active.version || !fs.existsSync(path.join(active.root, 'src/server/start.ts'))) return root;
   return active.root;
 }
 export async function waitForActivation(data) {

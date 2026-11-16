@@ -8,9 +8,9 @@ import { chooseEnvironment } from './environment-window.js';
 import { readEnvironment, saveEnvironment, startWsl, linuxPath, type Environment } from './wsl.js';
 
 const nix = process.env.PAPILOT_INSTALL_METHOD === 'nix';
-const releases = 'https://github.com/PapilotAI/papilot/releases';
-app.setName('Papilot');
-if (process.platform === 'win32') app.setAppUserModelId('ai.papilot.desktop');
+const releases = 'https://github.com/XuYouo/StudyBuddy/releases';
+app.setName('StudyBuddy');
+if (process.platform === 'win32') app.setAppUserModelId('io.github.xuyouo.studybuddy');
 if (process.env.PAPILOT_DESKTOP_DATA) app.setPath('userData', path.resolve(process.env.PAPILOT_DESKTOP_DATA));
 let window: BrowserWindow | null = null;
 let backend: ReturnType<typeof startBackend> | Awaited<ReturnType<typeof startWsl>> | undefined;
@@ -34,7 +34,7 @@ function external(url: string) {
 function showWindow() {
   if (window) { if (window.isMinimized()) window.restore(); window.show(); window.focus(); return; }
   if (!origin) return;
-  window = new BrowserWindow({ title: 'Papilot', width: 1380, height: 900, minWidth: 900, minHeight: 620,
+  window = new BrowserWindow({ title: 'StudyBuddy', width: 1380, height: 900, minWidth: 900, minHeight: 620,
     titleBarStyle: 'hidden', trafficLightPosition: { x: 18, y: 16 },
     autoHideMenuBar: process.platform !== 'darwin',
     icon: process.platform === 'win32'
@@ -53,7 +53,7 @@ function showWindow() {
   });
   window.on('closed', () => { window = null; });
   window.once('ready-to-show', () => window?.show());
-  void window.loadURL(origin).catch(error => { if (!quitting) dialog.showErrorBox('Could not open Papilot', String(error)); });
+  void window.loadURL(origin).catch(error => { if (!quitting) dialog.showErrorBox('Could not open StudyBuddy', String(error)); });
 }
 
 if (!app.requestSingleInstanceLock()) app.quit();
@@ -155,14 +155,15 @@ else {
     };
     session.defaultSession.setPermissionRequestHandler((_contents, _permission, callback) => callback(false));
     Menu.setApplicationMenu(Menu.buildFromTemplate([
-      { label: 'Papilot', submenu: [{ role: 'about' }, { label: nix ? 'Updates managed by Nix' : 'Download Updates…', enabled: !nix, click: () => external(releases) }, { type: 'separator' }, { role: 'hide' }, { role: 'hideOthers' }, { role: 'unhide' }, { type: 'separator' }, { role: 'quit' }] },
+      { label: 'StudyBuddy', submenu: [{ role: 'about' }, { label: nix ? 'Updates managed by Nix' : 'Download Updates…', enabled: !nix, click: () => external(releases) }, { type: 'separator' }, { role: 'hide' }, { role: 'hideOthers' }, { role: 'unhide' }, { type: 'separator' }, { role: 'quit' }] },
       { label: 'File', submenu: [{ id: 'open-folder', label: 'Open Folder…', accelerator: 'CmdOrCtrl+O', click: () => void openFolder() }, { type: 'separator' }, process.platform === 'darwin' ? { role: 'close' } : { role: 'quit' }] },
       ...(process.platform === 'win32' ? [{ label: 'Environment', submenu: [{ label: environment.kind === 'wsl' ? `WSL · ${environment.distribution}…` : 'Windows…', click: () => openEnvironment() }] }] : []),
       { role: 'editMenu' }, { role: 'viewMenu' }, { role: 'windowMenu' },
-      { role: 'help', submenu: [{ label: 'Papilot Guide', click: () => external('https://github.com/PapilotAI/papilot#readme') }, { label: 'Show Logs', click: () => shell.showItemInFolder(log) }] },
+      { role: 'help', submenu: [{ label: 'StudyBuddy Guide', click: () => external('https://github.com/XuYouo/StudyBuddy#readme') }, { label: 'Show Logs', click: () => shell.showItemInFolder(log) }] },
     ]));
+    const updatesEnabled = read(path.join(root, 'package.json'))?.updatesEnabled !== false;
     let server = root;
-    const fatal = (message: string) => { dialog.showErrorBox('Papilot stopped', `${message}\n\nLog: ${log}`); app.quit(); };
+    const fatal = (message: string) => { dialog.showErrorBox('StudyBuddy stopped', `${message}\n\nLog: ${log}`); app.quit(); };
     // Starts a backend and resolves once it serves requests. The window follows
     // it if an occupied port moved it to a new origin.
     const launch = async (folder: string) => {
@@ -172,7 +173,7 @@ else {
       backend = next;
       let url: string;
       try { url = await next.ready; } catch (error) { await next.stop(); throw error; }
-      next.child.once('exit', () => { if (!quitting && !switching && backend === next) fatal('The local server stopped unexpectedly. Reopen Papilot to continue.'); });
+      next.child.once('exit', () => { if (!quitting && !switching && backend === next) fatal('The local server stopped unexpectedly. Reopen StudyBuddy to continue.'); });
       // The backend asks for the switch once its update is ready and idle.
       next.child.on('message', message => {
         if (environment.kind === 'wsl' && (message as any)?.type === 'papilot:ready') {
@@ -181,10 +182,10 @@ else {
           port = Number(url.port); fs.writeFileSync(portFile, JSON.stringify(port));
           if (origin && url.origin !== origin) { origin = url.origin; void window?.loadURL(origin); }
         }
-        if (environment.kind === 'wsl' || nix || backend !== next || switching || quitting || (message as { type?: unknown } | null)?.type !== 'papilot:activate') return;
+        if (!updatesEnabled || environment.kind === 'wsl' || nix || backend !== next || switching || quitting || (message as { type?: unknown } | null)?.type !== 'papilot:activate') return;
         switching = true;
         void switchServer(data, bundle, message, server, () => next.stop(), launch).then(running => { server = running; })
-          .catch(error => fatal(`Papilot could not restart after the update: ${error instanceof Error ? error.message : error}`))
+          .catch(error => fatal(`StudyBuddy could not restart after the update: ${error instanceof Error ? error.message : error}`))
           .finally(() => { switching = false; });
       });
       port = Number(new URL(url).port);
@@ -193,7 +194,7 @@ else {
     };
     // Legacy npm activations (updates/active.json) are never used.
     try {
-      if (environment.kind === 'wsl') await launch(root);
+      if (!updatesEnabled || environment.kind === 'wsl') await launch(root);
       else server = await startServer(data, bundle, launch);
     } catch (error) {
       if (process.platform !== 'win32') throw error;
@@ -202,7 +203,7 @@ else {
     }
     showWindow();
   }).catch(error => {
-    dialog.showErrorBox('Could not start Papilot', `${error instanceof Error ? error.message : error}\n\nSee backend.log in ${app.getPath('logs')}.`);
+    dialog.showErrorBox('Could not start StudyBuddy', `${error instanceof Error ? error.message : error}\n\nSee backend.log in ${app.getPath('logs')}.`);
     app.quit();
   });
 }

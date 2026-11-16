@@ -1,6 +1,6 @@
 {
   "ui": {
-    "author": "Papilot-Team",
+    "author": "StudyBuddy-Team",
     "back": "Alle Artikel",
     "blog": "Blog",
     "breadcrumb": "Brotkrümelnavigation",
@@ -12,10 +12,10 @@
     "footerNavigation": "Fußzeile",
     "indexDescription": "Über KI, LaTeX und wissenschaftliches Schreiben.",
     "indexSeoDescription": "Entdecken Sie PDF-zentriertes Schreiben mit KI und LaTeX: direkt im Manuskript kommentieren, gesetzte Änderungen vor Ort prüfen und das eigene Fachurteil wahren.",
-    "indexSeoTitle": "Papilot-Blog: Wissenschaftliches Schreiben mit KI und LaTeX",
+    "indexSeoTitle": "StudyBuddy-Blog: Wissenschaftliches Schreiben mit KI und LaTeX",
     "indexTitle": "Blog",
     "languageLabel": "Sprache",
-    "latest": "Vom Papilot-Team",
+    "latest": "Vom StudyBuddy-Team",
     "mainNavigation": "Hauptnavigation",
     "minutes": "Min. Lesezeit",
     "privacy": "Datenschutz",
@@ -44,7 +44,7 @@
     "comparison": "Zurück zum Manuskript als Zentrum",
     "comparisonDesc": "Links sind Quellcode und PDF getrennt; rechts bildet das PDF mit Randnotizen direkt auf dem Manuskript den Hauptarbeitsbereich.",
     "flow": "Von der Seite zur Seite",
-    "flowDesc": "Autoren kommentieren das Manuskript, die KI ändert lokales LaTeX, Papilot kompiliert und Autoren prüfen direkt im PDF; bei Bedarf folgt die nächste Runde.",
+    "flowDesc": "Autoren kommentieren das Manuskript, die KI ändert lokales LaTeX, StudyBuddy kompiliert und Autoren prüfen direkt im PDF; bei Bedarf folgt die nächste Runde.",
     "newPath": "Lesen · Kommentieren · Prüfen",
     "now": "Manuskript-zentriert",
     "old": "Quellcode-zentriert",
@@ -67,7 +67,7 @@
         "Lokalen Code finden und ändern."
       ],
       [
-        "Papilot",
+        "StudyBuddy",
         "Projekt kompilieren",
         "Gesetztes Manuskript erzeugen."
       ],

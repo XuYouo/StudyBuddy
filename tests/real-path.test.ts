@@ -21,7 +21,7 @@ test('path identities resolve junctions and missing worktrees without folding ca
 });
 
 test('Windows native identity agrees across drive and directory casing', { skip: process.platform !== 'win32' }, () => {
-  const root = fs.realpathSync.native(fs.mkdtempSync(path.join(os.tmpdir(), 'Papilot MixedCase ')));
+  const root = fs.realpathSync.native(fs.mkdtempSync(path.join(os.tmpdir(), 'StudyBuddy MixedCase ')));
   try {
     const lowerDrive = root[0].toLowerCase() + root.slice(1), upper = root.toUpperCase();
     for (const alias of [lowerDrive, upper]) {

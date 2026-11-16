@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Papilot · A Modern Agentic LaTeX Editor</title>
+<title>StudyBuddy · A Modern Agentic LaTeX Editor</title>
 <!-- language-preference -->
 <script>try { const theme = localStorage.getItem('papilot-theme'); if (theme === 'dark' || theme === 'light') document.documentElement.dataset.theme = theme; } catch {}</script>
 <meta name="description" content="Mark up the compiled PDF and the coding agent you choose edits the LaTeX source. Each change comes back as a typeset before-and-after for you to accept or reject." data-zh-content="在编译好的 PDF 上批注，你选的编程智能体去改 LaTeX 源码。每处改动都排成修改前后的版面对比，由你接受或拒绝。">
@@ -12,8 +12,8 @@
 <link rel="alternate" hreflang="en" href="https://papilot.ai/?lang=en">
 <link rel="alternate" hreflang="zh-CN" href="https://papilot.ai/?lang=zh-CN">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Papilot">
-<meta property="og:title" content="Papilot · A Modern Agentic LaTeX Editor">
+<meta property="og:site_name" content="StudyBuddy">
+<meta property="og:title" content="StudyBuddy · A Modern Agentic LaTeX Editor">
 <meta property="og:description" content="Mark up the compiled PDF, and review every LaTeX change as a typeset before-and-after." data-zh-content="在编译好的 PDF 上批注，每处 LaTeX 改动都以排好版的修改前后给你审阅。">
 <meta property="og:url" content="https://papilot.ai/">
 <meta property="og:image" content="https://papilot.ai/assets/social-preview.png">
@@ -73,7 +73,7 @@
 
 <header class="topbar">
   <div class="wrap topbar-inner">
-    <a class="brand" href="./" aria-label="Papilot"><img class="brand-mark" src="assets/logo.svg" alt="" width="26" height="26"><span class="brand-name">Papilot</span></a>
+    <a class="brand" href="./" aria-label="StudyBuddy"><img class="brand-mark" src="assets/logo.svg" alt="" width="26" height="26"><span class="brand-name">StudyBuddy</span></a>
     <nav class="nav" aria-label="Sections" data-zh-aria-label="页面导航">
       <a href="#agents"><span lang="en">Agents</span><span lang="zh-CN">智能体</span></a>
       <a href="#why"><span lang="en">Approach</span><span lang="zh-CN">理念</span></a>
@@ -95,7 +95,7 @@
         </button>
         <div class="lang-list" id="lang-list" role="menu" aria-labelledby="lang-button" hidden></div>
       </div>
-      <a class="button secondary compact github-link" href="https://github.com/cu1ch3n/papilot" aria-label="GitHub">
+      <a class="button secondary compact github-link" href="https://github.com/XuYouo/StudyBuddy" aria-label="GitHub">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
         <span>GitHub</span>
       </a>
@@ -107,7 +107,7 @@
 
 <section class="hero">
   <!-- The first screen fills the window: the headline, whose "Agentic" is
-       marked as an addition, Papilot's window and the downloads. The window
+       marked as an addition, StudyBuddy's window and the downloads. The window
        is the app as it is: its 46px toolbar row with the window controls,
        the marking tools' rail, one change on a page whose other text,
        equations and figures are abstract, drawn from the viewer
@@ -147,7 +147,7 @@
                 <i class="review-step"><svg class="ic"><use href="#i-chevron-left"/></svg></i><span class="review-number"><span lang="en">Change 1</span><span lang="zh-CN">修改 1</span></span><i class="review-step"><svg class="ic"><use href="#i-chevron-right"/></svg></i><code class="review-where">main.tex:6</code>
                 <button class="review-accept" type="button"><svg class="ic"><use href="#i-check"/></svg><span class="sr"><span lang="en">Accept</span><span lang="zh-CN">接受</span></span></button>
                 <button class="review-reject" type="button"><svg class="ic"><use href="#i-close"/></svg><span class="sr"><span lang="en">Reject</span><span lang="zh-CN">拒绝</span></span></button>
-                <a class="review-comment" href="https://github.com/PapilotAI/papilot/discussions" title="Discuss Papilot on GitHub" data-zh-title="在 GitHub 上讨论 Papilot"><svg class="ic"><use href="#i-chat"/></svg><span class="sr"><span lang="en">Comment</span><span lang="zh-CN">评论</span></span></a>
+                <a class="review-comment" href="https://github.com/XuYouo/StudyBuddy/discussions" title="Discuss StudyBuddy on GitHub" data-zh-title="在 GitHub 上讨论 StudyBuddy"><svg class="ic"><use href="#i-chat"/></svg><span class="sr"><span lang="en">Comment</span><span lang="zh-CN">评论</span></span></a>
                 <button class="review-latex" type="button" aria-expanded="false" aria-controls="review-source-1" title="Show LaTeX source" data-zh-title="显示 LaTeX 源码"><svg class="ic"><use href="#i-code"/></svg><span class="sr">LaTeX</span></button>
               </div>
               <div class="review-side before" aria-hidden="true">
@@ -165,7 +165,7 @@
             </article>
             <span class="sheet-lines fill" aria-hidden="true"><i style="width:100%"></i><i style="width:72%"></i><span class="sheet-fig"><span class="fig-flow"><span class="fig-panel fig-source"><svg class="fig-file" viewBox="0 0 64 78"><path d="M4 2h40l18 18v54a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z" fill="#f6f7f9" stroke="#c9ced6" stroke-width="1.3"/><path d="M44 2v16a2 2 0 0 0 2 2h16" fill="none" stroke="#c9ced6" stroke-width="1.3"/><text x="9" y="34">\sum_{n</text><text x="9" y="46">\frac{1}</text><text x="9" y="58">= \frac{</text></svg><b>main.tex</b></span><span class="fig-step"><span class="latex">L<sup>a</sup>T<sub>e</sub>X</span><svg class="fig-arrow" viewBox="0 0 34 12"><path d="M1 6h30m-6-5 6 5-6 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="fig-panel"><span class="fig-page"><span class="fig-op"><small>∞</small><span>∑</span><small><var>n</var>=1</small></span><span class="fig-frac"><span>1</span><span><var>n</var><sup>2</sup></span></span><span>=</span><span class="fig-frac"><span><var>π</var><sup>2</sup></span><span>6</span></span></span><b>main.pdf</b></span></span><i></i></span><i style="width:100%"></i><i style="width:100%"></i><i style="width:86%"></i></span>
           </div>
-          <div class="m-decide"><i><svg class="ic"><use href="#i-chevron-left"/></svg></i><span>1 / 1</span><button class="m-accept" type="button"><svg class="ic"><use href="#i-check"/></svg><span class="sr"><span lang="en">Accept</span><span lang="zh-CN">接受</span></span></button><button class="m-reject" type="button"><svg class="ic"><use href="#i-close"/></svg><span class="sr"><span lang="en">Reject</span><span lang="zh-CN">拒绝</span></span></button><a class="m-talk" href="https://github.com/PapilotAI/papilot/discussions" title="Discuss Papilot on GitHub" data-zh-title="在 GitHub 上讨论 Papilot"><svg class="ic"><use href="#i-chat"/></svg><span class="sr"><span lang="en">Comment</span><span lang="zh-CN">评论</span></span></a><i><svg class="ic"><use href="#i-chevron-right"/></svg></i></div>
+          <div class="m-decide"><i><svg class="ic"><use href="#i-chevron-left"/></svg></i><span>1 / 1</span><button class="m-accept" type="button"><svg class="ic"><use href="#i-check"/></svg><span class="sr"><span lang="en">Accept</span><span lang="zh-CN">接受</span></span></button><button class="m-reject" type="button"><svg class="ic"><use href="#i-close"/></svg><span class="sr"><span lang="en">Reject</span><span lang="zh-CN">拒绝</span></span></button><a class="m-talk" href="https://github.com/XuYouo/StudyBuddy/discussions" title="Discuss StudyBuddy on GitHub" data-zh-title="在 GitHub 上讨论 StudyBuddy"><svg class="ic"><use href="#i-chat"/></svg><span class="sr"><span lang="en">Comment</span><span lang="zh-CN">评论</span></span></a><i><svg class="ic"><use href="#i-chevron-right"/></svg></i></div>
           <div class="m-tools" aria-hidden="true"><i><svg class="ic"><use href="#i-tool-magic"/></svg></i><hr><i><svg class="ic"><use href="#i-tool-note"/></svg></i><i class="rail-region"><svg class="ic"><use href="#i-tool-region"/></svg></i><i><svg class="ic"><use href="#i-tool-sticky"/></svg></i><i><svg class="ic"><use href="#i-tool-strike"/></svg></i><hr><i class="rail-select on"><svg class="ic"><use href="#i-tool-select"/></svg></i><hr><i><svg class="ic"><use href="#i-undo"/></svg></i><i><svg class="ic"><use href="#i-redo"/></svg></i></div>
         </div>
         <div class="app-chat" aria-hidden="true">
@@ -204,33 +204,33 @@
         <div class="download-list" id="download-list" role="menu" aria-labelledby="download-button" hidden>
           <div class="download-group" data-os="mac" role="group" aria-labelledby="download-mac">
             <p class="download-label" id="download-mac">macOS</p>
-            <a role="menuitem" tabindex="-1" data-arch="arm" href="https://github.com/PapilotAI/papilot/releases/download/v{{version}}/Papilot-{{version}}-mac-arm64.dmg" data-download-platform="mac" data-download-arch="arm64" data-download-format="dmg"><strong><span lang="en">Apple Silicon</span><span lang="zh-CN">Apple 芯片</span></strong><span class="download-meta">.dmg</span></a>
-            <a role="menuitem" tabindex="-1" data-arch="x86" href="https://github.com/PapilotAI/papilot/releases/download/v{{version}}/Papilot-{{version}}-mac-x64.dmg" data-download-platform="mac" data-download-arch="x64" data-download-format="dmg"><strong><span lang="en">Intel</span><span lang="zh-CN">Intel 芯片</span></strong><span class="download-meta">.dmg</span></a>
+            <a role="menuitem" tabindex="-1" data-arch="arm" href="https://github.com/XuYouo/StudyBuddy/releases/download/v{{version}}/StudyBuddy-{{version}}-mac-arm64.dmg" data-download-platform="mac" data-download-arch="arm64" data-download-format="dmg"><strong><span lang="en">Apple Silicon</span><span lang="zh-CN">Apple 芯片</span></strong><span class="download-meta">.dmg</span></a>
+            <a role="menuitem" tabindex="-1" data-arch="x86" href="https://github.com/XuYouo/StudyBuddy/releases/download/v{{version}}/StudyBuddy-{{version}}-mac-x64.dmg" data-download-platform="mac" data-download-arch="x64" data-download-format="dmg"><strong><span lang="en">Intel</span><span lang="zh-CN">Intel 芯片</span></strong><span class="download-meta">.dmg</span></a>
           </div>
           <div class="download-group" data-os="linux" role="group" aria-labelledby="download-linux">
             <p class="download-label" id="download-linux">Linux</p>
-            <a role="menuitem" tabindex="-1" href="https://github.com/PapilotAI/papilot/releases/download/v{{version}}/Papilot-{{version}}-linux-x86_64.AppImage" data-download-platform="linux" data-download-arch="x64" data-download-format="AppImage"><strong>AppImage</strong><span class="download-meta">x64</span></a>
-            <a role="menuitem" tabindex="-1" href="https://github.com/PapilotAI/papilot/releases/download/v{{version}}/Papilot-{{version}}-linux-amd64.deb" data-download-platform="linux" data-download-arch="x64" data-download-format="deb"><strong>Debian / Ubuntu</strong><span class="download-meta">x64 · .deb</span></a>
+            <a role="menuitem" tabindex="-1" href="https://github.com/XuYouo/StudyBuddy/releases/download/v{{version}}/StudyBuddy-{{version}}-linux-x86_64.AppImage" data-download-platform="linux" data-download-arch="x64" data-download-format="AppImage"><strong>AppImage</strong><span class="download-meta">x64</span></a>
+            <a role="menuitem" tabindex="-1" href="https://github.com/XuYouo/StudyBuddy/releases/download/v{{version}}/StudyBuddy-{{version}}-linux-amd64.deb" data-download-platform="linux" data-download-arch="x64" data-download-format="deb"><strong>Debian / Ubuntu</strong><span class="download-meta">x64 · .deb</span></a>
           </div>
           <div class="download-group" data-os="windows" role="group" aria-labelledby="download-windows">
             <p class="download-label" id="download-windows">Windows</p>
-            <a role="menuitem" tabindex="-1" href="https://github.com/PapilotAI/papilot/releases/download/v{{version}}/Papilot-{{version}}-win-x64.exe" data-download-platform="windows" data-download-arch="x64" data-download-format="exe"><strong><span lang="en">Installer</span><span lang="zh-CN">安装版</span></strong><span class="download-meta">x64 · .exe</span></a>
-            <a role="menuitem" tabindex="-1" href="https://github.com/PapilotAI/papilot/releases/download/v{{version}}/Papilot-{{version}}-win-x64-portable.exe" data-download-platform="windows" data-download-arch="x64" data-download-format="portable-exe"><strong><span lang="en">Portable app</span><span lang="zh-CN">便携版</span></strong><span class="download-meta">x64 · .exe</span></a>
+            <a role="menuitem" tabindex="-1" href="https://github.com/XuYouo/StudyBuddy/releases/download/v{{version}}/StudyBuddy-{{version}}-win-x64.exe" data-download-platform="windows" data-download-arch="x64" data-download-format="exe"><strong><span lang="en">Installer</span><span lang="zh-CN">安装版</span></strong><span class="download-meta">x64 · .exe</span></a>
+            <a role="menuitem" tabindex="-1" href="https://github.com/XuYouo/StudyBuddy/releases/download/v{{version}}/StudyBuddy-{{version}}-win-x64-portable.exe" data-download-platform="windows" data-download-arch="x64" data-download-format="portable-exe"><strong><span lang="en">Portable app</span><span lang="zh-CN">便携版</span></strong><span class="download-meta">x64 · .exe</span></a>
           </div>
           <div class="download-group" role="none">
-            <a role="menuitem" tabindex="-1" href="https://github.com/PapilotAI/papilot/releases/latest"><strong><span lang="en">All downloads</span><span lang="zh-CN">所有下载</span></strong><span class="download-meta">GitHub</span></a>
+            <a role="menuitem" tabindex="-1" href="https://github.com/XuYouo/StudyBuddy/releases/latest"><strong><span lang="en">All downloads</span><span lang="zh-CN">所有下载</span></strong><span class="download-meta">GitHub</span></a>
           </div>
         </div>
       </div>
       <div class="install">
-        <code><span class="prompt" aria-hidden="true">$</span> npm install -g papilot</code>
-        <button class="copy" type="button" data-copy="npm install -g papilot" aria-label="Copy the install command" data-zh-aria-label="复制安装命令">
+        <code><span class="prompt" aria-hidden="true">$</span> npm install -g .</code>
+        <button class="copy" type="button" data-copy="npm install -g ." aria-label="Copy the install command" data-zh-aria-label="复制安装命令">
           <svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2"/></svg>
           <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
         </button>
       </div>
     </div>
-    <p class="hero-note"><span lang="en">Version {{version}} · Free and open source · <a href="https://github.com/PapilotAI/papilot/blob/main/LICENSE">MIT License</a></span><span lang="zh-CN">版本 {{version}} · 免费开源 · <a href="https://github.com/PapilotAI/papilot/blob/main/LICENSE">MIT 许可证</a></span></p>
+    <p class="hero-note"><span lang="en">Version {{version}} · Free and open source · <a href="https://github.com/XuYouo/StudyBuddy/blob/main/LICENSE">MIT License</a></span><span lang="zh-CN">版本 {{version}} · 免费开源 · <a href="https://github.com/XuYouo/StudyBuddy/blob/main/LICENSE">MIT 许可证</a></span></p>
     <a class="scroll-cue" href="#agents" aria-label="Scroll down" data-zh-aria-label="向下滚动"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></a>
   </div>
 </section>
@@ -260,9 +260,9 @@
 </section>
 
 <!-- Three ways to work on a LaTeX paper, each drawn as a small window: the
-     two older ways side by side, Papilot's on a wide row of its own below,
+     two older ways side by side, StudyBuddy's on a wide row of its own below,
      drawn as a change with a comment on it. Scrolling on, the older two lose
-     their colour gradually as they pass the top of the window, and Papilot's
+     their colour gradually as they pass the top of the window, and StudyBuddy's
      comes in on the same scroll.
      The drawings are decoration: the cards' text carries the comparison. -->
 <section class="section" id="why">
@@ -327,7 +327,7 @@ progress and preservation.</pre></div>
           </div>
         </div>
         <div class="era-text">
-          <p class="era-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Papilot</p>
+          <p class="era-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>StudyBuddy</p>
           <h3><span lang="en">Reviewing the PDF</span><span lang="zh-CN">审阅 PDF</span></h3>
           <p><span lang="en">The AI edits the source, and each change is reviewed on the typeset page.</span><span lang="zh-CN">AI 改源码，改动排好版后在页面上逐条审阅。</span></p>
         </div>
@@ -502,8 +502,8 @@ progress and preservation.</pre></div>
 <section class="get" id="download">
   <div class="wrap get-inner">
     <div class="get-text">
-      <h2><span lang="en">Get Papilot</span><span lang="zh-CN">下载 Papilot</span></h2>
-      <p><span lang="en">The desktop app runs on macOS, Linux and Windows, and the command-line version installs from npm (Node.js 22.22+). Both use Git and your own TeX distribution (<a href="https://www.tug.org/mactex/">MacTeX</a> or <a href="https://www.tug.org/texlive/">TeX Live</a>). Papilot is free and open source under the <a href="https://github.com/PapilotAI/papilot/blob/main/LICENSE">MIT License</a>.</span><span lang="zh-CN">桌面版支持 macOS、Linux 和 Windows，命令行版用 npm 安装（需要 Node.js 22.22+）。两者都使用本机已安装的 Git 和 TeX 发行版（<a href="https://www.tug.org/mactex/">MacTeX</a> 或 <a href="https://www.tug.org/texlive/">TeX Live</a>）。Papilot 免费开源，采用 <a href="https://github.com/PapilotAI/papilot/blob/main/LICENSE">MIT 许可证</a>。</span></p>
+      <h2><span lang="en">Get StudyBuddy</span><span lang="zh-CN">下载 StudyBuddy</span></h2>
+      <p><span lang="en">The desktop app runs on macOS, Linux and Windows, and the command-line version installs from npm (Node.js 22.22+). Both use Git and your own TeX distribution (<a href="https://www.tug.org/mactex/">MacTeX</a> or <a href="https://www.tug.org/texlive/">TeX Live</a>). StudyBuddy is free and open source under the <a href="https://github.com/XuYouo/StudyBuddy/blob/main/LICENSE">MIT License</a>.</span><span lang="zh-CN">桌面版支持 macOS、Linux 和 Windows，命令行版用 npm 安装（需要 Node.js 22.22+）。两者都使用本机已安装的 Git 和 TeX 发行版（<a href="https://www.tug.org/mactex/">MacTeX</a> 或 <a href="https://www.tug.org/texlive/">TeX Live</a>）。StudyBuddy 免费开源，采用 <a href="https://github.com/XuYouo/StudyBuddy/blob/main/LICENSE">MIT 许可证</a>。</span></p>
       <div class="actions">
         <div class="download">
           <button class="button primary download-button" type="button" id="get-button" aria-haspopup="menu" aria-expanded="false" aria-controls="get-list">
@@ -518,43 +518,43 @@ progress and preservation.</pre></div>
           <div class="download-list" id="get-list" role="menu" aria-labelledby="get-button" hidden>
             <div class="download-group" data-os="mac" role="group" aria-labelledby="get-mac">
               <p class="download-label" id="get-mac">macOS</p>
-              <a role="menuitem" tabindex="-1" data-arch="arm" href="https://github.com/PapilotAI/papilot/releases/download/v{{version}}/Papilot-{{version}}-mac-arm64.dmg" data-download-platform="mac" data-download-arch="arm64" data-download-format="dmg"><strong><span lang="en">Apple Silicon</span><span lang="zh-CN">Apple 芯片</span></strong><span class="download-meta">.dmg</span></a>
-              <a role="menuitem" tabindex="-1" data-arch="x86" href="https://github.com/PapilotAI/papilot/releases/download/v{{version}}/Papilot-{{version}}-mac-x64.dmg" data-download-platform="mac" data-download-arch="x64" data-download-format="dmg"><strong><span lang="en">Intel</span><span lang="zh-CN">Intel 芯片</span></strong><span class="download-meta">.dmg</span></a>
+              <a role="menuitem" tabindex="-1" data-arch="arm" href="https://github.com/XuYouo/StudyBuddy/releases/download/v{{version}}/StudyBuddy-{{version}}-mac-arm64.dmg" data-download-platform="mac" data-download-arch="arm64" data-download-format="dmg"><strong><span lang="en">Apple Silicon</span><span lang="zh-CN">Apple 芯片</span></strong><span class="download-meta">.dmg</span></a>
+              <a role="menuitem" tabindex="-1" data-arch="x86" href="https://github.com/XuYouo/StudyBuddy/releases/download/v{{version}}/StudyBuddy-{{version}}-mac-x64.dmg" data-download-platform="mac" data-download-arch="x64" data-download-format="dmg"><strong><span lang="en">Intel</span><span lang="zh-CN">Intel 芯片</span></strong><span class="download-meta">.dmg</span></a>
             </div>
             <div class="download-group" data-os="linux" role="group" aria-labelledby="get-linux">
               <p class="download-label" id="get-linux">Linux</p>
-              <a role="menuitem" tabindex="-1" href="https://github.com/PapilotAI/papilot/releases/download/v{{version}}/Papilot-{{version}}-linux-x86_64.AppImage" data-download-platform="linux" data-download-arch="x64" data-download-format="AppImage"><strong>AppImage</strong><span class="download-meta">x64</span></a>
-              <a role="menuitem" tabindex="-1" href="https://github.com/PapilotAI/papilot/releases/download/v{{version}}/Papilot-{{version}}-linux-amd64.deb" data-download-platform="linux" data-download-arch="x64" data-download-format="deb"><strong>Debian / Ubuntu</strong><span class="download-meta">x64 · .deb</span></a>
+              <a role="menuitem" tabindex="-1" href="https://github.com/XuYouo/StudyBuddy/releases/download/v{{version}}/StudyBuddy-{{version}}-linux-x86_64.AppImage" data-download-platform="linux" data-download-arch="x64" data-download-format="AppImage"><strong>AppImage</strong><span class="download-meta">x64</span></a>
+              <a role="menuitem" tabindex="-1" href="https://github.com/XuYouo/StudyBuddy/releases/download/v{{version}}/StudyBuddy-{{version}}-linux-amd64.deb" data-download-platform="linux" data-download-arch="x64" data-download-format="deb"><strong>Debian / Ubuntu</strong><span class="download-meta">x64 · .deb</span></a>
             </div>
             <div class="download-group" data-os="windows" role="group" aria-labelledby="get-windows">
               <p class="download-label" id="get-windows">Windows</p>
-              <a role="menuitem" tabindex="-1" href="https://github.com/PapilotAI/papilot/releases/download/v{{version}}/Papilot-{{version}}-win-x64.exe" data-download-platform="windows" data-download-arch="x64" data-download-format="exe"><strong><span lang="en">Installer</span><span lang="zh-CN">安装版</span></strong><span class="download-meta">x64 · .exe</span></a>
-              <a role="menuitem" tabindex="-1" href="https://github.com/PapilotAI/papilot/releases/download/v{{version}}/Papilot-{{version}}-win-x64-portable.exe" data-download-platform="windows" data-download-arch="x64" data-download-format="portable-exe"><strong><span lang="en">Portable app</span><span lang="zh-CN">便携版</span></strong><span class="download-meta">x64 · .exe</span></a>
+              <a role="menuitem" tabindex="-1" href="https://github.com/XuYouo/StudyBuddy/releases/download/v{{version}}/StudyBuddy-{{version}}-win-x64.exe" data-download-platform="windows" data-download-arch="x64" data-download-format="exe"><strong><span lang="en">Installer</span><span lang="zh-CN">安装版</span></strong><span class="download-meta">x64 · .exe</span></a>
+              <a role="menuitem" tabindex="-1" href="https://github.com/XuYouo/StudyBuddy/releases/download/v{{version}}/StudyBuddy-{{version}}-win-x64-portable.exe" data-download-platform="windows" data-download-arch="x64" data-download-format="portable-exe"><strong><span lang="en">Portable app</span><span lang="zh-CN">便携版</span></strong><span class="download-meta">x64 · .exe</span></a>
             </div>
             <div class="download-group" role="none">
-              <a role="menuitem" tabindex="-1" href="https://github.com/PapilotAI/papilot/releases/latest"><strong><span lang="en">All downloads</span><span lang="zh-CN">所有下载</span></strong><span class="download-meta">GitHub</span></a>
+              <a role="menuitem" tabindex="-1" href="https://github.com/XuYouo/StudyBuddy/releases/latest"><strong><span lang="en">All downloads</span><span lang="zh-CN">所有下载</span></strong><span class="download-meta">GitHub</span></a>
             </div>
           </div>
         </div>
       </div>
       <p class="get-links">
-        <a href="https://github.com/PapilotAI/papilot/blob/main/docs/guide.md#agents"><span lang="en">Setting up an agent</span><span lang="zh-CN">配置智能体（英文）</span></a>
-        <a href="https://github.com/PapilotAI/papilot/blob/main/CHANGELOG.md"><span lang="en">Changelog</span><span lang="zh-CN">更新日志</span></a>
+        <a href="https://github.com/XuYouo/StudyBuddy/blob/main/docs/guide.md#agents"><span lang="en">Setting up an agent</span><span lang="zh-CN">配置智能体（英文）</span></a>
+        <a href="https://github.com/XuYouo/StudyBuddy/blob/main/CHANGELOG.md"><span lang="en">Changelog</span><span lang="zh-CN">更新日志</span></a>
       </p>
     </div>
     <div class="terminal">
       <div class="terminal-bar">
         <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
         <span class="terminal-title"><span lang="en">Terminal</span><span lang="zh-CN">终端</span></span>
-        <button class="copy" type="button" data-copy="npm install -g papilot&#10;papilot demo" aria-label="Copy the commands" data-zh-aria-label="复制命令">
+        <button class="copy" type="button" data-copy="npm install -g .&#10;studybuddy demo" aria-label="Copy the commands" data-zh-aria-label="复制命令">
           <svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2"/></svg>
           <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
         </button>
       </div>
-<pre><code><span class="prompt">$</span> npm install -g papilot
-<span class="prompt">$</span> papilot demo
-<span class="output">Example paper ready: Papilot paper (~/.papilot/example-paper)</span>
-<span class="output">Papilot is running at http://127.0.0.1:7274</span></code></pre>
+<pre><code><span class="prompt">$</span> npm install -g .
+<span class="prompt">$</span> studybuddy demo
+<span class="output">Example paper ready: StudyBuddy paper (~/.papilot/example-paper)</span>
+<span class="output">StudyBuddy is running at http://127.0.0.1:7274</span></code></pre>
     </div>
   </div>
 </section>
@@ -563,15 +563,15 @@ progress and preservation.</pre></div>
 
 <footer class="footer">
   <div class="wrap footer-inner">
-    <a class="brand" href="./"><img class="brand-mark" src="assets/logo.svg" alt="" width="22" height="22">Papilot</a>
+    <a class="brand" href="./"><img class="brand-mark" src="assets/logo.svg" alt="" width="22" height="22">StudyBuddy</a>
     <nav aria-label="Links" data-zh-aria-label="链接">
       <!-- blog-navigation -->
-      <a href="https://github.com/cu1ch3n/papilot">GitHub</a>
-      <a href="https://github.com/PapilotAI/papilot/releases/latest"><span lang="en">Downloads</span><span lang="zh-CN">下载</span></a>
-      <a href="https://www.npmjs.com/package/papilot">npm</a>
-      <a href="https://github.com/cu1ch3n/papilot#readme" data-zh-href="https://github.com/cu1ch3n/papilot/blob/main/docs/readme/README.zh-CN.md">README</a>
-      <a href="https://github.com/PapilotAI/papilot/blob/main/docs/guide.md"><span lang="en">Guide</span><span lang="zh-CN">指南</span></a>
-      <a href="https://github.com/PapilotAI/papilot/blob/main/CHANGELOG.md"><span lang="en">Changelog</span><span lang="zh-CN">更新日志</span></a>
+      <a href="https://github.com/XuYouo/StudyBuddy">GitHub</a>
+      <a href="https://github.com/XuYouo/StudyBuddy/releases/latest"><span lang="en">Downloads</span><span lang="zh-CN">下载</span></a>
+      <a href="https://github.com/XuYouo/StudyBuddy/blob/main/docs/development-macos.md">npm</a>
+      <a href="https://github.com/XuYouo/StudyBuddy#readme" data-zh-href="https://github.com/XuYouo/StudyBuddy/blob/main/docs/readme/README.zh-CN.md">README</a>
+      <a href="https://github.com/XuYouo/StudyBuddy/blob/main/docs/guide.md"><span lang="en">Guide</span><span lang="zh-CN">指南</span></a>
+      <a href="https://github.com/XuYouo/StudyBuddy/blob/main/CHANGELOG.md"><span lang="en">Changelog</span><span lang="zh-CN">更新日志</span></a>
       <a href="/privacy/"><span lang="en">Privacy notice</span><span lang="zh-CN">隐私声明</span></a>
     </nav>
     <p>MIT © 2026 PapilotAI</p>
@@ -1149,7 +1149,7 @@ const pick = (chat, texts) => {
 }
 
 // The older ways lose their colour gradually as they scroll up past the top
-// of the window, and Papilot's comes in on the same scroll, so the reader
+// of the window, and StudyBuddy's comes in on the same scroll, so the reader
 // sets the pace. Under reduced motion they are simply grey.
 {
   const eras = document.querySelector('.eras'), old = [...eras.querySelectorAll('.era.old')];

@@ -89,7 +89,7 @@ export async function reachableWsl(url: string, instance: string, signal?: Abort
     try {
       const response = await fetch(url + '/api/health', { signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(1000)]) : AbortSignal.timeout(1000) });
       const health = await response.json().catch(() => null);
-      return response.ok && health?.name === 'Papilot' && health?.desktopInstance === instance;
+      return response.ok && health?.name === 'StudyBuddy' && health?.desktopInstance === instance;
     } catch { /* WSL may still be setting up localhost forwarding. */ }
     if (!signal?.aborted) await new Promise(resolve => setTimeout(resolve, 250));
   }
@@ -111,7 +111,7 @@ export async function startWsl(options: { distribution: string; assets: string; 
       if (controller.signal.aborted || cycle !== generation) return;
       if (reachable) { rebinds = 0; child.emit('message', value); return; }
       if (++rebinds <= 2) { child.stdin.write(JSON.stringify({ type: 'papilot:rebind', instance: value.instance }) + '\n'); return; }
-      throw new Error('Windows could not reach this Papilot instance in WSL. Check localhost forwarding and reopen Papilot.');
+      throw new Error('Windows could not reach this StudyBuddy instance in WSL. Check localhost forwarding and reopen StudyBuddy.');
     } catch (error) { rejectReady(error instanceof Error ? error : new Error(String(error))); void stop(); }
   };
   let pending = '';

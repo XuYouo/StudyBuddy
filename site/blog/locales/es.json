@@ -1,6 +1,6 @@
 {
   "ui": {
-    "author": "Equipo de Papilot",
+    "author": "Equipo de StudyBuddy",
     "back": "Todos los artículos",
     "blog": "Blog",
     "breadcrumb": "Ruta de navegación",
@@ -12,10 +12,10 @@
     "footerNavigation": "Pie de página",
     "indexDescription": "Sobre IA, LaTeX y escritura académica.",
     "indexSeoDescription": "Descubre la escritura colaborativa con IA y LaTeX centrada en el PDF: anota sobre el manuscrito, revisa cambios maquetados y mantén el criterio en manos del autor.",
-    "indexSeoTitle": "Blog de Papilot: escritura académica con IA y LaTeX",
+    "indexSeoTitle": "Blog de StudyBuddy: escritura académica con IA y LaTeX",
     "indexTitle": "Blog",
     "languageLabel": "Idioma",
-    "latest": "Del equipo de Papilot",
+    "latest": "Del equipo de StudyBuddy",
     "mainNavigation": "Navegación principal",
     "minutes": "min de lectura",
     "privacy": "Privacidad",
@@ -44,7 +44,7 @@
     "comparison": "El diálogo vuelve al manuscrito",
     "comparisonDesc": "A la izquierda, un espacio dividido entre código fuente y PDF; a la derecha, el PDF como espacio principal con anotaciones adheridas directamente al manuscrito.",
     "flow": "Del manuscrito al manuscrito",
-    "flowDesc": "El autor anota el manuscrito, la IA modifica el LaTeX local, Papilot compila y el autor revisa en el PDF; si hace falta, continúa el ciclo.",
+    "flowDesc": "El autor anota el manuscrito, la IA modifica el LaTeX local, StudyBuddy compila y el autor revisa en el PDF; si hace falta, continúa el ciclo.",
     "newPath": "Leer · Anotar · Revisar",
     "now": "Centrado en el manuscrito",
     "old": "Centrado en el código",
@@ -67,7 +67,7 @@
         "Localiza y edita el código."
       ],
       [
-        "Papilot",
+        "StudyBuddy",
         "Compilar proyecto",
         "Genera el documento maquetado."
       ],

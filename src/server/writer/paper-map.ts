@@ -8,7 +8,7 @@ import { isProse, SKIP_DIRS } from './policy.ts';
 import { diffArrays } from 'diff';
 import { readTrace, type CompiledPaper, type Traced } from './build-map.ts';
 
-// The paper map: what Papilot Writer knows about the manuscript before it
+// The paper map: what StudyBuddy Writer knows about the manuscript before it
 // reads a line. It is made from the latest build of the paper (see
 // build-map.ts), so it shows the paper TeX typeset: the PDF's numbering and
 // pages, the title TeX stored and the abstract as printed, and only the
@@ -21,7 +21,7 @@ interface Paper {
 }
 export const paper = async () => (await engine()) as unknown as Paper;
 
-/** The last build Papilot Writer ran in this task, if any. */
+/** The last build StudyBuddy Writer ran in this task, if any. */
 export interface BuildNote { ok: boolean; at: number; pages?: number; errors: string[]; warnings: string[] }
 
 export interface PaperMap {
@@ -124,7 +124,7 @@ export async function paperMap(root: string, options: { compiled?: CompiledPaper
     if (!traced?.main) {
       const files = texFiles(root);
       lines.push(compiled
-        ? 'The latest build of the paper predates Papilot\'s outline, so there is no map of its sections yet. Call check_build: the map then shows the paper as TeX typeset it.'
+        ? 'The latest build of the paper predates StudyBuddy\'s outline, so there is no map of its sections yet. Call check_build: the map then shows the paper as TeX typeset it.'
         : 'The paper has not been compiled yet, so there is no map of its sections. Call check_build: the map then shows the paper as TeX typeset it.');
       if (files.length) lines.push(`TeX and bibliography files in the worktree (${files.length}): ${cap(files, 60, file => file)}`);
       result.files = files;

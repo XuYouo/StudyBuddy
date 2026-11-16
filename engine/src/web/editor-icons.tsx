@@ -1,7 +1,7 @@
 import React from "react";
 
 // Shared with the workspace's Icon component, so source editing uses the
-// same glyphs and stroke weight as the surrounding Papilot controls.
+// same glyphs and stroke weight as the surrounding StudyBuddy controls.
 export const editorIcons = {
   code: <path d="m8 7-5 5 5 5m8-10 5 5-5 5M14 4l-4 16"/>,
   pencil: <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>,

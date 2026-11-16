@@ -23,7 +23,7 @@ export function tarCommand() {
 // Keep wrapper paths intact: resolving symlinks can bypass Nix's environment.
 export function agentDirs(env = process.env) {
   const home = (WINDOWS ? env.USERPROFILE || env.HOME : env.HOME) || os.homedir();
-  // Windows per-user and system install locations for the tools Papilot drives.
+  // Windows per-user and system install locations for the tools StudyBuddy drives.
   // They are only used there; the POSIX directories above are harmless elsewhere.
   const appData = env.APPDATA || path.join(home, 'AppData', 'Roaming');
   const localAppData = env.LOCALAPPDATA || path.join(home, 'AppData', 'Local');
@@ -82,7 +82,7 @@ export function findExecutables(command, env = process.env, extra = [], include 
 export function which(command, env = process.env) {
   return findExecutable(command, env);
 }
-// A system program, found without PATH: Papilot tools can run with a minimal
+// A system program, found without PATH: StudyBuddy tools can run with a minimal
 // environment that does not include System32, and cmd.exe starts .cmd shims.
 function systemExecutable(name) {
   const root = process.env.SystemRoot || process.env.windir || 'C:\\Windows';

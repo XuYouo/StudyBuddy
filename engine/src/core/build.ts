@@ -188,11 +188,11 @@ const SELF = createHash("sha256").update(fs.readFileSync(fileURLToPath(import.me
 // pass's output aside, so that the pages can be shown while later passes
 // settle references, page numbers and the bibliography. Older versions
 // have no hooks and skip it.
-const PASS_HOOK = String.raw`if (defined &add_hook) { my $papilot_pass = 0; add_hook('after_xlatex', sub { my $dir = $ENV{PAPILOT_PASS_DIR}; return 0 unless $dir; $papilot_pass++; my $to = "$dir/$papilot_pass"; make_path($to); for my $file (split /\n/, $ENV{PAPILOT_PASS_FILES}) { next unless -f $file; my ($name) = $file =~ m{([^/]+)$}; copy($file, "$to/$name"); } print "Papilot: pass $papilot_pass output saved\n"; return 0; }); }`;
+const PASS_HOOK = String.raw`if (defined &add_hook) { my $papilot_pass = 0; add_hook('after_xlatex', sub { my $dir = $ENV{PAPILOT_PASS_DIR}; return 0 unless $dir; $papilot_pass++; my $to = "$dir/$papilot_pass"; make_path($to); for my $file (split /\n/, $ENV{PAPILOT_PASS_FILES}) { next unless -f $file; my ($name) = $file =~ m{([^/]+)$}; copy($file, "$to/$name"); } print "StudyBuddy: pass $papilot_pass output saved\n"; return 0; }); }`;
 // Every build records how TeX read the paper, in <job>.papilot beside the
 // PDF: each file it entered and left, and the file and line where each
 // contents entry (sections, floats), label, the title and the abstract
-// came from, with the contents text as TeX expanded it. Papilot Writer's
+// came from, with the contents text as TeX expanded it. StudyBuddy Writer's
 // paper map is made from it, so the map shows the paper TeX typeset: no
 // commented-out or \iffalse'd parts, and the PDF's own numbering. It loads
 // before the paper, writes only that file, and does nothing on a LaTeX
@@ -224,7 +224,7 @@ export const OUTLINE_TRACE = String.raw`\makeatletter
 \AddToHook{begindocument/end}{\papilot@patch}
 \fi
 \makeatother`;
-const SAVED = /^Papilot: pass (\d+) output saved/m, NEXT = /^Run number \d+ of rule '([^' ]+)/m;
+const SAVED = /^StudyBuddy: pass (\d+) output saved/m, NEXT = /^Run number \d+ of rule '([^' ]+)/m;
 /** A TeX pass's PDF, shown while the build goes on. */
 export interface PassPreview { pass: number; pdf: string; root: string; cwd: string }
 // Completed builds kept per set of targets, as candidates to continue from.

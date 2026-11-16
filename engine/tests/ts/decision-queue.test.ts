@@ -84,7 +84,7 @@ it("retries a request that may not have arrived with the same identity, and neve
   await tick();
   sent[0].answer.reject(new Unreachable("Failed to fetch"));
   await tick();
-  sent[1].answer.reject(new Unreachable("Papilot is restarting"));
+  sent[1].answer.reject(new Unreachable("StudyBuddy is restarting"));
   await tick();
   sent[2].answer.resolve("state-a");
   await queue.drained();

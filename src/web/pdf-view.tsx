@@ -365,7 +365,7 @@ export const PdfView = forwardRef<PdfHandle, {
     const box = container.current!, bus = new EventBus(), lifetime = new AbortController();
     const links = new PDFLinkService({ eventBus: bus, externalLinkTarget: LinkTarget.BLANK, externalLinkRel: 'noopener noreferrer' });
     const find = new PDFFindController({ eventBus: bus, linkService: links });
-    // Papilot owns notes and clipboard attachments. The built-in PDF editor
+    // StudyBuddy owns notes and clipboard attachments. The built-in PDF editor
     // installs document-wide paste/drop handlers even in its default NONE mode.
     // PDF.js 6 accepts abortSignal at runtime but omits it from its option type.
     const viewerOptions = { container: box, viewer: inner.current!, eventBus: bus, linkService: links, findController: find, removePageBorders: true, annotationMode: pdfjs.AnnotationMode.ENABLE,
@@ -581,7 +581,7 @@ export const PdfView = forwardRef<PdfHandle, {
     };
     box.addEventListener('pointerdown', pressNote); box.addEventListener('scroll', cancelPress);
     document.addEventListener('pointermove', moveNote); document.addEventListener('pointerup', releaseNote); document.addEventListener('pointercancel', cancelPress);
-    // Touch screens select words with Papilot's own handles and menu (style.css
+    // Touch screens select words with StudyBuddy's own handles and menu (style.css
     // turns native selection off there). Each text run is one word.
     picking.current = touchSelection<HTMLElement>(box, {
       target: element => element.closest('.textLayer')?.closest<HTMLElement>('.page') ?? undefined,

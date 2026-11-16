@@ -22,7 +22,7 @@ Write a short summary of your paper here.
 \end{abstract}
 
 \section{Introduction}
-Start writing here. You can edit this source in Papilot or ask an agent to help draft your paper.
+Start writing here. You can edit this source in StudyBuddy or ask an agent to help draft your paper.
 
 \section{Conclusion}
 Summarize your findings and next steps here.
@@ -51,7 +51,7 @@ export class PaperCreations {
     const id = input.id, name = newPaperName(input.name);
     if (typeof input.parent !== 'string' || !input.parent.trim() || input.parent.length > 4000 || /[\x00-\x1f]/.test(input.parent)) throw new Error('Choose an existing folder to save the paper in.');
     const expanded = input.parent.trim().replace(/^~(?=$|[\/\\])/, os.homedir());
-    if (!path.isAbsolute(expanded)) throw new Error('Enter an absolute folder path on the computer running Papilot.');
+    if (!path.isAbsolute(expanded)) throw new Error('Enter an absolute folder path on the computer running StudyBuddy.');
     let parent: string;
     try { parent = realPath(expanded); if (!fs.statSync(parent).isDirectory()) throw new Error(); }
     catch { throw new Error('Choose an existing folder to save the paper in.'); }
@@ -94,7 +94,7 @@ export class PaperCreations {
           try { fs.writeFileSync(path.join(root, file), contents, { flag: 'wx', mode: 0o600 }); }
           catch (error) { if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error; }
         }
-        await prepareRepository(root, 'Create paper in Papilot');
+        await prepareRepository(root, 'Create paper in StudyBuddy');
         receipt.prepared = true; save();
       } catch (error) {
         // Directory ownership does not imply ownership of everything inside:
@@ -115,9 +115,9 @@ export class PaperCreations {
           }
         }
         const missingGit = (error as NodeJS.ErrnoException).code === 'ENOENT' && (error as NodeJS.ErrnoException).syscall?.includes('spawn');
-        if (removed && missingGit) throw new Error('Install Git on the computer running Papilot, then retry creating the paper.');
+        if (removed && missingGit) throw new Error('Install Git on the computer running StudyBuddy, then retry creating the paper.');
         const message = missingGit
-          ? 'Install Git on the computer running Papilot, then retry creating the paper.' : (error as Error).message;
+          ? 'Install Git on the computer running StudyBuddy, then retry creating the paper.' : (error as Error).message;
         throw new Error(removed ? message : `${message} Paper files were kept at ${root}. Retry creation to continue.`);
       }
     }

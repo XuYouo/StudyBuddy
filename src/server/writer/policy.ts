@@ -1,12 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-// Which of Papilot Writer's actions run without asking. Writing prose is the
+// Which of StudyBuddy Writer's actions run without asking. Writing prose is the
 // agent's job, so reading anything in the task worktree and editing LaTeX or
 // BibTeX runs freely. Changes whose effects are hard to see in a review of
 // the text, such as data, scripts, packages, build settings, binaries,
 // overwrites, moves, deletions and commands, ask the author first. Nothing
-// may reach outside the worktree or into Git's or Papilot's state.
+// may reach outside the worktree or into Git's or StudyBuddy's state.
 
 /** An error the model reads in a tool result; the author never sees it, so it is not translated. */
 export const toolError = (message: string) => new Error(message);
@@ -50,17 +50,17 @@ export function resolveInside(cwd: string, file: string): Inside {
   const rel = path.relative(root, abs);
   if (!rel || rel.startsWith('..') || path.isAbsolute(rel)) {
     if (!rel && abs === root) return { abs, rel: '.' };
-    throw toolError(`${file} is outside the task worktree. Papilot Writer only works inside the paper's task worktree.`);
+    throw toolError(`${file} is outside the task worktree. StudyBuddy Writer only works inside the paper's task worktree.`);
   }
   const parts = rel.split(path.sep).map(part => part.toLowerCase());
-  if (parts.includes('.git')) throw toolError(`${file} is inside Git's own folder, which Papilot Writer never touches.`);
+  if (parts.includes('.git')) throw toolError(`${file} is inside Git's own folder, which StudyBuddy Writer never touches.`);
   return { abs, rel: rel.split(path.sep).join('/') };
 }
 
 /** Whether an action on a worktree path runs, asks or is refused. */
 export function decide(mode: WriterMode, action: Action, rel = ''): Decision {
   if (action === 'read') return { tier: 'safe', reason: 'Reading the paper is always allowed.' };
-  if (mode === 'read-only') return { tier: 'refuse', reason: 'This task is read-only, so Papilot Writer cannot change files or run commands.' };
+  if (mode === 'read-only') return { tier: 'refuse', reason: 'This task is read-only, so StudyBuddy Writer cannot change files or run commands.' };
   if (mode === 'full') return { tier: 'safe', reason: 'Full access is on for this task.' };
   if (action === 'command') return { tier: 'ask', reason: 'Commands can change anything in the worktree.' };
   if (action === 'delete') return { tier: 'ask', reason: `Deleting ${rel} is easy to miss in a review.` };

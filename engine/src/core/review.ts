@@ -666,7 +666,7 @@ export class Review {
     const afterCommit = await app.repo.commitWithAsync(
       task.accepted,
       accepted,
-      "Papilot: accept " + units.map((u) => u.id).join(", "),
+      "StudyBuddy: accept " + units.map((u) => u.id).join(", "),
     );
     this.record(
       identity,

@@ -37,7 +37,7 @@ drawn with $V_s$ composed with a rotation about the page centre,
 \end{equation}
 so that the complete chain from a glyph to a pixel is
 $(0\ 0\ 1)\, T_{rm}\, V_s\, R_{\phi}$ up to a translation. Zooming changes only
-$s$, which is why Papilot stores positions on the page in normalised
+$s$, which is why StudyBuddy stores positions on the page in normalised
 coordinates $r = (\xi_0, \eta_0, \xi_1, \eta_1) \in [0,1]^4$ relative to the
 view box:
 \begin{equation}
@@ -133,7 +133,7 @@ a line, enough for a drag to select a neighbouring word.
 
 \subsection{Per-word runs}
 
-Papilot instead reads every word's printed place from the PDF: its left edge
+StudyBuddy instead reads every word's printed place from the PDF: its left edge
 $\lambda_j$, baseline $y_j$, size $f_j$ and width $w_j$. It places one run per
 word, stretched to end where the next word begins, so that the run for word
 $j$ covers glyphs $J_j$ and the space after them with its own factor

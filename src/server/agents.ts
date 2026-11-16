@@ -14,7 +14,7 @@ import { DATA, ROOT } from './paths.ts';
 import { imageType } from './attachments.ts';
 import { ClaudeText } from './claude-text.ts';
 
-// Papilot drives every agent through the request and notification surface of
+// StudyBuddy drives every agent through the request and notification surface of
 // the Codex app-server: thread/start, thread/resume, turn/start,
 // turn/interrupt and thread/read, item and turn notifications, and approval
 // requests answered with respond(). Every other agent gets an adapter that
@@ -31,7 +31,7 @@ export interface AgentRuntime extends EventEmitter {
   preload?(): Promise<void>;
   start(): Promise<void>;
   /** Ends the conversation of a task being deleted, so the agent lets go of
-   *  what it keeps open in the task worktree before Papilot removes it. */
+   *  what it keeps open in the task worktree before StudyBuddy removes it. */
   closeThread?(threadId: string): Promise<void>;
   request(method: string, params: any, timeout?: number): Promise<any>;
   respond(id: string | number, result: unknown): void;
@@ -50,7 +50,7 @@ export interface Thread { permissions?: TaskPermissions; readOnly?: boolean; eph
 export interface Turn { id: string; threadId: string; clientId?: string; status: 'inProgress' | 'completed' | 'interrupted' | 'failed'; stop: () => void }
 export interface Item { id: string; type: string; [key: string]: unknown }
 
-// Shared bookkeeping: threads, turns and the notifications Papilot expects.
+// Shared bookkeeping: threads, turns and the notifications StudyBuddy expects.
 export abstract class Adapter extends EventEmitter implements AgentRuntime {
   ready = false;
   protected threads = new Map<string, Thread>();
@@ -86,7 +86,7 @@ export abstract class Adapter extends EventEmitter implements AgentRuntime {
       const turn: Turn = { id: randomUUID(), threadId: String(params.threadId), clientId: params.clientUserMessageId, status: 'inProgress', stop: () => {} };
       turn.stop = () => this.finish(turn, 'interrupted');
       this.turns.set(turn.id, turn);
-      // Papilot records the turn ID before the first event arrives.
+      // StudyBuddy records the turn ID before the first event arrives.
       const settings = { ...thread, cwd: params.cwd || thread.cwd };
       setImmediate(() => {
         if (turn.status !== 'inProgress') return;
@@ -124,20 +124,20 @@ export function toolItem(id: string, name: string, input: Record<string, any>): 
   return { id, type: 'toolCall', text: `${name}${target ? ` ${String(target).slice(0, 200)}` : ''}`, status: 'inProgress' };
 }
 
-const CLAUDE_KEY = 'Claude needs an Anthropic API key: Anthropic does not allow a Claude subscription login through the Claude Agent SDK. Start Papilot with ANTHROPIC_API_KEY set to use Claude.';
+const CLAUDE_KEY = 'Claude needs an Anthropic API key: Anthropic does not allow a Claude subscription login through the Claude Agent SDK. Start StudyBuddy with ANTHROPIC_API_KEY set to use Claude.';
 export function claudeConfigured(env: NodeJS.ProcessEnv = process.env) {
   return Boolean(env.ANTHROPIC_API_KEY || env.ANTHROPIC_AUTH_TOKEN || env.CLAUDE_CODE_USE_BEDROCK || env.CLAUDE_CODE_USE_VERTEX || env.CLAUDE_CODE_USE_FOUNDRY);
 }
-// Agent SDKs carry large native parts, so an installed Papilot fetches one
+// Agent SDKs carry large native parts, so an installed StudyBuddy fetches one
 // into the data folder the first time its agent can be used. ready() runs
 // before the download and throws when the agent is not configured. Managed
 // installations never download one: Nix ships a locked runtime, and other
-// managed installations use only Papilot's own dependencies.
+// managed installations use only StudyBuddy's own dependencies.
 export async function loadPackage(name: string, version: string, label: string, ready: () => void = () => {}): Promise<any> {
   try { return await import(name); }
   catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ERR_MODULE_NOT_FOUND') throw error; }
   const prefix = agentSdkFolder(ROOT, DATA);
-  if (!prefix) { ready(); throw new Error(`This installation does not include ${label}. Install ${name}@${version} into Papilot's node_modules, then restart Papilot.`); }
+  if (!prefix) { ready(); throw new Error(`This installation does not include ${label}. Install ${name}@${version} into StudyBuddy's node_modules, then restart StudyBuddy.`); }
   const resolve = () => createRequire(path.join(prefix, 'package.json')).resolve(name);
   let entry: string;
   try { entry = resolve(); } catch (error) {
@@ -149,7 +149,7 @@ export async function loadPackage(name: string, version: string, label: string, 
   }
   return import(pathToFileURL(entry).href);
 }
-// The file a package loaded from: Papilot's own dependencies, or the SDK
+// The file a package loaded from: StudyBuddy's own dependencies, or the SDK
 // folder above.
 export function packageFile(name: string) {
   const folder = agentSdkFolder(ROOT, DATA);
@@ -171,9 +171,9 @@ export function loadClaude(credentialed = claudeConfigured()) {
 
 // Claude runs through the Claude Agent SDK, which runs the Claude Code binary
 // with the login already on this host (a Claude subscription, or an API key
-// if ANTHROPIC_API_KEY is set). Papilot never reads or stores the credential.
+// if ANTHROPIC_API_KEY is set). StudyBuddy never reads or stores the credential.
 // Edits in the task worktree are accepted, commands run in Claude Code's
-// sandbox, and anything that needs approval comes to Papilot as a request.
+// sandbox, and anything that needs approval comes to StudyBuddy as a request.
 // With Claude Code installed, Claude runs as `claude -p` with the login on
 // this host (a Claude plan or an API key), one process per turn, resuming the
 // same session. Edits in the worktree are accepted and commands run in Claude
@@ -229,7 +229,7 @@ export class ClaudeAgent extends Adapter {
     private platform: NodeJS.Platform = process.platform) { super(); }
   detect() { return Boolean(this.findCli()) || claudeConfigured(); }
   async preload() { if (packageFile('@anthropic-ai/claude-agent-sdk')) await this.load(); }
-  // The environment Claude Code runs with; undefined keeps Papilot's own.
+  // The environment Claude Code runs with; undefined keeps StudyBuddy's own.
   protected environment(): Record<string, string> | undefined { return Object.fromEntries(Object.entries({ ...process.env, PATH: agentPath() }).filter((entry): entry is [string, string] => entry[1] !== undefined)); }
   async start() {
     if (this.ready) return;
@@ -383,7 +383,7 @@ export class ClaudeAgent extends Adapter {
         this.translate(turn, thread, message as SDKMessage, tools, texts, value => { error = value; });
       });
       const code = await new Promise<number | null>((resolve, reject) => { child.once('error', reject); child.once('close', resolve); });
-      if (denied.length) this.item(turn, { id: `${turn.id}:denied`, type: 'toolCall', status: 'declined', text: `Claude could not use ${[...new Set(denied)].join(', ')}: with claude -p, Papilot cannot ask for approval, so tools requiring approval are declined; managed restrictions also still apply.` });
+      if (denied.length) this.item(turn, { id: `${turn.id}:denied`, type: 'toolCall', status: 'declined', text: `Claude could not use ${[...new Set(denied)].join(', ')}: with claude -p, StudyBuddy cannot ask for approval, so tools requiring approval are declined; managed restrictions also still apply.` });
       if (stopped) this.finish(turn, 'interrupted');
       else if (error) this.finish(turn, 'failed', error);
       else if (code !== 0) this.finish(turn, 'failed', stderr.trim().split('\n').slice(-3).join(' ') || `claude exited with code ${code}.`);
@@ -474,7 +474,7 @@ export class ClaudeAgent extends Adapter {
 // Agent SDK; say so instead of the bare status.
 function explain(error: string) {
   return /403[^\n]*Request not allowed/i.test(error)
-    ? `Anthropic refused the request (${error.trim()}). A Claude subscription login cannot be used through the Claude Agent SDK; give Papilot an Anthropic API key (ANTHROPIC_API_KEY) to run Claude.`
+    ? `Anthropic refused the request (${error.trim()}). A Claude subscription login cannot be used through the Claude Agent SDK; give StudyBuddy an Anthropic API key (ANTHROPIC_API_KEY) to run Claude.`
     : error;
 }
 
@@ -482,7 +482,7 @@ function explain(error: string) {
 // way Zhipu documents GLM Coding Plan for Claude Code. ZHIPU_API_KEY selects
 // open.bigmodel.cn and ZAI_API_KEY the international api.z.ai. Claude Code
 // gets the key as its auth token, and only for that endpoint: Anthropic keys
-// and cloud-provider switches in Papilot's environment are not passed on.
+// and cloud-provider switches in StudyBuddy's environment are not passed on.
 export const GLM_MODELS = [
   { model: 'glm-5.3', displayName: 'GLM-5.3' }, { model: 'glm-5.3-flash', displayName: 'GLM-5.3 Flash' },
   { model: 'glm-5-turbo', displayName: 'GLM-5 Turbo' }, { model: 'glm-4.7', displayName: 'GLM-4.7' },
@@ -492,7 +492,7 @@ export function glmEndpoint(env: NodeJS.ProcessEnv = process.env) {
   if (env.ZAI_API_KEY) return { url: 'https://api.z.ai/api/anthropic', token: env.ZAI_API_KEY, account: 'Z.ai API key' };
   return null;
 }
-const GLM_KEY = 'GLM needs a GLM Coding Plan or API key: start Papilot with ZHIPU_API_KEY (open.bigmodel.cn) or ZAI_API_KEY (api.z.ai) set.';
+const GLM_KEY = 'GLM needs a GLM Coding Plan or API key: start StudyBuddy with ZHIPU_API_KEY (open.bigmodel.cn) or ZAI_API_KEY (api.z.ai) set.';
 export class GlmAgent extends ClaudeAgent {
   protected name = 'GLM';
   constructor(load: () => Promise<typeof import('@anthropic-ai/claude-agent-sdk')['query']> = () => loadClaude(true), private env: NodeJS.ProcessEnv = process.env,
@@ -514,7 +514,7 @@ export class GlmAgent extends ClaudeAgent {
   protected models() {
     return { data: GLM_MODELS.map((model, index) => ({ ...model, isDefault: index === 0, supportedReasoningEfforts: [], defaultReasoningEffort: null })) };
   }
-  protected limits(): never { throw new Error('GLM does not report usage to Papilot.'); }
+  protected limits(): never { throw new Error('GLM does not report usage to StudyBuddy.'); }
   protected explain(error: string) { return error; }
 }
 
@@ -567,7 +567,7 @@ export class AntigravityAgent extends Adapter {
     try {
       const files = images.map(file => {
         const resolved = fs.realpathSync(file);
-        if (!fs.statSync(resolved).isFile() || /[()*\r\n]/.test(resolved)) throw new Error('Antigravity cannot safely grant access to this image path. Move the Papilot data folder to a path without parentheses or wildcards.');
+        if (!fs.statSync(resolved).isFile() || /[()*\r\n]/.test(resolved)) throw new Error('Antigravity cannot safely grant access to this image path. Move the StudyBuddy data folder to a path without parentheses or wildcards.');
         return resolved;
       });
       if (files.length) {
@@ -578,7 +578,7 @@ export class AntigravityAgent extends Adapter {
     } catch (error) { this.finish(turn, 'failed', error instanceof Error ? error.message : String(error)); return; }
     const conversation = this.conversations[turn.threadId], entry = this.catalog.find(model => model.model === thread.model);
     const model = entry ? entry.ids[effort || entry.defaultEffort || ''] || Object.values(entry.ids)[0] : thread.model;
-    // agy has no separate system prompt: the first turn carries Papilot's instructions.
+    // agy has no separate system prompt: the first turn carries StudyBuddy's instructions.
     const prompt = conversation ? text : `${thread.instructions}\n\n---\n\n${text}`;
     const child = this.launch(findExecutable(this.binary) || this.binary, ['--input-format', 'stream-json', '--output-format', 'stream-json', '--mode', permissions === 'plan' ? 'plan' : 'accept-edits', '--settings', JSON.stringify(settings), ...(model ? ['--model', model] : []), ...(conversation ? ['--conversation', conversation] : [])], { cwd: thread.cwd, env: this.env() });
     let stopped = false, result: { status?: string; error?: string; denied_actions?: { display_name?: string; action?: string }[] } | null = null, stderr = '';

@@ -148,7 +148,7 @@ for (const scenario of ['recovered', 'new-error', 'no-reply', 'unfinished-tool',
     if (scenario === 'unfinished-tool') lines.push(step(77, 'tool', { state: 'ACTIVE', tool_name: 'edit_file' }));
     if (scenario === 'unfinished-reply') lines.push(step(77, 'agent_response', { state: 'ACTIVE', text_delta: 'One more thing' }));
     lines.push(JSON.stringify({ event: 'result', result: { status: 'ERROR', error, finished_reason: 'error' } }));
-    // Restore the conversation from disk, as after restarting Papilot.
+    // Restore the conversation from disk, as after restarting StudyBuddy.
     if (scenario !== 'fresh') fs.writeFileSync(file, JSON.stringify({ 'saved-thread': 'saved-conversation' }));
     const fake = fakeAgy([lines]), agent = new AntigravityAgent('agy', file, fake.launch as any);
     agent.ready = true;
@@ -321,7 +321,7 @@ test('pausing a Claude turn aborts it and declines its pending approval', async 
   assert.equal(seen.some(e => e.method === 'serverRequest/resolved'), true);
 });
 
-test('a refused Claude subscription login explains that Papilot needs an API key', async () => {
+test('a refused Claude subscription login explains that StudyBuddy needs an API key', async () => {
   const fake = fakeClaude(async function* () {
     yield { type: 'system', subtype: 'init', session_id: 's' };
     yield { type: 'result', subtype: 'success', is_error: true, result: 'Failed to authenticate. API Error: 403 Request not allowed', session_id: 's' };
@@ -332,7 +332,7 @@ test('a refused Claude subscription login explains that Papilot needs an API key
   await agent.request('turn/start', { threadId: thread.id, input: [{ type: 'text', text: 'Edit.' }], cwd: '/work' });
   const turn = await completed(seen);
   assert.equal(turn.status, 'failed');
-  assert.match(turn.error.message, /subscription login cannot be used through the Claude Agent SDK; give Papilot an Anthropic API key/);
+  assert.match(turn.error.message, /subscription login cannot be used through the Claude Agent SDK; give StudyBuddy an Anthropic API key/);
 });
 
 test('GLM runs Claude Code on Zhipu\'s endpoint with only the GLM key, and offers GLM models', async () => {
@@ -497,7 +497,7 @@ test('Cursor runs a sandboxed local SDK agent, streams items and resumes its age
     assert.equal(items[0].text, 'Checking now.'); assert.equal(items[1].aggregatedOutput, 'Build passed'); assert.deepEqual(items[2].changes, [{ path: '/work/main.tex' }]);
     const deltas = seen.filter(e => e.method === 'item/agentMessage/delta');
     assert.equal(deltas[0].params.itemId, items[0].id); assert.equal(deltas.at(-1)!.params.itemId, items[3].id);
-    // A restarted Papilot resumes the same Cursor agent and sends only the new message.
+    // A restarted StudyBuddy resumes the same Cursor agent and sends only the new message.
     agent.close();
     const restarted = new CursorAgent(async () => fake.sdk, file, () => true);
     await restarted.start();

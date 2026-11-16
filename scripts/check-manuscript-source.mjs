@@ -1,5 +1,5 @@
 // Editing the manuscript's LaTeX by hand from its PDF and from its Changes
-// view, through the browser, against a real Papilot server, review engine,
+// view, through the browser, against a real StudyBuddy server, review engine,
 // Git and LaTeX. Only the agents are inert; the repository, state and
 // browser profile are disposable.
 import assert from 'node:assert/strict';

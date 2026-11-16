@@ -13,5 +13,5 @@ export function npmCli(env = process.env, executable = process.execPath) {
     if (!candidate) continue;
     try { const real = fs.realpathSync(candidate); if (real.endsWith('npm-cli.js')) return real; } catch { /* next installation */ }
   }
-  throw new Error('npm is unavailable to Papilot.');
+  throw new Error('npm is unavailable to StudyBuddy.');
 }

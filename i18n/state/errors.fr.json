@@ -74,10 +74,10 @@
     "textHash": "fdc11a0b26887504fcbaca3cdd933e61ebf2e012162c23d1a0480b1170201b5f",
     "model": "gemini-4-argon-medium"
   },
-  "Another Papilot instance is already updating.": {
-    "revision": "f5a58f1d18a2d622ac5f97a2f5ca2d1d3ed045c892558eccc623167ac5528b74",
-    "textHash": "d6271bf48d46c2da16a0feb9447532cfcf2177ea90b774d7d5b892f467be944c",
-    "model": "gemini-4-argon-medium"
+  "Another StudyBuddy instance is already updating.": {
+    "revision": "7d2e19a1568980229969763598c5869f9315edb6f907ad8c09af351ba2c61e0e",
+    "textHash": "fde69b7eea763916d1c34d1cd30804fb99bbf04a111f39ebe224eefca09e5dd8",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Answer every question before submitting.": {
     "revision": "102755f15c4194bf15f487a5a057fcf7dc0b2a01dced8dbb549b347ca5c46151",
@@ -229,10 +229,10 @@
     "textHash": "746d7becfd7b30daa554cb19430ef4a28200cfe612c66834c63f4f249e31670d",
     "model": "gemini-4-argon-medium"
   },
-  "Codex sign-in expired. Select Refresh to load the current sign-in on the Papilot host. If it is still signed out, run papilot codex login there first.": {
-    "revision": "9275e962cc92c764f815634cbc10424c900e5e9e73505636a377a07e4b1c62ef",
-    "textHash": "8c9eaa2701f225aedaee1fbdb3c4ee566c8c5e5f78b90a51885013b301005842",
-    "model": "gemini-4-argon-medium"
+  "Codex sign-in expired. Select Refresh to load the current sign-in on the StudyBuddy host. If it is still signed out, run studybuddy codex login there first.": {
+    "revision": "63ada5075c88a88b876740dae51806c398bfa2673684e93e67c1dcd0ca9b470c",
+    "textHash": "9e6d30c05f0a82ffa46ab6759abd3fb3b13bd0423f588f0477a7d5c54b164fc1",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Confirm permanent task deletion before continuing.": {
     "revision": "8c590aaeae8bbbb733f8a367f7577a3aea5c2f945db041ae9c3522e62ad18293",
@@ -329,10 +329,10 @@
     "textHash": "3012760c1ba5ea1ac64312823af7846c670bc3525697f383b40642973263ba53",
     "model": "gemini-4-argon-medium"
   },
-  "GLM does not report usage to Papilot.": {
-    "revision": "522bdbb83082672d0101432a0f770754526d9b336b2ecdaebdc7249bf370e47f",
-    "textHash": "3ca6b9862b5b2abb77d2ddf60045ce98505737b142cb017a7c53cad52df7c602",
-    "model": "gemini-4-argon-medium"
+  "GLM does not report usage to StudyBuddy.": {
+    "revision": "16c8dc48c318880e038e30d52403e09422b1a64fc7b8aeaad44ee114cdd69cf3",
+    "textHash": "6531828bc4e53e1b8b2bb159d4762dbeaf70522a3070cfa2d84cc2a3247ff0fe",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Group instructions must refer to selected PDF notes.": {
     "revision": "3676f2a4b9f80442891c80d1db669a4589d22262da918a1f3f7a6038fc7417c3",
@@ -509,20 +509,20 @@
     "textHash": "d027b4c9b698d2b9d8549ed1cf4bcd92d89935abed33011a5caa12a65c88462a",
     "model": "gemini-4-argon-medium"
   },
-  "Papilot did not finish shutting down.": {
-    "revision": "f57164124a7570fe4b1ab570ca46bc01772ed85af79a975ee9a2b72094930d44",
-    "textHash": "e6ebd28b974387a92f58e5155024dc59c23789090b64b074b166fa3b7506a48e",
-    "model": "gemini-4-argon-medium"
+  "StudyBuddy did not finish shutting down.": {
+    "revision": "c274a750a8a35b59ed007fc3c26c986d59af75c1d9a431fabca2100ff3b449f7",
+    "textHash": "d91aab1f37f208f6d7f74827c88d014d6a52ec7f0b030e9a834f477d21770b8b",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
-  "Papilot is restarting after an update. Please wait a moment.": {
-    "revision": "88862b1b1dee40b6d47029605027cd8ac198ad3df3bfbb6f15ee0030d5b6294f",
-    "textHash": "702edf2fdebf014150179f04ba90d7cfff8ffecc5223c95a5096adbd084ebedc",
-    "model": "gemini-4-argon-medium"
+  "StudyBuddy is restarting after an update. Please wait a moment.": {
+    "revision": "09761482f3e4a8e970df1a10d4cee6db5dfa0d9c3c2400b905c059abf623fda3",
+    "textHash": "8c610f2d0d3a8c49f588b86b1cf2f1374c0f00bd2ea656e977cd2a6814469048",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
-  "Papilot restarted. Retry compilation to continue this import.": {
-    "revision": "b359c10341809ea8ed444b92d7d1aa7f841fa607c24fdb7e1346a6ec3d42a776",
-    "textHash": "5e1592a22f73efbd37fbc19951eb1eec2e3545de6e7cc1ad7f2522e02f36dfcd",
-    "model": "gemini-4-argon-medium"
+  "StudyBuddy restarted. Retry compilation to continue this import.": {
+    "revision": "4b53a03b02bc15df480bc9d1c59456191b8a5d7b3a870a001948e7247a63d05d",
+    "textHash": "6304541261046672164c07efb9acc7fcf5980501c65d2c3c267ae0f955369228",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Pause Codex before building a review.": {
     "revision": "83f67c7f31625f6e7b4ac01293f3f53fd28095a9d04bb4098d309f9b7c375753",
@@ -1109,10 +1109,10 @@
     "textHash": "a4bb0a202a99ff72ab176ba3bcadbc80b86aeda2495920351c8ea65a0f967a8c",
     "model": "gemini-4-argon-medium"
   },
-  "Updates are managed outside Papilot.": {
-    "revision": "a305102bfb57ef5ae295d19a045e4fe9d7e4fb48f15290be3e164898b3d54115",
-    "textHash": "1aeb68002714f62ca01b5c3baec4582cdfff562b7503e674816d479ccabddcd5",
-    "model": "gemini-4-argon-medium"
+  "Updates are managed outside StudyBuddy.": {
+    "revision": "7386e3406bd3d7f04bbfdae6af41170342045447f56263f2c45e1d38436a4149",
+    "textHash": "9e7b01edfa5a58d4b49e91b205f45ab848790f36b01f7957223e4c0b6b2843b4",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Upload a file as binary data.": {
     "revision": "783ea35d2b100d47d18bacc921f3a3884b84af835d32087132a563e3ad06cfda",
@@ -1174,9 +1174,9 @@
     "textHash": "ac32da21bc4d4899e556a6008ea189ac38ed2f8ba258a8ed2314287e583a1864",
     "model": "gemini-4-argon-medium"
   },
-  "npm is unavailable to Papilot.": {
-    "revision": "ff00d9f8a8c0f1af233ac04afeb4cf6e0895c19b3decee8f2ef27a1c7d5f3090",
-    "textHash": "e958f588ef095073948b302e04ef693a5c8dccdeeabaff7c620f2e5e88510e50",
-    "model": "gemini-4-argon-medium"
+  "npm is unavailable to StudyBuddy.": {
+    "revision": "19af9f8c101995c9b268ea86c577c5d8a964b10e45180e875c6cd3949a43466e",
+    "textHash": "98db819dd9912b8e1b365f4882af2ec8c13552ebb7f70e2a31713bb36b887102",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   }
 }

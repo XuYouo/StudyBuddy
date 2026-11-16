@@ -78,7 +78,7 @@ const ACTION: Record<string, string> = {
   comment: "Comment",
 };
 // A host can show a repository's uncommitted changes instead of a task's
-// round (Papilot does, with ?changes). Accepting stages a change in the Git
+// round (StudyBuddy does, with ?changes). Accepting stages a change in the Git
 // index, rejecting reverts it on disk, and a staged change can be unstaged.
 // Every change stays in view: staged ones remain uncommitted.
 const CHANGE_ACTION: Record<string, string> = {
@@ -276,7 +276,7 @@ export function ReviewApp({
   const placeKey = `papilot:review:${location.pathname}:${changes ? 'changes' : task}`;
   const [shortcuts, setShortcuts] = useState(readShortcuts);
   // The whole paper with the changes in place, or the changed sections only.
-  // A host may fix the view in the address (Papilot's manuscript chooses its
+  // A host may fix the view in the address (StudyBuddy's manuscript chooses its
   // PDF with its own switch); otherwise it opens on the stored default.
   const [pinnedView] = useState<ReviewView | null>(() => {
     const value = new URLSearchParams(location.search).get("view");
@@ -1654,7 +1654,7 @@ export function ReviewApp({
       if (article) reveal(article);
     });
   }, [paperView]);
-  // The switch changes this review only; the default is a Papilot setting.
+  // The switch changes this review only; the default is a StudyBuddy setting.
   function chooseView(next: ReviewView) {
     setView(next);
     window.dispatchEvent(new CustomEvent(VIEW_CHOSEN_EVENT, { detail: next }));
@@ -1968,7 +1968,7 @@ export function ReviewApp({
                               : "There are no new changes to review. Previous decisions are available in History.",
                 )}
               </span>
-              {/* A host such as Papilot puts its next step here, for example a commit. */}
+              {/* A host such as StudyBuddy puts its next step here, for example a commit. */}
               <div className="review-complete-actions" />
             </div>
           )}

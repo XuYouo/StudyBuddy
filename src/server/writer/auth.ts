@@ -4,9 +4,9 @@ import type { AuthStorage } from '@mariozechner/pi-coding-agent';
 import { DATA } from '../paths.ts';
 import type { WriterAuth, WriterLogin, WriterProvider } from '../../shared.ts';
 
-// Papilot Writer's credentials. They live in Papilot's own data folder, never
+// StudyBuddy Writer's credentials. They live in StudyBuddy's own data folder, never
 // in ~/.pi, so a Pi setup on the same host (its logins, extensions, settings)
-// cannot change how Papilot works. Keys can also come from the environment.
+// cannot change how StudyBuddy works. Keys can also come from the environment.
 // Subscriptions sign in with ChatGPT or GitHub Copilot. Claude is offered with
 // an API key only: Anthropic does not allow its subscription login through
 // other tools, so Claude subscription tokens are refused.
@@ -66,7 +66,7 @@ export class WriterCredentials {
     if (!KEY_PROVIDERS.some(item => item.id === provider)) throw new Error('This provider does not take an API key here.');
     key = key.trim();
     if (!key || key.length > 4096 || /\s/.test(key)) throw new Error('Paste the API key exactly as the provider shows it.');
-    if (provider === 'anthropic' && claudeSubscription(key)) throw new Error('This is a Claude subscription token. Papilot Writer can use Claude only with an Anthropic API key.');
+    if (provider === 'anthropic' && claudeSubscription(key)) throw new Error('This is a Claude subscription token. StudyBuddy Writer can use Claude only with an Anthropic API key.');
     this.storage.set(provider, { type: 'api_key', key });
     this.changed();
   }

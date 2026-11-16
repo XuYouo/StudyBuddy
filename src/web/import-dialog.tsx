@@ -98,8 +98,8 @@ export function ImportDialog({ api, agent, canRepair, onDone, onClose }: { api: 
   const finish = () => run(async () => { const project = await api<Project>(`/imports/${draft!.id}/finish`, {}); browserStorage.removeItem(memoryKey); await onDone(project); });
   const failure = draft?.error || '';
   const preparationFailure = /ENOBUFS|ERR_CHILD_PROCESS_STDIO_MAXBUFFER|Git snapshot export/i.test(failure);
-  const hint = preparationFailure ? t('Papilot could not prepare the files for compilation. This is an application error, not a LaTeX error.')
-    : /not found|ENOENT|not installed/i.test(failure) && /latexmk|pdflatex|xelatex|lualatex/i.test(failure) ? t('Install TeX Live or MacTeX with latexmk on the computer running Papilot, then retry.')
+  const hint = preparationFailure ? t('StudyBuddy could not prepare the files for compilation. This is an application error, not a LaTeX error.')
+    : /not found|ENOENT|not installed/i.test(failure) && /latexmk|pdflatex|xelatex|lualatex/i.test(failure) ? t('Install TeX Live or MacTeX with latexmk on the computer running StudyBuddy, then retry.')
     : /fontspec|Unicode character|xeCJK/i.test(failure) ? t('This paper may need XeLaTeX. Change the engine below and retry.')
     : /not found|missing|cannot find/i.test(failure) ? t('A package, font or source file may be missing. Check the details below, restore the missing file or ask for help.')
     : t('Check the main file and engine, or ask the assistant to fix compilation. You can also edit the saved files and retry.');

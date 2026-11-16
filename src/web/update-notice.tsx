@@ -17,13 +17,13 @@ function updateError(error: string) {
   if (error === 'The dev build needs at least 2 GB of free disk space. Free some space and retry.') return t('The dev build needs at least 2 GB of free disk space. Free some space and retry.');
   if (error === 'Could not check for updates. Try again when connected.') return t('Could not check for updates. Try again when connected.');
   if (error === 'This version needs the latest desktop app. Download it from GitHub Releases.') return t('This version needs the latest desktop app. Download it from GitHub Releases.');
-  if (error === 'The updated version did not start, so Papilot is using the version included with the app. Retry the update or download the latest desktop app.') return t('The updated version did not start, so Papilot is using the version included with the app. Retry the update or download the latest desktop app.');
+  if (error === 'The updated version did not start, so StudyBuddy is using the version included with the app. Retry the update or download the latest desktop app.') return t('The updated version did not start, so StudyBuddy is using the version included with the app. Retry the update or download the latest desktop app.');
   return error;
 }
 function unavailableReason(status: UpdateStatus) {
   return status.packageManager === 'nix' ? t('Updates are managed by Nix.')
-    : status.packageManager ? t('Updates are managed outside Papilot.')
-    : t('Papilot cannot find npm on this computer. Updates are unavailable until npm is installed.');
+    : status.packageManager ? t('Updates are managed outside StudyBuddy.')
+    : t('StudyBuddy cannot find npm on this computer. Updates are unavailable until npm is installed.');
 }
 function useUpdates(api: UpdateApi, version?: string) {
   const [status, setState] = useState<UpdateStatus | null>(null);
@@ -66,12 +66,12 @@ export function UpdateNotice({ api, version }: { api: UpdateApi; version: string
     element.showModal();
     return () => { element.close(); if (opener?.isConnected) opener.focus(); };
   }, [open]);
-  const currentVersion = <span className="brand-version" title={t('Papilot {version}', { version })}>v{versionLabel(version)}</span>;
+  const currentVersion = <span className="brand-version" title={t('StudyBuddy {version}', { version })}>v{versionLabel(version)}</span>;
   if (!status) return currentVersion;
   const busy = working(status), available = status.latestVersion && status.latestVersion !== status.currentVersion;
   if (!open && !busy && status.phase !== 'failed' && (!available || status.phase === 'idle')) return currentVersion;
   const label = status.phase === 'installing' ? t('Updating…') : status.phase === 'waiting' ? t('Update ready') : status.phase === 'restarting' ? t('Restarting…') : status.phase === 'failed' ? t('Update failed') : t('New version');
-  const description = `${t('Papilot {version}', { version: versionLabel(version) })} · ${label}${status.latestVersion ? ` · v${versionLabel(status.latestVersion)}` : ''}`;
+  const description = `${t('StudyBuddy {version}', { version: versionLabel(version) })} · ${label}${status.latestVersion ? ` · v${versionLabel(status.latestVersion)}` : ''}`;
   async function install() {
     if (!status || sending) return;
     setSending(true); setError('');
@@ -85,12 +85,12 @@ export function UpdateNotice({ api, version }: { api: UpdateApi; version: string
       <span className="update-dot" aria-hidden="true"/>
     </button>
     {open && <dialog ref={dialog} className="update-dialog" aria-labelledby="update-title" onCancel={event => { event.preventDefault(); setOpen(false); }} onKeyDown={keepDialogFocus} onClick={event => { if (event.target === event.currentTarget) setOpen(false); }}>
-      <div className="update-heading"><h2 id="update-title">{t('Update Papilot')}</h2><button className="icon-button" aria-label={t('Close')} onClick={() => setOpen(false)}><Icon name="close" size={16}/></button></div>
+      <div className="update-heading"><h2 id="update-title">{t('Update StudyBuddy')}</h2><button className="icon-button" aria-label={t('Close')} onClick={() => setOpen(false)}><Icon name="close" size={16}/></button></div>
       <p className="update-versions"><span>{versionLabel(status.currentVersion)}</span><Icon name="arrowRight" size={14}/><strong>{versionLabel(status.latestVersion || status.currentVersion)}</strong></p>
       <p role="status">{status.downloadUrl ? t('Download the latest desktop app for your system from GitHub Releases. Your papers and settings stay in place.')
         : status.phase === 'installing' ? t('Downloading and checking the new version…')
         : status.phase === 'waiting' ? t('The update is ready. Waiting for tasks and PDF builds to finish before restarting.')
-        : status.phase === 'restarting' ? t('Restarting Papilot. This page will reconnect automatically; your drafts are kept.')
+        : status.phase === 'restarting' ? t('Restarting StudyBuddy. This page will reconnect automatically; your drafts are kept.')
         : status.phase === 'failed' ? t('The update did not finish. Your current version is still available. You can retry here.')
         : t('Install the new version and restart automatically when tasks are idle. Your papers, tasks and settings stay in place.')}</p>
       {!status.canUpdate && !status.downloadUrl && <p className="inline-error">{unavailableReason(status)}</p>}
@@ -126,11 +126,11 @@ export function UpdateSettings({ api }: { api: UpdateApi }) {
   const tone = status.phase === 'failed' ? 'failed' : checkFailed ? 'warning' : busy || checking ? 'active' : available ? 'available' : status.latestVersion ? 'current' : 'idle';
   const icon = tone === 'failed' || tone === 'warning' ? 'alert' : busy || checking ? 'refresh' : available ? 'arrowUp' : status.latestVersion ? 'check' : 'refresh';
   return <div className="update-settings settings-page">
-    <section className="settings-card update-summary" aria-label={t('Update Papilot')}>
+    <section className="settings-card update-summary" aria-label={t('Update StudyBuddy')}>
       <div className="update-product-row">
         <div className="update-product">
           <span className="update-product-mark"><img src={logo} width="34" height="34" alt=""/></span>
-          <div><h3>Papilot</h3><p className="update-current-version"><span>{t('Current version')}</span><code title={status.currentVersion}>{versionLabel(status.currentVersion)}</code></p></div>
+          <div><h3>StudyBuddy</h3><p className="update-current-version"><span>{t('Current version')}</span><code title={status.currentVersion}>{versionLabel(status.currentVersion)}</code></p></div>
         </div>
         {!managed && <button className="button secondary update-check" disabled={sending || busy || checking} onClick={() => void send('/updates/check')}><Icon name="refresh" size={14}/>{t('Check for updates')}</button>}
       </div>
@@ -141,7 +141,7 @@ export function UpdateSettings({ api }: { api: UpdateApi }) {
         </div>
         {!checkFailed && <p className="update-status-description">{status.phase === 'installing' ? status.channel === 'dev' && !desktopWindow ? t('Downloading and building the selected GitHub commit…') : t('Downloading and checking the new version…')
           : status.phase === 'waiting' ? t('The update is ready. Waiting for tasks and PDF builds to finish before restarting.')
-          : status.phase === 'restarting' ? t('Restarting Papilot. This page will reconnect automatically; your drafts are kept.')
+          : status.phase === 'restarting' ? t('Restarting StudyBuddy. This page will reconnect automatically; your drafts are kept.')
           : checking ? null
           : status.phase === 'failed' ? t('The update did not finish. Your current version is still available. You can retry here.')
           : available ? status.downloadUrl ? t('Download the latest desktop app for your system from GitHub Releases. Your papers and settings stay in place.') : t('Install the new version and restart automatically when tasks are idle. Your papers, tasks and settings stay in place.')

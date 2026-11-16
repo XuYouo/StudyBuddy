@@ -275,8 +275,8 @@ function UserMessage({ item, agent }: { item: TimelineItem; agent: string }) {
   const notes = item.meta?.notes || readNotesInstructions(item.text);
   if (notes) return <NotesMessage item={item} notes={notes}/>;
   const { skill, feedback, sendsFeedback, build } = item.meta || {};
-  // Papilot sent the agent a build its own edits broke.
-  if (build) return <article className="message user notes-message build-message" aria-label={t('Papilot sent the build error to {agent}, {time}', { agent, time: time(item.createdAt) })}><div className="message-body" title={time(item.createdAt)}>
+  // StudyBuddy sent the agent a build its own edits broke.
+  if (build) return <article className="message user notes-message build-message" aria-label={t('StudyBuddy sent the build error to {agent}, {time}', { agent, time: time(item.createdAt) })}><div className="message-body" title={time(item.createdAt)}>
     <div className="sent-notes-head"><Icon name="alert" size={14}/>{t('Build failed · sent to {agent}', { agent })}</div>
     <p className="build-error">{[build.error, ...build.details].join('\n')}</p>
   </div></article>;
@@ -1166,8 +1166,8 @@ function App() {
   const actionRequests = useRef(new Set<string>());
   const [pendingActions, setPendingActions] = useState(new Set<string>());
   const [sidebarVisible, setSidebarVisible] = useState(() => browserStorage.getItem('papilot:sidebar') !== 'hidden');
-  // Papilot opens tasks with the review and chat side by side. A chosen view
-  // lasts until Papilot is closed, so one switch never changes the default.
+  // StudyBuddy opens tasks with the review and chat side by side. A chosen view
+  // lasts until StudyBuddy is closed, so one switch never changes the default.
   const [layout, setLayout] = useState<'split' | 'review' | 'conversation'>('split');
   const narrow = useMedia('(max-width: 900px)'), mobile = useMedia('(max-width: 680px)');
   const [mobileTab, setMobileTab] = useState('review');
@@ -1439,7 +1439,7 @@ function App() {
       setAgentChoice(agentChoice); browserStorage.setItem('papilot:agent', agentChoice);
     }
   }, [savedAgent, settled, agentChoice, offered]);
-  // Authors who already picked another agent keep it; Papilot Writer is suggested once.
+  // Authors who already picked another agent keep it; StudyBuddy Writer is suggested once.
   const [writerDismissed, setWriterDismissed] = useState(() => browserStorage.getItem('papilot:writer-suggestion') === 'dismissed');
   const dismissWriter = () => { setWriterDismissed(true); browserStorage.setItem('papilot:writer-suggestion', 'dismissed'); };
   const writerReady = Boolean(runtimes.papilot?.connected && runtimes.papilot.authenticated);
@@ -1652,7 +1652,7 @@ function App() {
   // manual retry made between the regular working-tree refreshes.
   useEffect(() => {
     if ((!manuscriptOpen && !manuscriptBuilding) || !needsManuscript || !project) return;
-    // Papilot compiles after its own writes and tells the view; this notices
+    // StudyBuddy compiles after its own writes and tells the view; this notices
     // edits saved by another editor.
     const delay = manuscriptBuilding ? 1500 : 5000;
     let stopped = false, timer: ReturnType<typeof setTimeout>;
@@ -1673,7 +1673,7 @@ function App() {
   }, [project?.id, project?.path, manuscriptOpen, gitOpen, gitAvailable, reviewKey]);
   // A skill chosen for one paper may not exist on another.
   useEffect(() => setNewSkill(null), [project?.id, project?.path]);
-  // Skills come from Papilot, ~/.papilot/skills and the paper's .papilot/skills,
+  // Skills come from StudyBuddy, ~/.papilot/skills and the paper's .papilot/skills,
   // read again on return to the window so a new skill file appears.
   useEffect(() => {
     if (!project) return;
@@ -1847,7 +1847,7 @@ function App() {
   useNoteUndo(() => replayAnnotation('undo'), undefined, () => replayAnnotation('redo'));
 
   const waiting = state?.tasks.filter(t => t.status === 'waiting_input').length || 0;
-  useEffect(() => { document.title = isPlayground ? 'Papilot Demo' : (waiting ? `(${waiting}) ` : '') + (task ? `${task.title} · Papilot` : gitOpen && project ? `${t('Version Management')} · ${project.name} · Papilot` : manuscriptOpen && project ? `${project.name} · Papilot` : 'Papilot'); }, [waiting, task?.title, manuscriptOpen, gitOpen, project?.name, uiLanguage]);
+  useEffect(() => { document.title = isPlayground ? 'StudyBuddy Demo' : (waiting ? `(${waiting}) ` : '') + (task ? `${task.title} · StudyBuddy` : gitOpen && project ? `${t('Version Management')} · ${project.name} · StudyBuddy` : manuscriptOpen && project ? `${project.name} · StudyBuddy` : 'StudyBuddy'); }, [waiting, task?.title, manuscriptOpen, gitOpen, project?.name, uiLanguage]);
   const replyNeeded = Boolean(task && state?.requests.some(r => r.taskId === task.id));
   const pending = task?.review?.counts?.pending || 0;
   const localReview = useReviewDraft(task?.id || '');
@@ -2072,15 +2072,15 @@ function App() {
           </div>}
         </div>
         <div className="brand">
-          <a href="/" className="brand-home" aria-label="Papilot" onClick={e => { e.preventDefault(); setSelected(''); setPage('manuscript'); if (mobile) setManuscriptView('pdf'); setSidebar(false); }}><img className="brand-mark" src={logo} alt=""/><span>Papilot</span></a>
-          {state && (!isPlayground ? <UpdateNotice api={api} version={state.version}/> : <span className="brand-version" title={t('Papilot {version}', { version: state.version })}>v{versionLabel(state.version)}</span>)}
+          <a href="/" className="brand-home" aria-label="StudyBuddy" onClick={e => { e.preventDefault(); setSelected(''); setPage('manuscript'); if (mobile) setManuscriptView('pdf'); setSidebar(false); }}><img className="brand-mark" src={logo} alt=""/><span>StudyBuddy</span></a>
+          {state && (!isPlayground ? <UpdateNotice api={api} version={state.version}/> : <span className="brand-version" title={t('StudyBuddy {version}', { version: state.version })}>v{versionLabel(state.version)}</span>)}
         </div>
         <button type="button" className="icon-button settings-link" aria-label={t('Settings')} title={t('Settings')} aria-haspopup="dialog" onClick={() => setSettings('general')}><Icon name="settings" size={18}/></button>
       </div>
     </aside>
     {sidebar && narrow && <button tabIndex={-1} className="sidebar-scrim" aria-label={t('Close task list')} onClick={() => setSidebar(false)}/>}
     <main className="main" inert={narrow && sidebar}>
-      <h1 className="sr-only">{task ? task.title : manuscriptOpen ? t('Manuscript') : referencesOpen ? t('Reference check') : gitOpen ? t('Version Management') : 'Papilot'}</h1>
+      <h1 className="sr-only">{task ? task.title : manuscriptOpen ? t('Manuscript') : referencesOpen ? t('Reference check') : gitOpen ? t('Version Management') : 'StudyBuddy'}</h1>
       {flyingTask && <TaskFlight task={flyingTask} sidebarShown={sidebarShown} onArrive={taskArrived}/>}
       <span className="sr-only" role="status" aria-atomic="true">{addedTask ? t('Task added: {title}', { title: addedTask.title }) : ''}</span>
       {!gitOpen && (mobile || (!task && !manuscriptOpen)) && (sidebarToggle || task || manuscriptOpen) && <div className="workspace-navigation">

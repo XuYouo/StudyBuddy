@@ -22,7 +22,7 @@ export class Codex extends EventEmitter {
     // Resuming even a cold thread retains its original developer instructions.
     // Application context supplies a later developer message on every turn,
     // including after restart, without discarding the conversation's history.
-    const additionalContext = { 'papilot-task-access': { kind: 'application', value: `These are Papilot's current task access instructions. They replace earlier Papilot instructions about access outside the task worktree, including blanket prohibitions on explicitly authorized manuscript writes, commits, and pushes. Manuscript review scope still applies; other task worktrees and Papilot's own source/state remain protected.\n${taskAccessInstructions}` } };
+    const additionalContext = { 'papilot-task-access': { kind: 'application', value: `These are StudyBuddy's current task access instructions. They replace earlier StudyBuddy instructions about access outside the task worktree, including blanket prohibitions on explicitly authorized manuscript writes, commits, and pushes. Manuscript review scope still applies; other task worktrees and StudyBuddy's own source/state remain protected.\n${taskAccessInstructions}` } };
     if (value === 'full') return { thread, turn: { approvalPolicy: 'never', sandboxPolicy: { type: 'dangerFullAccess' }, additionalContext } };
     // A loaded thread/resume can keep the previous policy (including full access).
     // Resolve a fresh native policy to retain configured roots and tmp exclusions,
@@ -59,7 +59,7 @@ export class Codex extends EventEmitter {
   constructor(private binary?: string, private args = ['app-server', '--listen', 'stdio://'], private env: NodeJS.ProcessEnv = process.env, private platform = process.platform) { super(); }
   // Codex sandboxes commands on Windows only with a Windows sandbox set up.
   // Without one configured, workspace access resolves to read-only and its
-  // sandbox cannot start; Papilot's threads then use the sandbox that needs no
+  // sandbox cannot start; StudyBuddy's threads then use the sandbox that needs no
   // administrator setup. A sandbox the user configured is kept.
   private threadConfig: Record<string, unknown> = {};
   async detect() {
@@ -97,8 +97,8 @@ export class Codex extends EventEmitter {
     };
     child.once('error', failed);
     child.once('exit', (code, signal) => failed(new Error(`Codex exited (${signal || code})`)));
-    // The experimental API carries the tools Papilot gives its threads (see VIEW_PDF_TOOL).
-    await this.request('initialize', { clientInfo: { name: 'papilot', title: 'Papilot', version: VERSION }, capabilities: { experimentalApi: true } });
+    // The experimental API carries the tools StudyBuddy gives its threads (see VIEW_PDF_TOOL).
+    await this.request('initialize', { clientInfo: { name: 'papilot', title: 'StudyBuddy', version: VERSION }, capabilities: { experimentalApi: true } });
     if (generation !== this.generation) throw new Error('Codex is not connected.');
     this.notify('initialized', {});
     this.threadConfig = {};

@@ -754,7 +754,7 @@ body.resizing iframe{pointer-events:none}
 @keyframes pdf-action-in{from{opacity:0}}
 .add-note{position:absolute;z-index:2;transform:translate(-100%,8px);display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 13px;border-radius:999px;background:var(--primary);color:#fff;font-size:13px;font-weight:500;white-space:nowrap;box-shadow:var(--float);pointer-events:auto;animation:pdf-action-in .14s var(--ease)}
 .add-note:hover{background:var(--primary-hover)}
-/* Touch screens select PDF words with Papilot's handles and menu
+/* Touch screens select PDF words with StudyBuddy's handles and menu
    (touch-select.ts), so the system's selection menu never covers them. The
    menu sits below the end handle. */
 @media(pointer:coarse){.pdf-container .textLayer,.pdf-container .textLayer span{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}}

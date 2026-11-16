@@ -6,7 +6,7 @@ import { imageType } from './attachments.ts';
 import { DATA } from './paths.ts';
 import type { TaskPermissionOption } from '../shared.ts';
 
-// The parts of @cursor/sdk Papilot uses. The SDK is fetched on first use, so
+// The parts of @cursor/sdk StudyBuddy uses. The SDK is fetched on first use, so
 // its types are restated here instead of being a build dependency.
 export const CURSOR_SDK_VERSION = '1.2.0';
 interface ModelSelection { id: string; params?: { id: string; value: string }[] }
@@ -20,7 +20,7 @@ export interface CursorSdk {
   Cursor: { me(): Promise<{ apiKeyName: string; userEmail?: string }>; models: { list(): Promise<CursorModel[]> } };
 }
 
-const CURSOR_KEY = 'Cursor needs a Cursor API key: start Papilot with CURSOR_API_KEY set (create one in the Cursor dashboard). The SDK does not use the Cursor app or CLI login.';
+const CURSOR_KEY = 'Cursor needs a Cursor API key: start StudyBuddy with CURSOR_API_KEY set (create one in the Cursor dashboard). The SDK does not use the Cursor app or CLI login.';
 // The SDK reads CURSOR_API_KEY, then the login it stores itself.
 export function cursorConfigured(env: NodeJS.ProcessEnv = process.env) {
   return Boolean(env.CURSOR_API_KEY) || fs.existsSync(path.join(os.homedir(), '.cursor/sdk/auth.json'));
@@ -35,7 +35,7 @@ export function loadCursor() {
 
 // The SDK looks for its platform helpers (the cursorsandbox binary, rg and the
 // shell parser) in node_modules folders above the running script, not beside
-// itself, and loads them as a run starts. The copy Papilot fetches on first
+// itself, and loads them as a run starts. The copy StudyBuddy fetches on first
 // use sits in the data folder, outside that search, so every sandboxed run
 // failed as "not supported in this environment". While a run starts, the
 // search begins at the SDK's own file.
@@ -58,7 +58,7 @@ const effortParameter = (model?: CursorModel) => model?.parameters?.find(paramet
 // sandbox: writes stay in the worktree and temporary folders, and commands
 // run without network access. The SDK has no interactive approvals, so
 // anything outside the sandbox fails and is reported in the conversation.
-// Each Papilot thread maps to a Cursor agent ID, resumed after a restart.
+// Each StudyBuddy thread maps to a Cursor agent ID, resumed after a restart.
 export class CursorAgent extends Adapter {
   permissionOptions(): TaskPermissionOption[] {
     return [
@@ -112,7 +112,7 @@ export class CursorAgent extends Adapter {
     const sdk = await this.load();
     const options: AgentOptions = { local: { cwd, settingSources: ['project'], sandboxOptions: { enabled: sandbox } } };
     const id = this.ids[threadId];
-    const agent = id ? await sdk.Agent.resume(id, options) : await sdk.Agent.create({ ...options, name: 'Papilot task', ...(model ? { model } : {}) });
+    const agent = id ? await sdk.Agent.resume(id, options) : await sdk.Agent.create({ ...options, name: 'StudyBuddy task', ...(model ? { model } : {}) });
     if (!id) { this.ids[threadId] = agent.agentId; this.save(); }
     this.agents.set(threadId, agent);
     this.sandboxed.set(threadId, sandbox);
@@ -131,7 +131,7 @@ export class CursorAgent extends Adapter {
     try {
       const model = this.selection(thread.model, effort);
       const agent = await this.agent(turn.threadId, thread.cwd, model, Boolean(thread.readOnly) || thread.permissions !== 'full');
-      // Cursor's harness prompt stays in place: the first turn carries Papilot's instructions.
+      // Cursor's harness prompt stays in place: the first turn carries StudyBuddy's instructions.
       const prompt = thread.started ? text : `${thread.instructions}\n\n---\n\n${text}`;
       const attached = await Promise.all(images.map(async file => {
         const bytes = await fs.promises.readFile(file), mimeType = imageType(bytes);

@@ -16,10 +16,10 @@ export function aiReviewSummary(text: string) {
 // shows the error, never this prompt.
 export function buildFixPrompt(failure: BuildFailure) {
   return [
-    'Papilot could not build the PDF review after your last turn:',
+    'StudyBuddy could not build the PDF review after your last turn:',
     [failure.error, ...failure.details].join('\n'),
     failure.log ? `The compiler log is at ${failure.log}.` : '',
-    'Fix this in the task worktree, then end your turn; Papilot builds the review again. Restore any file outside the review\'s scope to how it was when the task started, and mention in your summary any update that file still needs.',
+    'Fix this in the task worktree, then end your turn; StudyBuddy builds the review again. Restore any file outside the review\'s scope to how it was when the task started, and mention in your summary any update that file still needs.',
   ].filter(Boolean).join('\n\n');
 }
 

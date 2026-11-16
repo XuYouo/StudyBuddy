@@ -345,7 +345,7 @@ it("a build its server stopped is built again after the restart", async () => {
   expect(app.publisher.job(job.id).status).toBe("running");
   const restarted = f.app();
   expect(restarted.publisher.job(job.id).status).toBe("failed");
-  // Papilot rebuilds a job that failed with exactly this error.
+  // StudyBuddy rebuilds a job that failed with exactly this error.
   expect(restarted.publisher.job(job.id).result).toMatchObject({ error: "The review server restarted during the build." });
 });
 

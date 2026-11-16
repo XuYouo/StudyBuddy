@@ -1,15 +1,15 @@
 # Nix
 
-The flake packages Papilot's CLI, browser interface and Linux Electron desktop, including the review engine. It provides Node.js 24, Git, `which` and full TeX Live. The first build or development shell may download several gigabytes of dependencies. Agent CLIs and their sign-ins are configured separately, as described in the [agent guide](guide.md#agents).
+The flake packages StudyBuddy's CLI, browser interface and Linux Electron desktop, including the review engine. It provides Node.js 24, Git, `which` and full TeX Live. The first build or development shell may download several gigabytes of dependencies. Agent CLIs and their sign-ins are configured separately, as described in the [agent guide](guide.md#agents).
 
-The flake exposes packages for `x86_64-linux`, `aarch64-linux` and `aarch64-darwin`. The CLI and Electron desktop are exercised by the `x86_64-linux` NixOS VM integration check. ARM Linux has evaluation coverage only. The pinned Nixpkgs no longer supports Intel macOS. Electron installers are built separately; see [Papilot Desktop](../desktop/README.md).
+The flake exposes packages for `x86_64-linux`, `aarch64-linux` and `aarch64-darwin`. The CLI and Electron desktop are exercised by the `x86_64-linux` NixOS VM integration check. ARM Linux has evaluation coverage only. The pinned Nixpkgs no longer supports Intel macOS. Electron installers are built separately; see [StudyBuddy Desktop](../desktop/README.md).
 
 ## NixOS flake
 
-Add Papilot to the inputs in your system's `flake.nix`:
+Add StudyBuddy to the inputs in your system's `flake.nix`:
 
 ```nix
-inputs.papilot.url = "github:PapilotAI/papilot";
+inputs.papilot.url = "github:XuYouo/StudyBuddy";
 ```
 
 Include `papilot` in the `outputs` arguments and add its package to `environment.systemPackages` through an inline module:
@@ -38,7 +38,7 @@ Apply the configuration from your system flake's directory:
 sudo nixos-rebuild switch --flake .#my-host
 ```
 
-Your system's `flake.lock` pins the Papilot revision. To update it and rebuild:
+Your system's `flake.lock` pins the StudyBuddy revision. To update it and rebuild:
 
 ```sh
 nix flake update papilot
@@ -62,11 +62,11 @@ To build without starting the server, or install into your Nix profile:
 
 ```sh
 nix build
-./result/bin/papilot --version
+./result/bin/studybuddy --version
 nix profile install .
 ```
 
-The `default` and `papilot` package outputs are the same. The launcher adds its Node.js, Git and TeX Live to the front of `PATH`. Paper repositories and application data remain writable outside the Nix store. Papilot's default data directory is `~/.papilot`.
+The `default` and `papilot` package outputs are the same. The launcher adds its Node.js, Git and TeX Live to the front of `PATH`. Paper repositories and application data remain writable outside the Nix store. StudyBuddy's default data directory is `~/.papilot`.
 
 Nix installations ignore saved npm and desktop update layers. Update through Nix; the application displays the package manager and disables in-app installation. The launcher sets `PAPILOT_INSTALL_METHOD=nix`; other installations that pin their version, such as container images and system packages, get the same behavior for the `papilot` command and server with `managed` (see [Updates](guide.md#updates)).
 
@@ -105,7 +105,7 @@ nix fmt -- flake.nix nix/package.nix
 nix flake check
 ```
 
-`nix flake check` builds the package and checks the installed CLI's version and environment with `papilot doctor`. The build typechecks and bundles both web interfaces. Run the npm checks above when changing application code.
+`nix flake check` builds the package and checks the installed CLI's version and environment with `studybuddy doctor`. The build typechecks and bundles both web interfaces. Run the npm checks above when changing application code.
 
 For a custom TeX selection in another Nix configuration, call `nix/package.nix` with a `tex` argument. For example, this provides a basic installation with the required command-line tools; add any further packages your manuscripts need:
 
@@ -118,7 +118,7 @@ pkgs.callPackage ./nix/package.nix {
 ## Desktop and package management
 
 On Linux the default flake package includes `papilot` and `papilot-desktop`,
-plus a Papilot application menu entry. `.#papilot-cli` provides only the CLI
+plus a StudyBuddy application menu entry. `.#papilot-cli` provides only the CLI
 and browser interface; `.#papilot-desktop` provides the Electron launcher.
 Darwin's default remains the CLI/browser package.
 

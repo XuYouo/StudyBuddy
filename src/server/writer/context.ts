@@ -1,7 +1,7 @@
 import type { AgentSession } from '@mariozechner/pi-coding-agent';
 import type { ContextPart } from '../../shared.ts';
 
-// What fills Papilot Writer's context window. The provider reports the total
+// What fills StudyBuddy Writer's context window. The provider reports the total
 // for the latest request; the parts are estimated from their text (Pi's own
 // rule of about four characters a token, and 1,200 tokens an image) and then
 // scaled so they add up to that total. The compaction reserve is the room Pi
@@ -9,7 +9,7 @@ import type { ContextPart } from '../../shared.ts';
 
 const tokens = (chars: number) => Math.ceil(chars / 4);
 const IMAGE = 1200;
-// Pi's default; Papilot Writer does not change it.
+// Pi's default; StudyBuddy Writer does not change it.
 export const COMPACTION_RESERVE = 16384;
 
 /** The paper map, or an update to it, opens the author's messages. */

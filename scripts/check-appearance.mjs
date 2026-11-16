@@ -154,7 +154,7 @@ try {
   await expect(dialog).toBeVisible();
   await page.keyboard.press('Enter'); await page.keyboard.press('s'); await page.keyboard.press('Tab');
   await expect(theme).toHaveAttribute('data-value', 'slate');
-  await theme.focus(); await page.keyboard.press('Enter'); await page.keyboard.press('p'); await page.keyboard.press(' ');
+  await theme.focus(); await page.keyboard.press('Enter'); await page.keyboard.type('stu'); await page.keyboard.press(' ');
   await expect(theme).toHaveAttribute('aria-expanded', 'true');
   await page.keyboard.press('Enter');
   await expect(theme).toHaveAttribute('data-value', 'papilot');

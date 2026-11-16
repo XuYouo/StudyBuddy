@@ -10,7 +10,7 @@ import { execCommand, importLoader, linkDirectory, tarCommand } from '../../bin/
 import { npmCli } from '../../bin/npm-cli.mjs';
 
 export { npmCli } from '../../bin/npm-cli.mjs';
-export const DEV_REPOSITORY = 'https://github.com/PapilotAI/papilot.git';
+export const DEV_REPOSITORY = 'https://github.com/XuYouo/StudyBuddy.git';
 const git = async (args: string[], cwd: string) => (await promisify(execFile)('git', args, { cwd, timeout: 120000, maxBuffer: 1024 * 1024, env: { ...process.env, GIT_TERMINAL_PROMPT: '0' } })).stdout.trim();
 export const loaderFor = (root: string) => createRequire(path.join(root, 'package.json')).resolve('tsx/esm');
 export function runInstall(args: string[], cwd: string, log: number, timeout = 600000) {
@@ -25,7 +25,7 @@ export async function health(port: number, version: string, instance?: string) {
   try {
     const response = await fetch(`http://127.0.0.1:${port}/api/health`, { signal: AbortSignal.timeout(1500), redirect: 'error' });
     const value = await response.json();
-    return response.ok && value.name === 'Papilot' && value.version === version && (!instance || value.updateInstance === instance);
+    return response.ok && value.name === 'StudyBuddy' && value.version === version && (!instance || value.updateInstance === instance);
   } catch { return false; }
 }
 export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -63,7 +63,7 @@ export async function prepareDev(root: string, version: string, log: number, run
   await checkout(['-c', 'core.hooksPath=/dev/null', 'checkout', '--detach', 'FETCH_HEAD'], root);
   if (await checkout(['rev-parse', 'HEAD'], root) !== revision) throw new Error('The development checkout does not match the requested commit.');
   const pkg = readJson(path.join(root, 'package.json'));
-  if (pkg?.name !== 'papilot' || !stableVersion(pkg.version) || `${pkg.version}-dev.${revision}` !== version) throw new Error('The development checkout does not match the requested version.');
+  if (pkg?.name !== 'studybuddy' || !stableVersion(pkg.version) || `${pkg.version}-dev.${revision}` !== version) throw new Error('The development checkout does not match the requested version.');
   const flags = ['--ignore-scripts', '--no-audit', '--no-fund'];
   // Test-only tools can exclude a Node version that supports the application.
   // Build first, then enforce engine compatibility for the retained runtime.
@@ -112,7 +112,7 @@ export async function download(url: string, fetcher: typeof fetch, limit: number
   let address = new URL(url);
   for (let hop = 0; hop < 5; hop++) {
     if (!trusted(address)) throw new Error(INSTALL_FAILED);
-    const response = await fetcher(address.href, { signal: AbortSignal.timeout(300000), redirect: 'manual', headers: { Accept: 'application/octet-stream', 'User-Agent': 'Papilot' } });
+    const response = await fetcher(address.href, { signal: AbortSignal.timeout(300000), redirect: 'manual', headers: { Accept: 'application/octet-stream', 'User-Agent': 'StudyBuddy' } });
     try {
       const location = response.headers.get('location');
       if (response.status >= 300 && response.status < 400 && location) { address = new URL(location, address); continue; }
@@ -150,7 +150,7 @@ function linkBundle(root: string, bundle: string) {
     linkDirectory(target, link);
   }
 }
-// The desktop app downloads only Papilot's own code, built by the release
+// The desktop app downloads only StudyBuddy's own code, built by the release
 // workflow for this installer's shell, and checks that it starts. The app then
 // switches to it (desktop/runtime.ts).
 export async function installLayer(data: string, version: string, layer: DesktopLayer, bundle: { root: string; fingerprint: string }, fetcher = fetch) {
@@ -165,7 +165,7 @@ export async function installLayer(data: string, version: string, layer: Desktop
     await execCommand(tarCommand(), ['-xzf', archive, '-C', root, '--strip-components=1'], { timeout: 120000 });
     fs.rmSync(archive);
     const pkg = readJson(path.join(root, 'package.json')), shell = readJson(path.join(root, 'desktop-layer.json'));
-    if (pkg?.name !== 'papilot' || pkg.version !== version || shell?.version !== version) throw new Error('The downloaded package does not match the requested release.');
+    if (pkg?.name !== 'studybuddy' || pkg.version !== version || shell?.version !== version) throw new Error('The downloaded package does not match the requested release.');
     if (shell.fingerprint !== bundle.fingerprint) throw new Error('Download desktop updates from GitHub Releases.');
     for (const file of ['dist/index.html', 'src/server/start.ts', 'src/server/main.ts', 'engine/package.json']) {
       if (!fs.existsSync(path.join(root, file))) throw new Error('The downloaded release is incomplete.');
@@ -181,13 +181,13 @@ export async function installRelease(data: string, version: string) {
   if (devRevision(version)) return installDev(data, version);
   if (!stableVersion(version)) throw new Error('Invalid release version.');
   const releases = path.join(data, 'updates/releases'); fs.mkdirSync(releases, { recursive: true, mode: 0o700 });
-  const stage = fs.mkdtempSync(path.join(releases, version + '-')), root = path.join(stage, 'node_modules/papilot');
+  const stage = fs.mkdtempSync(path.join(releases, version + '-')), root = path.join(stage, 'node_modules/studybuddy');
   const log = fs.openSync(path.join(data, 'updates/install.log'), 'a', 0o600);
   try {
     const flags = ['--registry=https://registry.npmjs.org', '--omit=dev', '--ignore-scripts', '--no-audit', '--no-fund', '--engine-strict'];
-    await runInstall(['install', '--prefix', stage, '--save-exact', ...flags, `papilot@${version}`], stage, log);
+    await runInstall(['install', '--prefix', stage, '--save-exact', ...flags, `studybuddy@${version}`], stage, log);
     const pkg = readJson(path.join(root, 'package.json'));
-    if (pkg?.name !== 'papilot' || pkg.version !== version) throw new Error('The downloaded package does not match the requested release.');
+    if (pkg?.name !== 'studybuddy' || pkg.version !== version) throw new Error('The downloaded package does not match the requested release.');
     for (const file of ['dist/index.html', 'src/server/start.ts', 'src/server/main.ts', 'bin/papilot.mjs', 'engine/package-lock.json']) {
       if (!fs.existsSync(path.join(root, file))) throw new Error('The downloaded release is incomplete.');
     }

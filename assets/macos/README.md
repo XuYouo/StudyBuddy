@@ -1,3 +1,5 @@
+> Historical Papilot artwork. The current StudyBuddy assets are in `desktop/assets/`; run `node scripts/render-icon.mjs` to regenerate them.
+
 # Papilot macOS 图标
 
 延续 `src/web/logo.svg` 的蓝白笔尖和四角星，保留第一版笔尖的轮廓、配色和阴影，仅将底板增强为从左上白色到右下浅蓝的柔和渐变。由现有矢量标志直接制作，无 AI 位图生成。

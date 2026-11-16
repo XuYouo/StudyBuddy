@@ -256,7 +256,7 @@ test('the desktop opens a folder as a paper at once and asks only which of sever
     assert.deepEqual(JSON.parse(fs.readFileSync(path.join(clear, '.git/papilot/settings.json'), 'utf8')), { main: 'main.tex', engine: 'xelatex', source_dir: '' });
     assert.ok(git(clear, 'rev-parse', 'HEAD'));
     const again = await openFolder({ path: clear + '/' }, known, register);
-    assert.ok('project' in again); assert.equal(again.project, opened.project, 'A paper already in Papilot opens again');
+    assert.ok('project' in again); assert.equal(again.project, opened.project, 'A paper already in StudyBuddy opens again');
     // Several possible main files are offered without changing the folder.
     fs.writeFileSync(path.join(f.root, 'a.tex'), source); fs.writeFileSync(path.join(f.root, 'b.tex'), source.replace('\\documentclass', '% !TEX program = lualatex\n\\documentclass'));
     assert.deepEqual(await openFolder({ path: f.root }, known, register), { name: 'original', candidates: ['a.tex', 'b.tex'] });

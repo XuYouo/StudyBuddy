@@ -3,7 +3,7 @@ import { AGENT_NAMES, type Snapshot, type Task } from '../shared.ts';
 import { browserStorage } from './storage.ts';
 import { t, tn } from './i18n.ts';
 
-// Notifications tell the author when a task needs them while Papilot is
+// Notifications tell the author when a task needs them while StudyBuddy is
 // in the background: an agent asks a question or for approval, a review is
 // ready, or a task stops on an error. They are off until the author turns
 // them on, and the browser's permission is asked for at that moment.
@@ -102,7 +102,7 @@ export async function notify(alert: TaskAlert, open: (taskId: string) => void) {
 export async function testNotification() {
   if (!state.on || state.permission !== 'granted') return false;
   try {
-    const title = t('Notifications are on'), body = t('Papilot will tell you here when a task needs you.');
+    const title = t('Notifications are on'), body = t('StudyBuddy will tell you here when a task needs you.');
     if (nativeNotifications) return await window.papilotDesktop!.notify!({ taskId: null, title, body, sound: !nativeNotificationSound || state.sound });
     new Notification(title, { body, tag: 'papilot:test', icon: '/favicon.png' }); return true;
   }

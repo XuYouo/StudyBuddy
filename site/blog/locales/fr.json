@@ -1,6 +1,6 @@
 {
   "ui": {
-    "author": "L'équipe Papilot",
+    "author": "L'équipe StudyBuddy",
     "back": "Tous les articles",
     "blog": "Blog",
     "breadcrumb": "Fil d'Ariane",
@@ -12,10 +12,10 @@
     "footerNavigation": "Pied de page",
     "indexDescription": "Sur l'IA, LaTeX et la rédaction scientifique.",
     "indexSeoDescription": "Découvrez la rédaction LaTeX avec l'IA centrée sur le PDF : annotez votre manuscrit, révisez les changements composés sur place et gardez le jugement d'auteur.",
-    "indexSeoTitle": "Blog Papilot : IA et rédaction scientifique en LaTeX",
+    "indexSeoTitle": "Blog StudyBuddy : IA et rédaction scientifique en LaTeX",
     "indexTitle": "Blog",
     "languageLabel": "Langue",
-    "latest": "Par l'équipe Papilot",
+    "latest": "Par l'équipe StudyBuddy",
     "mainNavigation": "Navigation principale",
     "minutes": "min de lecture",
     "privacy": "Confidentialité",
@@ -44,7 +44,7 @@
     "comparison": "Le dialogue revient au manuscrit",
     "comparisonDesc": "À gauche, un espace séparant code source et PDF ; à droite, le PDF comme espace principal où les annotations s'attachent directement au manuscrit.",
     "flow": "Née sur la page, révisée sur la page",
-    "flowDesc": "L'auteur annote le manuscrit, l'IA modifie le code LaTeX local, Papilot compile, puis l'auteur révise sur le PDF et poursuit au besoin.",
+    "flowDesc": "L'auteur annote le manuscrit, l'IA modifie le code LaTeX local, StudyBuddy compile, puis l'auteur révise sur le PDF et poursuit au besoin.",
     "newPath": "Lire · Annoter · Réviser",
     "now": "Centré sur le manuscrit",
     "old": "Centré sur le code",
@@ -67,7 +67,7 @@
         "Cibler et modifier le code local."
       ],
       [
-        "Papilot",
+        "StudyBuddy",
         "Compiler le projet",
         "Produire le manuscrit composé."
       ],

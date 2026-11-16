@@ -10,7 +10,7 @@ function ProviderMark({ id }: { id: string }) {
   return <span className="writer-provider-mark" aria-hidden="true">{brands[id] ? <BrandIcon name={brands[id]} size={23}/> : <Icon name="globe" size={23}/>}</span>;
 }
 
-// Provider credentials remain local to Papilot. Only the selected key editor is
+// Provider credentials remain local to StudyBuddy. Only the selected key editor is
 // mounted; subscription sign-ins keep their existing polling and redirect flow.
 export function WriterSetup({ writer, online }: { writer: (route: string, body?: unknown) => Promise<WriterAuth>; online: boolean }) {
   const [auth, setAuth] = useState<WriterAuth | null>(null), [error, setError] = useState<string | null>(null), [busy, setBusy] = useState<string | null>(null);
@@ -112,7 +112,7 @@ export function WriterSetup({ writer, online }: { writer: (route: string, body?:
       </div>}
     </section>
     {error && <p className="runtime-agent-error writer-error" role="alert">{errorText(error)}</p>}
-    <details className="writer-storage-note"><summary><Icon name="info" size={13}/>{t('Installation & setup')}<Icon name="chevronDown" size={13}/></summary><p>{t('Claude works with an Anthropic API key only. Papilot keeps these credentials in its own data folder, separate from any Pi installation.')}</p></details>
+    <details className="writer-storage-note"><summary><Icon name="info" size={13}/>{t('Installation & setup')}<Icon name="chevronDown" size={13}/></summary><p>{t('Claude works with an Anthropic API key only. StudyBuddy keeps these credentials in its own data folder, separate from any Pi installation.')}</p></details>
   </section>;
 }
 

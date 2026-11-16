@@ -375,7 +375,7 @@ try {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await expect(viewer().locator('.change.current button.accept')).toHaveAttribute('aria-keyshortcuts', 'a');
   console.log('PASS: Shortcut settings, conflicts, reassignment, persistence, typing and selection guards, help navigation, reset, and mobile layout');
-  // Accept all and Reject all stay on one line and clear of Papilot's PDF
+  // Accept all and Reject all stay on one line and clear of StudyBuddy's PDF
   // tools; a narrow split pane shows each icon with its count.
   const batch = () => viewer().locator('.bar').evaluate(bar => {
     const room = bar.getBoundingClientRect().right - parseFloat(getComputedStyle(bar).paddingRight);

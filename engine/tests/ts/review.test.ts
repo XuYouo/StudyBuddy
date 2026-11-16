@@ -384,7 +384,7 @@ it("a folder another program keeps open stops finishing until a retry after it i
 it("finishing removes a worktree folder that Git unregistered but could not delete", async () => {
   const release = await holdFolder(task.worktree);
   try {
-    // What `git worktree remove` left before Papilot deleted the folder itself.
+    // What `git worktree remove` left before StudyBuddy deleted the folder itself.
     expect(() => app.repo.run(["worktree", "remove", "--force", task.worktree])).toThrow();
   } finally {
     await release();

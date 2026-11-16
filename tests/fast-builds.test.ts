@@ -105,7 +105,7 @@ test('each TeX pass that latexmk follows with more work is shown before the buil
     assert.ok(!fs.existsSync(path.join(path.dirname(result.root), 'passes', String(passes))), 'the last pass is the result itself');
     // A build that someone waits for without previews runs no hook.
     const plain = await new Builder(loadProject(f.root), f.repo).build(f.commit({ 'main.tex': document('\\section{One}Plain.\n') }));
-    assert.doesNotMatch(fs.readFileSync(path.join(path.dirname(plain.root), 'latexmk.log'), 'utf8'), /Papilot: pass/);
+    assert.doesNotMatch(fs.readFileSync(path.join(path.dirname(plain.root), 'latexmk.log'), 'utf8'), /StudyBuddy: pass/);
   } finally { f.close(); }
 });
 

@@ -1,4 +1,4 @@
-// Papilot ACP extension for DeepSeek Harness. It exposes the Harness's native
+// StudyBuddy ACP extension for DeepSeek Harness. It exposes the Harness's native
 // per-session permission presets without changing the user's regular dsh CLI.
 import { registerHooks } from 'node:module';
 
@@ -11,7 +11,7 @@ const optionsAfter = `\tasync configOptions(signal) {
 \t\tthis.assertActive();
 \t\tconst options = await this.modelControl.options(signal);
 \t\tconst permissions = this.ctx.permissionPresets;
-\t\tif (!permissions) throw new Error('Papilot requires native dsh permission presets.');
+\t\tif (!permissions) throw new Error('StudyBuddy requires native dsh permission presets.');
 \t\treturn [...options, { id: 'permission_mode', name: 'Permissions', category: 'mode', type: 'select',
 \t\t\tcurrentValue: permissions.current(this.agent.session),
 \t\t\toptions: permissions.names.filter(name => ['read-only', 'workspace-write', 'danger-full-access'].includes(name)).map(name => permissions.optionOf(name)) }];
@@ -38,7 +38,7 @@ registerHooks({
     const source = typeof result.source === 'string' ? result.source : Buffer.from(result.source).toString('utf8');
     // Refuse unknown source layouts rather than show a control that does nothing.
     if ([optionsBefore, setBefore, injectBefore].some(before => source.split(before).length !== 2))
-      throw new Error('This dsh version needs an updated Papilot permission adapter.');
+      throw new Error('This dsh version needs an updated StudyBuddy permission adapter.');
     return {
       ...result,
       source: source.replace(optionsBefore, optionsAfter).replace(setBefore, setAfter)

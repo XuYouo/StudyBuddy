@@ -23,9 +23,9 @@ const runNpm = (args, cwd = root) => run(process.execPath, [npm, ...args], cwd);
 // the development app always runs this checkout.
 const writeApp = (fingerprint) => {
   fs.mkdirSync('.desktop/app', { recursive: true });
-  fs.writeFileSync('.desktop/app/package.json', JSON.stringify({ name: 'papilot-desktop', productName: 'Papilot', version: pkg.version,
+  fs.writeFileSync('.desktop/app/package.json', JSON.stringify({ name: 'studybuddy-desktop', productName: 'StudyBuddy', version: pkg.version,
     description: pkg.description, author: pkg.author, homepage: pkg.homepage, license: pkg.license,
-    desktopName: 'ai.papilot.desktop.desktop', desktopShell: pkg.desktopShell, ...(fingerprint ? { desktopFingerprint: fingerprint } : {}), type: 'module', main: 'main.js' }, null, 2) + '\n');
+    desktopName: 'io.github.xuyouo.studybuddy.desktop', desktopShell: pkg.desktopShell, ...(fingerprint ? { desktopFingerprint: fingerprint } : {}), type: 'module', main: 'main.js' }, null, 2) + '\n');
 };
 
 if (process.argv[2] === 'layer') {

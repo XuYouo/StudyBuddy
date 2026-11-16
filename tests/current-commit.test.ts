@@ -124,7 +124,7 @@ for (const phase of ['before-files', 'after-files', 'after-index']) test(`task c
     const save = app.delivery.save.bind(app.delivery), run = app.repo.runAsync.bind(app.repo), rename = fs.renameSync;
     const head = disk.repo.rev('HEAD');
     if (phase === 'after-index') app.delivery.save = (name, data) => { if (data.done) throw new Error('Simulated crash'); save(name, data); };
-    if (phase === 'before-files') app.repo.runAsync = async (args, options) => { const result = await run(args, options); if (args[0] === 'update-ref' && args.includes('Papilot: commit reviewed task')) throw new Error('Simulated crash'); return result; };
+    if (phase === 'before-files') app.repo.runAsync = async (args, options) => { const result = await run(args, options); if (args[0] === 'update-ref' && args.includes('StudyBuddy: commit reviewed task')) throw new Error('Simulated crash'); return result; };
     if (phase === 'after-files') fs.renameSync = ((from, to) => { if (String(from).endsWith('index.lock')) throw new Error('Simulated crash'); return rename(from, to); }) as typeof fs.renameSync;
     try { await assert.rejects(async () => app.delivery.apply(task.name, false, 'commit', 'One commit'), /Simulated crash/); }
     finally { fs.renameSync = rename; app.repo.runAsync = run; app.delivery.save = save; }

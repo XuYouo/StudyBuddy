@@ -32,7 +32,7 @@ function outline(document: mupdf.Document) {
 test('the notes are drawn beside the paper, which keeps its pages, text, links and bookmarks', () => {
   const original = open(input);
   const output = open(annotatePdf(mupdf, input, [
-    note(3, 'Papilot organises the loop around three commitments.', 'Name the sections that implement each commitment.', { group: 'green', author: 'Ada' }),
+    note(3, 'StudyBuddy organises the loop around three commitments.', 'Name the sections that implement each commitment.', { group: 'green', author: 'Ada' }),
     note(3, 'Three commitments', '这里可以更具体一点：三个承诺分别对应哪一部分实现？'),
     note(3, 'unreviewed text cannot leak into the paper.', '', { group: 'yellow' }),
     { page: 0, rect: [0.15, 0.36, 0.85, 0.55], comment: 'Trim the abstract.' },

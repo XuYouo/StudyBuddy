@@ -1,6 +1,6 @@
 {
   "ui": {
-    "author": "Papilot 팀",
+    "author": "StudyBuddy 팀",
     "back": "전체 글",
     "blog": "블로그",
     "breadcrumb": "탐색 경로",
@@ -12,10 +12,10 @@
     "footerNavigation": "바닥글 메뉴",
     "indexDescription": "AI, LaTeX, 그리고 논문 집필에 관한 이야기입니다.",
     "indexSeoDescription": "PDF 중심의 AI·LaTeX 협업 집필을 살펴보세요. 원고에 직접 주석을 달고 조판된 수정 사항을 검토하며 학술적 판단을 저자의 손에 남깁니다.",
-    "indexSeoTitle": "Papilot 블로그: AI와 LaTeX 논문 집필",
+    "indexSeoTitle": "StudyBuddy 블로그: AI와 LaTeX 논문 집필",
     "indexTitle": "블로그",
     "languageLabel": "언어",
-    "latest": "Papilot 팀의 글",
+    "latest": "StudyBuddy 팀의 글",
     "mainNavigation": "주 메뉴",
     "minutes": "분 소요",
     "privacy": "개인정보 처리방침",
@@ -67,7 +67,7 @@
         "로컬 소스를 찾아 수정합니다."
       ],
       [
-        "Papilot",
+        "StudyBuddy",
         "프로젝트 컴파일",
         "조판된 새 원고를 생성합니다."
       ],

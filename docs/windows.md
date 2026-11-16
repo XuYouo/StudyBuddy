@@ -1,15 +1,15 @@
 # Windows setup
 
-Windows support is available from Papilot 0.9.1. Download the Windows x64 installer (`Papilot-VERSION-win-x64.exe`) or portable app (`Papilot-VERSION-win-x64-portable.exe`) from [GitHub Releases](https://github.com/PapilotAI/papilot/releases/latest). The installer lets you choose an installation folder and adds Start menu and desktop shortcuts; the portable app runs without installation. Both include Node.js and npm; install Codex yourself. Windows installers are unsigned. The desktop workflow builds and tests Windows x64 alongside macOS and Linux.
+Windows support is available from StudyBuddy 0.9.1. Download the Windows x64 installer (`StudyBuddy-VERSION-win-x64.exe`) or portable app (`StudyBuddy-VERSION-win-x64-portable.exe`) from [GitHub Releases](https://github.com/XuYouo/StudyBuddy/releases/latest). The installer lets you choose an installation folder and adds Start menu and desktop shortcuts; the portable app runs without installation. Both include Node.js and npm; install Codex yourself. Windows installers are unsigned. The desktop workflow builds and tests Windows x64 alongside macOS and Linux.
 
 ## Choose an environment
 
 The Windows desktop app recommends **WSL** on first launch. The setup screen detects installed distributions and checks Node.js/npm, Git and LaTeX in the selected environment. Missing tools get links to their official installation guides; **Check again** refreshes the results after installation. An existing environment selection is preserved. You can change it in **Settings → General → Environment**, or the **Environment** app menu.
 
-- **Windows** uses the Windows installations of Git, TeX and agents, and stores app data under `%APPDATA%\Papilot`.
-- **WSL** keeps the same Windows window but runs Papilot's backend, Git, TeX and agents inside the selected Linux distribution. Agent sign-ins stay in that distribution. App data is under `~/.local/share/papilot-desktop/data`, separate from Windows and from other distributions.
+- **Windows** uses the Windows installations of Git, TeX and agents, and stores app data under `%APPDATA%\StudyBuddy`.
+- **WSL** keeps the same Windows window but runs StudyBuddy's backend, Git, TeX and agents inside the selected Linux distribution. Agent sign-ins stay in that distribution. App data is under `~/.local/share/papilot-desktop/data`, separate from Windows and from other distributions.
 
-If WSL is missing, the setup screen offers a copyable `wsl --install -d Ubuntu` command and Microsoft's installation guide. Run it in an administrator PowerShell, restart if requested, then open Ubuntu to finish its first setup. Inside that distribution, install Linux Node.js LTS (22.22+), npm, Git and TeX Live. Windows tools do not count as Linux dependencies. Choose the distribution and click **Prepare WSL**. This installs Papilot's Linux dependencies in its own user directory, without using Windows `node_modules`. Install Codex inside the distribution too (`npm install -g @openai/codex`); a Windows Codex does not count. The first setup needs access to your npm registry from WSL; subsequent launches use the prepared copy. Failed or canceled setup can be retried, with details available in an expandable log.
+If WSL is missing, the setup screen offers a copyable `wsl --install -d Ubuntu` command and Microsoft's installation guide. Run it in an administrator PowerShell, restart if requested, then open Ubuntu to finish its first setup. Inside that distribution, install Linux Node.js LTS (22.22+), npm, Git and TeX Live. Windows tools do not count as Linux dependencies. Choose the distribution and click **Prepare WSL**. This installs StudyBuddy's Linux dependencies in its own user directory, without using Windows `node_modules`. Install Codex inside the distribution too (`npm install -g @openai/codex`); a Windows Codex does not count. The first setup needs access to your npm registry from WSL; subsequent launches use the prepared copy. Failed or canceled setup can be retried, with details available in an expandable log.
 
 The Windows runtime already includes Node.js and npm. Version Management is disabled when Git is missing in the selected backend environment, with a link to installation instructions. Normal workspace refreshes detect Git after installation and enable the entry; restoring a saved page cannot bypass the check. The example PDF can be read without Git or TeX, including after a restart. Installing Git initializes version management for the same example project while preserving its source edits and notes. An edited source is never marked as matching the bundled PDF; compiling edits requires Git and TeX. WSL preparation requires Linux Node.js and npm. Tool detection checks the TeX commands (`latexmk`, `synctex` and a LaTeX engine); a paper may need additional TeX packages. Agent sign-in is checked separately inside the workspace.
 
@@ -36,7 +36,7 @@ npm.cmd run desktop:build
 npm.cmd run desktop:build -- --dir
 ```
 
-The installer is `release/desktop/Papilot-VERSION-win-x64.exe`; the portable executable is `release/desktop/Papilot-VERSION-win-x64-portable.exe`, and the unpacked executable is `release/desktop/win-unpacked/Papilot.exe`. Build on Windows with a Node runtime matching the target CPU. Native release CI currently targets x64. The installer bundles Node and npm; Git, TeX, Codex and other agent CLIs are host tools. Unsigned development installers do not have a trusted publisher signature.
+The installer is `release/desktop/StudyBuddy-VERSION-win-x64.exe`; the portable executable is `release/desktop/StudyBuddy-VERSION-win-x64-portable.exe`, and the unpacked executable is `release/desktop/win-unpacked/StudyBuddy.exe`. Build on Windows with a Node runtime matching the target CPU. Native release CI currently targets x64. The installer bundles Node and npm; Git, TeX, Codex and other agent CLIs are host tools. Unsigned development installers do not have a trusted publisher signature.
 
 For the browser/server version from this checkout:
 
@@ -44,26 +44,26 @@ For the browser/server version from this checkout:
 npm.cmd run setup:review
 npm.cmd run build
 node bin/papilot.mjs doctor
-node bin/papilot.mjs --data "$env:USERPROFILE\Papilot data"
+node bin/papilot.mjs --data "$env:USERPROFILE\StudyBuddy data"
 ```
 
-Desktop data is under `%APPDATA%\Papilot`; CLI data defaults to `%USERPROFILE%\.papilot`. Use the desktop folder picker for local drive paths and UNC shares. Chinese characters and spaces in paths are supported. Paths in a paper's `.git/papilot/settings.json` are relative to the repository; either separator is accepted and stored paths use `/`. Do not put an absolute drive path in its `main` field.
+Desktop data is under `%APPDATA%\StudyBuddy`; CLI data defaults to `%USERPROFILE%\.papilot`. Use the desktop folder picker for local drive paths and UNC shares. Chinese characters and spaces in paths are supported. Paths in a paper's `.git/papilot/settings.json` are relative to the repository; either separator is accepted and stored paths use `/`. Do not put an absolute drive path in its `main` field.
 
-Papilot discovers the usual npm, Git for Windows, TeX Live and MiKTeX locations in addition to PATH. Restart Papilot after installing host tools. Commands installed by npm are launched through their Node entry points so multiline prompts and shell characters remain literal arguments. Stopping a build terminates its process tree. Windows runs background builds without the Unix-only pause/resume optimization.
+StudyBuddy discovers the usual npm, Git for Windows, TeX Live and MiKTeX locations in addition to PATH. Restart StudyBuddy after installing host tools. Commands installed by npm are launched through their Node entry points so multiline prompts and shell characters remain literal arguments. Stopping a build terminates its process tree. Windows runs background builds without the Unix-only pause/resume optimization.
 
-In the native Windows environment, Codex can also come from the installed Codex/ChatGPT desktop app. Papilot tries CLI installations first, then queries the current user's registered `OpenAI.Codex` package and runs its bundled `app/resources/codex.exe`. It does not launch the GUI or require an extra CLI installation. Select **Reconnect** after installing or updating that app; its versioned installation path is discovered again. `PAPILOT_CODEX_BIN` remains an explicit override. In WSL, install and sign in to the Linux Codex in the selected distribution; the Windows desktop backend is not used there.
+In the native Windows environment, Codex can also come from the installed Codex/ChatGPT desktop app. StudyBuddy tries CLI installations first, then queries the current user's registered `OpenAI.Codex` package and runs its bundled `app/resources/codex.exe`. It does not launch the GUI or require an extra CLI installation. Select **Reconnect** after installing or updating that app; its versioned installation path is discovered again. `PAPILOT_CODEX_BIN` remains an explicit override. In WSL, install and sign in to the Linux Codex in the selected distribution; the Windows desktop backend is not used there.
 
 Dependency links for downloaded app updates use Windows directory junctions and need no Developer Mode. Repositories containing actual symbolic links still require Windows symlink permissions when the engine exports those links (enable Developer Mode or use a repository without symbolic links).
 
 ## Claude permissions
 
-Native Windows does not support Claude Code's command sandbox. Claude and GLM therefore offer **Accept edits**, with **No sandbox** shown in the permission details. This accepts file edits using Claude's native permission rules. Commands still follow those rules: with Claude Code (`claude -p`), requests that need approval are declined and reported in the conversation; through the Claude Agent SDK, they ask for approval in Papilot. **Bypass permissions** remains a separate, explicit choice. Existing tasks using the default permissions use **Accept edits** when resumed on native Windows. Read-only reviews still have tools disabled.
+Native Windows does not support Claude Code's command sandbox. Claude and GLM therefore offer **Accept edits**, with **No sandbox** shown in the permission details. This accepts file edits using Claude's native permission rules. Commands still follow those rules: with Claude Code (`claude -p`), requests that need approval are declined and reported in the conversation; through the Claude Agent SDK, they ask for approval in StudyBuddy. **Bypass permissions** remains a separate, explicit choice. Existing tasks using the default permissions use **Accept edits** when resumed on native Windows. Read-only reviews still have tools disabled.
 
 For sandboxed commands, select a WSL 2 backend and install Claude there. WSL, Linux and macOS retain **Sandboxed edits**, including refusal to run when their sandbox is unavailable.
 
 ## Codex approvals
 
-Codex defaults to **Workspace access**, using the `workspace-write` sandbox and `on-request` approval policy. Selecting **Full access** in the agent settings explicitly disables the sandbox and uses `never`, subject to managed settings. Independently of that choice, Papilot reads the effective `approvals_reviewer` setting for the task directory before each turn and passes it to new threads, resumed threads and already loaded conversations. User, project and selected-profile reviewer settings remain authoritative; inheriting a reviewer does not change the selected permission mode or automatically accept requests. On Codex versions without the configuration API, the existing reviewer defaults are retained.
+Codex defaults to **Workspace access**, using the `workspace-write` sandbox and `on-request` approval policy. Selecting **Full access** in the agent settings explicitly disables the sandbox and uses `never`, subject to managed settings. Independently of that choice, StudyBuddy reads the effective `approvals_reviewer` setting for the task directory before each turn and passes it to new threads, resumed threads and already loaded conversations. User, project and selected-profile reviewer settings remain authoritative; inheriting a reviewer does not change the selected permission mode or automatically accept requests. On Codex versions without the configuration API, the existing reviewer defaults are retained.
 
 To use automatic review, configure `approvals_reviewer = "auto_review"` in the appropriate Codex environment. Windows and WSL have separate Codex configuration and sign-in state. Automatic review can still deny an action; it does not remove the filesystem sandbox. If a Windows sandbox cannot enter an otherwise writable worktree, inspect its ancestor directory traversal permissions and the Codex sandbox setup logs rather than disabling the sandbox.
 
@@ -80,14 +80,14 @@ $env:NO_PROXY = 'localhost,127.0.0.1,::1'
 npm.cmd ci
 ```
 
-The proxy must listen on a LAN interface if it runs on another computer. Agent sign-in and API calls also need access to that provider, independently of installing Papilot. A desktop launch uses the Windows system HTTP proxy when explicit proxy variables are absent.
+The proxy must listen on a LAN interface if it runs on another computer. Agent sign-in and API calls also need access to that provider, independently of installing StudyBuddy. A desktop launch uses the Windows system HTTP proxy when explicit proxy variables are absent.
 
 ## Verification
 
 ```powershell
 npm.cmd run typecheck
 node --import tsx --test tests/windows.test.ts tests/wsl.test.ts
-$env:PAPILOT_DESKTOP_EXECUTABLE = "$PWD\release\desktop\win-unpacked\Papilot.exe"
+$env:PAPILOT_DESKTOP_EXECUTABLE = "$PWD\release\desktop\win-unpacked\StudyBuddy.exe"
 npm.cmd run test:desktop
 node scripts/check-desktop-environments.mjs
 ```
@@ -107,6 +107,6 @@ The integration based on PR #72 (`4896713`), including the changes from main (`5
 
 After independent WSL device sign-in, the integrated app completed two real Codex editing turns in an isolated Linux paper with Chinese characters, spaces and `&` in its path. Restarting the Windows app resumed the same task and thread. Both rounds produced readable PDFs with the expected text, and the original manuscript stayed unchanged. Both turns inherited `auto_review` with `on-request` and the workspace-write sandbox; there were no manual approval requests. A separate harmless elevated print command also passed automatic review. These live checks used a real Codex, not a mock agent.
 
-On 2026-11-14, the desktop-backend discovery change passed native Windows 11 build 26200 checks with the registered `OpenAI.Codex_26.1106.6628.0` app (`codex-cli 0.167.0-alpha.4.1`). Independent CLI paths and development Codex dependencies were excluded from the test environment. Papilot discovered the bundled backend, reused its existing sign-in, listed eight models, and completed three real editing turns with workspace permissions in an isolated paper whose path contained Chinese characters, spaces and `&`. Each round produced a PDF with the expected text and applied successfully; the manuscript stayed unchanged until application. The same task and thread resumed after both a Codex process restart and a complete Papilot backend restart. Restoring an independent CLI verified its priority over the desktop backend. These checks exercised the real backend HTTP API over SSH; they did not repeat interactive desktop-window verification.
+On 2026-11-14, the desktop-backend discovery change passed native Windows 11 build 26200 checks with the registered `OpenAI.Codex_26.1106.6628.0` app (`codex-cli 0.167.0-alpha.4.1`). Independent CLI paths and development Codex dependencies were excluded from the test environment. StudyBuddy discovered the bundled backend, reused its existing sign-in, listed eight models, and completed three real editing turns with workspace permissions in an isolated paper whose path contained Chinese characters, spaces and `&`. Each round produced a PDF with the expected text and applied successfully; the manuscript stayed unchanged until application. The same task and thread resumed after both a Codex process restart and a complete StudyBuddy backend restart. Restoring an independent CLI verified its priority over the desktop backend. These checks exercised the real backend HTTP API over SSH; they did not repeat interactive desktop-window verification.
 
 Agent authentication and provider API calls require the user's account and a working connection to the provider; these are separate from the offline launch and compilation checks. ARM64 and UNC network-share compilation have not been validated on hardware.

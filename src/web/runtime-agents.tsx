@@ -14,10 +14,10 @@ import type { WriterAuth } from '../shared.ts';
 
 function connectionInfo(id: AgentId) {
   const descriptions = {
-    papilot: t('Built into Papilot and based on Pi. Signs in with ChatGPT or GitHub Copilot, or uses an API key.'),
+    papilot: t('Built into StudyBuddy and based on Pi. Signs in with ChatGPT or GitHub Copilot, or uses an API key.'),
     codex: t('Uses the local Codex CLI and its saved login.'),
     claude: t('Uses Claude Code when installed, or the Claude Agent SDK with API credentials.'),
-    cursor: t('Uses the Cursor SDK with CURSOR_API_KEY. Papilot installs the SDK on first use.'),
+    cursor: t('Uses the Cursor SDK with CURSOR_API_KEY. StudyBuddy installs the SDK on first use.'),
     grok: t('Uses Grok Build CLI through ACP with its saved login or configured API credentials.'),
     copilot: t('Uses GitHub Copilot CLI and its saved login or configured provider through ACP.'),
     antigravity: t('Uses the local Antigravity CLI and its saved Google login.'),
@@ -27,7 +27,7 @@ function connectionInfo(id: AgentId) {
     qwen: t('Uses Qwen Code and its saved login through ACP.'),
     opencode: t('Uses OpenCode with the providers and models you have connected.'),
   };
-  const commands = { papilot: '', codex: window.papilotDesktop ? 'codex login' : 'papilot codex login', claude: 'claude auth login', cursor: 'CURSOR_API_KEY', copilot: 'copilot login', grok: 'grok login', antigravity: 'agy', kimi: 'kimi login', glm: 'ZHIPU_API_KEY / ZAI_API_KEY', deepseek: 'dsh web', qwen: 'qwen', opencode: 'opencode auth login' };
+  const commands = { papilot: '', codex: window.papilotDesktop ? 'codex login' : 'studybuddy codex login', claude: 'claude auth login', cursor: 'CURSOR_API_KEY', copilot: 'copilot login', grok: 'grok login', antigravity: 'agy', kimi: 'kimi login', glm: 'ZHIPU_API_KEY / ZAI_API_KEY', deepseek: 'dsh web', qwen: 'qwen', opencode: 'opencode auth login' };
   return { description: descriptions[id], command: commands[id], key: id === 'cursor' || id === 'glm' };
 }
 
@@ -95,10 +95,10 @@ export function RuntimeAgents({ online, runtimes, report, busy, checkFailed, che
         {current && <details className="writer-models"><summary>{t('Available models')}<span>{runtime.models.length}</span></summary><RuntimeModels key={selected} models={runtime.models} connected/></details>}
       </> : <>
       {blocked && guidance && <section className="runtime-agent-help" aria-label={t('Set up this agent')}>
-        <p className="runtime-agent-reason" title={runtime?.error || undefined}>{state === 'missing' ? checked?.ok ? t('The latest configuration check found this agent. Reconnect to refresh its live status.') : guidance.summary : state === 'signin' ? t('Sign in on the Papilot host to continue.') : runtime?.error || t('The agent could not connect. Check its setup and try again.')}</p>
+        <p className="runtime-agent-reason" title={runtime?.error || undefined}>{state === 'missing' ? checked?.ok ? t('The latest configuration check found this agent. Reconnect to refresh its live status.') : guidance.summary : state === 'signin' ? t('Sign in on the StudyBuddy host to continue.') : runtime?.error || t('The agent could not connect. Check its setup and try again.')}</p>
         {state === 'missing' && !checked?.ok && <p>{guidance.steps[0]}</p>}
         {!(state === 'missing' && checked?.ok) && <code className="runtime-agent-command">{setup.command}</code>}
-        <div className="runtime-setup-actions"><button type="button" className="button secondary compact" disabled={!online || reconnecting} title={state === 'signin' ? t('Use the current {agent} sign-in on the Papilot host', { agent: AGENT_NAMES[selected] }) : undefined} onClick={() => void retry()}><Icon name="refresh" size={13}/>{reconnecting ? state === 'signin' ? t('Refreshing…') : t('Connecting…') : state === 'signin' ? t('Refresh') : t('Reconnect')}</button>{setupGuide}</div>
+        <div className="runtime-setup-actions"><button type="button" className="button secondary compact" disabled={!online || reconnecting} title={state === 'signin' ? t('Use the current {agent} sign-in on the StudyBuddy host', { agent: AGENT_NAMES[selected] }) : undefined} onClick={() => void retry()}><Icon name="refresh" size={13}/>{reconnecting ? state === 'signin' ? t('Refreshing…') : t('Connecting…') : state === 'signin' ? t('Refresh') : t('Reconnect')}</button>{setupGuide}</div>
         {reconnectError && <p role="alert">{t('Could not reconnect. Check the server connection and try again.')}</p>}
       </section>}
       {current ? <div className="runtime-agent-overview">
@@ -113,9 +113,9 @@ export function RuntimeAgents({ online, runtimes, report, busy, checkFailed, che
         <div className="runtime-agent-installation">
           <p>{setup.description}</p>
           {blocked && guidance ? <>
-            <p>{state === 'missing' ? guidance.reason : state === 'signin' ? t('Papilot reached this agent, but could not confirm a signed-in account on this host.') : t('Papilot could not establish a working connection to this agent. The latest connection error is shown below.')}</p>
+            <p>{state === 'missing' ? guidance.reason : state === 'signin' ? t('StudyBuddy reached this agent, but could not confirm a signed-in account on this host.') : t('StudyBuddy could not establish a working connection to this agent. The latest connection error is shown below.')}</p>
             {runtime?.error && <p className="runtime-agent-error">{errorText(runtime.error)}</p>}
-            {state === 'missing' && checked?.ok ? <p>{t('If the live status still disagrees with the check, restart Papilot under the same user and environment where you configured the agent.')}</p> : state === 'signin' ? <p>{selected === 'codex' ? t('Sign in as the user running Papilot, then select Refresh.') : t('Sign in as the user running Papilot, then restart Papilot.')}</p> : state === 'unavailable' ? <p>{t('Check the connection error above and the agent’s login, provider, and network settings on this host. Restart Papilot after changing credentials or executable paths.')}</p> : <ol>{guidance.steps.map(step => <li key={step}>{step}</li>)}</ol>}
+            {state === 'missing' && checked?.ok ? <p>{t('If the live status still disagrees with the check, restart StudyBuddy under the same user and environment where you configured the agent.')}</p> : state === 'signin' ? <p>{selected === 'codex' ? t('Sign in as the user running StudyBuddy, then select Refresh.') : t('Sign in as the user running StudyBuddy, then restart StudyBuddy.')}</p> : state === 'unavailable' ? <p>{t('Check the connection error above and the agent’s login, provider, and network settings on this host. Restart StudyBuddy after changing credentials or executable paths.')}</p> : <ol>{guidance.steps.map(step => <li key={step}>{step}</li>)}</ol>}
             <p><strong>{t('Already set up?')}</strong> {guidance.existing}</p>
           </> : <><span className="runtime-agent-caption">{setup.key ? t('Environment variable') : t('Set up on the host')}</span><code className="runtime-agent-command">{setup.command}</code></>}
           <div className="runtime-agent-check-heading"><h5>{t('Installation check')}</h5>{!busy && checked && <span className={`diagnostic-state ${checked.ok ? 'ok' : checked.severity === 'error' ? 'error' : checked.severity === 'warn' ? 'warn' : 'info'}`}>{checked.ok ? t('Passed') : checked.severity === 'error' ? t('Needs attention') : checked.severity === 'warn' ? t('Warning') : t('Not found')}</span>}</div>

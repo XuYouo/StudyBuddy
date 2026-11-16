@@ -1,5 +1,5 @@
 // A change's source, edited in the workspace's editor beside a task's review:
-// the real review engine and Papilot routes with a real LaTeX paper; only the
+// the real review engine and StudyBuddy routes with a real LaTeX paper; only the
 // agent is replaced. All files and servers belong to this disposable fixture.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -119,27 +119,27 @@ try {
   // Typing marks the tab; the chat keeps its place, and so does the draft.
   await side.locator('.cm-line', { hasText: 'third paragraph' }).click();
   await page.keyboard.press('End');
-  await page.keyboard.type(' Typed in Papilot.');
+  await page.keyboard.type(' Typed in StudyBuddy.');
   const unsaved = side.locator('.side-tab-close[data-dirty]');
   await expect(unsaved).toHaveAttribute('title', /^Unsaved/);
   await chat.click();
   await expect(side.locator('.composer-wrap')).toBeVisible();
   await expect(editor).toBeHidden();
   await tab.click();
-  await expect.poll(text).toContain('Proposed third paragraph. Typed in Papilot.');
+  await expect.poll(text).toContain('Proposed third paragraph. Typed in StudyBuddy.');
   fs.mkdirSync('test-results', { recursive: true });
   await page.screenshot({ path: 'test-results/task-source-edit.png' });
 
   // ⌘S writes the task's file, without an agent, and reviews it in a new round.
   const round = app.review.latestRound(task.name).number;
   await field.press('ControlOrMeta+s');
-  await expect.poll(worktree, { timeout: 60000 }).toContain('Proposed third paragraph. Typed in Papilot.');
+  await expect.poll(worktree, { timeout: 60000 }).toContain('Proposed third paragraph. Typed in StudyBuddy.');
   assert.equal(fs.readFileSync(path.join(f.root, METHOD), 'utf8'), BEFORE, 'the manuscript itself is untouched');
   await expect(unsaved, 'a saved file has no dot').toHaveCount(0);
   await expect.poll(() => app.review.latestRound(task.name)?.number, { timeout: 90000 }).toBeGreaterThan(round);
   await expect.poll(() => app.review.latestRound(task.name)?.visuals, { timeout: 90000 }).toBe('ready');
-  await expect(viewer.locator('.change').last()).toContainText('Typed in Papilot', { timeout: 60000 });
-  await expect(side.locator('.cm-review-added').last(), 'the new round\'s changes show in the text').toContainText('Typed in Papilot', { timeout: 30000 });
+  await expect(viewer.locator('.change').last()).toContainText('Typed in StudyBuddy', { timeout: 60000 });
+  await expect(side.locator('.cm-review-added').last(), 'the new round\'s changes show in the text').toContainText('Typed in StudyBuddy', { timeout: 30000 });
   await page.screenshot({ path: 'test-results/task-source-saved.png' });
   await expect(side.locator('.source-panel-error')).toHaveCount(0);
 

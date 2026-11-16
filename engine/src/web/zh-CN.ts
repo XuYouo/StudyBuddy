@@ -167,15 +167,15 @@ export const zhCN: Record<string, string> = {
   "Clipboard unavailable. Select the PDF text and use your browser’s Copy command.":
     "无法使用剪贴板。请选中 PDF 文本，然后使用浏览器的复制命令。",
 
-  // Locks sent by Papilot
-  "This task is no longer available in Papilot. Return to the workspace.":
-    "此任务已不在 Papilot 中，请返回工作区。",
+  // Locks sent by StudyBuddy
+  "This task is no longer available in StudyBuddy. Return to the workspace.":
+    "此任务已不在 StudyBuddy 中，请返回工作区。",
   "This task is being deleted. Review actions and comments are unavailable.":
     "此任务正在删除，无法审阅或评论。",
-  "Select Check status in Papilot before accepting, rejecting, or undoing changes. You can still add comments.":
-    "请先在 Papilot 中选择“检查状态”，再接受、拒绝或撤销修改。你仍可以添加评论。",
-  "Pause this task in Papilot before accepting, rejecting, or undoing changes. You can still add comments.":
-    "请先在 Papilot 中暂停此任务，再接受、拒绝或撤销修改。你仍可以添加评论。",
+  "Select Check status in StudyBuddy before accepting, rejecting, or undoing changes. You can still add comments.":
+    "请先在 StudyBuddy 中选择“检查状态”，再接受、拒绝或撤销修改。你仍可以添加评论。",
+  "Pause this task in StudyBuddy before accepting, rejecting, or undoing changes. You can still add comments.":
+    "请先在 StudyBuddy 中暂停此任务，再接受、拒绝或撤销修改。你仍可以添加评论。",
   "The agent is editing this task's files. Pause it before editing changes or undoing a rejection. You can still accept, reject and comment.":
     "智能体正在编辑此任务的文件。请先暂停它，再编辑修改或撤销拒绝。你仍可以接受、拒绝修改和添加评论。",
   "Wait for the current review action before accepting, rejecting, or undoing changes. You can still add comments.":
@@ -194,7 +194,7 @@ export const zhCN: Record<string, string> = {
     "可直接在 PDF 预览中选择文本。复制引用会包含选中的文本及其文件、行号和页码。选中文本时，审阅快捷键会暂停。",
   Close: "关闭",
 
-  // Uncommitted changes, when a host such as Papilot shows them
+  // Uncommitted changes, when a host such as StudyBuddy shows them
   "Uncommitted changes": "未提交的修改",
   Stage: "暂存",
   Revert: "还原",

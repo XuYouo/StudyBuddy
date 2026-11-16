@@ -1,17 +1,16 @@
 <div align="center">
 
-<img src="../assets/wordmark.svg#gh-light-mode-only" width="220" height="69" alt="Papilot"><img src="../assets/wordmark-dark.svg#gh-dark-mode-only" width="220" height="69" alt="Papilot"><br>**Editor LaTeX com IA de Nova Geração**
+<img src="../assets/wordmark.svg#gh-light-mode-only" width="270" height="66" alt="StudyBuddy"><img src="../assets/wordmark-dark.svg#gh-dark-mode-only" width="270" height="66" alt="StudyBuddy"><br>**Editor LaTeX com IA de Nova Geração**
 
 # Não leia nem escreva `.tex`<br>Trabalhe diretamente no <img src="../assets/pdf.svg" width="34" height="41" align="absmiddle" alt="PDF">
 
 Um **novo paradigma** para escrita e diagramação responsáveis com IA.
 
 <!-- BEGIN BADGES -->
-[![License: MIT](https://img.shields.io/github/license/PapilotAI/papilot?style=flat&color=22c55e)](../../LICENSE)
-[![CI](https://img.shields.io/github/actions/workflow/status/PapilotAI/papilot/ci.yml?branch=main&style=flat&label=CI)](https://github.com/PapilotAI/papilot/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/PapilotAI/papilot?style=flat&label=release&color=0969da)](https://github.com/PapilotAI/papilot/releases/latest)
-[![GitHub total downloads](https://img.shields.io/github/downloads/PapilotAI/papilot/total?style=flat&logo=github&label=downloads&color=0969da)](https://github.com/PapilotAI/papilot/releases)
-[![npm monthly downloads](https://img.shields.io/npm/dm/papilot?style=flat&logo=npm&label=downloads&color=cb3837)](https://www.npmjs.com/package/papilot)
+[![License: MIT](https://img.shields.io/github/license/XuYouo/StudyBuddy?style=flat&color=22c55e)](../../LICENSE)
+[![CI](https://img.shields.io/github/actions/workflow/status/XuYouo/StudyBuddy/ci.yml?branch=main&style=flat&label=CI)](https://github.com/XuYouo/StudyBuddy/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/XuYouo/StudyBuddy?style=flat&label=release&color=0969da)](https://github.com/XuYouo/StudyBuddy/releases/latest)
+[![GitHub total downloads](https://img.shields.io/github/downloads/XuYouo/StudyBuddy/total?style=flat&logo=github&label=downloads&color=0969da)](https://github.com/XuYouo/StudyBuddy/releases)
 <!-- END BADGES -->
 
 <p data-language-switcher><sub><a href="../../README.md">English</a>&nbsp;· <a href="README.zh-CN.md">简体中文</a>&nbsp;· <a href="README.zh-Hant.md">繁體中文</a>&nbsp;· <a href="README.ja.md">日本語</a>&nbsp;· <a href="README.ko.md">한국어</a>&nbsp;· <a href="README.de.md">Deutsch</a>&nbsp;· <a href="README.fr.md">Français</a>&nbsp;· <a href="README.es.md">Español</a>&nbsp;· <a href="README.pt.md">Português</a>&nbsp;· <a href="README.it.md">Italiano</a>&nbsp;· <a href="README.sv.md">Svenska</a></sub></p>
@@ -24,7 +23,7 @@ Um **novo paradigma** para escrita e diagramação responsáveis com IA.
   <source media="(prefers-color-scheme: dark) and (max-width: 600px)" srcset="../assets/readme-showcase/hero-compact-dark.png">
   <source media="(prefers-color-scheme: dark)" srcset="../assets/readme-showcase/hero-dark.png">
   <source media="(max-width: 600px)" srcset="../assets/readme-showcase/hero-compact.png">
-  <img src="../assets/readme-showcase/hero.png" alt="O Papilot mostra uma edição de IA como um antes e depois diagramado no PDF, com Aceitar, Rejeitar e Comentar." width="900">
+  <img src="../assets/readme-showcase/hero.png" alt="O StudyBuddy mostra uma edição de IA como um antes e depois diagramado no PDF, com Aceitar, Rejeitar e Comentar." width="900">
 </picture>
 </a>
 </p>
@@ -41,12 +40,12 @@ Artigos, teses, livros, slides: os leitores só veem a página diagramada.<br>
     <source media="(prefers-color-scheme: dark) and (max-width: 600px)" srcset="../assets/readme-showcase/paradigm-compact-dark.png">
     <source media="(prefers-color-scheme: dark)" srcset="../assets/readme-showcase/paradigm-dark.png">
     <source media="(max-width: 600px)" srcset="../assets/readme-showcase/paradigm-compact.png">
-    <img src="../assets/readme-showcase/paradigm.png" alt="Escrever LaTeX à mão, depois verificar diffs de LaTeX gerados por IA e, agora, o Papilot: fazer a revisão do PDF." width="900">
+    <img src="../assets/readme-showcase/paradigm.png" alt="Escrever LaTeX à mão, depois verificar diffs de LaTeX gerados por IA e, agora, o StudyBuddy: fazer a revisão do PDF." width="900">
   </picture>
 </p>
 
 **Chega de compilar diffs na cabeça.**<br>
-Um diff no código-fonte faz você *imaginar* o PDF. O Papilot *mostra* o resultado diagramado para você.
+Um diff no código-fonte faz você *imaginar* o PDF. O StudyBuddy *mostra* o resultado diagramado para você.
 
 <a id="-point-at-the-page-and-say-what-you-want"></a>
 
@@ -60,7 +59,7 @@ Marque uma frase, uma equação ou uma figura e escreva uma anotação.<br>
     <source media="(prefers-color-scheme: dark) and (max-width: 600px)" srcset="../assets/readme-showcase/notes-app-compact-dark.png">
     <source media="(prefers-color-scheme: dark)" srcset="../assets/readme-showcase/notes-app-dark.png">
     <source media="(max-width: 600px)" srcset="../assets/readme-showcase/notes-app-compact.png">
-    <img src="../assets/readme-showcase/notes-app.png" alt="O Papilot com um quadro ao redor de uma equação e uma frase destacada no PDF, cada uma com uma anotação, ambas adicionadas à próxima tarefa." width="900">
+    <img src="../assets/readme-showcase/notes-app.png" alt="O StudyBuddy com um quadro ao redor de uma equação e uma frase destacada no PDF, cada uma com uma anotação, ambas adicionadas à próxima tarefa." width="900">
   </picture>
 </p>
 
@@ -104,12 +103,12 @@ Marque uma frase, uma equação ou uma figura e escreva uma anotação.<br>
 <!-- BEGIN DOWNLOADS -->
 | Sistema / distribuição | Download / pacote | Instalar / executar |
 | --- | --- | --- |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="../assets/readme-icons/apple-dark.svg"><img src="../assets/readme-icons/apple.svg" width="18" height="18" align="absmiddle" alt=""></picture> **macOS** | [Apple Silicon](https://github.com/PapilotAI/papilot/releases/latest) · [Intel](https://github.com/PapilotAI/papilot/releases/latest)<br>DMG / ZIP | Abra o DMG e arraste Papilot para Aplicativos. |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="../assets/readme-icons/windows-dark.svg"><img src="../assets/readme-icons/windows.svg" width="18" height="18" align="absmiddle" alt=""></picture> **Windows** | [Instalador](https://github.com/PapilotAI/papilot/releases/latest) · [Versão portátil](https://github.com/PapilotAI/papilot/releases/latest)<br>x64 | Execute o instalador ou abra diretamente a versão portátil. |
-| <img src="../assets/readme-icons/ubuntu.svg" width="18" height="18" align="absmiddle" alt=""> <img src="../assets/readme-icons/debian.svg" width="18" height="18" align="absmiddle" alt=""> **Ubuntu / Debian / Linux Mint** | [.deb](https://github.com/PapilotAI/papilot/releases/latest) | `sudo apt install ./Papilot-*.deb` |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="../assets/readme-icons/linux-dark.svg"><img src="../assets/readme-icons/linux.svg" width="18" height="18" align="absmiddle" alt=""></picture> **Fedora / Arch / openSUSE** | [AppImage](https://github.com/PapilotAI/papilot/releases/latest) | `chmod +x Papilot-*.AppImage`<br>`./Papilot-*.AppImage` |
+| <picture><source media="(prefers-color-scheme: dark)" srcset="../assets/readme-icons/apple-dark.svg"><img src="../assets/readme-icons/apple.svg" width="18" height="18" align="absmiddle" alt=""></picture> **macOS** | [Apple Silicon](https://github.com/XuYouo/StudyBuddy/releases/latest) · [Intel](https://github.com/XuYouo/StudyBuddy/releases/latest)<br>DMG / ZIP | Abra o DMG e arraste StudyBuddy para Aplicativos. |
+| <picture><source media="(prefers-color-scheme: dark)" srcset="../assets/readme-icons/windows-dark.svg"><img src="../assets/readme-icons/windows.svg" width="18" height="18" align="absmiddle" alt=""></picture> **Windows** | [Instalador](https://github.com/XuYouo/StudyBuddy/releases/latest) · [Versão portátil](https://github.com/XuYouo/StudyBuddy/releases/latest)<br>x64 | Execute o instalador ou abra diretamente a versão portátil. |
+| <img src="../assets/readme-icons/ubuntu.svg" width="18" height="18" align="absmiddle" alt=""> <img src="../assets/readme-icons/debian.svg" width="18" height="18" align="absmiddle" alt=""> **Ubuntu / Debian / Linux Mint** | [.deb](https://github.com/XuYouo/StudyBuddy/releases/latest) | `sudo apt install ./StudyBuddy-*.deb` |
+| <picture><source media="(prefers-color-scheme: dark)" srcset="../assets/readme-icons/linux-dark.svg"><img src="../assets/readme-icons/linux.svg" width="18" height="18" align="absmiddle" alt=""></picture> **Fedora / Arch / openSUSE** | [AppImage](https://github.com/XuYouo/StudyBuddy/releases/latest) | `chmod +x StudyBuddy-*.AppImage`<br>`./StudyBuddy-*.AppImage` |
 | <img src="../assets/readme-icons/nixos.svg" width="18" height="18" align="absmiddle" alt=""> **NixOS** | [Nix flake](../nix.md#nixos-flake) | [Adicionar ao seu `flake.nix`](../nix.md#nixos-flake) |
-| **macOS / Linux / Windows (CLI)** | [npm](https://www.npmjs.com/package/papilot) | `npm install -g papilot` |
+| **macOS / Linux / Windows (CLI)** | [npm](https://github.com/XuYouo/StudyBuddy/blob/main/docs/development-macos.md) | `npm install -g .` |
 
 Os pacotes Linux são para x86_64 e foram testados no Ubuntu 22.04. Consulte o [guia da versão desktop](../../desktop/README.md#build-and-run) para dependências e ajuda com AppImage/FUSE.
 
@@ -122,11 +121,11 @@ O pacote npm abre a interface no navegador e requer Node.js 22.22+. O Nix requer
 
 ## 🚀 Comece a usar
 
-1. **Instale.** [Baixe o aplicativo](#downloads) para macOS, Linux ou Windows, ou execute `npm install -g papilot` (Node.js 22.22+). Você também precisa do Git e do TeX Live ou MacTeX.
-2. **Abra seu projeto.** Escolha a pasta com seus arquivos `.tex`. O Papilot compila o PDF.
+1. **Instale.** [Baixe o aplicativo](#downloads) para macOS, Linux ou Windows, ou execute `npm install -g .` (Node.js 22.22+). Você também precisa do Git e do TeX Live ou MacTeX.
+2. **Abra seu projeto.** Escolha a pasta com seus arquivos `.tex`. O StudyBuddy compila o PDF.
 3. **Escolha um agente.** Use o login de CLI ou a chave de API que você já tem e faça marcações na página.
 
-Quer ver um exemplo primeiro? Execute `papilot demo`. Os detalhes estão no [guia](../guide.md#install-and-run).
+Quer ver um exemplo primeiro? Execute `studybuddy demo`. Os detalhes estão no [guia](../guide.md#install-and-run).
 
 <a id="documentation-and-community"></a>
 
@@ -134,9 +133,9 @@ Quer ver um exemplo primeiro? Execute `papilot demo`. Os detalhes estão no [gui
 
 ## 🤝 Comunidade
 
-<img src="../assets/readme-icons/issue.svg" width="20" height="20" align="absmiddle" alt=""> &nbsp;**Encontrou um bug ou sentiu falta de um recurso?** [Abra uma issue](https://github.com/PapilotAI/papilot/issues/new/choose), mesmo que seja um rascunho.
+<img src="../assets/readme-icons/issue.svg" width="20" height="20" align="absmiddle" alt=""> &nbsp;**Encontrou um bug ou sentiu falta de um recurso?** [Abra uma issue](https://github.com/XuYouo/StudyBuddy/issues/new/choose), mesmo que seja um rascunho.
 
-<img src="../assets/readme-icons/discussion.svg" width="20" height="20" align="absmiddle" alt=""> &nbsp;**Tem uma dúvida ou uma ideia?** [Inicie uma discussão](https://github.com/PapilotAI/papilot/discussions).
+<img src="../assets/readme-icons/discussion.svg" width="20" height="20" align="absmiddle" alt=""> &nbsp;**Tem uma dúvida ou uma ideia?** [Inicie uma discussão](https://github.com/XuYouo/StudyBuddy/discussions).
 
 <img src="../assets/readme-icons/pull-request.svg" width="20" height="20" align="absmiddle" alt=""> &nbsp;**Torne-se um colaborador.** Pull requests são muito bem-vindos, inclusive os escritos com agentes de IA. Comece pelo [guia de contribuição](../../.github/CONTRIBUTING.md).
 
@@ -145,10 +144,10 @@ Quer ver um exemplo primeiro? Execute `papilot demo`. Os detalhes estão no [gui
 ## Colaboradores
 
 <p>
-  <a href="https://github.com/PapilotAI/papilot/graphs/contributors">
+  <a href="https://github.com/XuYouo/StudyBuddy/graphs/contributors">
     <picture>
       <source media="(max-width: 600px)" srcset="../assets/readme-contributors/compact.svg">
-      <img src="../assets/readme-contributors/desktop.svg" alt="Colaboradores do Papilot">
+      <img src="../assets/readme-contributors/desktop.svg" alt="Colaboradores do StudyBuddy">
     </picture>
   </a>
 </p>

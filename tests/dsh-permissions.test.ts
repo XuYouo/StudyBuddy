@@ -95,7 +95,7 @@ for (const method of ['configOptions(signal)', 'setConfig(configId, value, signa
   test(`DeepSeek loader rejects an incompatible ${method} layout before running it`, () => {
     const result = runFixture(source.replace(method, method.replace('signal', 'changed')), "assert.fail('An incompatible adapter must not execute');");
     assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /This dsh version needs an updated Papilot permission adapter/);
+    assert.match(result.stderr, /This dsh version needs an updated StudyBuddy permission adapter/);
     assert.doesNotMatch(result.stderr, /An incompatible adapter must not execute/);
   });
 }
@@ -106,7 +106,7 @@ for (const layout of ['missing', 'ambiguous']) {
       : `${source}\nfunction unrelated() { const inject = []; return inject; }`;
     const result = runFixture(changed, "assert.fail('An incompatible adapter must not execute');");
     assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /This dsh version needs an updated Papilot permission adapter/);
+    assert.match(result.stderr, /This dsh version needs an updated StudyBuddy permission adapter/);
     assert.doesNotMatch(result.stderr, /An incompatible adapter must not execute/);
   });
 }

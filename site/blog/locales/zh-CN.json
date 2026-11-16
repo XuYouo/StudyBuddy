@@ -8,15 +8,15 @@
     "indexTitle": "博客",
     "indexDescription": "关于 AI、LaTeX 与论文写作。",
     "category": "产品理念",
-    "latest": "来自 Papilot 团队",
+    "latest": "来自 StudyBuddy 团队",
     "read": "阅读全文",
     "contents": "本文目录",
     "back": "所有文章",
     "minutes": "分钟阅读",
     "rss": "通过 RSS 订阅",
     "privacy": "隐私声明",
-    "author": "Papilot 团队",
-    "indexSeoTitle": "Papilot 博客：AI 与 LaTeX 论文写作",
+    "author": "StudyBuddy 团队",
+    "indexSeoTitle": "StudyBuddy 博客：AI 与 LaTeX 论文写作",
     "indexSeoDescription": "探索以 PDF 为中心的 AI 与 LaTeX 协作写作：在论文上批注、审阅排版后的修改，并让学术判断留在作者手中。",
     "languageLabel": "语言",
     "mainNavigation": "主导航",
@@ -39,7 +39,7 @@
     "newPath": "阅读 · 批注 · 审阅",
     "under": "AI 在后台修改本地 LaTeX 文件",
     "flow": "修改始于页面，也归于页面",
-    "flowDesc": "作者批注文稿，AI 修改本地 LaTeX，Papilot 编译，再由作者在 PDF 上审阅；需要时继续修订。",
+    "flowDesc": "作者批注文稿，AI 修改本地 LaTeX，StudyBuddy 编译，再由作者在 PDF 上审阅；需要时继续修订。",
     "again": "需要时，带着新的批注继续",
     "steps": [
       [
@@ -53,7 +53,7 @@
         "定位并修改本地源码。"
       ],
       [
-        "Papilot",
+        "StudyBuddy",
         "编译项目",
         "生成实际排版后的文稿。"
       ],

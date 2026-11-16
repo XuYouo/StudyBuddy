@@ -48,7 +48,7 @@ try {
     await page.waitForFunction(parent => document.querySelector('#create-paper-parent')?.value === parent, parent);
     if (desktop) { await dialog.getByRole('button', { name: 'Choose folder', exact: true }).click(); assert.equal(await location.inputValue(), picked); }
     else {
-      await dialog.getByText('This location is on the computer running Papilot.', { exact: false }).waitFor();
+      await dialog.getByText('This location is on the computer running StudyBuddy.', { exact: false }).waitFor();
       await page.setViewportSize({ width: 320, height: 640 });
       await page.emulateMedia({ colorScheme: 'dark' });
       await page.screenshot({ path: 'test-results/create-paper-mobile.png', animations: 'disabled' });

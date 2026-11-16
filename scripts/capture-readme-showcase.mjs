@@ -6,9 +6,9 @@
 //
 // npm run readme:showcase builds everything and runs both.
 //
-// The homepage draws Papilot in HTML and CSS (site/index.html), so the README
+// The homepage draws StudyBuddy in HTML and CSS (site/index.html), so the README
 // reuses those drawings instead of keeping a second copy: hero*.png is the
-// opening window and paradigm*.png the three cards of "Why", whose Papilot
+// opening window and paradigm*.png the three cards of "Why", whose StudyBuddy
 // card shows the real review from scripts/capture-readme-review.mjs. Each is
 // captured at 2x with a transparent surround, in light and dark, at desktop
 // and phone width (the phone layout draws the phone app), in English and
@@ -55,11 +55,11 @@ try {
     const page = await browser.newPage({ viewport: { width: layout.width, height: 1000 }, deviceScaleFactor: 2, colorScheme: scheme, reducedMotion: 'reduce' });
     await page.goto(`${origin}/${locale === 'en' ? '' : `${locale}/`}`, { waitUntil: 'networkidle' });
     // Under reduced motion the site greys out the two older ways at once; the
-    // README keeps their red marks, the "don't" beside Papilot's "do".
+    // README keeps their red marks, the "don't" beside StudyBuddy's "do".
     await page.addStyleTag({ content: 'html,body,main,section{background:transparent!important}.topbar,.scroll-cue{display:none!important}.era.old{--old:0!important}'
       // Text beside a window would show in its shadow margin on a phone.
       + '.hero-copy>:not(.app-window),.feature-text,.section-head{visibility:hidden!important}' });
-    // Papilot's card in "Why" shows the real review instead of the homepage's
+    // StudyBuddy's card in "Why" shows the real review instead of the homepage's
     // abstract drawing: the review pane of scripts/capture-readme-review.mjs.
     const raw = path.join(root, 'test-results/readme-review', `review-app${scheme === 'dark' ? '-dark' : ''}-raw${locale === 'en' ? '' : `.${locale}`}.png`);
     if (!fs.existsSync(raw)) throw new Error('Run node --import tsx scripts/capture-readme-review.mjs first.');

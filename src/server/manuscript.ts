@@ -106,7 +106,7 @@ function gitDir(root: string) {
 }
 // Cheap evidence that Git's own state moved: the index, HEAD, the current
 // branch, a fetch or a merge. Each changes when a commit, stage, checkout,
-// fetch or merge happens, from Papilot or from a terminal.
+// fetch or merge happens, from StudyBuddy or from a terminal.
 export function gitStamp(root: string) {
   const dir = gitDir(root);
   if (!dir) return '';
@@ -452,14 +452,14 @@ export class Manuscripts extends EventEmitter {
   // Every open event stream listens for builds.
   constructor() { super(); this.setMaxListeners(0); }
   /** Stops every compiler this process started, also paused ones, so that
-   *  nothing keeps running after Papilot quits. */
+   *  nothing keeps running after StudyBuddy quits. */
   async stop() {
     const stopping = Promise.all([this.reviewSnapshots.stop(), this.pdfReader.stop()]);
     const { stopAll } = await import(pathToFileURL(path.join(ENGINE, 'src/core/process.ts')).href);
     stopAll();
     await stopping;
   }
-  /** Loads the PDF engine and reads Papilot's example paper with it once,
+  /** Loads the PDF engine and reads StudyBuddy's example paper with it once,
    *  before the server answers requests: compiling its WebAssembly and
    *  setting up color conversion take a few hundred milliseconds the first
    *  time, which would otherwise hold up the first PDF someone opens. */
@@ -539,7 +539,7 @@ export class Manuscripts extends EventEmitter {
 
   // The view polls every second and a half while a build runs; Git's status
   // costs a walk of the working tree, which competes with TeX, so it is
-  // read again at most every few seconds then, and after Papilot's own writes.
+  // read again at most every few seconds then, and after StudyBuddy's own writes.
   // Between builds the view polls every five seconds to notice other editors:
   // the status is read again when the working tree or Git's own state moved,
   // and at least every half minute for what neither shows, such as a push
@@ -585,7 +585,7 @@ export class Manuscripts extends EventEmitter {
     if (!build || build.tree !== tree) this.start(projectId, root, tree, build);
   }
 
-  /** After Papilot itself wrote into the working tree: the tree it is now,
+  /** After StudyBuddy itself wrote into the working tree: the tree it is now,
    *  compiling at once or as soon as the build in progress ends. The caller
    *  recognizes the build of its write by this tree. */
   async written(projectId: string, root: string) {
@@ -962,7 +962,7 @@ export class Manuscripts extends EventEmitter {
   /** The PDF pages, counted from 1, where lines of a paper file printed in the
    *  manuscript's latest build, or null without one. A task's text differs
    *  from it only where the task edited, so this places most of what it reads. */
-  /** The paper's latest compiled build, which Papilot Writer maps the paper from. */
+  /** The paper's latest compiled build, which StudyBuddy Writer maps the paper from. */
   paperBuild(projectId: string) {
     const build = this.builds.get(projectId);
     if (!build?.pdf || !build.root || !fs.existsSync(build.pdf)) return null;
@@ -1015,7 +1015,7 @@ export class Manuscripts extends EventEmitter {
     const { mupdf } = await engine();
     return markedPage(mupdf, pdf, page, rects);
   }
-  // The PDF with the paper's notes drawn on it, to share with people outside Papilot.
+  // The PDF with the paper's notes drawn on it, to share with people outside StudyBuddy.
   async annotatedPdf(projectId: string, key: string, notes: ExportNote[]) {
     const pdf = this.pdf(projectId, key), { mupdf } = await engine();
     return annotatePdf(mupdf, fs.readFileSync(pdf), notes);

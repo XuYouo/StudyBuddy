@@ -59,7 +59,7 @@ echo $! > "${gates}/child-$key"
 echo $$ > "${gates}/pid-$key"
 if [ -n "$PAPILOT_PASS_DIR" ] && [ -e "${gates}/preview" ]; then
   mkdir -p "$PAPILOT_PASS_DIR/1" && echo xdv > "$PAPILOT_PASS_DIR/1/main.xdv"
-  echo "Papilot: pass 1 output saved"
+  echo "StudyBuddy: pass 1 output saved"
   echo "Run number 2 of rule 'pdflatex'"
 fi
 i=0; while [ ! -e "${gates}/go-$key" ] && [ $i -lt 1200 ]; do sleep 0.05; i=$((i+1)); done

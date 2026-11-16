@@ -20,6 +20,32 @@ function fixture(overrides: Record<string, any> = {}) {
   const updates = new Updates({ root: process.cwd(), data, version: '0.6.0', port: 1, supported: true, latest: async () => '0.7.0', busy: () => false, shutdown() {}, ...overrides });
   return { data, updates, close() { updates.close(); fs.rmSync(data, { recursive: true, force: true }); } };
 }
+test('local builds neither contact update feeds nor activate queued application updates', async () => {
+  for (const desktop of [false, true]) {
+    const f = fixture({ enabled: false, desktop,
+      bundle: { root: process.cwd(), version: '0.1.0', fingerprint: 'f'.repeat(64) },
+      latest: async () => assert.fail('disabled updates must not query npm'),
+      latestDesktop: async () => assert.fail('disabled updates must not query GitHub'),
+      install: async () => assert.fail('disabled updates must not install'),
+      restart: async () => assert.fail('disabled updates must not restart'),
+    });
+    try {
+      writeJson(path.join(f.data, desktop ? 'updates/desktop/status.json' : 'updates/status.json'), {
+        phase: 'waiting', latestVersion: '99.0.0', pid: process.pid,
+      });
+      f.updates.start();
+      const status = await f.updates.check();
+      assert.equal(status.canUpdate, false);
+      assert.equal(status.packageManager, 'managed');
+      assert.equal(status.phase, 'idle');
+      assert.equal(status.latestVersion, null);
+      assert.throws(() => f.updates.setChannel('dev'), /managed outside StudyBuddy/);
+      assert.throws(() => f.updates.install('99.0.0'), /managed outside StudyBuddy/);
+      assert.equal(fs.existsSync(path.join(f.data, 'updates/install.lock')), false);
+    } finally { f.close(); }
+  }
+});
+
 test('the development desktop app checks its own source and only links to installers', async () => {
   const data = temporary(), downloadUrl = `${DESKTOP_RELEASES}/tag/v0.7.0`;
   const saved = { currentVersion: devVersion, latestVersion: devVersion, phase: 'restarting', pid: process.pid };
@@ -59,10 +85,10 @@ function githubFixture(files: Record<string, Buffer | string>) {
   const fetcher: typeof fetch = async (input, init) => {
     const url = String(input); requests.push(url);
     assert.equal(init?.redirect, 'manual'); assert.ok(!url.startsWith('https://api.github.com'));
-    const latest = /^https:\/\/github\.com\/PapilotAI\/papilot\/releases\/latest\/download\/(.+)$/.exec(url);
+    const latest = /^https:\/\/github\.com\/XuYouo\/StudyBuddy\/releases\/latest\/download\/(.+)$/.exec(url);
     const stable = Object.keys(files).filter(name => /^v[\d.]+\//.test(name)).sort().pop()?.split('/')[0];
-    if (latest) return stable ? new Response(null, { status: 302, headers: { Location: `https://github.com/PapilotAI/papilot/releases/download/${stable}/${latest[1]}` } }) : new Response('Not Found', { status: 404 });
-    const download = /^https:\/\/github\.com\/PapilotAI\/papilot\/releases\/download\/(.+)$/.exec(url);
+    if (latest) return stable ? new Response(null, { status: 302, headers: { Location: `https://github.com/XuYouo/StudyBuddy/releases/download/${stable}/${latest[1]}` } }) : new Response('Not Found', { status: 404 });
+    const download = /^https:\/\/github\.com\/XuYouo\/StudyBuddy\/releases\/download\/(.+)$/.exec(url);
     if (download) return download[1] in files ? new Response(null, { status: 302, headers: { Location: `https://release-assets.githubusercontent.com/${download[1]}` } }) : new Response('Not Found', { status: 404 });
     const file = /^https:\/\/release-assets\.githubusercontent\.com\/(.+)$/.exec(url)?.[1];
     if (file && file in files) { const body = files[file]; return new Response(typeof body === 'string' ? body : new Uint8Array(body)); }
@@ -74,7 +100,7 @@ function desktopRelease(tag: string, version: string, manifest: Record<string, a
   const layer = Buffer.from(`layer ${version}`), name = `papilot-app-${version}.tgz`;
   const written = { format: 1, version, fingerprint, layer: { name, size: layer.length, sha256: sha256(layer) }, ...manifest };
   return { files: { [`${tag}/desktop.json`]: JSON.stringify(written), [`${tag}/${name}`]: layer },
-    layer: { url: `https://github.com/PapilotAI/papilot/releases/download/${tag}/${name}`, size: layer.length, sha256: sha256(layer) } };
+    layer: { url: `https://github.com/XuYouo/StudyBuddy/releases/download/${tag}/${name}`, size: layer.length, sha256: sha256(layer) } };
 }
 test('desktop discovery reads release downloads and offers the update layer only to the shell it was built for', async () => {
   const stable = desktopRelease('v1.1.0', '1.1.0'), dev = desktopRelease(DESKTOP_DEV_TAG, devVersion);
@@ -84,7 +110,7 @@ test('desktop discovery reads release downloads and offers the update layer only
   assert.deepEqual(await latestDesktopRelease(github.fetcher), { version: '1.1.0', downloadUrl: `${DESKTOP_RELEASES}/tag/v1.1.0` }, 'The development app gets no layer');
   assert.deepEqual(await latestDesktopRelease(github.fetcher, 'dev', fingerprint), { version: devVersion, downloadUrl: `${DESKTOP_RELEASES}/tag/${DESKTOP_DEV_TAG}`, layer: dev.layer });
   assert.deepEqual(await latestDesktopRelease(github.fetcher, 'dev', 'e'.repeat(64)), { version: devVersion, downloadUrl: `${DESKTOP_RELEASES}/tag/${DESKTOP_DEV_TAG}` });
-  assert.ok(github.requests.includes('https://github.com/PapilotAI/papilot/releases/latest/download/desktop.json'));
+  assert.ok(github.requests.includes('https://github.com/XuYouo/StudyBuddy/releases/latest/download/desktop.json'));
   // A release without a manifest yet (or before the first nightly build) offers nothing.
   assert.equal(await latestDesktopRelease(githubFixture(stable.files).fetcher, 'dev', fingerprint), null);
   assert.equal(await latestDesktopRelease(githubFixture({}).fetcher, 'stable', fingerprint), null);
@@ -101,7 +127,7 @@ test('desktop discovery reads release downloads and offers the update layer only
   // Downloads follow redirects only over HTTPS to GitHub's hosts.
   const redirect = (location: string): typeof fetch => async () => new Response(null, { status: 302, headers: { Location: location } });
   for (const location of ['http://release-assets.githubusercontent.com/x', 'https://example.com/x', 'https://githubusercontent.com.example.com/x']) {
-    await assert.rejects(download('https://github.com/PapilotAI/papilot/releases/download/v1.1.0/desktop.json', redirect(location), 1024), /could not be installed/);
+    await assert.rejects(download('https://github.com/XuYouo/StudyBuddy/releases/download/v1.1.0/desktop.json', redirect(location), 1024), /could not be installed/);
   }
   await assert.rejects(download('https://github.com/x', async () => new Response('x'.repeat(2048)), 1024), /could not be installed/);
 });
@@ -170,9 +196,9 @@ test('installing a layer verifies the download, links the installer dependencies
   const data = temporary(), source = temporary(), version = '0.7.0';
   const root = path.join(source, 'package');
   const files: Record<string, string> = {
-    'package.json': JSON.stringify({ name: 'papilot', version, type: 'module' }), 'desktop-layer.json': JSON.stringify({ format: 1, version, fingerprint }),
+    'package.json': JSON.stringify({ name: 'studybuddy', version, type: 'module' }), 'desktop-layer.json': JSON.stringify({ format: 1, version, fingerprint }),
     'dist/index.html': '', 'engine/package.json': '{}', 'src/server/start.ts': '',
-    'src/server/main.ts': `import http from 'node:http';\nimport { fileURLToPath } from 'node:url';\nimport fs from 'node:fs';\nhttp.createServer((_, res) => res.end(JSON.stringify({ name: 'Papilot', version: '${version}', linked: fs.existsSync(fileURLToPath(new URL('../../node_modules/tsx', import.meta.url))) }))).listen(Number(process.env.PAPILOT_PORT), '127.0.0.1');\n`,
+    'src/server/main.ts': `import http from 'node:http';\nimport { fileURLToPath } from 'node:url';\nimport fs from 'node:fs';\nhttp.createServer((_, res) => res.end(JSON.stringify({ name: 'StudyBuddy', version: '${version}', linked: fs.existsSync(fileURLToPath(new URL('../../node_modules/tsx', import.meta.url))) }))).listen(Number(process.env.PAPILOT_PORT), '127.0.0.1');\n`,
   };
   for (const [name, content] of Object.entries(files)) { fs.mkdirSync(path.dirname(path.join(root, name)), { recursive: true }); fs.writeFileSync(path.join(root, name), content); }
   const archive = path.join(source, 'layer.tgz');
@@ -212,10 +238,10 @@ test('dev discovery reads main once and pins the package version to its exact co
   const requests: string[] = [];
   const fetcher: typeof fetch = async url => {
     requests.push(String(url));
-    return new Response(JSON.stringify(requests.length === 1 ? { object: { sha: revision } } : { name: 'papilot', version: '0.7.0' }));
+    return new Response(JSON.stringify(requests.length === 1 ? { object: { sha: revision } } : { name: 'studybuddy', version: '0.7.0' }));
   };
   assert.equal(await latestRelease('dev', fetcher), devVersion);
-  assert.deepEqual(requests, ['https://api.github.com/repos/PapilotAI/papilot/git/ref/heads/main', `https://raw.githubusercontent.com/PapilotAI/papilot/${revision}/package.json`]);
+  assert.deepEqual(requests, ['https://api.github.com/repos/XuYouo/StudyBuddy/git/ref/heads/main', `https://raw.githubusercontent.com/XuYouo/StudyBuddy/${revision}/package.json`]);
   assert.equal(devRevision(devVersion), revision);
   assert.ok(releaseVersion(devVersion));
   for (const value of ['0.7.0-dev.main', '0.7.0-dev.abc1234', `${devVersion}/../../bad`, '0.7.0-dev.' + 'A'.repeat(40)]) assert.equal(releaseVersion(value), false);
@@ -256,7 +282,7 @@ test('dev preparation builds the advertised commit, independently of a newer mai
   try {
     fs.mkdirSync(source); fs.mkdirSync(root);
     git(source, ['init', '-q']); git(source, ['config', 'user.name', 'Test']); git(source, ['config', 'user.email', 'test@localhost']);
-    writeJson(path.join(source, 'package.json'), { name: 'papilot', version: '0.7.0' });
+    writeJson(path.join(source, 'package.json'), { name: 'studybuddy', version: '0.7.0' });
     writeJson(path.join(source, 'engine/package.json'), { name: 'review' });
     git(source, ['add', '.']); git(source, ['-c', 'commit.gpgsign=false', '-c', 'core.hooksPath=/dev/null', 'commit', '-qm', 'Selected']);
     const sha = git(source, ['rev-parse', 'HEAD']);
@@ -293,7 +319,7 @@ test('dev builds tolerate test-only engine restrictions but reject incompatible 
       ['app-runtime', 'dependencies', 'devDependencies'],
       ['review-runtime', 'devDependencies', 'dependencies'],
     ]) {
-      writeJson(path.join(source, 'package.json'), { name: 'papilot', version: '0.7.0', scripts: { build }, [appKind]: { 'fixture-incompatible': 'file:./fixture-incompatible-1.0.0.tgz' } });
+      writeJson(path.join(source, 'package.json'), { name: 'studybuddy', version: '0.7.0', scripts: { build }, [appKind]: { 'fixture-incompatible': 'file:./fixture-incompatible-1.0.0.tgz' } });
       writeJson(path.join(engine, 'package.json'), { name: 'review', version: '1.0.0', scripts: { build }, [reviewKind]: { 'fixture-incompatible': 'file:../fixture-incompatible-1.0.0.tgz' } });
       npm(source, ['install', '--package-lock-only']);
       npm(engine, ['install', '--package-lock-only']);
@@ -372,20 +398,20 @@ test('an interrupted update is recoverable and another live installer owns the l
   } finally { f.close(); }
 });
 test('launchers select only a newer complete release inside the managed directory', () => {
-  const data = temporary(), root = path.join(data, 'original'), release = path.join(data, 'updates/releases/next/node_modules/papilot');
+  const data = temporary(), root = path.join(data, 'original'), release = path.join(data, 'updates/releases/next/node_modules/studybuddy');
   try {
-    fs.mkdirSync(root, { recursive: true }); writeJson(path.join(root, 'package.json'), { name: 'papilot', version: '0.6.0' });
+    fs.mkdirSync(root, { recursive: true }); writeJson(path.join(root, 'package.json'), { name: 'studybuddy', version: '0.6.0' });
     fs.mkdirSync(path.join(release, 'src/server'), { recursive: true }); fs.writeFileSync(path.join(release, 'src/server/start.ts'), '');
-    writeJson(path.join(release, 'package.json'), { name: 'papilot', version: '0.7.0' });
+    writeJson(path.join(release, 'package.json'), { name: 'studybuddy', version: '0.7.0' });
     writeJson(path.join(data, 'updates/active.json'), { root: release, version: '0.7.0' });
     assert.equal(activeInstallation(root, data), release);
     assert.equal(activeInstallation(release, data), release);
-    writeJson(path.join(root, 'package.json'), { name: 'papilot', version: '0.8.0' });
+    writeJson(path.join(root, 'package.json'), { name: 'studybuddy', version: '0.8.0' });
     assert.equal(activeInstallation(root, data), root);
-    writeJson(path.join(release, 'package.json'), { name: 'papilot', version: devVersion });
+    writeJson(path.join(release, 'package.json'), { name: 'studybuddy', version: devVersion });
     writeJson(path.join(data, 'updates/active.json'), { root: release, version: devVersion, channel: 'dev' });
     assert.equal(activeInstallation(root, data), release, 'an explicit dev selection survives the original launcher');
-    writeJson(path.join(release, 'package.json'), { name: 'papilot', version: '0.7.0' });
+    writeJson(path.join(release, 'package.json'), { name: 'studybuddy', version: '0.7.0' });
     writeJson(path.join(data, 'updates/active.json'), { root: release, version: '0.7.0', channel: 'stable' });
     assert.equal(activeInstallation(root, data), release, 'returning to stable is an explicit selection');
     writeJson(path.join(data, 'updates/active.json'), { root: release, version: '0.7.0', channel: 'dev' });
@@ -410,7 +436,7 @@ async function stopTestTree(pid: number | undefined) {
 }
 function fakeRelease(root: string, version: string, broken = false) {
   fs.mkdirSync(path.join(root, 'src/server'), { recursive: true });
-  writeJson(path.join(root, 'package.json'), { name: 'papilot', version, type: 'module' });
+  writeJson(path.join(root, 'package.json'), { name: 'studybuddy', version, type: 'module' });
   fs.symlinkSync(path.join(process.cwd(), 'node_modules'), path.join(root, 'node_modules'), process.platform === 'win32' ? 'junction' : 'dir');
   fs.writeFileSync(path.join(root, 'src/server/main.ts'), `
     import http from 'node:http'; import fs from 'node:fs'; import path from 'node:path';
@@ -419,7 +445,7 @@ function fakeRelease(root: string, version: string, broken = false) {
     ${broken ? "fs.writeFileSync(path.join(data,'papilot.sqlite'),'broken migration');" : ''}
     const server = http.createServer((req,res) => {
       let active = {}; try { active = JSON.parse(fs.readFileSync(path.join(data,'updates/active.json'),'utf8')); } catch {}
-      res.setHeader('Content-Type','application/json'); res.end(JSON.stringify({ name:'Papilot', version:${JSON.stringify(broken ? 'wrong' : version)}, updateInstance:active.id }));
+      res.setHeader('Content-Type','application/json'); res.end(JSON.stringify({ name:'StudyBuddy', version:${JSON.stringify(broken ? 'wrong' : version)}, updateInstance:active.id }));
     }); server.listen(Number(process.env.PAPILOT_PORT),'127.0.0.1');
     process.on('SIGTERM',()=>server.close(()=>process.exit(0)));
   `);
@@ -463,15 +489,15 @@ test('downloaded releases may start slowly before activation, but not past the d
 });
 
 for (const version of ['0.7.0', devVersion]) test(`a browser install of ${version} restarts the real server and the original launcher keeps the selected version and data`, async t => {
-  const folder = temporary(), original = path.join(folder, 'original'), data = path.join(original, '.papilot');
-  const candidate = path.join(data, 'updates/releases/next/node_modules/papilot'), port = await freePort();
+  const folder = temporary(), original = path.join(folder, 'original'), data = path.join(original, '.studybuddy');
+  const candidate = path.join(data, 'updates/releases/next/node_modules/studybuddy'), port = await freePort();
   const log = fs.openSync(path.join(folder, 'server.log'), 'w');
   let started: ReturnType<typeof spawn> | undefined;
   const copy = (root: string, version: string) => {
     fs.mkdirSync(root, { recursive: true });
     fs.cpSync(path.join(process.cwd(), 'src'), path.join(root, 'src'), { recursive: true });
     fs.cpSync(path.join(process.cwd(), 'bin'), path.join(root, 'bin'), { recursive: true });
-    writeJson(path.join(root, 'package.json'), { ...readJson(path.join(process.cwd(), 'package.json')), version });
+    writeJson(path.join(root, 'package.json'), { ...readJson(path.join(process.cwd(), 'package.json')), version, updatesEnabled: true });
     fs.symlinkSync(path.join(process.cwd(), 'node_modules'), path.join(root, 'node_modules'), process.platform === 'win32' ? 'junction' : 'dir');
     fs.symlinkSync(path.join(process.cwd(), 'engine'), path.join(root, 'engine'), process.platform === 'win32' ? 'junction' : 'dir');
     const start = path.join(root, 'src/server/start.ts');

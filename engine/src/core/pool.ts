@@ -9,13 +9,13 @@ import { capture, ProcessError, stopping } from "./process.ts";
 /** How much a TeX run matters to the person waiting, as in build.ts. */
 export type PoolPriority = "foreground" | "normal" | "background";
 const RANK: Record<PoolPriority, number> = { background: 0, normal: 1, foreground: 2 };
-/** TeX runs at once on this machine, across Papilot and every review
+/** TeX runs at once on this machine, across StudyBuddy and every review
  *  engine it started: the manuscript preview, review rounds of several
  *  tasks, speculative builds and comparison rendering. */
 export const SLOTS = 2;
 const signals = process.platform !== "win32";
 
-// The pool is a folder that Papilot passes to the review engines it starts
+// The pool is a folder that StudyBuddy passes to the review engines it starts
 // (PAPILOT_TEX_POOL), so every process of one installation shares it. A
 // process started without one has a pool of its own. A process holds a slot
 // with a lock file that it keeps fresh; one that crashed leaves a lock that

@@ -1,7 +1,7 @@
 import type { Api, Model } from '@mariozechner/pi-ai';
 import { toolError } from './policy.ts';
 
-// Papilot Writer offers the models each provider says the author can use
+// StudyBuddy Writer offers the models each provider says the author can use
 // now, not Pi's built-in list, which ships with the package and goes stale:
 // a ChatGPT account may not serve a model the list names, and newer models
 // are missing from it. Each provider's own model list is fetched with the
@@ -29,7 +29,7 @@ function chatgptAccount(token: string) {
   try { return JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString('utf8'))?.['https://api.openai.com/auth']?.chatgpt_account_id || null; } catch { return null; }
 }
 
-/** A provider's own model list, or null when it has none Papilot can read. */
+/** A provider's own model list, or null when it has none StudyBuddy can read. */
 export async function listModels(provider: string, token: string, template: Model<Api>, fetcher: Fetch, clientVersion: string): Promise<Listed[] | null> {
   const base = trimSlash(template.baseUrl || '');
   if (provider === 'openai-codex') {

@@ -235,7 +235,7 @@ kbd {
 }
 
 /* Full paper or changes only, as one segmented control (a host such as
-   Papilot shows its own instead). */
+   StudyBuddy shows its own instead). */
 .view-switch {
   display: inline-grid;
   grid-template-columns: repeat(2, 1fr);
@@ -1223,7 +1223,7 @@ kbd {
 }
 
 /* The comment box: a title with a close button, a borderless field that
-   grows with its text, and a round send button, like Papilot's own composer. */
+   grows with its text, and a round send button, like StudyBuddy's own composer. */
 .composer {
   position: fixed;
   left: 50%;

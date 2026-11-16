@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// The papilot command: starts the workspace, or adds the example paper first.
+// The studybuddy command: starts the workspace, or adds the example paper first.
 import { spawn, spawnSync } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import os from 'node:os';
@@ -9,21 +9,21 @@ import { agentPath, findExecutable, spawnSyncCommand, WINDOWS } from './agent-pa
 import { npmCli } from './npm-cli.mjs';
 import { activeInstallation, managedInstall } from './installation.mjs';
 
-const usage = `Usage: papilot [doctor | demo | codex <args> | service install | service stop] [--port <number>] [--data <folder>]
+const usage = `Usage: studybuddy [doctor | demo | codex <args> | service install | service stop] [--port <number>] [--data <folder>]
 
-  papilot                  Start Papilot at http://127.0.0.1:7274
-  papilot doctor           Check the environment; use doctor --help for options
-  papilot demo             Add the example paper, then start
-  papilot codex login      Sign in to Codex with the Codex that Papilot uses
-  papilot service install  Run Papilot in the background after login (macOS)
-  papilot service stop     Stop the background service
+  studybuddy                  Start StudyBuddy at http://127.0.0.1:7274
+  studybuddy doctor           Check the environment; use doctor --help for options
+  studybuddy demo             Add the example paper, then start
+  studybuddy codex login      Sign in to Codex with the Codex that StudyBuddy uses
+  studybuddy service install  Run StudyBuddy in the background after login (macOS)
+  studybuddy service stop     Stop the background service
   --port <number>          Listen on another local port (PAPILOT_PORT)
-  --data <folder>          Keep state in another folder (PAPILOT_DATA, default ~/.papilot)
+  --data <folder>          Keep state in another folder (PAPILOT_DATA, default ~/.studybuddy)
   --version                Print the version`;
 
 let pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 const packageRoot = fileURLToPath(new URL('..', import.meta.url));
-const installedPackage = () => JSON.parse(readFileSync(path.join(activeInstallation(packageRoot, process.env.PAPILOT_DATA || path.join(os.homedir(), '.papilot')), 'package.json'), 'utf8'));
+const installedPackage = () => JSON.parse(readFileSync(path.join(activeInstallation(packageRoot, process.env.PAPILOT_DATA || path.join(os.homedir(), '.studybuddy')), 'package.json'), 'utf8'));
 const args = process.argv.slice(2);
 async function main() {
   const doctor = args[0] === 'doctor';
@@ -51,7 +51,7 @@ async function main() {
     }
   }
 
-  // Papilot needs Node 22.22+. When an older Node runs this command, use a newer
+  // StudyBuddy needs Node 22.22+. When an older Node runs this command, use a newer
   // one from nvm or PATH, preferring LTS releases, without changing the default.
   const parse = version => version.replace(/^v/, '').split('.').map(Number);
   const supported = version => { const [major, minor] = parse(version); return major > 22 || (major === 22 && minor >= 22); };
@@ -68,12 +68,12 @@ async function main() {
     const node = best(nvm) || best(others);
     if (!node) {
       if (doctor) return (await import('./doctor.mjs')).doctor(args.slice(1));
-      console.error(`Papilot needs Node.js 22.22 or newer; this is ${process.versions.node}. Install it with \`nvm install 22\` or from https://nodejs.org, then run papilot again.`);
+      console.error(`StudyBuddy needs Node.js 22.22 or newer; this is ${process.versions.node}. Install it with \`nvm install 22\` or from https://nodejs.org, then run studybuddy again.`);
       process.exit(1);
     }
-    console.error(`Papilot needs Node.js 22.22+; using ${node.version.replace(/^v/, '')} from ${path.dirname(node.file)}.`);
+    console.error(`StudyBuddy needs Node.js 22.22+; using ${node.version.replace(/^v/, '')} from ${path.dirname(node.file)}.`);
     const child = spawn(node.file, [fileURLToPath(import.meta.url), ...args], { stdio: 'inherit', env: { ...process.env, PATH: path.dirname(node.file) + path.delimiter + process.env.PATH } });
-    // Pass stop signals on, so stopping papilot also stops the server it started.
+    // Pass stop signals on, so stopping studybuddy also stops the server it started.
     for (const signal of ['SIGINT', 'SIGTERM', 'SIGHUP']) process.on(signal, () => child.kill(signal));
     await new Promise(() => child.on('exit', code => process.exit(code ?? 1)));
   }
@@ -83,11 +83,11 @@ async function main() {
   // Node 22 marks node:sqlite as experimental; that notice is noise for users.
   const emitWarning = process.emitWarning;
   process.emitWarning = (warning, ...rest) => String(warning).includes('SQLite') ? undefined : emitWarning.call(process, warning, ...rest);
-  process.env.PAPILOT_DATA ||= path.join(os.homedir(), '.papilot');
+  process.env.PAPILOT_DATA ||= path.join(os.homedir(), '.studybuddy');
   process.env.PATH = agentPath();
   pkg = installedPackage();
 
-  // Papilot drives Codex through its app server. A codex on PATH at least as new
+  // StudyBuddy drives Codex through its app server. A codex on PATH at least as new
   // as the tested version is used as it is; otherwise that version is installed
   // once into the data folder, except in a managed installation.
   function findCodex() {
@@ -105,10 +105,10 @@ async function main() {
       console.warn(`Install a supported Codex separately${method === 'nix' ? ' with Nix' : ''}, or set PAPILOT_CODEX_BIN to an existing installation.`);
       return '';
     }
-    console.log(`Installing Codex ${tested} for Papilot (first run only)...`);
+    console.log(`Installing Codex ${tested} for StudyBuddy (first run only)...`);
     const result = spawnSync(process.execPath, [npmCli(), 'install', '--prefix', prefix, `@openai/codex@${tested}`, '--no-audit', '--no-fund', '--loglevel=error'], { stdio: 'inherit' });
     if (result.status === 0 && existsSync(installed)) return installed;
-    console.warn('Codex could not be installed, so Codex tasks are unavailable. Install it with npm install -g @openai/codex and run papilot again.');
+    console.warn('Codex could not be installed, so Codex tasks are unavailable. Install it with npm install -g @openai/codex and run studybuddy again.');
     return '';
   }
   if (codexArgs) {
@@ -127,10 +127,10 @@ async function main() {
       await import('../src/server/main.ts');
     } catch (error) {
       if (error?.code !== 'EADDRINUSE') throw error;
-      console.error(`Port ${process.env.PAPILOT_PORT || 7274} is already in use. Is Papilot already running? Start another copy with --port <number>.`);
+      console.error(`Port ${process.env.PAPILOT_PORT || 7274} is already in use. Is StudyBuddy already running? Start another copy with --port <number>.`);
       process.exit(1);
     }
-    if (!tex) console.warn('\nlatexmk was not found, so PDFs cannot be built yet. Install MacTeX or TeX Live (the full distribution), open a new terminal and run papilot again.');
+    if (!tex) console.warn('\nlatexmk was not found, so PDFs cannot be built yet. Install MacTeX or TeX Live (the full distribution), open a new terminal and run studybuddy again.');
   }
 }
 process.exitCode = await main();

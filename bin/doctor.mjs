@@ -11,16 +11,16 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
-const help = `Usage: papilot doctor [--repo <folder>] [--json] [--data <folder>] [--port <number>]
+const help = `Usage: studybuddy doctor [--repo <folder>] [--json] [--data <folder>] [--port <number>]
 
   --repo <folder>  Also check a LaTeX Git repository and its root document
   --json           Print one JSON report, suitable for scripts
-  --data <folder>  Check this data folder (default: PAPILOT_DATA or ~/.papilot)
+  --data <folder>  Check this data folder (default: PAPILOT_DATA or ~/.studybuddy)
   --port <number>  Check this local server port (default: PAPILOT_PORT or 7274)
   --help           Show this help
 
 Checks the current environment and, on macOS, installed service tool paths.
-Does not install software, start Papilot, compile papers or send model prompts.
+Does not install software, start StudyBuddy, compile papers or send model prompts.
 Exit codes: 0 = no blocking errors (warnings may remain), 1 = blocking errors,
 2 = invalid command-line options. Agent configuration is not a live API test.`;
 
@@ -77,7 +77,7 @@ function installedModule(name, directory = root) {
 export async function doctor(args) {
   if (args.includes('--help') || args.includes('-h')) { console.log(help); return 0; }
   const json = args.includes('--json');
-  let data = expand(process.env.PAPILOT_DATA || path.join(os.homedir(), '.papilot'));
+  let data = expand(process.env.PAPILOT_DATA || path.join(os.homedir(), '.studybuddy'));
   let port = Number(process.env.PAPILOT_PORT || 7274), repo = null;
   try {
     for (let i = 0; i < args.length; i++) {
@@ -92,7 +92,7 @@ export async function doctor(args) {
     }
     if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('--port or PAPILOT_PORT must be an integer from 1 to 65535.');
   } catch (error) {
-    if (json) console.log(JSON.stringify({ name: 'Papilot', version: pkg.version, ok: false, checks: [], error: error.message }));
+    if (json) console.log(JSON.stringify({ name: 'StudyBuddy', version: pkg.version, ok: false, checks: [], error: error.message }));
     else console.error(`${error.message}\n\n${help}`);
     return 2;
   }
@@ -104,20 +104,20 @@ export async function doctor(args) {
   const check = (id, ok, severity, detail, fix = null) => checks.push({ id, ok: Boolean(ok), severity, detail: clean(detail), fix: ok || !fix ? null : clean(fix) });
   const engine = expand(process.env.PAPILOT_REVIEW_ENGINE || path.join(root, 'engine'));
   const sourceCheckout = fs.existsSync(path.join(root, '.git'));
-  const repair = sourceCheckout ? 'Run npm ci in the Papilot checkout.' : 'Reinstall Papilot with npm install -g papilot.';
-  // Agent SDKs are looked for where Papilot loads them. Managed installations
+  const repair = sourceCheckout ? 'Run npm ci in the StudyBuddy checkout.' : 'Rebuild StudyBuddy from your source checkout.';
+  // Agent SDKs are looked for where StudyBuddy loads them. Managed installations
   // never install Codex or an SDK themselves.
   const method = managedInstall(), sdkFolder = agentSdkFolder(root, data);
   const separateCodex = `Install a supported Codex separately${method === 'nix' ? ' with Nix' : ''} or set PAPILOT_CODEX_BIN to an existing installation.`;
   const agentSdk = name => installedModule(name) || (sdkFolder && installedModule(name, sdkFolder));
-  const sdkFix = (name, fix) => method === 'nix' ? 'Reinstall the Papilot Nix package; it includes the agent SDKs.'
-    : method ? `Install ${name} into Papilot's node_modules, then restart Papilot.` : fix;
+  const sdkFix = (name, fix) => method === 'nix' ? 'Reinstall the StudyBuddy Nix package; it includes the agent SDKs.'
+    : method ? `Install ${name} into StudyBuddy's node_modules, then restart StudyBuddy.` : fix;
 
-  check('node', supportedNode(process.versions.node), 'error', `Node.js ${process.versions.node} (${process.execPath})`, 'Install Node.js 22.22 or newer, then run papilot doctor again.');
+  check('node', supportedNode(process.versions.node), 'error', `Node.js ${process.versions.node} (${process.execPath})`, 'Install Node.js 22.22 or newer, then run studybuddy doctor again.');
   const missing = Object.keys(pkg.dependencies).filter(name => !installedModule(name));
   check('dependencies', !missing.length, 'error', missing.length ? `Missing packages: ${missing.join(', ')}.` : 'Runtime packages are installed.', repair);
   const frontend = fs.existsSync(path.join(root, 'dist/index.html'));
-  check('frontend', frontend, 'error', frontend ? 'Papilot frontend build is present.' : 'Papilot frontend build is missing: dist/index.html.', sourceCheckout ? 'Run npm run build.' : repair);
+  check('frontend', frontend, 'error', frontend ? 'StudyBuddy frontend build is present.' : 'StudyBuddy frontend build is missing: dist/index.html.', sourceCheckout ? 'Run npm run build.' : repair);
   const missingEngine = ['src/client.ts', 'src/core/config.ts', 'dist/web/index.html'].filter(file => !fs.existsSync(path.join(engine, file)));
   check('review-engine', !missingEngine.length, 'error', `Review engine: ${engine}${missingEngine.length ? `; missing ${missingEngine.join(', ')}` : ''}`, process.env.PAPILOT_REVIEW_ENGINE ? 'Check PAPILOT_REVIEW_ENGINE and build that review engine.' : sourceCheckout ? 'Run npm run setup:review.' : repair);
   check('data', writableDirectory(data), 'error', `Data folder: ${data}${fs.existsSync(data) ? '' : ' (will be created on startup)'}`, 'Choose a writable directory with --data <folder>.');
@@ -190,13 +190,13 @@ export async function doctor(args) {
       }
       const login = await command(file, ['login', 'status']);
       const ready = login.ok && /^\s*logged in\b/im.test(login.stdout + '\n' + login.stderr);
-      check('agent.codex', ready, 'warn', `${version ? `Codex ${version}` : 'Codex'} (${file}): ${ready ? 'signed in' : login.reason || 'login could not be confirmed'}.`, 'Run papilot codex login, then rerun doctor.');
+      check('agent.codex', ready, 'warn', `${version ? `Codex ${version}` : 'Codex'} (${file}): ${ready ? 'signed in' : login.reason || 'login could not be confirmed'}.`, 'Run studybuddy codex login, then rerun doctor.');
       return ready;
     }
     check('agent.codex', false, 'warn', configured ? 'PAPILOT_CODEX_BIN does not point to an executable.' : !found.length ? 'Codex is not installed.' : `No installed Codex meets version ${minimum}.`,
       method ? separateCodex
         : configured ? 'Correct PAPILOT_CODEX_BIN or unset it to use automatic installation.'
-        : 'Run papilot codex login; it installs the supported Codex when needed.');
+        : 'Run studybuddy codex login; it installs the supported Codex when needed.');
     return false;
   }
   async function claudeCheck() {
@@ -207,17 +207,17 @@ export async function doctor(args) {
       let login = null;
       try { login = JSON.parse(result.stdout); } catch { /* Reported below. */ }
       const ready = Boolean(login?.loggedIn);
-      check('agent.claude', ready, 'warn', `${cli}: ${ready ? `Claude Code signed in${login.subscriptionType ? ` (${login.subscriptionType} plan)` : ''}; generation was not tested` : login ? 'Claude Code is not signed in' : result.reason || 'login status unavailable'}.`, 'Run claude auth login, then select Reconnect in Papilot. Set PAPILOT_CLAUDE_BIN if needed.');
+      check('agent.claude', ready, 'warn', `${cli}: ${ready ? `Claude Code signed in${login.subscriptionType ? ` (${login.subscriptionType} plan)` : ''}; generation was not tested` : login ? 'Claude Code is not signed in' : result.reason || 'login status unavailable'}.`, 'Run claude auth login, then select Reconnect in StudyBuddy. Set PAPILOT_CLAUDE_BIN if needed.');
       return ready;
     }
     const sdk = agentSdk('@anthropic-ai/claude-agent-sdk');
     const configured = ['ANTHROPIC_API_KEY', 'ANTHROPIC_AUTH_TOKEN', 'CLAUDE_CODE_USE_BEDROCK', 'CLAUDE_CODE_USE_VERTEX', 'CLAUDE_CODE_USE_FOUNDRY'].some(key => Boolean(process.env[key]));
-    check('agent.claude', Boolean(sdk && configured), configured ? 'warn' : 'info', !configured ? 'Claude Code is not installed and no Claude API key is configured, so Papilot does not offer Claude.' : sdk ? 'Claude SDK installed; API credentials configured (not validated).' : `Claude API credentials configured; the Agent SDK is not installed${method ? '' : ' yet'}.`, !configured ? 'Install Claude Code and sign in with claude auth login to use your Claude plan, or start Papilot with ANTHROPIC_API_KEY or a supported cloud provider configured.' : sdkFix('@anthropic-ai/claude-agent-sdk', 'Start papilot once to install the Claude Agent SDK.'));
+    check('agent.claude', Boolean(sdk && configured), configured ? 'warn' : 'info', !configured ? 'Claude Code is not installed and no Claude API key is configured, so StudyBuddy does not offer Claude.' : sdk ? 'Claude SDK installed; API credentials configured (not validated).' : `Claude API credentials configured; the Agent SDK is not installed${method ? '' : ' yet'}.`, !configured ? 'Install Claude Code and sign in with claude auth login to use your Claude plan, or start StudyBuddy with ANTHROPIC_API_KEY or a supported cloud provider configured.' : sdkFix('@anthropic-ai/claude-agent-sdk', 'Start studybuddy once to install the Claude Agent SDK.'));
     return Boolean(sdk && configured);
   }
   async function agyCheck() {
     const file = agentExecutable(process.env.PAPILOT_AGY_BIN || 'agy');
-    if (!file) { check('agent.antigravity', false, 'info', missingAgent('agy', 'PAPILOT_AGY_BIN'), 'Install Antigravity and sign in to agy on this host. If already installed, correct PAPILOT_AGY_BIN or the server PATH, then restart Papilot.'); return false; }
+    if (!file) { check('agent.antigravity', false, 'info', missingAgent('agy', 'PAPILOT_AGY_BIN'), 'Install Antigravity and sign in to agy on this host. If already installed, correct PAPILOT_AGY_BIN or the server PATH, then restart StudyBuddy.'); return false; }
     const proxy = process.env.PAPILOT_AGY_PROXY;
     const env = proxy ? { ...process.env, HTTPS_PROXY: proxy, HTTP_PROXY: proxy, https_proxy: proxy, http_proxy: proxy, NO_PROXY: '127.0.0.1,localhost' } : process.env;
     const result = await command(file, ['models'], { env });
@@ -227,12 +227,12 @@ export async function doctor(args) {
   }
   // ACP agents: the CLI must offer its ACP mode. Login is not checked, so no credential is read.
   function missingAgent(command, variable) {
-    return process.env[variable] ? `${variable} does not resolve to a runnable executable in Papilot's environment.`
-      : `${command} was not found on the PATH or in the standard agent folders available to Papilot. It may be installed for a different user or shell.`;
+    return process.env[variable] ? `${variable} does not resolve to a runnable executable in StudyBuddy's environment.`
+      : `${command} was not found on the PATH or in the standard agent folders available to StudyBuddy. It may be installed for a different user or shell.`;
   }
   async function acpCheck(id, name, bin, help, install, update, supported = /\bACP\b|Agent Client Protocol/i) {
     const file = agentExecutable(process.env[bin.env] || bin.name);
-    if (!file) { check(`agent.${id}`, false, 'info', missingAgent(bin.name, bin.env), `${install}. If already installed, correct ${bin.env} or the server PATH, then restart Papilot.`); return false; }
+    if (!file) { check(`agent.${id}`, false, 'info', missingAgent(bin.name, bin.env), `${install}. If already installed, correct ${bin.env} or the server PATH, then restart StudyBuddy.`); return false; }
     const result = await command(file, help);
     const ready = result.ok && supported.test(result.stdout + '\n' + result.stderr);
     check(`agent.${id}`, ready, 'warn', `${file}: ${ready ? 'ACP command available; login and generation were not tested' : result.reason || 'ACP command unavailable'}.`, `${update} Set ${bin.env} if needed.`);
@@ -248,13 +248,13 @@ export async function doctor(args) {
   async function cursorCheck() {
     const configured = Boolean(process.env.CURSOR_API_KEY) || fs.existsSync(path.join(os.homedir(), '.cursor/sdk/auth.json'));
     const sdk = agentSdk('@cursor/sdk');
-    check('agent.cursor', Boolean(configured && sdk), configured ? 'warn' : 'info', !configured ? 'Neither CURSOR_API_KEY nor a saved Cursor SDK login was found for the user running Papilot.' : sdk ? 'Cursor SDK installed; SDK credentials detected (not validated).' : `Cursor SDK credentials detected; the SDK is ${method ? 'not installed' : 'installed on first use'}.`, !configured ? 'Start Papilot with CURSOR_API_KEY set to a key from the Cursor dashboard, or configure the Cursor SDK login. The Cursor app and CLI login are not used. Restart Papilot after changing its environment.' : sdkFix('@cursor/sdk', 'Start papilot and choose Cursor once to install the SDK.'));
+    check('agent.cursor', Boolean(configured && sdk), configured ? 'warn' : 'info', !configured ? 'Neither CURSOR_API_KEY nor a saved Cursor SDK login was found for the user running StudyBuddy.' : sdk ? 'Cursor SDK installed; SDK credentials detected (not validated).' : `Cursor SDK credentials detected; the SDK is ${method ? 'not installed' : 'installed on first use'}.`, !configured ? 'Start StudyBuddy with CURSOR_API_KEY set to a key from the Cursor dashboard, or configure the Cursor SDK login. The Cursor app and CLI login are not used. Restart StudyBuddy after changing its environment.' : sdkFix('@cursor/sdk', 'Start studybuddy and choose Cursor once to install the SDK.'));
     return configured;
   }
   async function glmCheck() {
     const configured = Boolean(process.env.ZHIPU_API_KEY || process.env.ZAI_API_KEY);
     const sdk = agentSdk('@anthropic-ai/claude-agent-sdk');
-    check('agent.glm', Boolean(configured && sdk), configured ? 'warn' : 'info', !configured ? 'ZHIPU_API_KEY or ZAI_API_KEY is not set, so Papilot does not offer GLM.' : sdk ? `GLM key configured for ${process.env.ZHIPU_API_KEY ? 'open.bigmodel.cn' : 'api.z.ai'} (not validated).` : `GLM key configured; the Claude Agent SDK that runs GLM is ${method ? 'not installed' : 'installed on first use'}.`, !configured ? 'Start Papilot with ZHIPU_API_KEY (open.bigmodel.cn) or ZAI_API_KEY (api.z.ai) set to your GLM Coding Plan or API key.' : sdkFix('@anthropic-ai/claude-agent-sdk', 'Start papilot and choose GLM once to install the Claude Agent SDK.'));
+    check('agent.glm', Boolean(configured && sdk), configured ? 'warn' : 'info', !configured ? 'ZHIPU_API_KEY or ZAI_API_KEY is not set, so StudyBuddy does not offer GLM.' : sdk ? `GLM key configured for ${process.env.ZHIPU_API_KEY ? 'open.bigmodel.cn' : 'api.z.ai'} (not validated).` : `GLM key configured; the Claude Agent SDK that runs GLM is ${method ? 'not installed' : 'installed on first use'}.`, !configured ? 'Start StudyBuddy with ZHIPU_API_KEY (open.bigmodel.cn) or ZAI_API_KEY (api.z.ai) set to your GLM Coding Plan or API key.' : sdkFix('@anthropic-ai/claude-agent-sdk', 'Start studybuddy and choose GLM once to install the Claude Agent SDK.'));
     return configured;
   }
   const agents = await Promise.all([codexCheck(), claudeCheck(), cursorCheck(), copilotCheck(), grokCheck(), agyCheck(), kimiCheck(), glmCheck(), deepseekCheck(), qwenCheck(), opencodeCheck()]);
@@ -269,7 +269,7 @@ export async function doctor(args) {
       check('project.git', atRoot, 'error', atRoot ? `Git repository: ${repo}` : 'The paper folder is not a Git repository root.', 'Pass the repository root; initialize Git first if the paper is not yet versioned.');
       if (atRoot) {
         const head = await command(git, ['-C', repo, 'rev-parse', '--verify', 'HEAD']);
-        check('project.head', head.ok, 'error', head.ok ? 'The repository has an initial commit.' : 'The repository has no initial commit.', 'Create the first Git commit before adding this paper to Papilot.');
+        check('project.head', head.ok, 'error', head.ok ? 'The repository has an initial commit.' : 'The repository has no initial commit.', 'Create the first Git commit before adding this paper to StudyBuddy.');
         let settings = 'the settings.json in the papilot folder of its Git directory';
         try {
           const { register } = await import('tsx/esm/api');
@@ -297,15 +297,15 @@ export async function doctor(args) {
   try {
     const response = await fetch(`http://127.0.0.1:${port}/api/health`, { signal: AbortSignal.timeout(1500), redirect: 'error' });
     const health = await response.json();
-    const ok = response.ok && health?.ok === true && health?.name === 'Papilot';
-    check('server', ok, 'warn', ok ? `Papilot is responding on port ${port}.` : `Port ${port} is not serving a healthy Papilot instance.`, 'Check the running service or choose another --port.');
+    const ok = response.ok && health?.ok === true && health?.name === 'StudyBuddy';
+    check('server', ok, 'warn', ok ? `StudyBuddy is responding on port ${port}.` : `Port ${port} is not serving a healthy StudyBuddy instance.`, 'Check the running service or choose another --port.');
   } catch (error) {
     const offline = error.cause?.code === 'ECONNREFUSED';
-    check('server', offline, offline ? 'info' : 'warn', offline ? `Papilot is not running on port ${port}; this is fine before startup.` : `Could not verify Papilot on port ${port}.`, 'Check the running service or choose another --port.');
+    check('server', offline, offline ? 'info' : 'warn', offline ? `StudyBuddy is not running on port ${port}; this is fine before startup.` : `Could not verify StudyBuddy on port ${port}.`, 'Check the running service or choose another --port.');
   }
 
   if (process.platform === 'darwin') {
-    const plist = path.join(os.homedir(), 'Library/LaunchAgents/local.papilot.plist');
+    const plist = path.join(os.homedir(), 'Library/LaunchAgents/local.studybuddy.plist');
     if (!fs.existsSync(plist)) check('service', true, 'info', 'macOS background service is not installed (optional).');
     else {
       const result = await command('/usr/bin/plutil', ['-convert', 'json', '-o', '-', plist]);
@@ -317,19 +317,19 @@ export async function doctor(args) {
         const different = tools.filter(name => executable(name, env) !== executable(name));
         const node = settings.ProgramArguments?.[2];
         const validNode = typeof node === 'string' && executable(node, env);
-        check('service.tools', !missing.length && !different.length && validNode, 'warn', !validNode ? 'The service Node executable is missing.' : missing.length ? `The saved service PATH is missing: ${missing.join(', ')}.` : different.length ? `Service and terminal resolve different tools: ${different.join(', ')}.` : 'The saved service paths match the terminal tools.', 'Reinstall with papilot service install from the intended environment; use PAPILOT_SERVICE_PATH for your TeX/Python directory.');
-        const serviceData = expand(env.PAPILOT_DATA || path.join(settings.WorkingDirectory || root, '.papilot'));
+        check('service.tools', !missing.length && !different.length && validNode, 'warn', !validNode ? 'The service Node executable is missing.' : missing.length ? `The saved service PATH is missing: ${missing.join(', ')}.` : different.length ? `Service and terminal resolve different tools: ${different.join(', ')}.` : 'The saved service paths match the terminal tools.', 'Reinstall with studybuddy service install from the intended environment; use PAPILOT_SERVICE_PATH for your TeX/Python directory.');
+        const serviceData = expand(env.PAPILOT_DATA || path.join(settings.WorkingDirectory || root, '.studybuddy'));
         check('service.data', serviceData === data, 'warn', serviceData === data ? 'The service data folder matches this diagnostic target.' : `The service uses a different data folder: ${serviceData}`, 'Run doctor with the service data folder (--data), or reinstall the service with the intended PAPILOT_DATA.');
-      } catch { check('service', false, 'warn', 'The installed service configuration could not be read.', 'Run papilot service install to recreate the service configuration.'); }
+      } catch { check('service', false, 'warn', 'The installed service configuration could not be read.', 'Run studybuddy service install to recreate the service configuration.'); }
     }
   }
   // Keep reports stable even though independent probes finish in any order.
   const order = ['node', 'dependencies', 'frontend', 'review-engine', 'data', 'git', 'latexmk', 'synctex', 'tex-engines', 'agent.codex', 'agent.claude', 'agent.cursor', 'agent.copilot', 'agent.grok', 'agent.antigravity', 'agent.kimi', 'agent.glm', 'agent.deepseek', 'agent.qwen', 'agent.opencode', 'agents', 'project', 'project.git', 'project.head', 'project.main', 'project.engine', 'project.worktrees', 'remote', 'server', 'service', 'service.tools', 'service.data'];
   checks.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
-  const report = { name: 'Papilot', version: pkg.version, ok: !checks.some(item => !item.ok && item.severity === 'error'), checks };
+  const report = { name: 'StudyBuddy', version: pkg.version, ok: !checks.some(item => !item.ok && item.severity === 'error'), checks };
   if (json) console.log(JSON.stringify(report, null, 2));
   else {
-    console.log(`Papilot ${pkg.version} doctor\n`);
+    console.log(`StudyBuddy ${pkg.version} doctor\n`);
     for (const item of checks) {
       console.log(`${item.ok ? '✓' : item.severity === 'error' ? '✗' : item.severity === 'info' ? '-' : '!'} ${item.id}: ${item.detail}`);
       if (item.fix) console.log(`  Fix: ${item.fix}`);

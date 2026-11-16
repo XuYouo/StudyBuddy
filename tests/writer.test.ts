@@ -50,7 +50,7 @@ The loss is small.
   return dir;
 }
 
-// Compiles a paper as Papilot's builds do: a snapshot of the sources, built
+// Compiles a paper as StudyBuddy's builds do: a snapshot of the sources, built
 // into build/ with the outline trace loaded first.
 let texAvailable: boolean | undefined;
 const hasTeX = () => texAvailable ??= (() => { try { execFileSync('latexmk', ['-v'], { stdio: 'ignore' }); return true; } catch { return false; } })();
@@ -224,7 +224,7 @@ test('a chore command cancelled before it starts does not write to the worktree'
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });
 
-test('Claude subscription tokens are refused and credentials stay in Papilot', async () => {
+test('Claude subscription tokens are refused and credentials stay in StudyBuddy', async () => {
   const { AuthStorage } = await import('@mariozechner/pi-coding-agent');
   const storage = AuthStorage.inMemory();
   const credentials = new WriterCredentials(storage, { ANTHROPIC_API_KEY: 'sk-ant-oat01-abc', OPENAI_API_KEY: 'sk-test' });
@@ -245,7 +245,7 @@ test('tool calls show as file changes, commands, page views or named tools', () 
   assert.equal(toolItem('4', 'search_text', { query: 'flow' }).text, 'Search text flow');
 });
 
-test('Papilot Writer runs a turn on Pi: map first, approvals through Papilot, chore mode within the turn', { timeout: 60000, skip: !hasTeX() }, async () => {
+test('StudyBuddy Writer runs a turn on Pi: map first, approvals through StudyBuddy, chore mode within the turn', { timeout: 60000, skip: !hasTeX() }, async () => {
   const dir = paper(), compiled = compile(dir), data = fs.mkdtempSync(path.join(os.tmpdir(), 'papilot writer data '));
   const ai = await import('@mariozechner/pi-ai'), { AuthStorage } = await import('@mariozechner/pi-coding-agent');
   const faux = ai.registerFauxProvider({ provider: 'faux', models: [{ id: 'writer', reasoning: false }] });
@@ -266,7 +266,7 @@ test('Papilot Writer runs a turn on Pi: map first, approvals through Papilot, ch
     const notes: any[] = [], requests: any[] = [];
     agent.on('notification', note => notes.push(note));
     agent.on('request', request => {
-      // Papilot answers where the latest build is.
+      // StudyBuddy answers where the latest build is.
       if (request.method === 'item/tool/call' && request.params.tool === 'paper_build') { setImmediate(() => agent.respond(request.id, { success: true, contentItems: [{ type: 'inputText', text: JSON.stringify(compiled) }] })); return; }
       requests.push(request); setImmediate(() => agent.respond(request.id, { decision: 'accept' }));
     });
@@ -323,7 +323,7 @@ test('models come from each provider\'s own list, with Pi\'s entries only as tem
   assert.deepEqual(models[0].cost, { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, 'An unknown model has no made-up prices');
 });
 
-test('Papilot Writer lists the provider\'s models and falls back to Pi\'s entries when the list is unavailable', async () => {
+test('StudyBuddy Writer lists the provider\'s models and falls back to Pi\'s entries when the list is unavailable', async () => {
   const { AuthStorage } = await import('@mariozechner/pi-coding-agent');
   let online = true;
   const fetcher = async (url: string) => {
@@ -368,7 +368,7 @@ test('a read names the sections it covered and the pages they print on', { skip:
   assert.deepEqual(sectionsOf(outline, 'sections/method.tex', 1, 5), { sections: [{ number: '2', title: 'Method' }] }, 'A section read whole is named at its highest level');
   assert.deepEqual(sectionsOf(outline, 'sections/method.tex', 4, 4), { sections: [{ number: '2.1', title: 'Loss' }], partial: true }, 'Part of a section names the innermost one');
   assert.equal(sectionsOf(outline, 'refs.bib', 1, 3), null);
-  // The pages come from SyncTeX through Papilot; the read reports both.
+  // The pages come from SyncTeX through StudyBuddy; the read reports both.
   const asked: any[] = [];
   const tools = writerTools(host(dir, { papilot: async (tool, args) => { asked.push([tool, args]); return tool === 'paper_build' ? built(compiled)(tool) : { success: true, text: '[4,5]' }; } }));
   const read = tools.find(item => item.name === 'read_file')!;

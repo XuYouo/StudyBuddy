@@ -8,7 +8,7 @@ import type { BibliographyReport, ReferenceCheck } from '../shared.ts';
 // The paper's bibliography as it is on disk: every entry, where it is cited,
 // what is wrong with it without looking anything up, and, when asked, what
 // Crossref, DBLP and arXiv know of it. The review engine does the reading
-// and the checking; this is where Papilot asks it for a whole paper.
+// and the checking; this is where StudyBuddy asks it for a whole paper.
 
 type Input = { id: string; type: string; fields: Record<string, string> };
 interface Checker { lookup(inputs: Input[], start?: boolean, retry?: boolean): { checks: Record<string, ReferenceCheck>; pending: number } }
@@ -30,7 +30,7 @@ export function engine(): Promise<Engine> {
     .then(modules => Object.assign({}, ...modules) as Engine);
   return loading;
 }
-// One checker for Papilot's process, so that the panel and the review of
+// One checker for StudyBuddy's process, so that the panel and the review of
 // uncommitted changes share their results and their file.
 let shared: Checker | undefined;
 export async function checker(file = path.join(DATA, 'references.json')) {

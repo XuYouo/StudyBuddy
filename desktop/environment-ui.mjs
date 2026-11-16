@@ -27,7 +27,7 @@ function render() {
   $('continue').hidden = linux && !report?.prepared;
   $('continue').disabled = busy || checking || !report || linux && !report.canPrepare;
   const missing = report?.checks.some(check => !check.ready);
-  $('continue').textContent = opening ? text('Opening…', '正在打开…') : startupFailure() ? text('Retry Papilot', '重试启动') : missing ? text('Explore the demo', '先体验示例论文') : text('Open Papilot', '打开 Papilot');
+  $('continue').textContent = opening ? text('Opening…', '正在打开…') : startupFailure() ? text('Retry StudyBuddy', '重试启动') : missing ? text('Explore the demo', '先体验示例论文') : text('Open StudyBuddy', '打开 StudyBuddy');
   $('footer-note').textContent = linux && report && !report.canPrepare
     ? text('Install Linux Node.js and npm to prepare this environment.', '先安装 Linux 版 Node.js 与 npm，才能准备此环境。')
     : startupFailure()
@@ -52,7 +52,7 @@ function showChecks() {
     const title = document.createElement('div'); title.className = 'check-title'; title.textContent = labels[check.id];
     const detail = document.createElement('div'); detail.className = 'check-detail';
     detail.textContent = !report ? checking || discovering ? text('Checking…', '正在检测…') : text('Not checked. Try checking again.', '尚未完成检测，请重试。') : check.ready
-      ? check.detail === 'bundled' ? text('Included with Papilot', 'Papilot 已随附') : check.detail || text('Tools found', '已检测到所需工具')
+      ? check.detail === 'bundled' ? text('Included with StudyBuddy', 'StudyBuddy 已随附') : check.detail || text('Tools found', '已检测到所需工具')
       : guidance[check.id] + (check.id === 'tex' && check.detail ? text(' Missing: ', ' 缺少：') + check.detail : '');
     content.append(title, detail); row.append(symbol, content);
     if (report && !check.ready) {
@@ -80,9 +80,9 @@ async function check() {
     if (ticket !== generation) return;
     report = result;
     const missing = report.checks.filter(item => !item.ready).length;
-    $('check-summary').textContent = failure ? text('Papilot could not start in this environment.', 'Papilot 未能在此环境中启动。') : missing
+    $('check-summary').textContent = failure ? text('StudyBuddy could not start in this environment.', 'StudyBuddy 未能在此环境中启动。') : missing
       ? text(`${missing} ${missing === 1 ? 'tool needs' : 'tools need'} attention. Follow the guides below.`, `还需准备 ${missing} 项工具，请按下方指引安装。`)
-      : report.prepared ? text('Everything is ready for your workspace.', '环境已就绪，可以打开工作区。') : text('Tools are ready. Prepare Papilot to continue.', '所需工具已就绪，准备 Papilot 后即可继续。');
+      : report.prepared ? text('Everything is ready for your workspace.', '环境已就绪，可以打开工作区。') : text('Tools are ready. Prepare StudyBuddy to continue.', '所需工具已就绪，准备 StudyBuddy 后即可继续。');
   } catch (error) {
     if (ticket !== generation) return;
     $('check-summary').textContent = text('Could not finish the check.', '暂时无法完成检测。'); status([failure, error.message].filter(Boolean).join('\n'), true);
@@ -114,7 +114,7 @@ $('cancel').onclick = async () => { try { await api.cancel(); } catch (error) { 
 api.onProgress(chunk => { $('log').textContent = ($('log').textContent + chunk).slice(-12000); $('log').scrollTop = $('log').scrollHeight; });
 $('prepare').onclick = async () => {
   preparing = true; $('output').hidden = false; $('output').open = false; $('log').textContent = ''; render();
-  status(text('Preparing Papilot in Linux. The first download may take a few minutes.', '正在 Linux 中准备 Papilot，首次下载可能需要几分钟。'));
+  status(text('Preparing StudyBuddy in Linux. The first download may take a few minutes.', '正在 Linux 中准备 StudyBuddy，首次下载可能需要几分钟。'));
   try { await api.prepare($('distribution').value); preparing = false; await check(); }
   catch (error) { status(error.message, true); $('output').open = true; }
   finally { preparing = false; render(); }

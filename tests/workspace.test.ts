@@ -1919,7 +1919,7 @@ test('Antigravity instructions defer to its current native permission policy', (
     const codex = (f.workspace as any).instructions(f.task) as string;
     const antigravity = (f.workspace as any).instructions({ ...f.task, agent: 'antigravity' }) as string;
     assert.match(codex, /You may run tools in the task worktree/);
-    assert.match(antigravity, /^You are Antigravity running inside Papilot/);
+    assert.match(antigravity, /^You are Antigravity running inside StudyBuddy/);
     assert.match(antigravity, /Shell commands follow the current native permission policy/);
     assert.doesNotMatch(antigravity, /You may run tools/);
   } finally { f.close(); }
@@ -2182,7 +2182,7 @@ test('Writer check_build requests the whole paper and replaces the map build', a
   } finally { f.close(); fs.rmSync(dir, { recursive: true, force: true }); }
 });
 
-test('Codex threads get the view_pdf tool, which Papilot answers with typeset pages', async () => {
+test('Codex threads get the view_pdf tool, which StudyBuddy answers with typeset pages', async () => {
   const views: unknown[] = [];
   const f = fixture(async (_method, route, body) => {
     if (route.endsWith('/view')) { views.push(body); return { pages: [{ index: 3, label: '1', shows: ['main.tex:12'], file: '/paper/.git/papilot/views/p-task/1/page-1-3.png' }, { index: 4, label: null, shows: ['main.tex:20'], file: '/paper/.git/papilot/views/p-task/1/page-4-4.png' }], missing: ['Page 99: no page has this printed number.'], targets: ['chapters/intro'] }; }
@@ -2198,7 +2198,7 @@ test('Codex threads get the view_pdf tool, which Papilot answers with typeset pa
     assert.deepEqual(start.dynamicTools.map((tool: any) => tool.name), ['view_pdf']);
     assert.match(start.developerInstructions, /use the view_pdf tool and open the pages it draws with your image viewer/);
     assert.equal(f.store.task(f.task.id).viewPdf, true);
-    // Papilot answers the call itself: the author is not asked.
+    // StudyBuddy answers the call itself: the author is not asked.
     const call = (id: number, tool: string, args: object) => (f.workspace as any).serverRequest({ id, method: 'item/tool/call', params: { threadId: 'thread', turnId: 'turn-new', callId: `call-${id}`, tool, arguments: args } });
     const pages = Array.from({ length: 10 }, (_, index) => String(index + 1));
     call(41, 'view_pdf', { locations: ['main.tex:12'], pages: [...pages, 7], accepted: 'yes' });
@@ -2213,7 +2213,7 @@ test('Codex threads get the view_pdf tool, which Papilot answers with typeset pa
     assert.equal(f.store.task(f.task.id).status, 'running');
     call(42, 'other_tool', {});
     for (let i = 0; i < 20 && f.codex.replies.length < 2; i++) await tick();
-    assert.deepEqual(f.codex.replies[1], { id: 42, result: { success: false, contentItems: [{ type: 'inputText', text: 'Papilot has no tool named other_tool.' }] } });
+    assert.deepEqual(f.codex.replies[1], { id: 42, result: { success: false, contentItems: [{ type: 'inputText', text: 'StudyBuddy has no tool named other_tool.' }] } });
     // The chat shows what the agent looked at.
     await (f.workspace as any).notification({ method: 'item/completed', params: { threadId: 'thread', turnId: 'turn-new', item: { id: 'look', type: 'dynamicToolCall', tool: 'view_pdf', arguments: { locations: ['main.tex:12'], pages: ['99'] }, status: 'completed', success: true } } });
     const item = f.store.items(f.task.id).find(entry => entry.id === `${f.task.id}:turn-new:look`)!;
@@ -2609,7 +2609,7 @@ test('AI review uses normal agent tools and approvals, saves PDF notes, and neve
     assert.equal(start.config.web_search, 'live');
     assert.equal(start.dynamicTools, undefined);
     assert.match(start.developerInstructions, /Do not edit the manuscript/);
-    // A review started by an older Papilot, without a saved text file, gets one.
+    // A review started by an older StudyBuddy, without a saved text file, gets one.
     assert.equal(savedText(worktree), 'p1-l1\tThis always holds.\n');
     const request = f.codex.calls.find(call => call.method === 'turn/start')!.params.input[0].text;
     assert.ok(request.includes(path.join(worktree, '.papilot-pdf-lines.txt')));
@@ -2869,7 +2869,7 @@ for (const lifecycle of ['start', 'resume', 'loaded', 'fallback'] as const) {
           if (call.method === 'turn/start') {
             assert.deepEqual(call.params.sandboxPolicy, permissions === 'full' ? { type: 'dangerFullAccess' } : sandbox);
             assert.equal(call.params.approvalPolicy, permissions === 'full' ? 'never' : 'on-request');
-            assert.match(call.params.additionalContext['papilot-task-access'].value, /replace earlier Papilot instructions about access outside the task worktree/);
+            assert.match(call.params.additionalContext['papilot-task-access'].value, /replace earlier StudyBuddy instructions about access outside the task worktree/);
           }
           else {
             assert.equal(call.params.sandbox, permissions === 'full' ? 'danger-full-access' : 'workspace-write');
@@ -2951,11 +2951,11 @@ for (const permissions of ['full', 'workspace'] as const) test(`loaded native co
     await tick(); await tick();
     assert.equal(f.codex.calls.some(call => call.method === 'thread/resume'), false);
     const text = f.codex.calls.find(call => call.method === 'turn/start')?.params.input[0].text;
-    assert.match(text, /supersedes earlier Papilot messages fixing the access mode/);
+    assert.match(text, /supersedes earlier StudyBuddy messages fixing the access mode/);
     assert.match(text, /By default, keep manuscript edits in this isolated task worktree/);
     assert.match(text, permissions === 'full' ? /current permissions are Full access/ : /current permissions are Workspace access/);
     assert.ok(text.endsWith(run.prompt));
-    assert.doesNotMatch(run.prompt, /Papilot settings update/, 'internal context must not alter the author’s stored message');
+    assert.doesNotMatch(run.prompt, /StudyBuddy settings update/, 'internal context must not alter the author’s stored message');
   } finally { f.close(); }
 });
 
@@ -2968,7 +2968,7 @@ test('editing instructions keep manuscript boundaries without pinning mutable ac
       assert.match(instructions('workspace'), /By default, keep manuscript edits in this isolated task worktree/);
       assert.match(instructions('workspace'), /runtime's current sandbox and approval requirements/);
       assert.doesNotMatch(instructions('workspace'), /Only edit this isolated task worktree|The user selected full access/);
-      assert.match(instructions('full'), /Never edit other task worktrees or Papilot's own source\/state/);
+      assert.match(instructions('full'), /Never edit other task worktrees or StudyBuddy's own source\/state/);
       assert.match(instructions('full'), /explicitly asks you to copy, apply, or edit specified files in the manuscript checkout/);
       assert.match(instructions('full'), /without requiring Apply to workspace or repeated confirmation/);
       assert.match(instructions('full'), /Do not commit or push without user authorization/);
@@ -3296,7 +3296,7 @@ test('review instructions retain read-only manuscript boundaries despite editing
   try {
     for (const agent of AGENT_IDS) {
       const instructions = (f.workspace as any).instructions({ ...f.task, agent, mode: 'review', permissions: 'full' });
-      assert.match(instructions, /Never edit the manuscript checkout, other task worktrees, or Papilot's state/);
+      assert.match(instructions, /Never edit the manuscript checkout, other task worktrees, or StudyBuddy's state/);
       assert.doesNotMatch(instructions, /that request authorizes those writes|necessary Git fetch\/pull/);
     }
   } finally { f.close(); }

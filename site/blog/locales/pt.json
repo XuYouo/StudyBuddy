@@ -1,6 +1,6 @@
 {
   "ui": {
-    "author": "Equipe Papilot",
+    "author": "Equipe StudyBuddy",
     "back": "Todos os artigos",
     "blog": "Blog",
     "breadcrumb": "Navegação estrutural",
@@ -12,10 +12,10 @@
     "footerNavigation": "Rodapé",
     "indexDescription": "Sobre IA, LaTeX e escrita acadêmica.",
     "indexSeoDescription": "Explore a escrita colaborativa com IA e LaTeX centrada no PDF: faça anotações no manuscrito, revise alterações diagramadas e mantenha o julgamento com o autor.",
-    "indexSeoTitle": "Blog do Papilot: escrita acadêmica com IA e LaTeX",
+    "indexSeoTitle": "Blog do StudyBuddy: escrita acadêmica com IA e LaTeX",
     "indexTitle": "Blog",
     "languageLabel": "Idioma",
-    "latest": "Da equipe Papilot",
+    "latest": "Da equipe StudyBuddy",
     "mainNavigation": "Navegação principal",
     "minutes": "min de leitura",
     "privacy": "Privacidade",
@@ -44,7 +44,7 @@
     "comparison": "O diálogo volta ao manuscrito",
     "comparisonDesc": "À esquerda, código-fonte e PDF ficam separados; à direita, o PDF é o espaço principal, com anotações presas diretamente ao manuscrito.",
     "flow": "A revisão nasce e volta à página",
-    "flowDesc": "O autor anota o manuscrito, a IA edita o LaTeX local, o Papilot compila e o autor revisa no PDF, seguindo com novas revisões quando necessário.",
+    "flowDesc": "O autor anota o manuscrito, a IA edita o LaTeX local, o StudyBuddy compila e o autor revisa no PDF, seguindo com novas revisões quando necessário.",
     "newPath": "Ler · Anotar · Revisar",
     "now": "Centrado no manuscrito",
     "old": "Centrado no código-fonte",
@@ -67,7 +67,7 @@
         "Localiza e edita o código local."
       ],
       [
-        "Papilot",
+        "StudyBuddy",
         "Compilar projeto",
         "Gera o manuscrito diagramado."
       ],

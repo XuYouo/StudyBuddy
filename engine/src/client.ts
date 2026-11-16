@@ -95,7 +95,7 @@ async function waitForExit(url: string, pid: number) {
     "The review server has not stopped yet. Retry after it finishes.",
   );
 }
-// Papilot's npm server leaves the review server it starts running on its own,
+// StudyBuddy's npm server leaves the review server it starts running on its own,
 // since a service may restart around it. The desktop app owns the server it
 // starts: the server stops when the app's process ends, however it ends,
 // because their IPC channel closes. Either way it gets its own process group,
@@ -122,7 +122,7 @@ async function launch(root: string, port: number, owned: boolean): Promise<Clien
       {
         // Process lists show this name instead of node. (process.title would
         // register the server with macOS as a background app.)
-        argv0: "Papilot review server",
+        argv0: "StudyBuddy review server",
         cwd: ROOT,
         detached: process.platform !== "win32" || !owned,
         windowsHide: true,

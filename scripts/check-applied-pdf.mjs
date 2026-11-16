@@ -1,4 +1,4 @@
-// Regression for https://github.com/PapilotAI/papilot/issues/178.
+// Regression for https://github.com/XuYouo/StudyBuddy/issues/178.
 // Node >= 22.22; first build both frontends, then run:
 // node --import tsx scripts/check-applied-pdf.mjs
 // Uses the real app, review UI and PDF.js with fixture API responses. No agent

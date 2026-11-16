@@ -1,5 +1,17 @@
 # Changelog
 
+## StudyBuddy 0.1.0 — 2026-11-16
+
+- Initialize the StudyBuddy fork with its own application name, bundle identifier and version.
+- Add the teal book icon across macOS, the workspace and documentation.
+- Isolate local application data and disable application self-updates for local builds.
+- Add a reproducible macOS development and installation workflow.
+- Preserve Papilot's MIT license and contributor attribution.
+
+See [macOS development](docs/development-macos.md) for build and installation instructions.
+
+## Upstream Papilot history
+
 Notable changes to Papilot, newest first. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]

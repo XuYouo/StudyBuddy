@@ -269,7 +269,7 @@ try {
   await page.clock.runFor(300);
   assert.equal(await settingsDialog.getByRole('button', { name: /^(Sharing|Sign out)$/ }).count(), 0, 'Single-user settings have no collaboration controls');
   await page.screenshot({ path: 'test-results/settings-general-desktop.png' });
-  for (const [label, file] of [['Appearance', 'appearance'], ['Notifications', 'notifications'], ['Keyboard shortcuts', 'shortcuts'], ['About Papilot', 'about']]) {
+  for (const [label, file] of [['Appearance', 'appearance'], ['Notifications', 'notifications'], ['Keyboard shortcuts', 'shortcuts'], ['About StudyBuddy', 'about']]) {
     await settingsDialog.getByRole('button', { name: label, exact: true }).click();
     assert.equal(await settingsDialog.locator('.settings-content').evaluate(el => el.scrollWidth > el.clientWidth), false);
     await page.screenshot({ path: `test-results/settings-${file}-desktop.png` });
@@ -319,7 +319,7 @@ try {
   assert.equal(await diagnostics.getByRole('heading', { name: 'Agent configuration', exact: true }).count(), 0);
   assert.equal(await diagnostics.getByRole('button', { name: 'Check again', exact: true }).count(), 0);
   const agentCards = diagnostics.locator('.diagnostic-agent-card[data-agent]');
-  assert.deepEqual(await agentCards.locator('h4').allTextContents(), ['Codex', 'Claude', 'Papilot WriterBased on Pi', 'Cursor', 'Copilot', 'Grok', 'Antigravity', 'Kimi', 'GLM', 'DeepSeek', 'Qwen', 'OpenCode']);
+  assert.deepEqual(await agentCards.locator('h4').allTextContents(), ['Codex', 'Claude', 'StudyBuddy WriterBased on Pi', 'Cursor', 'Copilot', 'Grok', 'Antigravity', 'Kimi', 'GLM', 'DeepSeek', 'Qwen', 'OpenCode']);
   const availability = id => diagnostics.locator(`[data-agent="${id}"] .diagnostic-availability`);
   assert.equal(await availability('codex').innerText(), 'Ready');
   assert.equal(await availability('cursor').innerText(), 'Not detected');
@@ -355,9 +355,9 @@ try {
   assert.equal(await codexCard.getAttribute('aria-expanded'), 'true');
   assert.equal(await agentDetail.getByRole('meter').getAttribute('aria-valuenow'), '83');
   await agentDetail.getByText('12,418 credits', { exact: true }).waitFor();
-  assert.equal(await agentDetail.getByText('papilot codex login', { exact: true }).isVisible(), false);
+  assert.equal(await agentDetail.getByText('studybuddy codex login', { exact: true }).isVisible(), false);
   await agentDetail.locator('.runtime-agent-detection').getByText('Installation & setup', { exact: true }).click();
-  await agentDetail.getByText('papilot codex login', { exact: true }).waitFor();
+  await agentDetail.getByText('studybuddy codex login', { exact: true }).waitFor();
   await agentDetail.locator('.runtime-agent-detection').getByText('Installation & setup', { exact: true }).click();
   assert.equal(await page.locator('dialog[open]').count(), 1, 'Agent details stay in the settings page');
   await diagnostics.locator('.settings-content').evaluate(element => { element.scrollTop = 0; });
@@ -421,7 +421,7 @@ try {
   await page.evaluate(() => window.dispatchEvent(new Event('online')));
   await availability('copilot').getByText('Not detected', { exact: true }).waitFor();
   await diagnostics.getByRole('button', { name: 'Copilot details', exact: true }).click();
-  await agentDetail.getByText('copilot was not found by Papilot.', { exact: true }).waitFor();
+  await agentDetail.getByText('copilot was not found by StudyBuddy.', { exact: true }).waitFor();
   await agentDetail.getByText('copilot login', { exact: true }).waitFor();
   await agentDetail.locator('.runtime-agent-detection').getByText('Installation & setup', { exact: true }).click();
   await agentDetail.getByText(/PAPILOT_COPILOT_BIN/).waitFor();
@@ -431,7 +431,7 @@ try {
   await page.evaluate(() => window.dispatchEvent(new Event('online')));
   await availability('grok').getByText('Not detected', { exact: true }).waitFor();
   await diagnostics.getByRole('button', { name: 'Grok details', exact: true }).click();
-  await agentDetail.getByText('grok was not found by Papilot.', { exact: true }).waitFor();
+  await agentDetail.getByText('grok was not found by StudyBuddy.', { exact: true }).waitFor();
   await agentDetail.getByText('grok login', { exact: true }).waitFor();
   await agentDetail.locator('.runtime-agent-detection').getByText('Installation & setup', { exact: true }).click();
   await agentDetail.getByText(/PAPILOT_GROK_BIN/).waitFor();
@@ -484,9 +484,9 @@ try {
   await page.screenshot({ path: 'test-results/settings-agent-details-mobile.png', animations: 'disabled' });
   await agentDetail.getByRole('button', { name: '关闭智能体详情' }).click();
   await page.locator('dialog[open]').getByRole('button', { name: '设置', exact: true }).click();
-  await page.getByRole('button', { name: /关于 Papilot/ }).click();
-  assert.equal(await page.getByRole('link', { name: /更新日志/ }).getAttribute('href'), 'https://github.com/PapilotAI/papilot/blob/main/CHANGELOG.md');
-  assert.equal(await page.getByRole('link', { name: /参与贡献/ }).getAttribute('href'), 'https://github.com/PapilotAI/papilot/blob/main/.github/CONTRIBUTING.md');
+  await page.getByRole('button', { name: /关于 StudyBuddy/ }).click();
+  assert.equal(await page.getByRole('link', { name: /更新日志/ }).getAttribute('href'), 'https://github.com/XuYouo/StudyBuddy/blob/main/CHANGELOG.md');
+  assert.equal(await page.getByRole('link', { name: /参与贡献/ }).getAttribute('href'), 'https://github.com/XuYouo/StudyBuddy/blob/main/.github/CONTRIBUTING.md');
   await page.screenshot({ path: 'test-results/settings-about-links-mobile.png' });
   await page.locator('dialog[open]').getByRole('button', { name: '设置', exact: true }).click();
   await settingsDialog.getByRole('button', { name: '外观', exact: true }).click();
@@ -1347,7 +1347,7 @@ try {
   assert.equal(await page.getByRole('menuitem', { name: 'Export PDF', exact: true }).getAttribute('href'), '/api/projects/fixture-paper/manuscript.pdf?key=fixture&download=1');
   await page.keyboard.press('Escape');
   await pdfToolbar.getByRole('button', { name: 'Recompile PDF', exact: true }).waitFor();
-  assert.equal(await page.title(), 'Example paper · Papilot');
+  assert.equal(await page.title(), 'Example paper · StudyBuddy');
   await page.locator('.git-link').click();
   await gitPanel.locator('.git-detail-switcher').getByRole('button', { name: 'Version history', exact: true }).click();
   await worktrees.getByRole('button', { name: `Open task: ${task.title}`, exact: true }).click();
@@ -1500,7 +1500,7 @@ try {
   assert.equal(await agentSettings.getByRole('group', { name: 'Grok', exact: true }).locator('[data-brand=grok]').count(), 1);
   await page.screenshot({ path: 'test-results/grok-agent-settings.png', fullPage: true });
   const claudeRuntime = structuredClone(snapshot.runtimes.claude);
-  Object.assign(snapshot.runtimes.claude, { connected: false, authenticated: false, error: 'Claude needs an Anthropic API key: Start Papilot with ANTHROPIC_API_KEY set to use Claude.' });
+  Object.assign(snapshot.runtimes.claude, { connected: false, authenticated: false, error: 'Claude needs an Anthropic API key: Start StudyBuddy with ANTHROPIC_API_KEY set to use Claude.' });
   await page.evaluate(() => window.dispatchEvent(new Event('online')));
   await option('Haiku 5.5 · Claude').getByText('Unavailable', { exact: true }).waitFor();
   await choose('Haiku 5.5 · Claude');
@@ -1785,7 +1785,7 @@ try {
   await page.reload();
   await page.getByRole('button', { name: /^Clarify the introduction/ }).click();
   await page.getByRole('heading', { name: 'Codex needs your input' }).waitFor();
-  assert.equal(await page.title(), `(1) ${task.title} · Papilot`);
+  assert.equal(await page.title(), `(1) ${task.title} · StudyBuddy`);
   assert.equal(await page.getByRole('button', { name: 'Reply to Codex' }).isDisabled(), true);
   await page.getByRole('button', { name: /Introduction/ }).click({ timeout: 3000 });
   assert.equal(await page.getByRole('button', { name: 'Reply to Codex' }).isEnabled(), true);

@@ -40,7 +40,7 @@ test('Windows Path and PATHEXT find native commands instead of POSIX npm shims',
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });
 
-// Regression from https://github.com/PapilotAI/papilot/pull/13 (blessedcursed).
+// Regression from https://github.com/XuYouo/StudyBuddy/pull/13 (blessedcursed).
 test('desktop retains every inherited Windows PATH casing variant', { skip: !windows }, () => {
   const inherited = { Path: 'C:\\TeXLive\\bin\\windows', PATH: 'C:\\custom-bin', pAtH: 'C:\\extra-tools', KEEP: 'yes' };
   const env = backendEnvironment(process.execPath, process.cwd(), process.cwd(), inherited);
@@ -125,9 +125,9 @@ test('npm shims with Node flags preserve attachment JSON in local and global bin
     const require = createRequire(import.meta.url);
     const cmdShim = require(path.join(path.dirname(npmCli()), '../node_modules/cmd-shim/lib/index.js'));
     const entry = path.join(dir, 'agent.cjs');
-    fs.writeFileSync(entry, '#!/usr/bin/env node --no-warnings --title "Papilot fixture"\nconsole.log(JSON.stringify({args:process.argv.slice(2),flags:process.execArgv}))');
+    fs.writeFileSync(entry, '#!/usr/bin/env node --no-warnings --title "StudyBuddy fixture"\nconsole.log(JSON.stringify({args:process.argv.slice(2),flags:process.execArgv}))');
     const args = ['--settings', JSON.stringify({ permissions: { allow: ['read_file(C:\\论文 with space\\image & 1.png)'] } }), 'first\nsecond', '%PATH%'];
-    const flags = ['--no-warnings', '--title', 'Papilot fixture'];
+    const flags = ['--no-warnings', '--title', 'StudyBuddy fixture'];
     for (const bin of ['node_modules/.bin/agent', 'global/agent']) {
       const shim = path.join(dir, bin);
       await cmdShim(entry, shim);
@@ -257,7 +257,7 @@ test('desktop backend opens SQLite and exits cleanly through IPC', { timeout: 90
   const backend = startBackend({ node: process.execPath, root, data, log: path.join(data, 'backend.log'), env: { ...backendEnvironment(process.execPath, root, data), PAPILOT_UPDATE_PROBE: '1' } });
   try {
     const origin = await backend.ready;
-    assert.equal((await (await fetch(origin + '/api/health')).json()).name, 'Papilot');
+    assert.equal((await (await fetch(origin + '/api/health')).json()).name, 'StudyBuddy');
     assert.ok(fs.existsSync(path.join(data, 'papilot.sqlite')));
     assert.equal(await backend.idle(), true, 'Environment switching checks the live backend');
     await backend.stop();

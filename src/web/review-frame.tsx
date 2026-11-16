@@ -32,7 +32,7 @@ export const changesUrl = (projectId: string) => `/review/${projectId}/?changes=
 
 // The embedded viewer shares our origin. Keep its decision controls, but remove
 // navigation and the task title that the workspace already provides. Its bar
-// becomes the review toolbar; Papilot's PDF tools sit in the reserved space
+// becomes the review toolbar; StudyBuddy's PDF tools sit in the reserved space
 // on the right, and anything it leads with on the left.
 function compactReviewFrame(doc: Document, reserve: number, lead: number, changes: boolean) {
   if (!doc || doc.getElementById('papilot-embed-style')) return;
@@ -57,7 +57,7 @@ function compactReviewFrame(doc: Document, reserve: number, lead: number, change
     .references,.reference-entry{background:var(--bg);color:var(--text)}
     .reference-fields th,.reference-status,.reference-lines,.reference-cited,.reference-side,.reference-resolved{color:var(--text-3)}
     .toast.error{background:var(--red-soft);color:var(--red)}
-    /* Papilot's commit step at the end of the completion card. */
+    /* StudyBuddy's commit step at the end of the completion card. */
     .review-complete{align-items:center}
     .review-complete-actions{flex-wrap:wrap;justify-content:flex-end;max-width:100%}
     .review-complete-actions .commit-state{font-size:13px;color:var(--text-3)}
@@ -244,8 +244,8 @@ function compactReviewFrame(doc: Document, reserve: number, lead: number, change
     .change-head .source-toggle::before{content:"";width:16px;height:16px;background:currentColor;-webkit-mask:var(--icon-source) center/contain no-repeat;mask:var(--icon-source) center/contain no-repeat}
     :root[data-papilot-phone] .change-head .actions button:is(.accept,.reject,.comment,.unstage,.skip){width:44px;flex:1 1 auto}
     :root[data-papilot-phone] .change-head .actions button:is(.accept,.reject,.comment,.unstage,.skip)::before{width:18px;height:18px}
-    /* History shares the PDF tools' size. Shortcut settings live in Papilot. */
-    /* Papilot shows the full paper switch with its own controls. */
+    /* History shares the PDF tools' size. Shortcut settings live in StudyBuddy. */
+    /* StudyBuddy shows the full paper switch with its own controls. */
     .view-switch{display:none}
     .bar .ghost.history{display:inline-flex;align-items:center;justify-content:center;width:var(--papilot-button-size,30px);height:var(--papilot-button-size,30px);min-height:0;padding:0;font-size:0}
     .bar .history::before{content:"";width:16px;height:16px;background:currentColor;-webkit-mask:var(--icon-history) center/contain no-repeat;mask:var(--icon-history) center/contain no-repeat}
@@ -649,7 +649,7 @@ export function ReviewFrame({ task, changesOf, tools, lead, completion, onCommen
     watch.observe(document.body, { childList: true, subtree: true });
     return () => watch.disconnect();
   }, [document, ready]);
-  // The card with Papilot's next step stays at the top of the review while the
+  // The card with StudyBuddy's next step stays at the top of the review while the
   // author reads on, and lifts with a shadow once the paper scrolls under it.
   useEffect(() => {
     const paper = document?.getElementById('paper'), root = document?.documentElement;

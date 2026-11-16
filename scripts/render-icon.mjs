@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { chromium } from '../engine/node_modules/playwright/index.mjs';
+import { buildWindowsIcon } from './build-windows-icon.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const directory = path.join(root, 'desktop/assets');
@@ -16,7 +17,7 @@ const browser = await chromium.launch({ channel: 'chrome', headless: true });
 try {
   const page = await browser.newPage({ viewport: { width: 1024, height: 1024 }, deviceScaleFactor: 1 });
   await page.setContent('<html><body style="margin:0;background:transparent"></body></html>');
-  const sizes = [16, 32, 64, 128, 256, 512, 1024];
+  const sizes = [16, 32, 64, 128, 180, 256, 512, 1024];
   for (const size of sizes) {
     const data = await page.evaluate(async ({ source, size }) => {
       const img = new Image();
@@ -29,6 +30,8 @@ try {
       return canvas.toDataURL('image/png').split(',')[1];
     }, { source, size });
     const png = Buffer.from(data, 'base64');
+    if (size === 32) await fs.writeFile(path.join(root, 'public/favicon.png'), png);
+    if (size === 180) await fs.writeFile(path.join(root, 'public/apple-touch-icon.png'), png);
     if (size === 1024) await fs.writeFile(path.join(directory, 'icon.png'), png);
     if ([16, 32, 128, 256, 512].includes(size)) {
       await fs.writeFile(path.join(iconset, `icon_${size}x${size}.png`), png);
@@ -47,11 +50,25 @@ try {
     header span{font-size:12px;letter-spacing:2px;opacity:.55}.hero{display:block;width:384px;height:384px;margin:18px auto 4px}
     .sizes{height:170px;display:flex;align-items:center;justify-content:space-between;gap:12px}figure{margin:0;text-align:center;min-width:48px}
     figure img{display:block;margin:auto}figcaption{font-size:11px;opacity:.55;margin-top:12px}
-  </style></head><body>${['light','dark'].map(theme => `<section class="${theme}"><header><h1>Papilot</h1><span>macOS · ${theme.toUpperCase()}</span></header><img class="hero" src="${icon}"><div class="sizes">${samples}</div></section>`).join('')}</body></html>`);
+  </style></head><body>${['light','dark'].map(theme => `<section class="${theme}"><header><h1>StudyBuddy</h1><span>macOS · ${theme.toUpperCase()}</span></header><img class="hero" src="${icon}"><div class="sizes">${samples}</div></section>`).join('')}</body></html>`);
   await page.evaluate(() => Promise.all([...document.images].map(img => img.decode())));
   await page.screenshot({ path: path.join(directory, 'icon-preview.png') });
+  const background = await fs.readFile(path.join(directory, 'dmg-background.svg'), 'utf8');
+  for (const scale of [1, 2]) {
+    const data = await page.evaluate(async ({ source, scale }) => {
+      const img = new Image();
+      img.src = `data:image/svg+xml;base64,${btoa(source)}`;
+      await img.decode();
+      const canvas = document.createElement('canvas');
+      canvas.width = 640 * scale; canvas.height = 400 * scale;
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      return canvas.toDataURL('image/png').split(',')[1];
+    }, { source: background, scale });
+    await fs.writeFile(path.join(directory, `dmg-background${scale === 2 ? '@2x' : ''}.png`), Buffer.from(data, 'base64'));
+  }
 } finally {
   await browser.close();
 }
 execFileSync('/usr/bin/iconutil', ['--convert', 'icns', '--output', path.join(directory, 'icon.icns'), iconset]);
+buildWindowsIcon();
 console.log('Rendered desktop/assets/icon.png and icon.iconset; packaged icon.icns.');

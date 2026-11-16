@@ -9,7 +9,7 @@ let opened: BrowserWindow | undefined;
 export function chooseEnvironment(options: { parent?: BrowserWindow; current: Environment | null; assets: string; root: string; error?: string; apply: (value: Environment) => Promise<void> }) {
   if (opened) { opened.focus(); return; }
   const file = fileURLToPath(new URL('./environment.html', import.meta.url));
-  const page = new BrowserWindow({ title: 'Papilot · Environment', width: 820, height: 850, minWidth: 660, minHeight: 640,
+  const page = new BrowserWindow({ title: 'StudyBuddy · Environment', width: 820, height: 850, minWidth: 660, minHeight: 640,
     parent: options.parent, modal: Boolean(options.parent), autoHideMenuBar: true, backgroundColor: '#f7f8fa',
     webPreferences: { preload: fileURLToPath(new URL('./preload.cjs', import.meta.url)), sandbox: true, contextIsolation: true, nodeIntegration: false } });
   opened = page;

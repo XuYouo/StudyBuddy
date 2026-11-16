@@ -60,7 +60,7 @@ export class Reconciliations {
       }
     }
     if (!files.length) return null; // The author may have resolved it meanwhile.
-    const reviewBase = await app.repo.commitWithAsync(base, contents, "Papilot: prepare merge review");
+    const reviewBase = await app.repo.commitWithAsync(base, contents, "StudyBuddy: prepare merge review");
     const data: Reconciliation = { id: randomUUID(), round: app.review.latestRound(name)?.number ?? 0, files, sourceBase, sourceAccepted: task.accepted, base, reviewBase, worktreeBefore, ready: false, ...(intent ? { intent } : {}) };
     for (const file of await app.repo.changedFilesAsync(worktreeBefore, reviewBase)) safePath(task.worktree, file);
     // Keep the three versions available to the agent and across Git GC.

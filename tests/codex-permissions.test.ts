@@ -94,11 +94,11 @@ for (const initial of ['workspace', 'full'] as const) test(`real Codex switches 
       const sent = JSON.stringify(modelRequests.at(-1));
       assert.match(sent, /By default, keep manuscript edits in this isolated task worktree/);
       assert.match(sent, /runtime's current sandbox and approval requirements/);
-      assert.match(sent, /Never edit other task worktrees or Papilot's own source\/state/);
+      assert.match(sent, /Never edit other task worktrees or StudyBuddy's own source\/state/);
       const input: any[] = modelRequests.at(-1).input;
       const update = input.findLastIndex(item => item.role === 'developer' && JSON.stringify(item).includes('<papilot-task-access>'));
       assert.ok(update >= 0, 'current access instructions must have developer authority');
-      assert.match(JSON.stringify(input[update]), /replace earlier Papilot instructions about access outside the task worktree/);
+      assert.match(JSON.stringify(input[update]), /replace earlier StudyBuddy instructions about access outside the task worktree/);
       assert.match(JSON.stringify(input[update]), /blanket prohibitions on explicitly authorized manuscript writes, commits, and pushes/);
       assert.match(JSON.stringify(input[update]), /Manuscript review scope still applies/);
       assert.match(JSON.stringify(input[update]), /necessary Git fetch\/pull, staging, commit, and push/);

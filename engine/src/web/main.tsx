@@ -9,7 +9,7 @@ document.documentElement.lang = language();
 const params = new URLSearchParams(location.search),
   task = params.get("task"),
   round = Number(params.get("round")) || null;
-// Papilot opens a task's review, or with ?changes its uncommitted changes.
+// StudyBuddy opens a task's review, or with ?changes its uncommitted changes.
 createRoot(document.getElementById("root")!).render(
   params.has("changes") ? (
     <ReviewApp task="changes" pinned={null} changes />

@@ -1,11 +1,11 @@
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { Command, CommanderError } from "commander";
-// Papilot starts the review server through client.ts; this is its entry point.
+// StudyBuddy starts the review server through client.ts; this is its entry point.
 export async function main(argv = process.argv) {
   const program = new Command()
     .name("review-engine")
-    .description("Papilot's review server for LaTeX edits as PDF diffs.")
+    .description("StudyBuddy's review server for LaTeX edits as PDF diffs.")
     .exitOverride();
   program
     .command("serve")

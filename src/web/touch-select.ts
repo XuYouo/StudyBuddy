@@ -4,7 +4,7 @@ import { nearestGlyph, wordAround, type Rect } from './note-geometry.ts';
 export type Picked<T> = { target: T; units: HTMLElement[]; from: number; to: number };
 type Run<T> = Picked<T> & { words: { text: string; line: unknown }[]; boxes: (Rect | null)[]; anchor: [number, number] };
 
-// Touch screens select PDF text with Papilot's own highlight, handles and
+// Touch screens select PDF text with StudyBuddy's own highlight, handles and
 // menu instead of the system's, which callers turn off with user-select. A
 // long press picks a word and dragging on extends it word by word; each
 // .select-handle (data-end "from" or "to") moves its end, and a tap elsewhere

@@ -76,12 +76,12 @@ test('demo notes survive installing Git across restarts, including later restart
     await desktopDemo(process.cwd(), data, store, workspace, initial, () => false);
     const [project] = store.projects(), before = await initial.state(project.id, project.path);
     const document = mupdf.Document.openDocument(fs.readFileSync(initial.pdf(project.id, before.build.key!)), 'application/pdf');
-    const page = document.loadPage(0), [x0, y0, x1, y1] = page.getBounds(), [quad] = page.search('Papilot:', '')[0];
+    const page = document.loadPage(0), [x0, y0, x1, y1] = page.getBounds(), [quad] = page.search('StudyBuddy:', '')[0];
     const rect: [number, number, number, number] = [(Math.min(quad[0], quad[4]) - x0) / (x1 - x0), (Math.min(quad[1], quad[3]) - y0) / (y1 - y0),
       (Math.max(quad[2], quad[6]) - x0) / (x1 - x0), (Math.max(quad[5], quad[7]) - y0) / (y1 - y0)];
     page.destroy(); document.destroy();
     store.saveAnnotation({ id: 'note', projectId: project.id, key: before.build.key!, page: 0, rect, rects: [rect],
-      quote: 'Papilot:', comment: 'Keep this note', source: null, createdAt: 1 });
+      quote: 'StudyBuddy:', comment: 'Keep this note', source: null, createdAt: 1 });
     for (let restart = 0; restart < 2; restart++) {
       const manuscripts = new Manuscripts();
       await desktopDemo(process.cwd(), data, store, workspace, manuscripts, () => true);

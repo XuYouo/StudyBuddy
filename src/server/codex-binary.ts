@@ -1,7 +1,7 @@
 import { codexInstallations, firstRunnable } from '../../bin/codex-lookup.mjs';
 import { DATA, ROOT } from './paths.ts';
 
-// Papilot uses the Codex installed on this computer, like every other agent.
+// StudyBuddy uses the Codex installed on this computer, like every other agent.
 // The desktop installer does not carry Codex: it was the largest part of one,
 // and every Codex update meant downloading the whole app again.
 

@@ -15,12 +15,12 @@ import { mapMessage, mapUpdate, paperMap, type BuildNote } from './paper-map.ts'
 import { compiledPaper } from './build-map.ts';
 import type { Approval, Question, ToolHost } from './tools.ts';
 
-// Papilot Writer: Papilot's own paper-writing agent, built on the Pi agent
-// harness (@mariozechner/pi-coding-agent, used only as an SDK). Each Papilot
-// thread is one Pi session file in Papilot's data folder. Pi's own coding
+// StudyBuddy Writer: StudyBuddy's own paper-writing agent, built on the Pi agent
+// harness (@mariozechner/pi-coding-agent, used only as an SDK). Each StudyBuddy
+// thread is one Pi session file in StudyBuddy's data folder. Pi's own coding
 // tools, extensions, skills and ~/.pi settings are never loaded: the system
 // prompt, the tools (writer/tools.ts) and the context (the paper map that
-// opens every request) are Papilot's. Approvals, questions and the review
+// opens every request) are StudyBuddy's. Approvals, questions and the review
 // engine's build and pages go through the same requests as other agents.
 
 type Sdk = typeof import('@mariozechner/pi-coding-agent');
@@ -28,7 +28,7 @@ type Ai = typeof import('@mariozechner/pi-ai');
 type Fetch = (url: string, init?: RequestInit) => Promise<Response>;
 
 export interface WriterOptions {
-  /** Where sessions and credentials live; Papilot's data folder by default. */
+  /** Where sessions and credentials live; StudyBuddy's data folder by default. */
   dir?: string;
   /** Credentials to use instead of the file in dir (tests). */
   auth?: AuthStorage;
@@ -56,7 +56,7 @@ const FILE_TOOLS = new Set(['edit_file', 'write_file', 'move_file', 'delete_file
 const PER_PROVIDER = 30;
 // How long a provider's model list is trusted before it is fetched again.
 const CATALOG_TTL = 10 * 60 * 1000;
-// The Codex backend lists the models a client of this version can use; Papilot bundles this Codex.
+// The Codex backend lists the models a client of this version can use; StudyBuddy bundles this Codex.
 const CODEX_CLIENT_VERSION = (() => {
   try { const pkg = JSON.parse(fs.readFileSync(new URL('../../../package.json', import.meta.url), 'utf8')); return String(pkg.dependencies?.['@openai/codex'] || pkg.devDependencies?.['@openai/codex'] || '').replace(/^[^\d]*/, '') || '0.164.0'; }
   catch { return '0.164.0'; }
@@ -65,7 +65,7 @@ interface Listing { models: Model<Api>[]; efforts: Map<string, string[]>; at: nu
 export const modelId = (model: Pick<Model<Api>, 'provider' | 'id'>) => `${model.provider}/${model.id}`;
 
 export class WriterAgent extends Adapter {
-  readonly name = 'Papilot Writer';
+  readonly name = 'StudyBuddy Writer';
   private sdk?: Sdk;
   private ai?: Ai;
   private storage?: AuthStorage;
@@ -79,7 +79,7 @@ export class WriterAgent extends Adapter {
   private dir: string;
   constructor(private options: WriterOptions = {}) { super(); this.dir = options.dir || WRITER_DIR; }
 
-  // Built into Papilot, so always present; it still needs a model provider.
+  // Built into StudyBuddy, so always present; it still needs a model provider.
   detect() { return true; }
   async preload() { await this.load(); }
   async start() { await this.load(); this.ready = true; }
@@ -149,13 +149,13 @@ export class WriterAgent extends Adapter {
   private defaultModel() { return this.available()[0]; }
   protected account() {
     const configured = this.credentials?.status().providers.filter(provider => provider.configured && this.credentials!.usable(provider.id)) || [];
-    if (!configured.length || !this.defaultModel()) return { account: null, requiresOpenaiAuth: true, reason: 'Papilot Writer needs a model provider. Sign in with ChatGPT or GitHub Copilot, or add an API key, in Settings → Agents → Papilot Writer.' };
+    if (!configured.length || !this.defaultModel()) return { account: null, requiresOpenaiAuth: true, reason: 'StudyBuddy Writer needs a model provider. Sign in with ChatGPT or GitHub Copilot, or add an API key, in Settings → Agents → StudyBuddy Writer.' };
     return { account: { type: configured.map(provider => provider.name).join(', ') }, requiresOpenaiAuth: false };
   }
   protected async models() {
     await this.refreshModels();
     const fallback = this.defaultModel();
-    // The picker groups models by provider, under the names Papilot's settings use.
+    // The picker groups models by provider, under the names StudyBuddy's settings use.
     const sources = new Map(this.credentials!.status().providers.map(provider => [provider.id, provider.name]));
     return { data: this.available().map(model => {
       const listed = this.catalog.get(model.provider)?.efforts.get(model.id);
@@ -183,7 +183,7 @@ export class WriterAgent extends Adapter {
     this.waits.delete(String(id));
     wait.resolve(wait.kind === 'approval' ? false : wait.kind === 'question' ? [] : { success: false, text: message });
   }
-  // Sends a request to Papilot and waits for the answer, or for the turn to stop.
+  // Sends a request to StudyBuddy and waits for the answer, or for the turn to stop.
   private send<T>(turn: Turn, kind: Wait['kind'], method: string, params: Record<string, unknown>, fallback: T, signal?: AbortSignal, count?: number) {
     return new Promise<T>(resolve => {
       const id = randomUUID();
@@ -216,13 +216,13 @@ export class WriterAgent extends Adapter {
         { reason: `${request.title}. ${request.reason}`, command: request.kind === 'command' ? request.command : request.title }, false, signal),
       ask: (questions: Question[], signal) => this.send<string[]>(turn(), 'question', 'item/tool/requestUserInput',
         { questions: questions.map((q, index) => ({ id: String(index), header: q.header || 'Question', question: q.question, options: q.options, isOther: true })) }, [], signal, questions.length),
-      papilot: (tool, args, signal, callId) => this.send(turn(), 'tool', 'item/tool/call', { callId: callId || randomUUID(), tool, arguments: args }, { success: false, text: 'The turn stopped before Papilot answered.' }, signal),
+      papilot: (tool, args, signal, callId) => this.send(turn(), 'tool', 'item/tool/call', { callId: callId || randomUUID(), tool, arguments: args }, { success: false, text: 'The turn stopped before StudyBuddy answered.' }, signal),
       lastBuild: () => live.build,
       recordBuild: note => { live.build = note; },
       chore: () => live.chore,
       enterChore: async (reason, plan, signal) => {
         const ok = live.mode === 'full' || await this.send(turn(), 'approval', 'item/commandExecution/requestApproval',
-          { reason: `Enter chore mode: ${reason}. Papilot Writer will be able to run shell commands in the task worktree until the chore is done.`, command: plan || reason }, false, signal);
+          { reason: `Enter chore mode: ${reason}. StudyBuddy Writer will be able to run shell commands in the task worktree until the chore is done.`, command: plan || reason }, false, signal);
         if (ok) { live.chore = { reason }; live.choreChanged = true; }
         return ok;
       },
@@ -243,11 +243,11 @@ export class WriterAgent extends Adapter {
     known?.session.dispose();
     const sdk = this.sdk!, sessions = path.join(this.dir, 'sessions');
     fs.mkdirSync(sessions, { recursive: true });
-    // Papilot's helper turns (titles, commit messages) keep no session file.
+    // StudyBuddy's helper turns (titles, commit messages) keep no session file.
     const sessionManager = thread.ephemeral ? sdk.SessionManager.inMemory(thread.cwd) : sdk.SessionManager.open(path.join(sessions, `${threadId}.jsonl`), sessions, thread.cwd);
     const settingsManager = sdk.SettingsManager.inMemory({ compaction: { enabled: true } });
     const live: Live = { session: undefined as never, cwd: thread.cwd, mode, build: null, chore: null, choreChanged: false, turn: null, tools: [] };
-    // Earlier turns are summarized with Papilot Writer's own priorities.
+    // Earlier turns are summarized with StudyBuddy Writer's own priorities.
     const compaction: ExtensionFactory = pi => {
       pi.on('session_before_compact', async (event, ctx) => {
         if (!ctx.model) return undefined;
@@ -259,7 +259,7 @@ export class WriterAgent extends Adapter {
     };
     const loader = new sdk.DefaultResourceLoader({
       cwd: thread.cwd, agentDir: this.dir, settingsManager, noExtensions: true, noSkills: true, noPromptTemplates: true, noThemes: true, noContextFiles: true,
-      systemPrompt: `${CHARTER}\n\n# Papilot task\n\n${thread.instructions}`,
+      systemPrompt: `${CHARTER}\n\n# StudyBuddy task\n\n${thread.instructions}`,
       agentsFilesOverride: () => ({ agentsFiles: projectInstructions(thread.cwd) }),
       extensionFactories: [compaction],
     });
@@ -295,7 +295,7 @@ export class WriterAgent extends Adapter {
     try {
       await this.load();
       const model = await this.resolve(thread.model);
-      if (!model) throw new Error(String(this.account().reason || 'Papilot Writer has no model available.'));
+      if (!model) throw new Error(String(this.account().reason || 'StudyBuddy Writer has no model available.'));
       live = await this.open(turn.threadId, thread);
       if (stopped) return;
       live.turn = turn;
@@ -337,7 +337,7 @@ export class WriterAgent extends Adapter {
     }
   }
 
-  // Pi's events as the items Papilot shows in the conversation.
+  // Pi's events as the items StudyBuddy shows in the conversation.
   private translate(turn: Turn, session: AgentSession, fail: (error: string) => void) {
     let message = 0, text = '';
     const shown = new Map<string, Item>();
@@ -380,7 +380,7 @@ export class WriterAgent extends Adapter {
 
   close() {
     super.close();
-    for (const id of [...this.waits.keys()]) this.reject(id, 'Papilot is closing.');
+    for (const id of [...this.waits.keys()]) this.reject(id, 'StudyBuddy is closing.');
     for (const live of this.live.values()) live.session.dispose();
     this.live.clear();
     this.credentials?.close();
@@ -389,7 +389,7 @@ export class WriterAgent extends Adapter {
 
 const resultText = (result: any) => (result?.content || []).filter((part: { type: string }) => part.type === 'text').map((part: { text: string }) => part.text).join('\n');
 
-/** A tool call as Papilot shows it: file changes, commands, page views, the rest by name. */
+/** A tool call as StudyBuddy shows it: file changes, commands, page views, the rest by name. */
 export function toolItem(id: string, name: string, args: Record<string, any>): Item {
   if (FILE_TOOLS.has(name)) return { id, type: 'fileChange', changes: [{ path: String(args.path || args.bib_file || args.from || '') }], status: 'inProgress' };
   if (name === 'run_command') return { id, type: 'commandExecution', command: String(args.command || ''), status: 'inProgress' };

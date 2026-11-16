@@ -58,7 +58,7 @@ export function CreatePaperDialog({ api, onDone, onClose }: { api: <T>(url: stri
           <input id="create-paper-parent" value={form.parent} required maxLength={4000} autoComplete="off" spellCheck={false} disabled={busy} onChange={event => setForm({ ...form, parent: event.target.value })}/>
           {nativeFolders && <button type="button" className="button secondary compact" disabled={busy} onClick={() => void browse()}>{t('Choose folder')}</button>}
         </div>
-        <p className="create-paper-hint">{nativeFolders ? t('A new folder with the paper name will be created here. Existing folders are never replaced.') : t('This location is on the computer running Papilot. A new folder with the paper name will be created here; existing folders are never replaced.')}</p>
+        <p className="create-paper-hint">{nativeFolders ? t('A new folder with the paper name will be created here. Existing folders are never replaced.') : t('This location is on the computer running StudyBuddy. A new folder with the paper name will be created here; existing folders are never replaced.')}</p>
         <p className="create-paper-hint">{t('Next, edit main.tex in the source editor or ask an agent to help write your paper. Compilation starts in the workspace.')}</p>
         {busy && <p className="create-paper-status" role="status"><span className="spinner"/>{t('Creating your paper…')}</p>}
         {error && <p className="inline-error" role="alert">{error}</p>}

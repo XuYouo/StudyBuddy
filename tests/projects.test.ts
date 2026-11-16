@@ -32,7 +32,7 @@ function fixture() {
   return { dir, store, workspace, root, other, worktree, task, git, repo, calls, setInfo(value: unknown) { taskInfo = value; }, close() { workspace.close(); store.close(); fs.rmSync(dir, { recursive: true, force: true }); } };
 }
 
-test('removing a paper drops only its Papilot records and keeps repositories and worktrees intact', () => {
+test('removing a paper drops only its StudyBuddy records and keeps repositories and worktrees intact', () => {
   const f = fixture();
   try {
     f.store.saveTask(f.task);

@@ -24,7 +24,7 @@ export function AgentConnectionNotice({ name, runtime, reconnecting, onReconnect
   return <div className="agent-connection" data-state={connecting ? 'connecting' : 'error'}>
     <div className="agent-connection-message" role="status">{connecting ? <span className="spinner" aria-hidden="true"/> : <Icon name="alert" size={14}/>}<span>{message}</span></div>
     {error && error !== message && <details><summary>{t('Connection details')}</summary><p>{error}</p></details>}
-    <button type="button" disabled={reconnecting} title={signedOut ? t('Use the current {agent} sign-in on the Papilot host', { agent: name }) : undefined} onClick={onReconnect}><Icon name="refresh" size={12}/>{reconnecting ? signedOut ? t('Refreshing…') : t('Connecting…') : signedOut ? t('Refresh') : t('Reconnect')}</button>
+    <button type="button" disabled={reconnecting} title={signedOut ? t('Use the current {agent} sign-in on the StudyBuddy host', { agent: name }) : undefined} onClick={onReconnect}><Icon name="refresh" size={12}/>{reconnecting ? signedOut ? t('Refreshing…') : t('Connecting…') : signedOut ? t('Refresh') : t('Reconnect')}</button>
   </div>;
 }
 
@@ -40,14 +40,14 @@ export function NoAgentNotice({ reconnecting, onReconnect, onAdd }: { reconnecti
   </div>;
 }
 
-// Shown to authors who chose another agent before Papilot Writer existed:
+// Shown to authors who chose another agent before StudyBuddy Writer existed:
 // their choice stays, and this suggests trying the built-in agent once.
 export function WriterSuggestion({ ready, onUse, onSetUp, onDismiss }: { ready: boolean; onUse: () => void; onSetUp: () => void; onDismiss: () => void }) {
   return <div className="agent-connection writer-suggestion" data-state="info">
-    <div className="agent-connection-message" role="note"><BrandIcon name="papilot" size={16}/><span>{t('Try Papilot Writer, the paper-writing agent built into Papilot. Your current agent stays the default until you switch.')}</span></div>
+    <div className="agent-connection-message" role="note"><BrandIcon name="papilot" size={16}/><span>{t('Try StudyBuddy Writer, the paper-writing agent built into StudyBuddy. Your current agent stays the default until you switch.')}</span></div>
     <div className="agent-connection-actions">
-      {ready ? <button type="button" className="button primary compact" onClick={onUse}>{t('Use Papilot Writer')}</button>
-        : <button type="button" className="button primary compact" onClick={onSetUp}>{t('Set up Papilot Writer')}</button>}
+      {ready ? <button type="button" className="button primary compact" onClick={onUse}>{t('Use StudyBuddy Writer')}</button>
+        : <button type="button" className="button primary compact" onClick={onSetUp}>{t('Set up StudyBuddy Writer')}</button>}
       <button type="button" className="button secondary compact" onClick={onDismiss}>{t('Not now')}</button>
     </div>
   </div>;

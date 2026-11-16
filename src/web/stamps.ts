@@ -5,7 +5,7 @@ import { t, useLanguage } from './i18n.ts';
 
 // Quick notes for the magic pen: a short name for the wheel and the mark, and
 // the instruction the agent receives. Each is complete with only a location,
-// so marking needs no typing. Papilot starts with five; settings can change
+// so marking needs no typing. StudyBuddy starts with five; settings can change
 // them or add more, up to the eight a direction picks reliably. They sit
 // clockwise from the top, and number keys 1–8 pick the same slots in order.
 export interface Stamp { id: string; label: string; instruction: string; icon: string }

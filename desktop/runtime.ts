@@ -123,7 +123,7 @@ export function startBackend(options: { node: string; root: string; data: string
 export function idleCheck(child: ChildProcess, send: (message: { type: string; id: string }) => void | Promise<void>) {
   return new Promise<boolean>((resolve, reject) => {
     const id = randomUUID();
-    const timer = setTimeout(() => fail(new Error('Could not check running tasks. Try again after Papilot responds.')), 5000);
+    const timer = setTimeout(() => fail(new Error('Could not check running tasks. Try again after StudyBuddy responds.')), 5000);
     const cleanup = () => { clearTimeout(timer); child.off('message', receive); child.off('disconnect', closed); child.off('exit', closed); };
     const receive = (message: any) => {
       if (message?.type !== 'papilot:can-switch' || message.id !== id) return;
@@ -141,7 +141,7 @@ export function idleCheck(child: ChildProcess, send: (message: { type: string; i
   });
 }
 
-// Updates download only Papilot's own code (a layer, see scripts/desktop-layer.mjs)
+// Updates download only StudyBuddy's own code (a layer, see scripts/desktop-layer.mjs)
 // into the data directory. A layer runs on this installer's Node and
 // dependencies when it was built for the same shell fingerprint; installing
 // another app version retires it.
@@ -174,7 +174,7 @@ export function layer(data: string, bundle: Bundle, root: unknown, version: unkn
   if (!bundle.fingerprint || typeof root !== 'string' || typeof version !== 'string') return null;
   try { if (!fs.realpathSync(root).startsWith(fs.realpathSync(layerFiles(data).layers) + path.sep)) return null; } catch { return null; }
   const pkg = readJson(path.join(root, 'package.json')), shell = readJson(path.join(root, 'desktop-layer.json'));
-  if (pkg?.name !== 'papilot' || pkg.version !== version || shell?.version !== version || shell.fingerprint !== bundle.fingerprint || !fs.existsSync(path.join(root, 'src/server/start.ts'))) return null;
+  if (pkg?.name !== 'studybuddy' || pkg.version !== version || shell?.version !== version || shell.fingerprint !== bundle.fingerprint || !fs.existsSync(path.join(root, 'src/server/start.ts'))) return null;
   return { root, version };
 }
 export function activeLayer(data: string, bundle: Bundle) {
@@ -188,7 +188,7 @@ export function removeLayers(data: string, keep?: string) {
   try { if (keep) kept = path.relative(fs.realpathSync(layers), fs.realpathSync(keep)).split(path.sep)[0]; } catch { /* keep nothing */ }
   for (const entry of entries) if (entry !== kept) fs.rmSync(path.join(layers, entry), { recursive: true, force: true });
 }
-export const STARTUP_FAILED = 'The updated version did not start, so Papilot is using the version included with the app. Retry the update or download the latest desktop app.';
+export const STARTUP_FAILED = 'The updated version did not start, so StudyBuddy is using the version included with the app. Retry the update or download the latest desktop app.';
 // Starts the active layer, or the bundled server when there is none or it
 // fails. Returns the root that is running.
 export async function startServer(data: string, bundle: Bundle, launch: (root: string) => Promise<void>) {
@@ -200,7 +200,7 @@ export async function startServer(data: string, bundle: Bundle, launch: (root: s
   try { linkBundle(chosen.root, bundle.root); await launch(chosen.root); return chosen.root; }
   catch (error) {
     if (error instanceof BackendStopError) throw error;
-    console.error(`Papilot ${chosen.version} did not start:`, error);
+    console.error(`StudyBuddy ${chosen.version} did not start:`, error);
     fs.rmSync(active, { force: true });
     writeJson(status, { ...readJson(status), phase: 'failed', checkedAt: Date.now(), error: STARTUP_FAILED, pid: process.pid });
     await launch(bundle.root);

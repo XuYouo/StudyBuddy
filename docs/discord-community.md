@@ -1,4 +1,4 @@
-# Papilot Discord operations
+# StudyBuddy Discord operations
 
 Server: `1568215729063329955`. Keep the community small and navigable; use forum posts for individual problems and ideas.
 
@@ -7,7 +7,7 @@ Server: `1568215729063329955`. Keep the community small and navigable; use forum
 | Area | Channel | Purpose |
 | --- | --- | --- |
 | Start here | welcome-and-rules | Rules, downloads, navigation, helper commands |
-| Start here | announcements | Official releases via the existing Papilot Releases webhook |
+| Start here | announcements | Official releases via the existing StudyBuddy Releases webhook |
 | Community | general / 中文交流 | Conversation in English and Chinese |
 | Support | help | One support problem per forum post |
 | Support | feedback | One product idea or bug per forum post; use tags and reactions |
@@ -25,7 +25,7 @@ Mention Carl-bot followed by a name, e.g. `@Carl-bot download` (select the actua
 | --- | --- |
 | papilot | Command directory and channel links |
 | download | Current desktop release, CLI install/update and guide |
-| doctor | Version/environment checks, `papilot doctor`, minimal reproduction and redacted logs |
+| doctor | Version/environment checks, `studybuddy doctor`, minimal reproduction and redacted logs |
 | bug | GitHub bug form, original Discord post link and private security reporting |
 | feature | Writing scenario, problem, workaround, expected result and feature form |
 | contribute | Contribution guide, issue queue and development channel |
@@ -36,7 +36,7 @@ Commands are Carl-bot tags, not AI agents. They do not read papers, execute loca
 ## Feedback workflow
 
 1. Search for duplicates, then create a help/feedback forum post with one topic.
-2. Capture the writing task, Papilot version, OS, agent and a minimal reproduction. Do not request private manuscripts or secrets.
+2. Capture the writing task, StudyBuddy version, OS, agent and a minimal reproduction. Do not request private manuscripts or secrets.
 3. A maintainer confirms the problem or clarifies the feature. Actionable work becomes a GitHub issue using the bug/feature form. The author or maintainer copies the Discord post link into the form and replies to the original post with the issue link.
 4. New form submissions receive `needs-triage` plus `bug` or `enhancement`. Remove `needs-triage` after assigning the next action. Use existing `duplicate`, `wontfix`, `help wanted` and `good first issue` labels when appropriate.
 5. Link the implementing PR to the issue. Once released, reply to the original Discord post with the version and release link, then mark the forum post resolved/shipped.
@@ -47,8 +47,8 @@ This is an explicit human handoff between Discord and GitHub. No background copy
 
 Existing GitHub repository webhooks:
 
-- `708160215`: `release` → Papilot Releases → announcements.
-- `708160915`: `issues`, `pull_request` → Papilot GitHub → github-feed.
+- `708160215`: `release` → StudyBuddy Releases → announcements.
+- `708160915`: `issues`, `pull_request` → StudyBuddy GitHub → github-feed.
 
 Both use Discord's `/github` adapter. Do not add push/comment/review traffic indiscriminately or duplicate these subscriptions in Actions.
 

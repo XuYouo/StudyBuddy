@@ -1,5 +1,5 @@
 {
-  description = "Papilot: a local workspace for revising LaTeX papers with AI";
+  description = "StudyBuddy: a local workspace for revising LaTeX papers with AI";
 
   inputs.nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.zst";
 

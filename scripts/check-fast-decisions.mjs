@@ -57,7 +57,7 @@ async function open(page) {
     const body = route.request().postDataJSON();
     posts.push({ route: url.pathname.split('/').at(-1), ...body });
     if (hold) await new Promise(resolve => held.push(resolve));
-    if (unreachable > 0) { unreachable--; return route.fulfill({ status: 503, json: { error: 'Papilot is restarting after an update. Please wait a moment.' } }); }
+    if (unreachable > 0) { unreachable--; return route.fulfill({ status: 503, json: { error: 'StudyBuddy is restarting after an update. Please wait a moment.' } }); }
     const refusal = refuse?.(body);
     if (refusal) return route.fulfill({ status: 400, json: { error: refusal } });
     const extra = apply(url.pathname, body);
@@ -210,7 +210,7 @@ try {
     if (round) return route.fulfill({ json: { ...detail, round: Number(round[1]) } });
     if (route.request().method() !== 'POST') return route.fulfill({ json: view() });
     if (url.pathname.endsWith('/look')) return route.fulfill({ json: { ok: true } });
-    // As Papilot's proxy does, a write needs the page's token.
+    // As StudyBuddy's proxy does, a write needs the page's token.
     if (route.request().headers()['x-review-token'] !== 'fixture') return route.fulfill({ status: 403, json: { error: 'This review page has expired. Refresh it and try again.' } });
     const body = route.request().postDataJSON();
     posts.push({ route: url.pathname.split('/').at(-1), ...body });

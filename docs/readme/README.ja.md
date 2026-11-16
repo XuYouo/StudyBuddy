@@ -1,17 +1,16 @@
 <div align="center">
 
-<img src="../assets/wordmark.svg#gh-light-mode-only" width="220" height="69" alt="Papilot"><img src="../assets/wordmark-dark.svg#gh-dark-mode-only" width="220" height="69" alt="Papilot"><br>**次世代 AI LaTeX エディタ**
+<img src="../assets/wordmark.svg#gh-light-mode-only" width="270" height="66" alt="StudyBuddy"><img src="../assets/wordmark-dark.svg#gh-dark-mode-only" width="270" height="66" alt="StudyBuddy"><br>**次世代 AI LaTeX エディタ**
 
 # `.tex` の読み書きは不要<br><img src="../assets/pdf.svg" width="34" height="41" align="absmiddle" alt="PDF"> 上で直接作業
 
 AI を用いた責任ある執筆と組版のための**新しいパラダイム**。
 
 <!-- BEGIN BADGES -->
-[![License: MIT](https://img.shields.io/github/license/PapilotAI/papilot?style=flat&color=22c55e)](../../LICENSE)
-[![CI](https://img.shields.io/github/actions/workflow/status/PapilotAI/papilot/ci.yml?branch=main&style=flat&label=CI)](https://github.com/PapilotAI/papilot/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/PapilotAI/papilot?style=flat&label=release&color=0969da)](https://github.com/PapilotAI/papilot/releases/latest)
-[![GitHub total downloads](https://img.shields.io/github/downloads/PapilotAI/papilot/total?style=flat&logo=github&label=downloads&color=0969da)](https://github.com/PapilotAI/papilot/releases)
-[![npm monthly downloads](https://img.shields.io/npm/dm/papilot?style=flat&logo=npm&label=downloads&color=cb3837)](https://www.npmjs.com/package/papilot)
+[![License: MIT](https://img.shields.io/github/license/XuYouo/StudyBuddy?style=flat&color=22c55e)](../../LICENSE)
+[![CI](https://img.shields.io/github/actions/workflow/status/XuYouo/StudyBuddy/ci.yml?branch=main&style=flat&label=CI)](https://github.com/XuYouo/StudyBuddy/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/XuYouo/StudyBuddy?style=flat&label=release&color=0969da)](https://github.com/XuYouo/StudyBuddy/releases/latest)
+[![GitHub total downloads](https://img.shields.io/github/downloads/XuYouo/StudyBuddy/total?style=flat&logo=github&label=downloads&color=0969da)](https://github.com/XuYouo/StudyBuddy/releases)
 <!-- END BADGES -->
 
 <p data-language-switcher><sub><a href="../../README.md">English</a>&nbsp;· <a href="README.zh-CN.md">简体中文</a>&nbsp;· <a href="README.zh-Hant.md">繁體中文</a>&nbsp;· <a href="README.ja.md">日本語</a>&nbsp;· <a href="README.ko.md">한국어</a>&nbsp;· <a href="README.de.md">Deutsch</a>&nbsp;· <a href="README.fr.md">Français</a>&nbsp;· <a href="README.es.md">Español</a>&nbsp;· <a href="README.pt.md">Português</a>&nbsp;· <a href="README.it.md">Italiano</a>&nbsp;· <a href="README.sv.md">Svenska</a></sub></p>
@@ -24,7 +23,7 @@ AI を用いた責任ある執筆と組版のための**新しいパラダイム
   <source media="(prefers-color-scheme: dark) and (max-width: 600px)" srcset="../assets/readme-showcase/hero-compact-dark.png">
   <source media="(prefers-color-scheme: dark)" srcset="../assets/readme-showcase/hero-dark.png">
   <source media="(max-width: 600px)" srcset="../assets/readme-showcase/hero-compact.png">
-  <img src="../assets/readme-showcase/hero.png" alt="Papilot は AI による編集を組版済みの変更前後として PDF 上に表示し、承認・却下・コメントを行えます。" width="900">
+  <img src="../assets/readme-showcase/hero.png" alt="StudyBuddy は AI による編集を組版済みの変更前後として PDF 上に表示し、承認・却下・コメントを行えます。" width="900">
 </picture>
 </a>
 </p>
@@ -41,12 +40,12 @@ AI を用いた責任ある執筆と組版のための**新しいパラダイム
     <source media="(prefers-color-scheme: dark) and (max-width: 600px)" srcset="../assets/readme-showcase/paradigm-compact-dark.png">
     <source media="(prefers-color-scheme: dark)" srcset="../assets/readme-showcase/paradigm-dark.png">
     <source media="(max-width: 600px)" srcset="../assets/readme-showcase/paradigm-compact.png">
-    <img src="../assets/readme-showcase/paradigm.png" alt="手書きの LaTeX、AI による LaTeX 差分の確認、そして Papilot による PDF のレビューへ。" width="900">
+    <img src="../assets/readme-showcase/paradigm.png" alt="手書きの LaTeX、AI による LaTeX 差分の確認、そして StudyBuddy による PDF のレビューへ。" width="900">
   </picture>
 </p>
 
 **頭の中で差分をコンパイルする必要はもうありません。**<br>
-ソースの差分では PDF を*想像*するしかありませんが、Papilot は組版された状態でそれを*表示*します。
+ソースの差分では PDF を*想像*するしかありませんが、StudyBuddy は組版された状態でそれを*表示*します。
 
 <a id="-point-at-the-page-and-say-what-you-want"></a>
 
@@ -60,7 +59,7 @@ AI を用いた責任ある執筆と組版のための**新しいパラダイム
     <source media="(prefers-color-scheme: dark) and (max-width: 600px)" srcset="../assets/readme-showcase/notes-app-compact-dark.png">
     <source media="(prefers-color-scheme: dark)" srcset="../assets/readme-showcase/notes-app-dark.png">
     <source media="(max-width: 600px)" srcset="../assets/readme-showcase/notes-app-compact.png">
-    <img src="../assets/readme-showcase/notes-app.png" alt="PDF 上の数式を囲む枠とハイライトされた文にそれぞれ注釈が付けられ、次のタスクに追加されている Papilot の画面。" width="900">
+    <img src="../assets/readme-showcase/notes-app.png" alt="PDF 上の数式を囲む枠とハイライトされた文にそれぞれ注釈が付けられ、次のタスクに追加されている StudyBuddy の画面。" width="900">
   </picture>
 </p>
 
@@ -104,12 +103,12 @@ AI を用いた責任ある執筆と組版のための**新しいパラダイム
 <!-- BEGIN DOWNLOADS -->
 | OS / ディストリビューション | ダウンロード / パッケージ | インストール / 起動 |
 | --- | --- | --- |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="../assets/readme-icons/apple-dark.svg"><img src="../assets/readme-icons/apple.svg" width="18" height="18" align="absmiddle" alt=""></picture> **macOS** | [Apple Silicon](https://github.com/PapilotAI/papilot/releases/latest) · [Intel](https://github.com/PapilotAI/papilot/releases/latest)<br>DMG / ZIP | DMG を開き、Papilot を「アプリケーション」にドラッグします。 |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="../assets/readme-icons/windows-dark.svg"><img src="../assets/readme-icons/windows.svg" width="18" height="18" align="absmiddle" alt=""></picture> **Windows** | [インストーラー](https://github.com/PapilotAI/papilot/releases/latest) · [ポータブル版](https://github.com/PapilotAI/papilot/releases/latest)<br>x64 | インストーラーを実行するか、ポータブル版を直接起動します。 |
-| <img src="../assets/readme-icons/ubuntu.svg" width="18" height="18" align="absmiddle" alt=""> <img src="../assets/readme-icons/debian.svg" width="18" height="18" align="absmiddle" alt=""> **Ubuntu / Debian / Linux Mint** | [.deb](https://github.com/PapilotAI/papilot/releases/latest) | `sudo apt install ./Papilot-*.deb` |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="../assets/readme-icons/linux-dark.svg"><img src="../assets/readme-icons/linux.svg" width="18" height="18" align="absmiddle" alt=""></picture> **Fedora / Arch / openSUSE** | [AppImage](https://github.com/PapilotAI/papilot/releases/latest) | `chmod +x Papilot-*.AppImage`<br>`./Papilot-*.AppImage` |
+| <picture><source media="(prefers-color-scheme: dark)" srcset="../assets/readme-icons/apple-dark.svg"><img src="../assets/readme-icons/apple.svg" width="18" height="18" align="absmiddle" alt=""></picture> **macOS** | [Apple Silicon](https://github.com/XuYouo/StudyBuddy/releases/latest) · [Intel](https://github.com/XuYouo/StudyBuddy/releases/latest)<br>DMG / ZIP | DMG を開き、StudyBuddy を「アプリケーション」にドラッグします。 |
+| <picture><source media="(prefers-color-scheme: dark)" srcset="../assets/readme-icons/windows-dark.svg"><img src="../assets/readme-icons/windows.svg" width="18" height="18" align="absmiddle" alt=""></picture> **Windows** | [インストーラー](https://github.com/XuYouo/StudyBuddy/releases/latest) · [ポータブル版](https://github.com/XuYouo/StudyBuddy/releases/latest)<br>x64 | インストーラーを実行するか、ポータブル版を直接起動します。 |
+| <img src="../assets/readme-icons/ubuntu.svg" width="18" height="18" align="absmiddle" alt=""> <img src="../assets/readme-icons/debian.svg" width="18" height="18" align="absmiddle" alt=""> **Ubuntu / Debian / Linux Mint** | [.deb](https://github.com/XuYouo/StudyBuddy/releases/latest) | `sudo apt install ./StudyBuddy-*.deb` |
+| <picture><source media="(prefers-color-scheme: dark)" srcset="../assets/readme-icons/linux-dark.svg"><img src="../assets/readme-icons/linux.svg" width="18" height="18" align="absmiddle" alt=""></picture> **Fedora / Arch / openSUSE** | [AppImage](https://github.com/XuYouo/StudyBuddy/releases/latest) | `chmod +x StudyBuddy-*.AppImage`<br>`./StudyBuddy-*.AppImage` |
 | <img src="../assets/readme-icons/nixos.svg" width="18" height="18" align="absmiddle" alt=""> **NixOS** | [Nix flake](../nix.md#nixos-flake) | [`flake.nix` に追加](../nix.md#nixos-flake) |
-| **macOS / Linux / Windows (CLI)** | [npm](https://www.npmjs.com/package/papilot) | `npm install -g papilot` |
+| **macOS / Linux / Windows (CLI)** | [npm](https://github.com/XuYouo/StudyBuddy/blob/main/docs/development-macos.md) | `npm install -g .` |
 
 Linux パッケージは x86_64 向けで、Ubuntu 22.04 でテスト済みです。依存関係と AppImage/FUSE の説明は[デスクトップ版のセットアップ](../../desktop/README.md#build-and-run)をご覧ください。
 
@@ -122,11 +121,11 @@ npm 版はブラウザーで動作し、Node.js 22.22+ が必要です。Nix で
 
 ## 🚀 はじめに
 
-1. **インストール。** macOS、Linux、Windows 向けの[アプリをダウンロード](#downloads)するか、`npm install -g papilot`（Node.js 22.22 以降）を実行します。また、Git と TeX Live または MacTeX が必要です。
-2. **プロジェクトを開く。** `.tex` ファイルが含まれるフォルダを選択すると、Papilot が PDF をビルドします。
+1. **インストール。** macOS、Linux、Windows 向けの[アプリをダウンロード](#downloads)するか、`npm install -g .`（Node.js 22.22 以降）を実行します。また、Git と TeX Live または MacTeX が必要です。
+2. **プロジェクトを開く。** `.tex` ファイルが含まれるフォルダを選択すると、StudyBuddy が PDF をビルドします。
 3. **エージェントを選択。** 既存の CLI ログインまたは API キーを使用し、ページに注釈を付けます。
 
-まずはサンプルを試したいですか？ `papilot demo` を実行してください。詳細は[ガイド](../guide.md#install-and-run)を参照してください。
+まずはサンプルを試したいですか？ `studybuddy demo` を実行してください。詳細は[ガイド](../guide.md#install-and-run)を参照してください。
 
 <a id="documentation-and-community"></a>
 
@@ -134,9 +133,9 @@ npm 版はブラウザーで動作し、Node.js 22.22+ が必要です。Nix で
 
 ## 🤝 コミュニティ
 
-<img src="../assets/readme-icons/issue.svg" width="20" height="20" align="absmiddle" alt=""> &nbsp;**バグの発見や機能の要望がありますか？** 簡単な内容でも構いませんので、[Issue を作成](https://github.com/PapilotAI/papilot/issues/new/choose)してください。
+<img src="../assets/readme-icons/issue.svg" width="20" height="20" align="absmiddle" alt=""> &nbsp;**バグの発見や機能の要望がありますか？** 簡単な内容でも構いませんので、[Issue を作成](https://github.com/XuYouo/StudyBuddy/issues/new/choose)してください。
 
-<img src="../assets/readme-icons/discussion.svg" width="20" height="20" align="absmiddle" alt=""> &nbsp;**質問やアイデアがありますか？** [Discussion を開始](https://github.com/PapilotAI/papilot/discussions)してください。
+<img src="../assets/readme-icons/discussion.svg" width="20" height="20" align="absmiddle" alt=""> &nbsp;**質問やアイデアがありますか？** [Discussion を開始](https://github.com/XuYouo/StudyBuddy/discussions)してください。
 
 <img src="../assets/readme-icons/pull-request.svg" width="20" height="20" align="absmiddle" alt=""> &nbsp;**コントリビューターになる。** AI エージェントを用いて作成されたものを含め、プルリクエストを歓迎します。まずは[コントリビューションガイド](../../.github/CONTRIBUTING.md)をご覧ください。
 
@@ -145,10 +144,10 @@ npm 版はブラウザーで動作し、Node.js 22.22+ が必要です。Nix で
 ## 貢献者
 
 <p>
-  <a href="https://github.com/PapilotAI/papilot/graphs/contributors">
+  <a href="https://github.com/XuYouo/StudyBuddy/graphs/contributors">
     <picture>
       <source media="(max-width: 600px)" srcset="../assets/readme-contributors/compact.svg">
-      <img src="../assets/readme-contributors/desktop.svg" alt="Papilot の貢献者">
+      <img src="../assets/readme-contributors/desktop.svg" alt="StudyBuddy の貢献者">
     </picture>
   </a>
 </p>

@@ -10,7 +10,7 @@ export { LANGUAGES, type Language };
 export type LanguageChoice = Language | 'system';
 const key = 'papilot:language';
 
-// The first browser language Papilot speaks wins; outside a browser (tests) it is English.
+// The first browser language StudyBuddy speaks wins; outside a browser (tests) it is English.
 export function browserLanguage(languages: readonly string[] = typeof window === 'undefined' ? [] : navigator.languages?.length ? navigator.languages : [navigator.language]): Language {
   for (const tag of languages) {
     const supported = supportedLanguage(tag);

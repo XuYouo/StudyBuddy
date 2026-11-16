@@ -46,8 +46,8 @@ add_hook('after_xlatex', sub { print "Project hook ran\\n"; return 0; });
       const transcript = fs.readFileSync(path.join(path.dirname(result.root), "latexmk.log"), "utf8");
       expect(transcript).toContain("Project rc loaded");
       expect(transcript).toContain("Project hook ran");
-      expect(transcript).toContain("Papilot: pass 1 output saved");
-      expect(transcript).toContain("Papilot: pass 2 output saved");
+      expect(transcript).toContain("StudyBuddy: pass 1 output saved");
+      expect(transcript).toContain("StudyBuddy: pass 2 output saved");
       if (priority === "foreground") {
         expect(previews.map(preview => preview.pass)).toContain(1);
         for (const preview of previews) {

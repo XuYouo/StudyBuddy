@@ -65,7 +65,7 @@ export async function checkDesktopNotifications(application, page, snapshot) {
     assert.equal((await calls())[1].silent, soundControl);
     await application.evaluate(() => { globalThis.notificationFailure = true; });
     await send.click();
-    await expect(page.getByRole('status').filter({ hasText: 'Papilot could not show the notification.' })).toBeVisible();
+    await expect(page.getByRole('status').filter({ hasText: 'StudyBuddy could not show the notification.' })).toBeVisible();
     await application.evaluate(() => { globalThis.notificationFailure = false; });
     await page.reload();
     await openSettings();

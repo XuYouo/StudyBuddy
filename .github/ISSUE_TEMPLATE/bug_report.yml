@@ -1,5 +1,5 @@
 name: Bug report
-description: Something in Papilot doesn't work as it should.
+description: Something in StudyBuddy doesn't work as it should.
 labels: [bug, needs-triage]
 body:
   - type: markdown
@@ -17,14 +17,14 @@ body:
     attributes:
       label: Steps to reproduce
       placeholder: |
-        1. Run papilot demo
+        1. Run studybuddy demo
         2. Open PDF in the sidebar
         3. ...
   - type: input
     id: version
     attributes:
-      label: Papilot version
-      description: The output of `papilot --version`.
+      label: StudyBuddy version
+      description: The output of `studybuddy --version`.
     validations:
       required: true
   - type: dropdown

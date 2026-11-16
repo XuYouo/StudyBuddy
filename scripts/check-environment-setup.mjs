@@ -66,21 +66,21 @@ try {
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
   await page.screenshot({ path: 'test-results/environment-native-en.png', fullPage: true }); await page.close();
 
-  const startupError = 'Papilot could not open its database. Check the data folder permissions.';
+  const startupError = 'StudyBuddy could not open its database. Check the data folder permissions.';
   page = await open({ current: { kind: 'native' }, startupError, prepared: true });
   await expect(page.locator('#status.error')).toHaveText(startupError);
-  await expect(page.locator('#check-summary')).toHaveText('Papilot could not start in this environment.');
-  await expect(page.locator('#continue')).toHaveText('Retry Papilot'); await expect(page.locator('#continue')).toBeEnabled();
+  await expect(page.locator('#check-summary')).toHaveText('StudyBuddy could not start in this environment.');
+  await expect(page.locator('#continue')).toHaveText('Retry StudyBuddy'); await expect(page.locator('#continue')).toBeEnabled();
   await page.locator('#refresh').click(); await expect(page.locator('#status.error')).toHaveText(startupError);
   await page.locator('input[value=wsl]').check(); await expect(page.locator('#status')).toHaveText('');
   await expect(page.locator('#check-summary')).toHaveText('Everything is ready for your workspace.');
-  await expect(page.locator('#continue')).toHaveText('Open Papilot'); await expect(page.locator('#continue')).toBeEnabled();
+  await expect(page.locator('#continue')).toHaveText('Open StudyBuddy'); await expect(page.locator('#continue')).toBeEnabled();
   await page.locator('input[value=native]').check(); await expect(page.locator('#status.error')).toHaveText(startupError);
   await page.locator('#continue').click(); assert.deepEqual(await page.evaluate(() => window.setupTest.applied), [{ kind: 'native' }]); await page.close();
 
   page = await open({ current: { kind: 'native' }, startupError, empty: true, discoveryError: 'WSL is not installed.' });
   await expect(page.locator('#status.error')).toHaveText(startupError);
-  await expect(page.locator('#check-summary')).toHaveText('Papilot could not start in this environment.');
+  await expect(page.locator('#check-summary')).toHaveText('StudyBuddy could not start in this environment.');
   await page.locator('input[value=wsl]').check(); await expect(page.locator('#install-wsl')).toBeVisible();
   await expect(page.locator('#status')).toHaveText(''); await page.close();
 
@@ -90,7 +90,7 @@ try {
   await page.locator('#cancel').click(); await expect(page.locator('#status')).toHaveText('Setup canceled.'); await expect(page.locator('#refresh')).toBeEnabled(); await page.close();
   page = await open({ slow: true }); await page.locator('input[value=native]').check();
   await expect(page.locator('#continue')).toBeEnabled(); await page.waitForTimeout(650);
-  await expect(page.locator('[data-check=node]')).toContainText('Included with Papilot'); await page.close();
+  await expect(page.locator('[data-check=node]')).toContainText('Included with StudyBuddy'); await page.close();
   assert.deepEqual(errors, []);
   console.log('PASS: recommended WSL, install guides, recheck, prepare, persisted native choice, startup failure and retry, environment switching, missing WSL, failure, cancellation, stale-result isolation, and responsive bilingual layouts.');
 } finally { await browser.close(); await server.close(); }

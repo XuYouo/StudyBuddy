@@ -91,7 +91,7 @@ export function SettingsDialog({ theme, onTheme, resolved, appearance, onAppeara
     ] },
     { label: t('Application'), entries: [
       ...(updates ? [{ page: 'updates' as const, label: t('Updates'), icon: 'refresh' }] : []),
-      { page: 'about', label: t('About Papilot'), icon: 'info', keywords: t('Third-party licenses') },
+      { page: 'about', label: t('About StudyBuddy'), icon: 'info', keywords: t('Third-party licenses') },
     ] },
   ];
   const title = page === 'licenses' ? t('Third-party licenses') : groups.flatMap(group => group.entries).find(entry => entry.page === page)!.label;
@@ -113,18 +113,18 @@ export function SettingsDialog({ theme, onTheme, resolved, appearance, onAppeara
           {!visibleGroups.length && <p className="settings-search-empty">{t('No matching settings')}</p>}
         </nav>
         <div className="settings-sidebar-bottom">
-          <footer className="settings-footer"><span>Papilot · v{versionLabel(info.version)}</span><a href={info.repository} target="_blank" rel="noopener noreferrer" aria-label={`GitHub · ${t('Opens in a new tab')}`}><Icon name="github" size={16}/></a></footer>
+          <footer className="settings-footer"><span>StudyBuddy · v{versionLabel(info.version)}</span><a href={info.repository} target="_blank" rel="noopener noreferrer" aria-label={`GitHub · ${t('Opens in a new tab')}`}><Icon name="github" size={16}/></a></footer>
         </div>
       </aside>
       <div className={`settings-content settings-content-${page}`}>
         <header className="settings-content-header">
           <button type="button" className="settings-back settings-mobile-back" onClick={browseCategories}><Icon name="chevronLeft" size={14}/>{t('Settings')}</button>
-          {page === 'licenses' && <button type="button" className="settings-back" onClick={() => goTo('about')}><Icon name="chevronLeft" size={14}/>{t('About Papilot')}</button>}
+          {page === 'licenses' && <button type="button" className="settings-back" onClick={() => goTo('about')}><Icon name="chevronLeft" size={14}/>{t('About StudyBuddy')}</button>}
           <h2 id="settings-title" tabIndex={-1}>{(page === 'latex' || page === 'git') && <BrandIcon name={page} size={30}/>}{title}</h2>
         </header>
         {page === 'general' && <section className="settings-card">
           <div className="settings-row settings-choice">
-            <div className="settings-text"><span className="settings-name">{t('Language')}</span><p>{t('Language for the Papilot interface.')}</p></div>
+            <div className="settings-text"><span className="settings-name">{t('Language')}</span><p>{t('Language for the StudyBuddy interface.')}</p></div>
             <ChipSelect label={t('Language')} value={choice} onChange={value => setLanguage(value as LanguageChoice)} options={[{ value: 'system', label: t('Browser default ({language})', { language: browserName }) }, ...LANGUAGES.map(item => ({ value: item.id, label: item.name }))]}/>
           </div>
           <ModelDefaultSettings {...modelDefaults}/>

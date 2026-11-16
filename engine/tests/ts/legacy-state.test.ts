@@ -10,7 +10,7 @@ import { run } from "../../src/core/process.ts";
 import { realPath } from "../../src/core/files.ts";
 import { stopServerIn } from "../../src/client.ts";
 
-// Papilot 0.9.4 and earlier kept a paper's state under the names of the review
+// StudyBuddy 0.9.4 and earlier kept a paper's state under the names of the review
 // engine's former standalone skill. Opening the paper moves it.
 let f: Fixture;
 afterEach(() => f?.close());
@@ -134,7 +134,7 @@ it("reports settings that cannot be used instead of guessing", () => {
 });
 
 // On Windows a running server's open files keep its folder from moving, so
-// Papilot stops an earlier version's server first, even mid-build.
+// StudyBuddy stops an earlier version's server first, even mid-build.
 it("stops the review server recorded in a folder and waits until it has exited", async () => {
   f = new Fixture();
   const home = path.join(f.root, ".git", STATE, "server");

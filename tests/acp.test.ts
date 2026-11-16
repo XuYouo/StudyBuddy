@@ -637,7 +637,7 @@ test('OpenCode is set to its dedicated default mode and asked to request approva
     assert.ok(f.calls.some(call => call.method === 'session/set_config_option' && call.params.configId === 'mode' && call.params.value === 'papilot-default'));
     assert.equal(f.calls.some(call => call.method === 'session/set_mode'), false);
   } finally { f.agent.close(); }
-  // The user's own OpenCode configuration is kept, with Papilot's approvals on top.
+  // The user's own OpenCode configuration is kept, with StudyBuddy's approvals on top.
   const merged = JSON.parse(opencodeConfig(JSON.stringify({ model: 'x/y', permission: { webfetch: 'deny', bash: 'allow' } })));
   assert.equal(merged.model, 'x/y'); assert.equal(merged.permission.webfetch, 'deny'); assert.equal(merged.permission.bash, 'ask');
   assert.equal(JSON.parse(opencodeConfig('not json')).permission.shell, 'ask');

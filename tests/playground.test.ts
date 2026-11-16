@@ -274,8 +274,8 @@ test('mock Git stages, commits and syncs locally while preserving uncommitted fi
   assert.equal(before.files.length, 3);
   assert.deepEqual(before.files.filter(file => file.staged).map(file => file.path), ['README.md']);
   const diff = await api<GitDiff>(route + '/diff?path=main.tex&scope=unstaged');
-  assert.match(diff.diff, /-Papilot connects your manuscript/);
-  assert.match(diff.diff, /\+Papilot brings PDF notes/);
+  assert.match(diff.diff, /-StudyBuddy connects your manuscript/);
+  assert.match(diff.diff, /\+StudyBuddy brings PDF notes/);
   await api(route + '/stage', { paths: ['main.tex'], stage: true });
   assert.equal((await api<GitDiff>(route + '/diff?path=main.tex&scope=unstaged')).diff, '');
   assert.equal((await api<GitDiff>(route + '/diff?path=main.tex&scope=staged')).diff, diff.diff);

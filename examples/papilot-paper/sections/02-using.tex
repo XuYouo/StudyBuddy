@@ -1,25 +1,25 @@
-\section{Using Papilot}
+\section{Using StudyBuddy}
 \label{sec:using}
 
-This section describes Papilot as an author meets it. The later sections
+This section describes StudyBuddy as an author meets it. The later sections
 explain why it behaves as it does.
 
 \subsection{Running it}
 
-Papilot needs Node.js~22.22 or later, Git, a \TeX{} installation with
+StudyBuddy needs Node.js~22.22 or later, Git, a \TeX{} installation with
 \texttt{latexmk} and \texttt{synctex}, and a signed-in agent on the host. It is
 installed and started with
 \begin{verbatim}
-npm install -g papilot
+npm install -g .
 papilot
 \end{verbatim}
 and then opened at \texttt{http://127.0.0.1:7274}. \emph{Add paper} registers a
 \LaTeX{} Git repository on the host; later papers are added and switched from
 the paper menu at the top of the sidebar. A repository must have at least one
 commit and compile with \texttt{latexmk}; when several files could be the root
-document, Papilot asks which one to compile. To try a sample first, \texttt{papilot demo}
+document, StudyBuddy asks which one to compile. To try a sample first, \texttt{studybuddy demo}
 copies this paper into a separate repository and registers it as
-\emph{Papilot paper}, without touching any existing manuscript.
+\emph{StudyBuddy paper}, without touching any existing manuscript.
 
 \subsection{A task from start to finish}
 
@@ -27,11 +27,11 @@ copies this paper into a separate repository and registers it as
   \item Select \emph{New task}, describe the revision and press Enter. The first
     line of the prompt becomes the task's title, and the task runs on the paper
     selected in the sidebar. Below the prompt, choose the agent, its model and
-    its reasoning effort; Papilot remembers all three for the next task.
+    its reasoning effort; StudyBuddy remembers all three for the next task.
   \item Follow the conversation and answer the agent's questions or permission
     requests. When both execution slots are busy, further tasks queue
     (\cref{sec:agents}).
-  \item When the agent finishes, Papilot builds the PDF review automatically.
+  \item When the agent finishes, StudyBuddy builds the PDF review automatically.
     Accept, reject or comment on each change in the typeset review.
   \item Send the saved comments, or write further instructions in the
     conversation. Either starts the next round, which carries the review
@@ -99,17 +99,17 @@ window with how much is used and when it resets (\cref{sec:usage}).
 
 \subsection{Working from another device}
 
-Papilot binds only to \texttt{127.0.0.1}. To reach it from a phone or another
+StudyBuddy binds only to \texttt{127.0.0.1}. To reach it from a phone or another
 computer, it is published on a private Tailscale network, and the server checks
 the host, the browser's origin and the Tailscale identity of every remote
 request (\cref{sec:security}):
 \begin{verbatim}
 export PAPILOT_PUBLIC_ORIGIN=https://your-mac.your-tailnet.ts.net:8443
 export PAPILOT_TAILSCALE_LOGIN=your-tailscale-login
-papilot service install
+studybuddy service install
 tailscale serve --bg --https=8443 http://127.0.0.1:7274
 \end{verbatim}
-A background service starts Papilot after login, restarts it if it exits and
+A background service starts StudyBuddy after login, restarts it if it exits and
 keeps the computer from sleeping while it runs. Without Tailscale, an SSH
 tunnel serves the same purpose.
 

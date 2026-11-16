@@ -100,7 +100,7 @@ try {
   for (const box of await grid.locator('li').evaluateAll(items => items.map(item => item.getBoundingClientRect().toJSON()))) assert.ok(box.top > 0 && box.bottom < view, 'every agent is in view at once');
 
   // The older ways keep their colour while they are read, lose it as they
-  // scroll past, and Papilot's comes in on the same scroll.
+  // scroll past, and StudyBuddy's comes in on the same scroll.
   const progress = () => page.evaluate(() => [...document.querySelectorAll('.era')].map(card => +(card.style.getPropertyValue(card.classList.contains('ours') ? '--new' : '--old') || 0)));
   const scrollEras = fraction => page.evaluate(f => scrollTo(0, document.querySelector('.era.old').getBoundingClientRect().top + scrollY - innerHeight * f), fraction);
   await scrollEras(.3);
@@ -109,7 +109,7 @@ try {
   await scrollEras(-.25);
   await page.waitForTimeout(300);
   const [first, second, ours] = await progress();
-  assert.ok(first > .9 && second > .9 && ours > .9, 'grey once scrolled past, with Papilot\'s in view');
+  assert.ok(first > .9 && second > .9 && ours > .9, 'grey once scrolled past, with StudyBuddy\'s in view');
 
   // The feature windows are pictures: named, with nothing to focus inside,
   // and each plays its round once on screen, at a fixed height.
@@ -209,7 +209,7 @@ try {
       assert.equal(await page.locator('.download-list:visible').count(), 1, `${list} opens alone`);
       const box = await page.locator(list).boundingBox();
       assert.ok(box.y >= 0 && box.y + box.height <= height, `${list} inside the window at ${width}×${height}`);
-      assert.equal(await page.locator(`${list} [role=menuitem]`).last().getAttribute('href'), 'https://github.com/PapilotAI/papilot/releases/latest');
+      assert.equal(await page.locator(`${list} [role=menuitem]`).last().getAttribute('href'), 'https://github.com/XuYouo/StudyBuddy/releases/latest');
       await page.keyboard.press('Escape');
       assert.equal(await page.locator(list).isHidden(), true, `${list} closes`);
     }
@@ -232,7 +232,7 @@ try {
         await windowsPage.locator(button).click();
         assert.equal(await windowsPage.locator(`${list} .download-group`).first().getAttribute('data-os'), 'windows');
         const downloads = await windowsPage.locator(`${list} [data-download-platform=windows]`).evaluateAll(links => links.map(link => link.href));
-        assert.deepEqual(downloads, ['', '-portable'].map(suffix => `https://github.com/PapilotAI/papilot/releases/download/v${version}/Papilot-${version}-win-x64${suffix}.exe`));
+        assert.deepEqual(downloads, ['', '-portable'].map(suffix => `https://github.com/XuYouo/StudyBuddy/releases/download/v${version}/StudyBuddy-${version}-win-x64${suffix}.exe`));
         const box = await windowsPage.locator(list).boundingBox();
         assert.ok(box.x >= 0 && box.x + box.width <= width && box.y >= 0 && box.y + box.height <= 900, `Windows ${locale}/${width}: ${list} fits`);
         if (button === '#download-button' && ['en', 'zh-CN'].includes(locale)) await windowsPage.screenshot({ path: `test-results/site/windows-${locale}-${width}.png` });

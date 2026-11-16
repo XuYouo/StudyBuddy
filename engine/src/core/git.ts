@@ -7,9 +7,9 @@ import { capture, run, startTracked, which } from "./process.ts";
 import { realPath, same } from "./files.ts";
 import { moveLegacyState } from "./legacy-state.ts";
 const IDENTITY = {
-  GIT_AUTHOR_NAME: "Papilot",
+  GIT_AUTHOR_NAME: "StudyBuddy",
   GIT_AUTHOR_EMAIL: "papilot@localhost",
-  GIT_COMMITTER_NAME: "Papilot",
+  GIT_COMMITTER_NAME: "StudyBuddy",
   GIT_COMMITTER_EMAIL: "papilot@localhost",
 };
 export class GitError extends Error {}
@@ -42,7 +42,7 @@ export function gitDirOf(root: string) {
   }
   return dir;
 }
-/** Papilot keeps a paper's review state in this folder of its Git directory,
+/** StudyBuddy keeps a paper's review state in this folder of its Git directory,
  *  and the commits of its tasks in refs below REFS. */
 export const STATE = "papilot";
 export const REFS = "refs/papilot/";
@@ -137,7 +137,7 @@ export class Repo {
     try {
       return run(
         gitBinary(),
-        // Papilot compares working-tree bytes with Git blobs. Windows Git
+        // StudyBuddy compares working-tree bytes with Git blobs. Windows Git
         // defaults to converting line endings, which would make a checkout
         // differ from its own blob; every operation here treats files as-is.
         ["-c", "core.quotepath=off", "-c", "core.autocrlf=false", "--literal-pathspecs", ...args],
@@ -356,7 +356,7 @@ export class Repo {
       this.keepIndex(index);
       return first;
     });
-    return this.commitTree(tree, head, "Papilot snapshot");
+    return this.commitTree(tree, head, "StudyBuddy snapshot");
   }
   /** `snapshot` for servers, which keep answering requests meanwhile. */
   async snapshotAsync(include: string[] = [], exclude: readonly string[] = []) {
@@ -387,7 +387,7 @@ export class Repo {
       if (first !== await capture() || head !== await this.textAsync(["rev-parse", "--verify", "--quiet", "HEAD^{commit}"]))
         throw new GitError("Files changed while the snapshot was taken. Wait for saves to finish and retry.");
       this.keepIndex(index);
-      return await this.textAsync(["commit-tree", "--no-gpg-sign", first, "-p", head, "-m", "Papilot snapshot"], { env: { ...process.env, ...IDENTITY } });
+      return await this.textAsync(["commit-tree", "--no-gpg-sign", first, "-p", head, "-m", "StudyBuddy snapshot"], { env: { ...process.env, ...IDENTITY } });
     } finally {
       await fs.promises.rm(folder, { recursive: true, force: true });
     }

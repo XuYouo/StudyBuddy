@@ -20,7 +20,7 @@ interface ReviewState {
 type TaskSettings = Partial<Pick<Task, 'model' | 'effort' | 'serviceTier' | 'permissions'>>;
 interface LocalState { annotations: Annotation[]; reviews: Record<string, ReviewState>; copied: Record<string, string>; hiddenSuggestions: string[]; taskSettings: Record<string, TaskSettings>; openedPresets: Record<string, number>; replays: Record<string, DemoReplay>; repository: DemoGit }
 export class PlaygroundDownloadRequired extends Error {
-  constructor() { super('Download Papilot to run tasks and use your own papers. Your draft is kept in this browser.'); this.name = 'PlaygroundDownloadRequired'; }
+  constructor() { super('Download StudyBuddy to run tasks and use your own papers. Your draft is kept in this browser.'); this.name = 'PlaygroundDownloadRequired'; }
 }
 
 // Decisions and annotations are local. Only the pre-rendered results are fixed:
@@ -78,7 +78,7 @@ export function createPlaygroundData(storage: Store, version: string, pdfKey: st
         : { state: rounds[plan.id] ? phase(plan.id) : 'done', round: rounds[plan.id] ? 1 : null, counts: count, unsent: count.accepted + count.rejected + count.commented, comments: count.commented, files: count.accepted ? ['main.tex'] : [] },
     };
   }
-  const reviewPlan = { id: 'example-review', title: 'Review the philosophy and the math', agent: 'codex', prompt: 'Review this illustrated Papilot tour. Check that its philosophy gives authors concrete choices, and that the annotation geometry states its assumptions. Keep the review tied to exact words, symbols and table cells.', answer: 'The tour connects the product images to three principles: **read the rendered page, keep editorial control, and own your files and tools**. I left three precise suggestions: name the author’s choices, generalize the coordinate formula beyond a zero origin, and demonstrate the same normalized box on an offset page. Open **AI suggestions** and use **Keep on manuscript** to keep a suggestion.' };
+  const reviewPlan = { id: 'example-review', title: 'Review the philosophy and the math', agent: 'codex', prompt: 'Review this illustrated StudyBuddy tour. Check that its philosophy gives authors concrete choices, and that the annotation geometry states its assumptions. Keep the review tied to exact words, symbols and table cells.', answer: 'The tour connects the product images to three principles: **read the rendered page, keep editorial control, and own your files and tools**. I left three precise suggestions: name the author’s choices, generalize the coordinate formula beyond a zero origin, and demonstrate the same normalized box on an offset page. Open **AI suggestions** and use **Keep on manuscript** to keep a suggestion.' };
   const suggestions = () => ['note-claim', 'note-equation', 'note-table'].map(id => {
     const note = seededNotes.find(note => note.id === id)!;
     const suggestionId = `suggestion-${id}`;
@@ -251,7 +251,7 @@ export function createPlaygroundData(storage: Store, version: string, pdfKey: st
       persist(); return task(permissionTask, plans.indexOf(permissionTask) + 1);
     }
     if (body !== undefined) throw new PlaygroundDownloadRequired();
-    if (path === '/state') return { version, projects: [{ id: projectId, name: 'Meet Papilot', path: '/example/papilot-introduction', createdAt }], tasks: [task(reviewPlan, 0), ...plans.filter(plan => !plan.preset || local.openedPresets[plan.id]).map((plan, index) => task(plan, index + 1))], requests: [], runtime: demoRuntimes.codex, runtimes: demoRuntimes } satisfies Snapshot;
+    if (path === '/state') return { version, projects: [{ id: projectId, name: 'Meet StudyBuddy', path: '/example/papilot-introduction', createdAt }], tasks: [task(reviewPlan, 0), ...plans.filter(plan => !plan.preset || local.openedPresets[plan.id]).map((plan, index) => task(plan, index + 1))], requests: [], runtime: demoRuntimes.codex, runtimes: demoRuntimes } satisfies Snapshot;
     if (path === `${base}/manuscript`) return { git, build: { status: 'ready', current: true, key: pdfKey, pages, builtAt: createdAt }, annotations: local.annotations.filter(note => !note.deletedAt) } satisfies Manuscript;
     if (path === `${base}/skills`) return { skills: [
       { id: 'polish', name: 'Polish', description: 'Improve clarity while preserving meaning.', hint: 'Which passage should be clearer?', source: 'builtin' },

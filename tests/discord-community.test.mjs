@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { runNotice, weeklyDigest, sendWebhook } from '../scripts/discord-community.mjs';
 
-const run = { id: 42, name: 'CI', head_branch: 'main', head_sha: 'abcdef123', repository: { full_name: 'PapilotAI/papilot' }, head_repository: { full_name: 'PapilotAI/papilot' }, event: 'push', conclusion: 'failure', run_attempt: 1, display_title: 'Fix @everyone <@123>' };
+const run = { id: 42, name: 'CI', head_branch: 'main', head_sha: 'abcdef123', repository: { full_name: 'XuYouo/StudyBuddy' }, head_repository: { full_name: 'XuYouo/StudyBuddy' }, event: 'push', conclusion: 'failure', run_attempt: 1, display_title: 'Fix @everyone <@123>' };
 test('development alerts exclude forks, PRs, normal success and cancelled runs', () => {
   assert.equal(runNotice({ ...run, event: 'pull_request' }), null);
   assert.equal(runNotice({ ...run, head_repository: { full_name: 'someone/papilot' } }), null);

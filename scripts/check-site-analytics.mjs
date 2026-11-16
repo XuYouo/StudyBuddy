@@ -121,7 +121,7 @@ try {
     await ready();
     assert.equal(await page.locator('#statistics-notice, #statistics-preferences').count(), 0, 'no homepage consent interface');
     assert.equal(await page.locator('.footer a[href="/privacy/"]').count(), 1);
-    assert.deepEqual((await visits())[0], { website: config.PAPILOT_UMAMI_WEBSITE_ID, hostname: 'papilot.ai', url: routeFor(locale), title: 'Papilot', language: locale, referrer: 'https://source.example' });
+    assert.deepEqual((await visits())[0], { website: config.PAPILOT_UMAMI_WEBSITE_ID, hostname: 'papilot.ai', url: routeFor(locale), title: 'StudyBuddy', language: locale, referrer: 'https://source.example' });
     assert.equal(await page.evaluate(() => window.trackerConfig.autoTrack), 'false');
     await page.locator('.hero [data-copy]').click();
     assert.equal((await events('copy_install')).length, 1);

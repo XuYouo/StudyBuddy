@@ -11,7 +11,7 @@ import { compiledPaper } from './build-map.ts';
 import { argumentsOf, definitions, documentStart, eachNode, lineAt, literal, parseTex, project, simpleMacros } from './plain-text.ts';
 import { bibKeys, checkBibtex, describeCandidate, fetchBibtex, searchReferences } from './references.ts';
 
-// Papilot Writer's tools. They are about the paper (its outline, sections,
+// StudyBuddy Writer's tools. They are about the paper (its outline, sections,
 // labels, citations, build and pages) rather than a code base, and each one
 // asks policy.ts whether it may run, may run after the author approves, or
 // may not run at all. Every path stays inside the task worktree.
@@ -25,8 +25,8 @@ export interface ToolHost {
   /** Asks the author; resolves true when they accept. */
   approve(request: Approval, signal?: AbortSignal): Promise<boolean>;
   ask(questions: Question[], signal?: AbortSignal): Promise<string[]>;
-  /** Runs one of Papilot's own tools (the review engine's build and pages). */
-  /** callId is the tool call's own id, so what Papilot keeps for it lands on the right chat line. */
+  /** Runs one of StudyBuddy's own tools (the review engine's build and pages). */
+  /** callId is the tool call's own id, so what StudyBuddy keeps for it lands on the right chat line. */
   papilot(tool: 'view_pdf' | 'check_build' | 'source_pages' | 'paper_build', args: Record<string, unknown>, signal?: AbortSignal, callId?: string): Promise<{ success: boolean; text: string }>;
   lastBuild(): BuildNote | null;
   recordBuild(note: BuildNote): void;
@@ -524,7 +524,7 @@ export function writerTools(host: ToolHost): ToolDefinition[] {
     parameters: Type.Object({ url: Type.String({ pattern: '^https?://' }) }),
     async execute({ url }) {
       const fetcher = host.fetch || fetch;
-      const response = await fetcher(url, { headers: { 'User-Agent': 'Papilot (https://papilot.ai)', Accept: 'text/html,text/plain;q=0.9,*/*;q=0.5' }, redirect: 'follow', signal: AbortSignal.timeout(30000) });
+      const response = await fetcher(url, { headers: { 'User-Agent': 'StudyBuddy (https://papilot.ai)', Accept: 'text/html,text/plain;q=0.9,*/*;q=0.5' }, redirect: 'follow', signal: AbortSignal.timeout(30000) });
       if (!response.ok) throw toolError(`${new URL(url).hostname} answered ${response.status}.`);
       const type = response.headers.get('content-type') || '';
       if (!/text|json|xml/.test(type)) throw toolError(`The page is ${type || 'not text'}; only text pages can be read.`);
@@ -555,5 +555,5 @@ export function writerTools(host: ToolHost): ToolDefinition[] {
   return host.mode() === 'read-only' ? reading : [...reading, edit, write, add, move, remove, enterChore, exitChore, command];
 }
 
-/** Tools that change files, so Papilot shows them as file changes. */
+/** Tools that change files, so StudyBuddy shows them as file changes. */
 export const FILE_TOOLS = new Set(['edit_file', 'write_file', 'move_file', 'delete_file', 'add_reference']);

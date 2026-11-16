@@ -1,12 +1,12 @@
-# Papilot Writer: the built-in paper agent (based on Pi)
+# StudyBuddy Writer: the built-in paper agent (based on Pi)
 
 Status: implemented on `branch/papilot-writer-agent`.
 
 ## Goal
 
-An agent that belongs to Papilot itself and is made for writing papers, not
+An agent that belongs to StudyBuddy itself and is made for writing papers, not
 code. It runs in-process on the [Pi](https://github.com/badlogic/pi-mono) SDK
-(`@mariozechner/pi-coding-agent`, MIT). It is listed first as **Papilot Writer**,
+(`@mariozechner/pi-coding-agent`, MIT). It is listed first as **StudyBuddy Writer**,
 with a "Based on Pi" subtitle. It differs from the other agents in two ways:
 
 1. **Context is organized around the paper.** The title, abstract and a live
@@ -29,8 +29,8 @@ used, never Pi's CLI, TUI or `~/.pi` discovery:
 - Credentials live in `DATA/papilot-writer/auth.json`, separate from Pi's.
 
 This means a user's Pi setup or third-party Pi plugins cannot change how
-Papilot works. The third-party license list and the Nix package both read
-`package-lock.json`, so neither needed a change. `papilot doctor` also
+StudyBuddy works. The third-party license list and the Nix package both read
+`package-lock.json`, so neither needed a change. `studybuddy doctor` also
 recognizes import-only packages now.
 
 ## Runtime shape
@@ -39,7 +39,7 @@ recognizes import-only packages now.
 `papilot`. It speaks the same Codex app-server surface as every other agent,
 so queueing, approvals, review rounds and pausing stay in `workspace.ts`.
 
-| Papilot surface | Pi |
+| StudyBuddy surface | Pi |
 | --- | --- |
 | `thread/start`, `thread/resume` | `createAgentSession` with a session file per thread under `DATA/papilot-writer/sessions` (in memory for ephemeral threads) |
 | `turn/start` | `session.prompt(map + text)` |
@@ -49,31 +49,31 @@ so queueing, approvals, review rounds and pausing stay in `workspace.ts`.
 | `item/*` notifications | text deltas, tool start/end → `fileChange`, `commandExecution`, `dynamicToolCall` items |
 | approvals | tools await `item/fileChange/requestApproval` or `item/commandExecution/requestApproval` |
 | questions | `ask_author` → `item/tool/requestUserInput` |
-| typeset pages, build | `view_pages`/`check_build` → `item/tool/call`, answered by Papilot's view route |
+| typeset pages, build | `view_pages`/`check_build` → `item/tool/call`, answered by StudyBuddy's view route |
 
 ### Credentials
 
-Settings → Agents → Papilot Writer:
+Settings → Agents → StudyBuddy Writer:
 
 - **Subscriptions**: ChatGPT Plus/Pro (`openai-codex`) and GitHub Copilot,
   through Pi's OAuth flows. The sign-in page opens in the browser. If its
-  redirect cannot reach the Papilot host, the author pastes the redirect URL.
+  redirect cannot reach the StudyBuddy host, the author pastes the redirect URL.
 - **API keys**: Anthropic, OpenAI, Google, OpenRouter, DeepSeek, xAI,
-  Moonshot, Z.ai, Mistral. Keys in Papilot's environment work too.
+  Moonshot, Z.ai, Mistral. Keys in StudyBuddy's environment work too.
 - Claude is API-key only. Anthropic does not allow subscription logins
   through third-party harnesses, so `sk-ant-oat` tokens are refused.
 
 ### Default agent
 
-Papilot Writer is first in `AGENT_IDS`, so a fresh install picks it once a
+StudyBuddy Writer is first in `AGENT_IDS`, so a fresh install picks it once a
 provider is configured. If the author chose an agent before, that choice is
-kept and a dismissible banner suggests trying Papilot Writer.
+kept and a dismissible banner suggests trying StudyBuddy Writer.
 
 ## Context organization
 
 1. **Charter** (system prompt, stable and cached): role, context layers, tool
    workflow, chore mode and ask-first behaviour (`charter.ts`), plus
-   Papilot's task instructions.
+   StudyBuddy's task instructions.
 2. **Paper map** (rebuilt every turn from source, `paper-map.ts`), sent in
    front of the author's message inside `<paper-map>`:
    - pinned **title** and **abstract**, with their `file:line`;
@@ -127,7 +127,7 @@ and each command still asks in paper edits mode. The agent calls
 `exit_chore_mode` when it is done. Chore mode always ends with the turn.
 
 Pi fixes the tool set for each run. So entering or leaving chore mode ends
-the run, and the adapter re-prompts within the same Papilot turn with the new
+the run, and the adapter re-prompts within the same StudyBuddy turn with the new
 tool set.
 
 ### Permission modes
@@ -138,7 +138,7 @@ tool set.
 
 ## UI
 
-- Agent tile with Papilot's nib icon and a "Based on Pi" subtitle. The
+- Agent tile with StudyBuddy's nib icon and a "Based on Pi" subtitle. The
   drawer shows the models and the provider setup (`writer-setup.tsx`).
 - The suggestion banner for authors who already chose another agent.
 - Strings are in all 10 locales.

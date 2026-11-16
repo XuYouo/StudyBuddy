@@ -41,7 +41,7 @@
     if (!enabled() || type !== 'event') return false;
     let referrer = '';
     try { const url = new URL(document.referrer); if (['http:', 'https:'].includes(url.protocol) && url.origin !== location.origin) referrer = url.origin; } catch {}
-    const clean = { website: config.dataset.websiteId, hostname: location.hostname, url: pagePath, title: 'Papilot', language: locale, referrer };
+    const clean = { website: config.dataset.websiteId, hostname: location.hostname, url: pagePath, title: 'StudyBuddy', language: locale, referrer };
     if (payload.name) {
       const data = eventData(payload.name, payload.data);
       if (!data) return false;
@@ -113,13 +113,13 @@
     document.head.append(script);
   };
   const destinations = new Map([
-    ['https://github.com/PapilotAI/papilot', 'github'], ['https://github.com/cu1ch3n/papilot', 'github'],
-    ['https://github.com/PapilotAI/papilot/releases/latest', 'releases'], ['https://www.npmjs.com/package/papilot', 'npm'],
-    ['https://github.com/PapilotAI/papilot/discussions', 'discussions'], ['https://github.com/PapilotAI/papilot/blob/main/LICENSE', 'license'],
-    ['https://github.com/PapilotAI/papilot/blob/main/docs/guide.md', 'guide'], ['https://github.com/PapilotAI/papilot/blob/main/docs/guide.md#agents', 'guide'],
-    ['https://github.com/PapilotAI/papilot/blob/main/CHANGELOG.md', 'changelog'], ['https://www.tug.org/mactex/', 'mactex'], ['https://www.tug.org/texlive/', 'texlive'],
-    ['https://github.com/cu1ch3n/papilot#readme', 'readme'],
-    ...languages.filter(language => language !== 'en').map(language => [`https://github.com/cu1ch3n/papilot/blob/main/docs/readme/README.${language}.md`, 'readme']),
+    ['https://github.com/XuYouo/StudyBuddy', 'github'], ['https://github.com/XuYouo/StudyBuddy', 'github'],
+    ['https://github.com/XuYouo/StudyBuddy/releases/latest', 'releases'], ['https://github.com/XuYouo/StudyBuddy/blob/main/docs/development-macos.md', 'npm'],
+    ['https://github.com/XuYouo/StudyBuddy/discussions', 'discussions'], ['https://github.com/XuYouo/StudyBuddy/blob/main/LICENSE', 'license'],
+    ['https://github.com/XuYouo/StudyBuddy/blob/main/docs/guide.md', 'guide'], ['https://github.com/XuYouo/StudyBuddy/blob/main/docs/guide.md#agents', 'guide'],
+    ['https://github.com/XuYouo/StudyBuddy/blob/main/CHANGELOG.md', 'changelog'], ['https://www.tug.org/mactex/', 'mactex'], ['https://www.tug.org/texlive/', 'texlive'],
+    ['https://github.com/XuYouo/StudyBuddy#readme', 'readme'],
+    ...languages.filter(language => language !== 'en').map(language => [`https://github.com/XuYouo/StudyBuddy/blob/main/docs/readme/README.${language}.md`, 'readme']),
   ]);
   const click = event => {
     if (!enabled() || !event.isTrusted || event.defaultPrevented || (event.type === 'auxclick' ? event.button !== 1 : event.button !== 0)) return;

@@ -29,7 +29,7 @@
 .review-complete:has(.task-commit)>span{font-size:12px;color:var(--text-3)}
 .review-complete-actions:has(.task-commit){width:100%;margin:8px 0 0}
 .task-delivery:has(.task-commit){align-items:stretch}
-/* Papilot's next step floats at the top of the review while the author reads on. */
+/* StudyBuddy's next step floats at the top of the review while the author reads on. */
 .review-complete:has(>.review-complete-actions:not(:empty)){position:sticky;top:var(--paper-top,14px);z-index:6;transition:box-shadow .15s}
 :root[data-papilot-scrolled] .review-complete:has(>.review-complete-actions:not(:empty)){box-shadow:var(--float)}
 @media(prefers-reduced-motion:reduce){.review-complete{transition:none}}

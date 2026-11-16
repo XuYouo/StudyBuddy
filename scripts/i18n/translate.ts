@@ -25,7 +25,7 @@ export function pendingMessages(messages: Message[], locale: string, config: Loc
 }
 
 export function translationPrompt(messages: Message[], locale: string, config: LocaleConfig) {
-  return `You translate the Papilot user interface for academic authors. Papilot manages papers, PDF annotations, AI-assisted edits, and reviewing changes.
+  return `You translate the StudyBuddy user interface for academic authors. StudyBuddy manages papers, PDF annotations, AI-assisted edits, and reviewing changes.
 Translate from English into ${config.name} (${locale}). ${config.instructions}
 Return only a JSON object with a "translations" array of {"id": number, "text": string}, one entry per input ID.
 Preserve every {placeholder} exactly, including repeated placeholders. Keep product names, code, commands, keyboard shortcuts, and URLs intact. Translate whole messages naturally, retaining their meaning and tone. Do not translate the paper itself.

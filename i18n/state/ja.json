@@ -79,10 +79,10 @@
     "textHash": "073978b3e6fc52bb76785692cc4eed1eac9f7bdc62037fa12cfe3f8e97c6e262",
     "model": "gemini-4-argon-medium"
   },
-  "About Papilot": {
-    "revision": "85b5d8d95db2020dc8ee4ae036dcb004277aba839abe9c169af8939973f63d8a",
-    "textHash": "8236c27694b88532b664ada9126de73ae6dc3a2f2c2fd860f868078d76a116a2",
-    "model": "gemini-4-argon-medium"
+  "About StudyBuddy": {
+    "revision": "17018622af7fc85f5b132d861e93d193ba83a84abc13767e06b75e17e8d3c7b7",
+    "textHash": "034a309470b2f0baca5ec56a1aa762903f368fbf8f1ded424cb16a55eef5f478",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Accent": {
     "revision": "0c879e6e3ea838c1281a196c72be59a6aeccec428f3393b587364a8bac5048fd",
@@ -274,10 +274,10 @@
     "textHash": "993ef18652b867d534121f6d5baf4bbd1747d684a39490c933ae89df634008f2",
     "model": "gemini-4-argon-medium"
   },
-  "An environment variable set in a new terminal does not reach an already running server. Restart Papilot with the credentials; Reconnect alone cannot change its environment.": {
-    "revision": "031708db95e3d34c012dee30e0f7601602381201f7f549e155b4933af2b423d9",
-    "textHash": "6ec937685029e531a4af864ab50d60d2233cc5c29bb7d7655516a388e82aa8cb",
-    "model": "gemini-4-argon-medium"
+  "An environment variable set in a new terminal does not reach an already running server. Restart StudyBuddy with the credentials; Reconnect alone cannot change its environment.": {
+    "revision": "247ab454b10243a5b55cde029db81f70e48e7ea7b803cf7611df5e4a9fc3fcbe",
+    "textHash": "03a00339620d0b365f822c85109bd527fbba714c45b6eb0beb6d644ef3dd9684",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Annotation group color": {
     "revision": "514113e3e99c09a194d3289b94eb285e0654ae7332191deb5091cc85ae17638d",
@@ -464,10 +464,10 @@
     "textHash": "a70301b7fed0ef719b49a70f29faa65282243e9614fbf4b38848f5aad364d35c",
     "model": "gemini-4-argon-medium"
   },
-  "Browsers show notifications only on HTTPS or localhost. Open Papilot at a secure address to use them.": {
-    "revision": "438cbe269643bc3af277fbc3381fcc47e4d5864cc235bee6a87341b37486f021",
-    "textHash": "ab0a54e069622229a3d1d024d71e59017ae747eb18c375a84806c925b64236be",
-    "model": "gemini-4-argon-medium"
+  "Browsers show notifications only on HTTPS or localhost. Open StudyBuddy at a secure address to use them.": {
+    "revision": "5e57fc144bdebb288b6854357b18fe945d4828080b8497c5cc51c448daddf836",
+    "textHash": "830652f8aeeeaf1267eb5695ad0d322706d79f2715e3c3aafc3e6d2f782d1438",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Build failed · sent to {agent}": {
     "revision": "741a4bef3e09355172635f6715764c1862cdf5038a4ce99eb2f873b147fdeb33",
@@ -589,10 +589,10 @@
     "textHash": "e9fdf061ccf0049411eec728bed3cffcfa23d376efc7c0f51cc99ddbf91252c3",
     "model": "gemini-4-argon-medium"
   },
-  "Check the connection error above and the agent’s login, provider, and network settings on this host. Restart Papilot after changing credentials or executable paths.": {
-    "revision": "14a4ef933f5767b20a97a32aeffd7904b5159bc128869a12fe971ff9c0b387c6",
-    "textHash": "2e5d43e5900942c4bd0550ba5b2379a3c75ada5d7221413a83015119d7e4bd32",
-    "model": "gemini-4-argon-medium"
+  "Check the connection error above and the agent’s login, provider, and network settings on this host. Restart StudyBuddy after changing credentials or executable paths.": {
+    "revision": "70f829959575b4b54e28348165d7da0b51701095668314d62f6cb1af87e0bd1d",
+    "textHash": "99e9a1f330ffb090d3744e28f2e784ab32525245f5fe99b053bdf771a065bdf2",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Check the main file and engine, or ask the assistant to fix compilation. You can also edit the saved files and retry.": {
     "revision": "933919494f97475230f9243341a64c87f014a75508c1d63a5030ca8a8a2d01ad",
@@ -1759,10 +1759,10 @@
     "textHash": "5c949450157e6928a7c18044880e7356d8bab1a72022fe574502a41241aabffc",
     "model": "gemini-4-argon-medium"
   },
-  "For the SDK instead, start Papilot with ANTHROPIC_API_KEY or a supported cloud provider configured. Restart Papilot after changing its environment.": {
-    "revision": "db6e3d3f68868310e4e147d85f7775d63eb6310d5d935f07cf016aad68dd10d7",
-    "textHash": "3e9f43c7f9f0159c21d1ed07879ef318088ccf08b35e83f4d39daf459bfe977f",
-    "model": "gemini-4-argon-medium"
+  "For the SDK instead, start StudyBuddy with ANTHROPIC_API_KEY or a supported cloud provider configured. Restart StudyBuddy after changing its environment.": {
+    "revision": "afa1065be07db4b144ff58eb423b063cd544325b03c684a98a03b6d0c1d63367",
+    "textHash": "f05909bbbf0d6b6c14d5a337419a50cf2c9153f0db63ff64455036e49a20c71b",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Foreground": {
     "revision": "d34808dc4280e4a87fdfc1a0f936dcdb67f105401322ec65a1ff48a6738311c6",
@@ -1804,10 +1804,10 @@
     "textHash": "a44f4b2775e108d20fa847a9ebc0364371bf8118110444845667512375e17aa2",
     "model": "gemini-4-argon-medium"
   },
-  "Get started and make Papilot your own.": {
-    "revision": "9d754341794da36994360b1c668a1d9f641845126be9018837208d85cf563aab",
-    "textHash": "597772691bb6ddd974461b646e6ede7b9832160cfd7d610743a41d1de527564a",
-    "model": "gemini-4-argon-medium"
+  "Get started and make StudyBuddy your own.": {
+    "revision": "1c692798aba49356e29bc43df5a668cf4e26d0f04f013ce46e9c9f48d4b316ef",
+    "textHash": "44fd0c503adf4e176ecb38da1974115429cc4e2905afaadae72666f1f78217a6",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "GitHub repository": {
     "revision": "d979524042e59b03c814fa1c44c57e2382c1049bc83568421011703c7ca07316",
@@ -1854,10 +1854,10 @@
     "textHash": "a73b033ab08111abc2323454991ff68783116c26757bd4a3691c68a87fbc0c82",
     "model": "gemini-4-argon-medium"
   },
-  "Help improve Papilot with code, docs, and ideas.": {
-    "revision": "0b518bde0f753982c40e5cc00ba40de1506048565837101f16240ae403ed9720",
-    "textHash": "067887a45b39c5c6b3172b58dd60487e5d7b9d37362daa666877d0e728278aaf",
-    "model": "gemini-4-argon-medium"
+  "Help improve StudyBuddy with code, docs, and ideas.": {
+    "revision": "197aa48e95357c12704b0feac94d2a781aa9215d662ac31dbbce01a6eefb9a66",
+    "textHash": "50b196055b235a18c39d9021d113d5a93527d893bfbee8db9d767d819cc64f62",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Hide task list": {
     "revision": "46543877f7bdcd5e59bdee38a36eea72387d115a3b3c8582a5b0801a78f0132e",
@@ -1884,15 +1884,15 @@
     "textHash": "ef99a450e3965fd4cf40218c030860c9ff7e3b5dd5f54e9657dedb8d2d53117c",
     "model": "gemini-4-argon-medium"
   },
-  "If it is already installed, set {variable} to its executable path in the environment that starts Papilot, then restart Papilot.": {
-    "revision": "0de392f8c1422692eaf5f912fbf7eaefd5e27e95007a8034e00d4a5e333e6862",
-    "textHash": "e0aa3dac7d6ba4d3d19077253c1398d704d1c3aa4a9c3ddb70ce0b14ea9a7142",
-    "model": "gemini-4-argon-medium"
+  "If it is already installed, set {variable} to its executable path in the environment that starts StudyBuddy, then restart StudyBuddy.": {
+    "revision": "2dbd8bd43b6a37dfcf59526729ac950240e208b9358cdeba2580bc81a7bce783",
+    "textHash": "edbbc22c7ed3033acf75f07a004c46f1fb2fb9eadc9772d72aa6301c5d863158",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
-  "If the live status still disagrees with the check, restart Papilot under the same user and environment where you configured the agent.": {
-    "revision": "a4dccec57661ec7cd5f439692931eb7a23b43b9a23aa42626ab5a1df18670884",
-    "textHash": "bd6ef680680ad1465211b8a6e05aa7bdbb6890329985cf5c6e528d50c53701a8",
-    "model": "gemini-4-argon-medium"
+  "If the live status still disagrees with the check, restart StudyBuddy under the same user and environment where you configured the agent.": {
+    "revision": "09f8f83ff5b78696f51c8991a96cdc95c3d78412984e4d1f767a4d6963246e82",
+    "textHash": "a9c16972e3bf48be5d821e70d7630fcaabbc0a314bcc8e7f3aef2db1a378151a",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "If the task changes the manuscript, a PDF comparison will appear here. Otherwise, read the answer in the chat.": {
     "revision": "8a1d20f3ba9ac3897c03d617a72c3eaebd7e102676e0d03b1859c90d9f2cf564",
@@ -1959,20 +1959,20 @@
     "textHash": "bd6fe04be9c2f01ab353b8409916880336385728e9d2744438adc152518d9641",
     "model": "gemini-4-argon-medium"
   },
-  "Install TeX Live or MacTeX with latexmk on the computer running Papilot, then retry.": {
-    "revision": "15f914fe5dab8f0c7feaca6dba58fa2715c60658b3397fa31900bdd6e44e213d",
-    "textHash": "c9aaeea5f2a0a0603074623a34202aa725d5ced5e15cd5e04ce15690b6a4c641",
-    "model": "gemini-4-argon-medium"
+  "Install TeX Live or MacTeX with latexmk on the computer running StudyBuddy, then retry.": {
+    "revision": "0a93849e040cdfdc23b19b77d5b31bbc15095a3b3c671167c1a2270fa03113dd",
+    "textHash": "7b6f12e3ea3d5ddd26705b52aab55a19f0b805b7e417a1eb73810497339a1a72",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Install the new version and restart automatically when tasks are idle. Your papers, tasks and settings stay in place.": {
     "revision": "879a2214f20dd7337c9309e14905d974f83208fa898085d1c599b33997bc2223",
     "textHash": "aefc1219890e6b9b0dc49562c4212e952c08da5cd2ecf55e4d1c6fbc3df708cd",
     "model": "gemini-4-argon-medium"
   },
-  "Install {command} on the host running Papilot, then complete its login or provider setup below.": {
-    "revision": "56c7c264911af9f43868be55f34edb7290e7bd2b9ffe372f35d888e7b7b0353a",
-    "textHash": "3da3ddf34e71ba4dfdc0a56047573264562b5a4a85f628cf67b6bb2d949c04c8",
-    "model": "gemini-4-argon-medium"
+  "Install {command} on the host running StudyBuddy, then complete its login or provider setup below.": {
+    "revision": "9919eb4c8d86481bafe535915d3fadde9d9cdc9becfe21edd5a4744e02c0e99b",
+    "textHash": "fd4c7467ca44d2651ae6a5baa342929ce777ce7beae3cf25b770e7caddb69a77",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Installation & setup": {
     "revision": "b9cdb1b77ef6eba17745a1bee3879cb25e074b216108d404dba5e4de3a192b79",
@@ -2094,10 +2094,10 @@
     "textHash": "9682ba3b92f7a96122201caf4478d6d4c414d7d3bbc16cf10101b8df883621d8",
     "model": "gemini-4-argon-medium"
   },
-  "Language for the Papilot interface.": {
-    "revision": "247dfdb5ed0dfea16a9169b725d1ea48651815f7ad01e6cccdf09dafe721abe8",
-    "textHash": "586c01772ed3f964064d1c4981fa421ed6315cdf7af006c922254b51dbd8ebb3",
-    "model": "gemini-4-argon-medium"
+  "Language for the StudyBuddy interface.": {
+    "revision": "ca2fcddfeeac4fd9f67856b8804c3475f0ad3be874400dc5304baa82556ad3a9",
+    "textHash": "75250ca61142bb52a777e97e33cecec265e190bee9696510684a25a0cc3ffc15",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Later": {
     "revision": "d4532165e0c0982c4c5a745a3e5a61afb5b7b57856f698826acb61c2c793c863",
@@ -2114,10 +2114,10 @@
     "textHash": "20d77d43984e3c4b087c6ced118d522da3ca2b2aec1a0674999144e472bd20ca",
     "model": "gemini-4-argon-medium"
   },
-  "Libraries and fonts used by Papilot and its review engine. Each component is covered by its own license.": {
-    "revision": "c5bf660c35f3eb9ab07c607f3da5a0b3b65a2993876179d2127ea6cc90aa0129",
-    "textHash": "ddf9331d87037a19f1d0c2cb03ca02925e43cb02769f3017632da5ce58aaa383",
-    "model": "gemini-4-argon-medium"
+  "Libraries and fonts used by StudyBuddy and its review engine. Each component is covered by its own license.": {
+    "revision": "17c3789749fee87d78300a4047e1b6fba685923163c68dcf3aa0c2a02d1f772a",
+    "textHash": "24c940d88bf3d0394e0bb1bf9b022a2d73cafcfff9cf41eb868fa14663bc3538",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Libraries, fonts, and the people behind them.": {
     "revision": "1daf17f5ed3c37ef626b6737eae78d7e734e674f13c3ed792ae711b68510d809",
@@ -2924,50 +2924,50 @@
     "textHash": "daeebd70d45e2fcf4171912170ff7d4409ef463c60b67fdedbd4222dd5f29133",
     "model": "gemini-4-argon-medium"
   },
-  "Papilot cannot find npm on this computer. Updates are unavailable until npm is installed.": {
-    "revision": "941f4c91cdd38cf632eb0df2593bf7007bfd5f619b2d63228343ec77525379c7",
+  "StudyBuddy cannot find npm on this computer. Updates are unavailable until npm is installed.": {
+    "revision": "a761621b27614f301060dfe073f51040f9fbf602775528e0e16f81e665b947c0",
     "textHash": "b612db89de49f972660d38018fcb9f40c7137cbf747ca8508e1201d22b54b7b3",
-    "model": "gemini-4-argon-medium"
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
-  "Papilot could not establish a working connection to this agent. The latest connection error is shown below.": {
-    "revision": "924a5f07a3da5efb6fbd069beceb611bdc9009d654c485ada9e8fda338acda6c",
+  "StudyBuddy could not establish a working connection to this agent. The latest connection error is shown below.": {
+    "revision": "473bfe211a5338020fade5ce8db7bf16d0883c8b3717dc63c2777472d908e9f4",
     "textHash": "f41d286b2e943a6ce8be3d931bce9cc204b4a37fcda57528f0ce77f9d39e7c9a",
-    "model": "gemini-4-argon-medium"
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
-  "Papilot could not prepare the files for compilation. This is an application error, not a LaTeX error.": {
-    "revision": "ca272b07b13a9558dd5796934306f7e8a03dfaa687aeed817ddf811fd1c2b5cd",
-    "textHash": "6cf35327852db1fce1b9587692ba1e369ddb162d06bd65b07ee56d8a9b6f631d",
-    "model": "gemini-4-argon-high"
+  "StudyBuddy could not prepare the files for compilation. This is an application error, not a LaTeX error.": {
+    "revision": "98ea147ff1eeca326214d0fa5fa2dab2c27222ef97f578eeaf287ef401ca0b7f",
+    "textHash": "f19720248c6a590bdb7ee26116f8653c1c75a8b721ba01087d6f3111a3d1ae4b",
+    "model": "gemini-4-argon-high + manual StudyBuddy rename"
   },
-  "Papilot keeps this list for you, so your phone and computer offer the same notes.": {
-    "revision": "0a0dd4248ac973973f50c334ba95c34a8a46dbe6f33ea0336964027357dc4037",
-    "textHash": "cc6e46ea44bd985a748fae231ee026388c1fbf0cc6ee31efc693acf995277018",
-    "model": "gemini-4-argon-medium"
+  "StudyBuddy keeps this list for you, so your phone and computer offer the same notes.": {
+    "revision": "95891b73f566922d17d45ab58cacd9d1d338adf33d1d86e8874621420e948e11",
+    "textHash": "97bb13c9050b9145b36cdfdfc8a9f13aa5c06b02d80f9dbf3e82692ac38f13b0",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
-  "Papilot license": {
-    "revision": "95547c68832993ca553baa409a1b269e998eb8bcd64557bcb0ad5763a82ee58e",
-    "textHash": "4186864f71a9896c53b836dda37a278a387758657e4614382dd85470087ba4eb",
-    "model": "gemini-4-argon-medium"
+  "StudyBuddy license": {
+    "revision": "8c463428e07ea98c48b7a97df64d6bb677e50350bd1fdcfb0c805884015ebf5b",
+    "textHash": "09c9af0832283f9f6152eaab8e10cd343579561e68136f5a30f5dc320838027e",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
-  "Papilot reached this agent, but could not confirm a signed-in account on this host.": {
-    "revision": "898d89abf8df6a3aa7225a87f772618d8f52f014226f0b93793360d50142561c",
+  "StudyBuddy reached this agent, but could not confirm a signed-in account on this host.": {
+    "revision": "cca5c5e1edf8c866a5f51e5fe5926dd97f4ad7f0c5683ae4ce3928e4d2adab09",
     "textHash": "e037f8581924dbe51f724d4ae5ae3f0228a907b54acd72f8e62eb0febad8a904",
-    "model": "gemini-4-argon-medium"
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
-  "Papilot sent the build error to {agent}, {time}": {
-    "revision": "976b88d055413d7534be965ab81b5cfdab6b767e2a4c93ac786a964dc01efb6e",
-    "textHash": "73a322884e004f006d58dae05a3e88e868de52404886e22cb06b2b88e400a94c",
-    "model": "gemini-4-argon-medium"
+  "StudyBuddy sent the build error to {agent}, {time}": {
+    "revision": "5492b41c1d14a4f9287a71d430e019018e40f5043deb53b5fd3f1e1203bb7ed3",
+    "textHash": "bf35e4fb975845cb3c1b02a676a74be90b51b461555d277cc2f091439ee622e9",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
-  "Papilot will tell you here when a task needs you.": {
-    "revision": "7cf0ff53535751ecf9279013311ee887380b889760c1a6500377b49113d7fd43",
-    "textHash": "b19ee7b77987f55a38ff12b1145aa4bb12e1df299185df6d96bc5afeae4182d2",
-    "model": "gemini-4-argon-medium"
+  "StudyBuddy will tell you here when a task needs you.": {
+    "revision": "e01561b8325cd2e834ff5555d14a4bb601376993fb41da5a72191226c911289d",
+    "textHash": "8b16c052840546d5e515c6ba00efaf0e1907622f5a536ec5cf0e06703ab4d1c7",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
-  "Papilot {version}": {
-    "revision": "fde3a5a06a0105309874fe8df029aed5b15733aaa3c5fe2876dfac04dcb90033",
-    "textHash": "51af418185d19d1fd3cc275cf1cdc6621071d9b8d3b59470aa61899335519d77",
-    "model": "gemini-4-argon-medium"
+  "StudyBuddy {version}": {
+    "revision": "49d73d49a08e5f7db634a76e354445f527cf1bce30d467379c2d3cdb82c81d33",
+    "textHash": "b6a22f1932a5858a4ca5c5669f8097413a3a2422cf8c68b017da07195e2861f1",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Passed": {
     "revision": "2372882be09b0c5b8cc6afcf4f6f0de8c284b3e4bb41f2a0a8c154d6bf92a6ae",
@@ -3104,10 +3104,10 @@
     "textHash": "bf73d1a0a93999d12342bdec5ebebe360edbaece704540b29055af8b54c08c6e",
     "model": "gemini-4-argon-medium"
   },
-  "Provide CURSOR_API_KEY to the process or service that starts Papilot, then restart Papilot. The SDK is installed automatically when used.": {
-    "revision": "69aaa488a6fc77b5faec2d34d07bfd79f1768e643078b6a59e14781b61e62547",
-    "textHash": "a6e2faa458d9a202e867fb43fd6bdf0a48cab9a08c3800ff79497e4ed2e4e5d6",
-    "model": "gemini-4-argon-medium"
+  "Provide CURSOR_API_KEY to the process or service that starts StudyBuddy, then restart StudyBuddy. The SDK is installed automatically when used.": {
+    "revision": "7afef7f88ae2f0836aaf7a0257a8f1eee16f3ef644fc9dae841e673458d7ba3b",
+    "textHash": "38779de5c42f6070a5018f6cfdacf3fd5d798de31c820d98334fbbdf0fe00784",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Publish branch": {
     "revision": "be8dc2fc9d07ed6259dfc79c29f5b3c81f3a38afbe20c5d772890a06a8cb7138",
@@ -3354,10 +3354,10 @@
     "textHash": "7cfcd17e8667029dd504bb47c1237ffdb79d7e1405d1a1b0c962e4042819a7fc",
     "model": "gemini-4-argon-medium"
   },
-  "Remove from Papilot": {
-    "revision": "9c52c9dfae73d3d3883fcdca6ea08d608c1ac0749eb0419cbb3702b56ad3bc1a",
-    "textHash": "659debfc15d850cc7364872c17e2b60a888943b27c6f4c1cccf109915d09f059",
-    "model": "gemini-4-argon-medium"
+  "Remove from StudyBuddy": {
+    "revision": "9d21b0e466ed076d0286d40659376aa8948a41345b48d8f4e969a34503d1a64a",
+    "textHash": "96d36486727f241e06091260dff070f94b6bea9a0b2673f2f7e272ecf884ecf8",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Remove note {n} from task": {
     "revision": "dc2f59c76783ab01d5fff7ed7fe8ff0b7961669710d4c935093e8c2b4d842962",
@@ -3384,10 +3384,10 @@
     "textHash": "5deebd787adb156f21b7afdf57a2073876c9b05deb0dcdaa97f6896120765467",
     "model": "gemini-4-argon-medium"
   },
-  "Remove this paper and its tasks, conversations and notes from Papilot?": {
-    "revision": "6723b46a5fcdcdbf9b039290b4dcb280ce360f0a24344ce0de87122163ffcde2",
-    "textHash": "1b076e266d6858034c22d02468144b5877ce1c18983481ae833926d3f060d7b1",
-    "model": "gemini-4-argon-medium"
+  "Remove this paper and its tasks, conversations and notes from StudyBuddy?": {
+    "revision": "730a88fba14bcf95510fe55d898b1de34c774c1d4af15f167c87bb86c34dd682",
+    "textHash": "5952fb5133e984a456c2500f6b17233b72853a82de39bd57228f830555490dc4",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Removed “{name}”.": {
     "revision": "f980d7827fc8d0eef0ed4275466a851a9c06dc8d7805aee312abd6926fb500f7",
@@ -3504,10 +3504,10 @@
     "textHash": "15d9b84216cffd66bcf9c0f5a852c11cfafd993732ca2f42c65aa9941829516d",
     "model": "gemini-4-argon-medium"
   },
-  "Restarting Papilot. This page will reconnect automatically; your drafts are kept.": {
-    "revision": "d3385730a827e6374e4898a3e783ef037b6758c04b3368cefef44378d08881e5",
-    "textHash": "9042a1e4b4084e97aac3bc8df157cf88e1dbc9f69fc4538f8f439a89d8d504b0",
-    "model": "gemini-4-argon-medium"
+  "Restarting StudyBuddy. This page will reconnect automatically; your drafts are kept.": {
+    "revision": "619e1d0ef321f47c140e688b7eaddd93195ab0ddfe799b084864061ae66906ba",
+    "textHash": "1560720f237696b7340fa8e7efc4a54e354fa506a81ec35b5b08f591eb363e36",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Restarting…": {
     "revision": "f3428b25805f31192a033a306d705be71df2092b27a64e7b034fd82ee77a46d9",
@@ -3874,10 +3874,10 @@
     "textHash": "3d854ca34f270eb82007e59edfe0d04ad3eea8eb82eccf92044bc9f1479494b9",
     "model": "gemini-4-argon-medium"
   },
-  "Set ZHIPU_API_KEY for open.bigmodel.cn, or ZAI_API_KEY for api.z.ai, in the environment that starts Papilot. Then restart Papilot.": {
-    "revision": "1a5df0b47f187e3acb6e6e3356f18a1141ac3f760329db6a179f6ff248ecd3d0",
-    "textHash": "e29167eaad13e66b42ba5a52ad5cb02e188d39fbc73e70d7ea455e4cf44259a4",
-    "model": "gemini-4-argon-medium"
+  "Set ZHIPU_API_KEY for open.bigmodel.cn, or ZAI_API_KEY for api.z.ai, in the environment that starts StudyBuddy. Then restart StudyBuddy.": {
+    "revision": "5878f1079f81fc2641f8e2af71f285952078dc8141e4a283e749faaa58d88a73",
+    "textHash": "0f8c18d03fa7cc9156cfd326f7f9cb0b225db1e2974e159eef0f9748656d90c2",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Set up on the host": {
     "revision": "5c169c9b1087cde18fc28a84d8bb2fdf65cea12ee4a61867ea75b965e504324f",
@@ -3944,10 +3944,10 @@
     "textHash": "70ecc358bc226395b5c1d7012efc2f119c3cf86e01cc4954847f7d8484554fc3",
     "model": "gemini-4-argon-medium"
   },
-  "Show desktop notifications while Papilot is in the background.": {
-    "revision": "da14085aa540d49bb2e6690a565a1fe6af2f1e54af2a07466a6eb50ec47f778f",
-    "textHash": "190de52f45dbba0c8a2ffbaa3eb4c345a186ab35d505eb9619ab6f062ab947d7",
-    "model": "gemini-4-argon-medium"
+  "Show desktop notifications while StudyBuddy is in the background.": {
+    "revision": "db8c9063f9c0e9cb79ad9ba3e33fe5fe6613fb3f25d59f722c434ed0a466125b",
+    "textHash": "f331c4121556267051b0614665e9459290a0b8f166066682423954dfac9a7e8f",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Show fewer models": {
     "revision": "893e7080df0b727d0871c63c202718c26784a13524f4d8dc269193b4036a531b",
@@ -4014,20 +4014,20 @@
     "textHash": "c257a6c720cf735cc1b106147819ff5fa1678919269046cf0ae6232a78717f7e",
     "model": "gemini-4-argon-medium"
   },
-  "Sign in as the user running Papilot, then restart Papilot.": {
-    "revision": "0e5ee495c74988cee57cffa40c273b5bfdf2869074345c0fd7127b0bed1f7c55",
-    "textHash": "13b045cd50c4c20a7f467302cc90ccf85346b7ceb57122ac8a2a18e01989a2fd",
-    "model": "gemini-4-argon-medium"
+  "Sign in as the user running StudyBuddy, then restart StudyBuddy.": {
+    "revision": "eb6efa5d6db1afe2990c05651552474876aaa6ee54fb6ec36cc358a3ce7ae996",
+    "textHash": "1976ef0d2311ee15af28de4aa596773222edd7cb8a6b16a82587f25e8451e264",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
-  "Sign in as the user running Papilot, then select Refresh.": {
-    "revision": "2228e0205f31b0bcdb1376d039e94c8fbd9f7d305a81bfaa1f224ade284f8a81",
-    "textHash": "13a79c4e4f740e409d1027826d8f0a3de65e922bb7dd1fbe7db6d7d60a4ce38e",
-    "model": "gemini-4-argon-medium"
+  "Sign in as the user running StudyBuddy, then select Refresh.": {
+    "revision": "c75d02ab1e96b0abacd6f8deab2310b1022bcc297429b070e3c4075bd44e7a54",
+    "textHash": "a21c19a1c28316452ac6109294e2267b56da83953acd99fc5057e34d2f9e2c72",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
-  "Sign in on the Papilot host to continue.": {
-    "revision": "bb6d076b2a19a5716973cb0b2f1f7fdf445554bebe3f4ce245b553ce5de5b821",
-    "textHash": "4369e77b48fb7a553619b5ada322d8635e1a599fb4e88a47175bea15922ffc29",
-    "model": "gemini-4-argon-medium"
+  "Sign in on the StudyBuddy host to continue.": {
+    "revision": "240b76fa13c208e016fbecac85f2c4a734a01fc89eee2af79e271a931370469a",
+    "textHash": "0cc9e7457c433c6da50f0a8f5fb1383d0f6fc49f93c37c17b0610aaec322e200",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Sign-in required": {
     "revision": "9f5fb27b17f4c7f161e8c3b3184f49fc8b0962ad06bc39e36b82ba0dd01aedf1",
@@ -4289,10 +4289,10 @@
     "textHash": "e1cdc6bf055d95b763d1cfe4a9d0730659d43345b0d562883906b524afe01675",
     "model": "gemini-4-argon-medium"
   },
-  "The browser and the Papilot server may run on different computers. Background services can also use a different PATH or user account from your terminal.": {
-    "revision": "b1193a802f5e5dc782293ce58028b7439fccdb9f0c5d65bb59fe0788f06c5d72",
-    "textHash": "d91690b1ac9f7ed0d51af2e21d5de1b941bbacce72d29e21e9eb77699c32d4ff",
-    "model": "gemini-4-argon-medium"
+  "The browser and the StudyBuddy server may run on different computers. Background services can also use a different PATH or user account from your terminal.": {
+    "revision": "71c3ad47b001dc08a199bd76dfd6aef02873573850ee1acae27748ddad00291f",
+    "textHash": "4fa633cff4c82930cbd2af8b5db5fe0c6668d07b062041db27f5f5e1e5919095",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "The dev build needs at least 2 GB of free disk space. Free some space and retry.": {
     "revision": "a2acf72cd62d2bb2c47b3b72451cd74f9609648556f594f34057ae89f99ecbc8",
@@ -4314,25 +4314,25 @@
     "textHash": "9b94f0e5d0195ae62ddfbaac539eb8248518298a95dff91eacd728e2efe75ae6",
     "model": "gemini-4-argon-medium"
   },
-  "The last connection attempt could not find a runnable {command} CLI in the Papilot server environment. It may still be installed in another location or for another user.": {
-    "revision": "e8fab62bc86e6d462bd77209d7f798e0dc9a57388199f746883f63eb5c5655e3",
-    "textHash": "9d730bbd57625638f781475a981a1b7bcf7412b823199747c7d731a4c16da61f",
-    "model": "gemini-4-argon-medium"
+  "The last connection attempt could not find a runnable {command} CLI in the StudyBuddy server environment. It may still be installed in another location or for another user.": {
+    "revision": "24976c0fcdd7f137572c18a89c82c03b36cdbcc1bb8fddbdf3042b5a0d8bae49",
+    "textHash": "71f8c143f5f3b103f5cd399321b4ce02d8a86367e268d54f50b368da0351d7a4",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
-  "The last connection attempt found neither CURSOR_API_KEY nor a saved Cursor SDK login for the user running Papilot. Signing in to the Cursor desktop app or CLI does not configure this SDK.": {
-    "revision": "ad6e5bf6a2dcbea1d5bc1849f14da1e7a7c28abda3dd30b0395022ae1a4095ec",
-    "textHash": "a1937f1e38b8f6ad82e7698b693de9a1d2be3f72b6a41ce7d7c591fd24d085db",
-    "model": "gemini-4-argon-medium"
+  "The last connection attempt found neither CURSOR_API_KEY nor a saved Cursor SDK login for the user running StudyBuddy. Signing in to the Cursor desktop app or CLI does not configure this SDK.": {
+    "revision": "b566f9c43cfa79ae6dc9b2e2bf2f7cc1a04d623a9442920942c08113c115933a",
+    "textHash": "e60eb38c8a4271f3db3a2739b96a1c2aa07e9c9ea2806afa3377e6c915ca51b9",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
-  "The last connection attempt found neither Claude Code nor supported API credentials in the Papilot server environment.": {
-    "revision": "0f4355b0d81e3dc2300921db8306f162094450568ee3319275e2d3f5a16a0ee3",
-    "textHash": "8b129f048cc384efdc39c59a41aaba6a1cddbf0f9af5daea7cff157c39617b99",
-    "model": "gemini-4-argon-medium"
+  "The last connection attempt found neither Claude Code nor supported API credentials in the StudyBuddy server environment.": {
+    "revision": "45a8f07e98c8685a2d0b93b18db189efe5fed4d81616dfd713627b82c54315b9",
+    "textHash": "0173c751c0323ba4833e2e9bd264ee239fad1ce0735ec8f1bbf7ea84c4c98005",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
-  "The last connection attempt found neither ZHIPU_API_KEY nor ZAI_API_KEY in the Papilot server environment. A Claude login or a GLM website login does not supply these keys.": {
-    "revision": "59032920dc96690b780f595b6cd45b2aecc8a7182181025283cc4a5c4c2fb8cb",
-    "textHash": "1ed74890cdc35fbe1b5e872d1aa8425ffb894b1957a1eec8d013818466008fc3",
-    "model": "gemini-4-argon-medium"
+  "The last connection attempt found neither ZHIPU_API_KEY nor ZAI_API_KEY in the StudyBuddy server environment. A Claude login or a GLM website login does not supply these keys.": {
+    "revision": "3d231b7fdf930d4038229d3c517575dc2e6373d3983fcf3f75e159977e704de3",
+    "textHash": "53976b26fc372eb7eab17d8f2443d0e009e1a96cc5e404f01a29fc5a06f73a64",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "The last line of this paragraph holds only a word or two. Reword slightly to pull it back.": {
     "revision": "f8966716775864cc1f80e5ddbe4a292c7f01d26374ec57d11766d025e3ac7ecc",
@@ -4389,10 +4389,10 @@
     "textHash": "66a0bb82f3b4e0f205958564adba7beb936801fdefd2e1e2a2ff8c25a68fcb0a",
     "model": "gemini-4-argon-medium"
   },
-  "The updated version did not start, so Papilot is using the version included with the app. Retry the update or download the latest desktop app.": {
-    "revision": "08ce008c0f84e0363f4bcf6f4b2959429dea8d2be7ce69a28dd733798a513b34",
-    "textHash": "10e5a508c6b4cc9f39f275cc0709e88398f2397489e1433841c12f4ecc6b0e28",
-    "model": "gemini-4-argon-medium"
+  "The updated version did not start, so StudyBuddy is using the version included with the app. Retry the update or download the latest desktop app.": {
+    "revision": "049698708a89d62706848761205c7d75d6691e8f5bfcaecc0034561a9e5706d9",
+    "textHash": "739b6ae7268bca78cdd586a6a00d69acb47cb638989bcd800f823203ed03978f",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "The wheel holds up to {count} notes.": {
     "revision": "f3dba86f7d96e4974de7567f7f53fa13c891ffab69419da0556144248bf6211f",
@@ -4489,10 +4489,10 @@
     "textHash": "8488d8ba33fb1c02a1dc09f53fd54334a92b41fb6a8e4fe5765f16f3401b860b",
     "model": "gemini-4-argon-high"
   },
-  "This permanently removes the task from Papilot, including its conversation, worktree, and PDF review files. Unaccepted edits and saved comments will be discarded, and review decisions can no longer be undone.": {
-    "revision": "5b098c22e64715e93b5a8670c25539336edaabd87b88ff25219f82ca4303ad1f",
-    "textHash": "9441acdda697eb0bd3f97e554bdc5a1e69f066f7678cfaef08a945ae5c879d6d",
-    "model": "gemini-4-argon-medium"
+  "This permanently removes the task from StudyBuddy, including its conversation, worktree, and PDF review files. Unaccepted edits and saved comments will be discarded, and review decisions can no longer be undone.": {
+    "revision": "081223265dfc9ce7eeb2b091c02024d6c74bdec3b48691b2fd60153bb9200e57",
+    "textHash": "74a1e1e67f78b1f1e8eff5d49985afbbbc2fd61c47c68be8eb9cfb1bc94368d1",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "This skill changed on disk. Reload it before deleting.": {
     "revision": "f2a77c1c98428cb721a5ab47a20236c28e285f2aacd0e597a13481ce7a54defd",
@@ -4714,10 +4714,10 @@
     "textHash": "f1e5fb9ee234eed9337a75d4f83c41a3428b3c958917c876a75412ea20a4cf6d",
     "model": "gemini-4-argon-medium"
   },
-  "Update Papilot": {
-    "revision": "bfe2b28eaeaf2948e9a62361009b8fb814e09e2a98ef103ca5db75aed2ef804d",
-    "textHash": "2622cd5c3d2c9cb4213bd48dbab2bb88e3d86f3643401dc549bb249276a6ccad",
-    "model": "gemini-4-argon-medium"
+  "Update StudyBuddy": {
+    "revision": "4a669428fda6fc5eac21f6b73b612c733df02c4e0bdf432460b105d88e95d84e",
+    "textHash": "f0757ae872cabe239e2daacc44146d14c4c098f7aeb1978f8a5ef94846da27ad",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Update available": {
     "revision": "5b5706a06700f8ebc8f6420a96d2b4c52edbb5a063c500f2e7cf9d05498070b6",
@@ -4754,10 +4754,10 @@
     "textHash": "3db34c3b08d590a7f3d2c2869ba08a598223ff8735f6e4e626cbbdb3174b5248",
     "model": "gemini-4-argon-medium"
   },
-  "Updates are managed outside Papilot.": {
-    "revision": "01b37117a2b49763d20f1bfaefcf79a920c48389acb9c2882d7b6d0c6436f939",
-    "textHash": "59f6af89f9ea3e00755ff1b78cef03dcd9c0f5151f5c3c06abf48092fd1f0bba",
-    "model": "gemini-4-argon-medium"
+  "Updates are managed outside StudyBuddy.": {
+    "revision": "5f6aa84ddcbd8b64061052434d2b58a1ffacfa7c1b5c358e5e4553054d9e78eb",
+    "textHash": "a5b07c31b3554424feed4e1030189e02eab83e843dfede0fd6afaf97abba7483",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Updating…": {
     "revision": "efafa2548c1e158f069b06be5548ac6bb2a219bd6c7dbab64872c66a0236b253",
@@ -4799,10 +4799,10 @@
     "textHash": "808bbe0c068071ad6cbad0380b2930033cf8d5aa7dafcc71c66b079eb75c1973",
     "model": "gemini-4-argon-medium"
   },
-  "Use the current {agent} sign-in on the Papilot host": {
-    "revision": "43849dbc95e50099ab5c02572ecbbf78c54d85530453412a81316d1d52e3f217",
-    "textHash": "c39f2a1cd4ea2681c73b4cb823037d51435acff1d7eab755b8c9aaff846b1838",
-    "model": "gemini-4-argon-medium"
+  "Use the current {agent} sign-in on the StudyBuddy host": {
+    "revision": "9501a08ad6a8d4388b38536135069ce49b5e934cdb628bf24ad54d286e52cb9d",
+    "textHash": "07fcc076ba4de1073bfb6524d6298d9bdd5cb9b41410cfef14177c895260c8a0",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Used for new tasks. Saved in this browser.": {
     "revision": "cdcc5eb9b8fef3d9bc56a9cc2c3782ff7b99d5075b7d8b6a6ddf3cd9838611bd",
@@ -4854,10 +4854,10 @@
     "textHash": "6cc8d555c663419a688b3b35284eff122199c8c4be605cdd68eba468bf1c2afd",
     "model": "gemini-4-argon-medium"
   },
-  "Uses the Cursor SDK with CURSOR_API_KEY. Papilot installs the SDK on first use.": {
-    "revision": "d39e5c529d2db2e4b14b6a6ad660f78f7d7ba91e16c45434420732d926f5c8b7",
-    "textHash": "b3b931eb41c2772dba8051fa31ca0d4f9ed904a5b8f27a6808feb38f34881398",
-    "model": "gemini-4-argon-medium"
+  "Uses the Cursor SDK with CURSOR_API_KEY. StudyBuddy installs the SDK on first use.": {
+    "revision": "8c64ebb3d36f8c2e257c1f04161d8d4b69f419f075dd93d5851b50c3a933fb49",
+    "textHash": "e218665a077991b5119c73a75e9578a3329d54ff6bfd4b9dd95d35378654efce",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Uses the local Antigravity CLI and its saved Google login.": {
     "revision": "6f1b7f882a2872af2908d17d2abeb34a0035362ea27dca2795d2a9f18c372374",
@@ -5384,10 +5384,10 @@
     "textHash": "989cdbbda6ec08434b60e15a65b1936b20cfe77fc065c2fcc0a6d1844677d3e4",
     "model": "gemini-4-argon-medium"
   },
-  "{command} was not found by Papilot.": {
-    "revision": "a480582be9bc3077ff60796571b198c049d441286e08d9e0db41f9e4e67b8008",
-    "textHash": "0b08640ae823baccbf28c4cc38c19ded35a2c89a9c63107083ece59ebf288c90",
-    "model": "gemini-4-argon-medium"
+  "{command} was not found by StudyBuddy.": {
+    "revision": "d00fe0df1a63d7486b2d9f8cea6b6a11721705c3cfa1969160e0608b62dd8fac",
+    "textHash": "ba8861b686d2814c9a3d7bc6de49855591e68b22b961b8728c55551b7259f2f9",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "{count} of {limit}": {
     "revision": "1689ef10f78660d961efde415d1f99ffc7b03a4193ff4283157cc2a3f298c7d4",

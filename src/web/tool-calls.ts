@@ -2,7 +2,7 @@ import type { TimelineItem, ToolPlace } from '../shared.ts';
 import { t, tn } from './i18n.ts';
 
 // How tool calls read in the chat. An agent that says what a call did (its
-// kind and target, as Papilot Writer does) gets a sentence and an icon for
+// kind and target, as StudyBuddy Writer does) gets a sentence and an icon for
 // it, and a run of calls folds into one line that says what happened, such
 // as "Listed files, read 15 files, searched 2 times". Other calls show the
 // agent's own text.

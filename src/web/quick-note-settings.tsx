@@ -91,7 +91,7 @@ export function QuickNoteSettings() {
       <div>
         <p className="settings-intro">{t('After you mark text with the magic pen, its wheel offers these notes, clockwise from the top. Each is sent to the agent as the instruction for that text.')}</p>
         <p className="settings-intro">{t('Number keys pick the same slots. Press one before marking to keep that note on the pen; 0 or Escape lets go.')}</p>
-        <p className="settings-intro">{t('Papilot keeps this list for you, so your phone and computer offer the same notes.')}</p>
+        <p className="settings-intro">{t('StudyBuddy keeps this list for you, so your phone and computer offer the same notes.')}</p>
       </div>
     </div>
     <div ref={rows} className="quick-note-list settings-card" role="list" aria-label={t('Quick notes')} onPointerLeave={() => { if (!dragging) setHover(null); }}>

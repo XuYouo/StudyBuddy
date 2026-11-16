@@ -21,12 +21,13 @@ const workspace = new Workspace(store);
 const manuscripts = new Manuscripts(), changes = new Changes();
 const desktop = process.env.PAPILOT_DESKTOP === '1';
 const prepareDemo = desktop ? await desktopDemo(ROOT, DATA, store, workspace, manuscripts).catch(error => console.error('Could not prepare the demo paper:', error)) : undefined;
-// A packaged desktop app downloads only Papilot's own code built for its
+// A packaged desktop app downloads only StudyBuddy's own code built for its
 // installer (see desktop/runtime.ts) and asks the app to switch to it. npm
 // updates belong to the web server.
 const bundleRoot = desktop && process.send ? process.env.PAPILOT_DESKTOP_BUNDLE : undefined, fingerprint = process.env.PAPILOT_DESKTOP_FINGERPRINT || '';
 const bundle = bundleRoot && fingerprint ? { root: bundleRoot, version: readJson(path.join(bundleRoot, 'package.json'))?.version || '', fingerprint } : undefined;
 const updates = new Updates({ root: ROOT, data: DATA, version: VERSION, port: PORT, desktop, bundle,
+  enabled: readJson(path.join(ROOT, 'package.json'))?.updatesEnabled !== false,
   ...(bundle ? { restart: async (root: string, version: string) => { process.send!({ type: 'papilot:activate', root, version }); } } : {}),
   busy: () => workspace.busyForUpdate || manuscripts.busyForUpdate || changes.busyForUpdate, shutdown: () => shutdown() });
 const activation = desktop ? null : readJson(path.join(DATA, 'updates/active.json'));
@@ -50,7 +51,7 @@ const localUrl = await app.listen({ host: '127.0.0.1', port: PORT }).catch(error
 // Desktop requests an OS-assigned port. Keep Host/Origin checks exact after bind.
 localListener.port = Number(new URL(localUrl).port);
 store.recover();
-console.log(`Papilot is running at ${localUrl}${PUBLIC_ORIGIN ? `\nRemote: ${PUBLIC_ORIGIN}` : ''}`);
+console.log(`StudyBuddy is running at ${localUrl}${PUBLIC_ORIGIN ? `\nRemote: ${PUBLIC_ORIGIN}` : ''}`);
 if (!process.env.PAPILOT_UPDATE_PROBE) { void workspace.connect(); updates.start(); }
 // Recompute cached feedback counts, including decisions from before this restart.
 for (const task of store.tasks()) {

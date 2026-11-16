@@ -1,6 +1,6 @@
 {
   "ui": {
-    "author": "Papilot Team",
+    "author": "StudyBuddy Team",
     "back": "All posts",
     "blog": "Blog",
     "breadcrumb": "Breadcrumb",
@@ -12,10 +12,10 @@
     "footerNavigation": "Footer",
     "indexDescription": "On AI, LaTeX, and academic writing.",
     "indexSeoDescription": "Explore PDF-first AI and LaTeX collaborative writing: annotate directly on your manuscript, review typeset changes in place, and keep judgment with the author.",
-    "indexSeoTitle": "Papilot Blog: AI and LaTeX Academic Writing",
+    "indexSeoTitle": "StudyBuddy Blog: AI and LaTeX Academic Writing",
     "indexTitle": "Blog",
     "languageLabel": "Language",
-    "latest": "From the Papilot Team",
+    "latest": "From the StudyBuddy Team",
     "mainNavigation": "Main navigation",
     "minutes": "min read",
     "privacy": "Privacy Notice",
@@ -44,7 +44,7 @@
     "comparison": "Returning the focus to the page",
     "comparisonDesc": "On the left, a split workspace separates source code from the PDF; on the right, the PDF is the primary workspace, with annotations attached directly to the manuscript.",
     "flow": "Revisions begin and end on the page",
-    "flowDesc": "The author annotates the manuscript, AI edits the local LaTeX files, Papilot compiles the project, and the author reviews the changes on the PDF, continuing to revise as needed.",
+    "flowDesc": "The author annotates the manuscript, AI edits the local LaTeX files, StudyBuddy compiles the project, and the author reviews the changes on the PDF, continuing to revise as needed.",
     "newPath": "Read · Annotate · Review",
     "now": "Manuscript-centric",
     "old": "Source-centric",
@@ -67,7 +67,7 @@
         "Find and edit local source files."
       ],
       [
-        "Papilot",
+        "StudyBuddy",
         "Compile project",
         "Build the newly typeset document."
       ],

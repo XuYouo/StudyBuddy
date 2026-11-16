@@ -19,11 +19,11 @@ const revision = /^(\d+\.\d+\.\d+)-dev\.([a-f0-9]{40})$/.exec(manifest.version);
 if (!revision || revision[2] !== commit) throw new Error(`The update layer ${manifest.version} was not built from ${commit}.`);
 if (!fs.existsSync(file(manifest.layer.name))) throw new Error(`Missing ${manifest.layer.name}.`);
 const base = revision[1], label = `${base}-dev.${commit.slice(0, 7)}`;
-for (const suffix of INSTALLER_SUFFIXES) if (!fs.existsSync(file(`Papilot-${base}-${suffix}`))) throw new Error(`Missing the tested installer Papilot-${base}-${suffix}.`);
+for (const suffix of INSTALLER_SUFFIXES) if (!fs.existsSync(file(`StudyBuddy-${base}-${suffix}`))) throw new Error(`Missing the tested installer StudyBuddy-${base}-${suffix}.`);
 
-const title = `Papilot ${label}`;
+const title = `StudyBuddy ${label}`;
 const notes = `Development build of ${repo}@${commit} from main. It may be less stable than a release.\n\n`
-  + 'Desktop apps on the **Dev** channel (Settings → Updates) install it in place, downloading only Papilot\'s own code '
+  + 'Desktop apps on the **Dev** channel (Settings → Updates) install it in place, downloading only StudyBuddy\'s own code '
   + `(${(manifest.layer.size / 1048576).toFixed(1)} MB) when their installer matches this build. Otherwise, download the installer for your system below; papers and settings stay in place.`;
 let release;
 try { release = JSON.parse(gh('api', `repos/${repo}/releases/tags/${tag}`)); }
@@ -37,8 +37,8 @@ const previous = existing.has('desktop.json') ? JSON.parse(gh('release', 'downlo
 let installers = reusableInstallers(previous, [...existing], manifest.fingerprint);
 if (installers) console.log(`The shell is unchanged; keeping ${installers.join(', ')}.`);
 else {
-  installers = INSTALLER_SUFFIXES.map(suffix => `Papilot-${label}-${suffix}`);
-  INSTALLER_SUFFIXES.forEach((suffix, index) => fs.renameSync(file(`Papilot-${base}-${suffix}`), file(installers[index])));
+  installers = INSTALLER_SUFFIXES.map(suffix => `StudyBuddy-${label}-${suffix}`);
+  INSTALLER_SUFFIXES.forEach((suffix, index) => fs.renameSync(file(`StudyBuddy-${base}-${suffix}`), file(installers[index])));
   gh('release', 'upload', tag, ...installers.map(file), '--clobber');
 }
 gh('release', 'upload', tag, file(manifest.layer.name), '--clobber');

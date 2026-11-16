@@ -35,7 +35,7 @@ const pinger = (async () => {
   }
 })();
 const slowest = (from: number, to: number) => Math.max(0, ...answers.filter(([at]) => at >= from && at <= to).map(([, ms]) => ms));
-// This process's event loop stands in for Papilot's, which runs the same
+// This process's event loop stands in for StudyBuddy's, which runs the same
 // manuscript code: the longest gap between ticks of a 2 ms timer.
 // (monitorEventLoopDelay misses long synchronous stretches.)
 const lag = (() => {
@@ -69,7 +69,7 @@ for (;;) {
 }
 mark('published');
 const publishLag = lag.max;
-// Papilot compiles what committing the task will write as soon as the round is ready.
+// StudyBuddy compiles what committing the task will write as soon as the round is ready.
 if (manuscripts.predict) {
   const preview = await client.get<{ files: Record<string, string | null> | null }>(`/api/tasks/${id}/preview`);
   if (preview.files) void manuscripts.predict('paper', root, Object.fromEntries(Object.entries(preview.files).map(([name, data]) => [name, data === null ? null : Buffer.from(data, 'base64')])));

@@ -174,7 +174,7 @@ try {
   await views.getByRole('button', { name: 'Split', exact: true }).click();
   await readable();
   await expect.poll(() => box.evaluate(el => Math.round(el.scrollTop))).toBeGreaterThan(500);
-  // A chosen view lasts for the session; Papilot starts side by side again.
+  // A chosen view lasts for the session; StudyBuddy starts side by side again.
   await views.getByRole('button', { name: 'Chat', exact: true }).click();
   await expect(page.locator('.task-grid')).toHaveClass(/layout-conversation/);
   await page.evaluate(() => localStorage.setItem('papilot:layout', 'conversation'));

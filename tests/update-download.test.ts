@@ -4,7 +4,7 @@ import { createServer } from 'node:http';
 import { gzipSync } from 'node:zlib';
 import { download } from '../src/server/update-install.ts';
 
-const url = 'https://github.com/PapilotAI/papilot/releases/download/v1.1.0/desktop.json';
+const url = 'https://github.com/XuYouo/StudyBuddy/releases/download/v1.1.0/desktop.json';
 const failed = /The new version could not be installed/;
 
 function streamedResponse(init: ResponseInit = {}) {

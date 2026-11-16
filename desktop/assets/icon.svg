@@ -1,48 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" fill="none">
-  <title>Papilot macOS app icon</title>
-  <desc>The Papilot blue and white pen nib on a softly shaded, continuous-corner square. Transparent outside the tile.</desc>
+  <title>StudyBuddy macOS app icon</title>
+  <desc>An open ivory book and amber bookmark on a softly shaded teal tile.</desc>
   <defs>
-    <linearGradient id="tile" x1="300" y1="100" x2="710" y2="924" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#FFFFFF"/>
-      <stop offset="0.38" stop-color="#ECF3FB"/>
-      <stop offset="0.72" stop-color="#D2E1F2"/>
-      <stop offset="1" stop-color="#ABC5E3"/>
-    </linearGradient>
-    <linearGradient id="rim" x1="512" y1="100" x2="512" y2="924" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#FFFFFF"/>
-      <stop offset="1" stop-color="#B9CADD"/>
-    </linearGradient>
-    <linearGradient id="blue" x1="32" y1="6" x2="46" y2="48" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#568CC0"/>
-      <stop offset="0.55" stop-color="#356AA0"/>
-      <stop offset="1" stop-color="#285784"/>
-    </linearGradient>
-    <linearGradient id="paper" x1="25" y1="6" x2="25" y2="48" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#FFFFFF"/>
-      <stop offset="1" stop-color="#EFF4FA"/>
-    </linearGradient>
-    <filter id="tile-shadow" x="0" y="0" width="1024" height="1024" filterUnits="userSpaceOnUse">
-      <feDropShadow dx="0" dy="12" stdDeviation="11" flood-color="#152B43" flood-opacity="0.16"/>
-      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#152B43" flood-opacity="0.12"/>
-    </filter>
-    <filter id="nib-shadow" x="0" y="0" width="64" height="68" filterUnits="userSpaceOnUse">
-      <feDropShadow dx="0" dy="0.8" stdDeviation="0.9" flood-color="#1D426B" flood-opacity="0.14"/>
-    </filter>
-    <path id="tile-shape" d="M358 100H666C753 100 797 100 832 118C864 134 890 160 906 192C924 227 924 271 924 358V666C924 753 924 797 906 832C890 864 864 890 832 906C797 924 753 924 666 924H358C271 924 227 924 192 906C160 890 134 864 118 832C100 797 100 753 100 666V358C100 271 100 227 118 192C134 160 160 134 192 118C227 100 271 100 358 100Z"/>
+    <linearGradient id="tile" x1="220" y1="100" x2="800" y2="924" gradientUnits="userSpaceOnUse"><stop stop-color="#35B9B1"/><stop offset=".5" stop-color="#168F91"/><stop offset="1" stop-color="#13556B"/></linearGradient>
+    <linearGradient id="page" x1="320" y1="330" x2="700" y2="700" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFFFF"/><stop offset="1" stop-color="#DBF4EE"/></linearGradient>
+    <linearGradient id="bookmark" x1="636" y1="332" x2="684" y2="520" gradientUnits="userSpaceOnUse"><stop stop-color="#FFE9A6"/><stop offset="1" stop-color="#F4BA58"/></linearGradient>
+    <filter id="shadow" x="0" y="0" width="1024" height="1024" filterUnits="userSpaceOnUse"><feDropShadow dy="12" stdDeviation="12" flood-color="#123C4F" flood-opacity=".2"/></filter>
+    <filter id="book-shadow" x="180" y="230" width="670" height="600" filterUnits="userSpaceOnUse"><feDropShadow dy="18" stdDeviation="16" flood-color="#073B4B" flood-opacity=".24"/></filter>
+    <path id="shape" d="M358 100H666C753 100 797 100 832 118C864 134 890 160 906 192C924 227 924 271 924 358V666C924 753 924 797 906 832C890 864 864 890 832 906C797 924 753 924 666 924H358C271 924 227 924 192 906C160 890 134 864 118 832C100 797 100 753 100 666V358C100 271 100 227 118 192C134 160 160 134 192 118C227 100 271 100 358 100Z"/>
   </defs>
-  <g filter="url(#tile-shadow)">
-    <use href="#tile-shape" fill="url(#tile)"/>
-    <use href="#tile-shape" stroke="url(#rim)" stroke-width="2"/>
-  </g>
-  <g id="brand-mark" transform="translate(134.4 134.4) scale(11.8)" stroke="#193A59" stroke-width="1.8" stroke-linejoin="round">
-    <g filter="url(#nib-shadow)">
-      <path d="M18 48H32V58H18Z" fill="#F0F4F8"/>
-      <path d="M32 48H46V58H32Z" fill="#BDCEE1"/>
-      <path d="M32 6L12 34L18 48H32V6Z" fill="url(#paper)" stroke="none"/>
-      <path d="M32 6L52 34L46 48H32V6Z" fill="url(#blue)" stroke="none"/>
-      <path d="M32 6L52 34L46 48H18L12 34L32 6Z"/>
-      <path d="M32 6V20"/>
-      <path d="M32 20Q35 31 46 34Q35 37 32 48Q29 37 18 34Q29 31 32 20Z" fill="#FFFFFF"/>
-    </g>
+  <g filter="url(#shadow)"><use href="#shape" fill="url(#tile)"/><use href="#shape" stroke="#D1FFF0" stroke-opacity=".32" stroke-width="2"/></g>
+  <g filter="url(#book-shadow)">
+    <path d="M246 382C342 356 432 373 512 424C592 373 682 356 778 382V688C682 662 592 679 512 730C432 679 342 662 246 688Z" fill="#073F51" fill-opacity=".42"/>
+    <path d="M256 352C350 323 428 344 512 396C596 344 674 323 768 352V660C674 631 596 652 512 704C428 652 350 631 256 660Z" fill="#A3DED3"/>
+    <path d="M272 322C361 300 436 323 512 373V680C436 630 361 607 272 629Z" fill="url(#page)"/>
+    <path d="M512 373C588 323 663 300 752 322V629C663 607 588 630 512 680Z" fill="#F8FFFB"/>
+    <path d="M512 376V674" stroke="#71BCB4" stroke-width="8" stroke-linecap="round"/>
+    <path d="M627 320C648 316 671 314 694 315V504L661 482L627 508Z" fill="url(#bookmark)"/>
+    <path d="M322 416C371 412 414 426 458 452M322 480C370 476 414 490 458 516M322 544C361 542 397 550 431 566" stroke="#BDDCD3" stroke-width="13" stroke-linecap="round"/>
+    <path d="M565 557C600 540 633 531 669 530" stroke="#BDDCD3" stroke-width="13" stroke-linecap="round"/>
   </g>
 </svg>

@@ -1,4 +1,4 @@
-# Publishing on the Papilot blog
+# Publishing on the StudyBuddy blog
 
 The blog uses the website's static build and Cloudflare deployment. Articles, language navigation and RSS are fully rendered without JavaScript. No CMS, database or additional runtime is needed.
 

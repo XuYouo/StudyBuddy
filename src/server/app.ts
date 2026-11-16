@@ -154,7 +154,7 @@ export async function buildApp(options: AppOptions) {
   const updateRequests = new WeakMap<object, () => void>();
   app.addHook('onRequest', async (request, reply) => {
     if (!options.updates || !/^\/(api|review)\//.test(request.url) || /^\/api\/(?:updates(?:\/|$)|health(?:\?|$)|events(?:\?|$)|state(?:\?|$))/.test(request.url)) return;
-    if (options.updates.restarting) return reply.code(503).header('Retry-After', '3').send({ error: 'Papilot is restarting after an update. Please wait a moment.' });
+    if (options.updates.restarting) return reply.code(503).header('Retry-After', '3').send({ error: 'StudyBuddy is restarting after an update. Please wait a moment.' });
     const release = options.updates.enter(); updateRequests.set(request, release); reply.raw.once('close', release);
   });
   app.addHook('onResponse', async request => { updateRequests.get(request)?.(); });
@@ -228,7 +228,7 @@ export async function buildApp(options: AppOptions) {
     return { ...state, annotations, ...(scope ? { noteSections: scope.sections, unplacedSectionNotes: scope.unplaced } : {}) };
   }
 
-  app.get('/api/health', () => ({ ok: true, name: 'Papilot', version: options.version, ...(options.desktopInstance ? { desktopInstance: options.desktopInstance } : {}), ...(options.updateInstance ? { updateInstance: options.updateInstance } : {}) }));
+  app.get('/api/health', () => ({ ok: true, name: 'StudyBuddy', version: options.version, ...(options.desktopInstance ? { desktopInstance: options.desktopInstance } : {}), ...(options.updateInstance ? { updateInstance: options.updateInstance } : {}) }));
   app.get('/api/runtime/requirements', () => (options.systemRequirements || systemRequirements)());
   // Detection starts host processes. All tabs and personal remote connections
   // share one budget and one in-flight probe; polling other routes is unaffected.
@@ -310,10 +310,10 @@ export async function buildApp(options: AppOptions) {
     });
   });
   app.post('/api/reconnect', async request => { await workspace.connect(); return workspace.snapshot().runtime; });
-  // Papilot Writer's model providers: subscription sign-ins and API keys.
+  // StudyBuddy Writer's model providers: subscription sign-ins and API keys.
   const writer = async () => {
     const runtime = workspace.agents.papilot as WriterAgent;
-    if (!(runtime instanceof WriterAgent)) throw Object.assign(new Error('Papilot Writer is not available.'), { statusCode: 404 });
+    if (!(runtime instanceof WriterAgent)) throw Object.assign(new Error('StudyBuddy Writer is not available.'), { statusCode: 404 });
     await runtime.preload();
     return runtime.credentials!;
   };
@@ -821,8 +821,8 @@ export async function buildApp(options: AppOptions) {
   app.post<{ Params: { id: string } }>('/api/requests/:id', { config: { resource: { request: 'id' } } }, request => { workspace.answer(request.params.id, request.body as any); return { ok: true }; });
 
   // The review viewer also shows a paper's uncommitted changes against its
-  // last commit. Papilot answers those routes itself, ahead of the engine's
-  // below, and the viewer posts with Papilot's token. Staging writes the
+  // last commit. StudyBuddy answers those routes itself, ahead of the engine's
+  // below, and the viewer posts with StudyBuddy's token. Staging writes the
   // index; reverting writes files, so it waits for review actions and commits.
   const changesAccess = { config: { resource: { project: 'projectId' }, csrf: false as const } };
   const changesToken = (request: { headers: Record<string, unknown> }) => {
@@ -885,7 +885,7 @@ export async function buildApp(options: AppOptions) {
     return nextPaperPass(connectReview, project.path, name, round, after);
   });
   app.route<{ Params: { projectId: string; '*': string } }>({
-    // The review page posts with the review engine's token rather than Papilot's.
+    // The review page posts with the review engine's token rather than StudyBuddy's.
     method: ['GET', 'POST'], url: '/review/:projectId/*', config: { resource: { project: 'projectId' }, csrf: false }, handler: async (request, reply) => {
       const project = store.project(request.params.projectId);
       const route = '/' + request.params['*'];
@@ -939,7 +939,7 @@ export async function buildApp(options: AppOptions) {
               settles = task.id;
             }
           }
-          // A round's new version as one complete PDF, which Papilot compiles,
+          // A round's new version as one complete PDF, which StudyBuddy compiles,
           // lets the review show the changes in the whole paper.
           const round = request.method === 'GET' && response.ok ? /^\/api\/tasks\/([a-z0-9-]+)\/rounds\/(\d+)$/.exec(route) : null;
           if (round) Object.assign(value as object, { pdf: `${prefix}/pdf/${round[1]}/${round[2]}`, passes: `${prefix}/pdf/${round[1]}/${round[2]}/passes` });
@@ -961,6 +961,6 @@ export async function buildApp(options: AppOptions) {
   });
 
   if (options.dist) await registerFrontend(app, options.dist);
-  else app.get('/', (_request, reply) => reply.type('text/plain').send('Papilot: run npm run build, then restart the server.'));
+  else app.get('/', (_request, reply) => reply.type('text/plain').send('StudyBuddy: run npm run build, then restart the server.'));
   return app;
 }

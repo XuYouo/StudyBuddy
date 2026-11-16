@@ -7,7 +7,7 @@ import { isSkillIcon } from '../skill-icons.ts';
 import { skillMetadata, skillInstructions } from '../skill-metadata.ts';
 
 // Skills are Markdown instructions an author runs with "/" in the composer.
-// Papilot ships some in skills/; ~/.papilot/skills/ adds the author's
+// StudyBuddy ships some in skills/; ~/.papilot/skills/ adds the author's
 // own for every paper, and a paper's .papilot/skills/ its own. A later source
 // replaces an earlier skill with the same name. Each skill is <name>.md, or a
 // folder with a SKILL.md (the Agent Skills layout) whose other files the

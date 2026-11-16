@@ -93,7 +93,7 @@ export async function finishCurrentCommit(repo: Repo, data: Delivery, validateFi
     if (await repo.textAsync(["write-tree"], { env }) !== data.indexAfter) throw new Error("Could not prepare the task's staging result.");
     await handle.writeFile(await fs.promises.readFile(target));
     await handle.sync();
-    if (head !== data.commit) await repo.runAsync(["update-ref", "-m", "Papilot: commit reviewed task", ref, data.commit!, data.parent!]);
+    if (head !== data.commit) await repo.runAsync(["update-ref", "-m", "StudyBuddy: commit reviewed task", ref, data.commit!, data.parent!]);
     writeFiles();
     fs.renameSync(lock, index);
   } finally {

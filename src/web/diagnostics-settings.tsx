@@ -9,7 +9,7 @@ export interface DiagnosticsSettingsProps {
   check: (projectId: string | undefined, signal: AbortSignal) => Promise<DiagnosticReport>;
   reconnect: () => Promise<void>;
   latex: (signal: AbortSignal) => Promise<LatexInstallation | null>;
-  /** Papilot Writer's providers: GET with no body, POST with one. */
+  /** StudyBuddy Writer's providers: GET with no body, POST with one. */
   writer?: (route: string, body?: unknown) => Promise<WriterAuth>;
 }
 

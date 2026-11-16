@@ -44,8 +44,8 @@ export async function desktopDemo(root: string, data: string, store: Store, work
       if (fresh) copyExamplePaper(source, paper, { excludePreview: true });
       const expectedSource = sourceTree(source);
       const git = hasGit();
-      const project = git ? await workspace.addProject(paper, 'Papilot · Demo paper')
-        : { id: randomUUID(), name: 'Papilot · Demo paper', path: fs.realpathSync(paper), createdAt: Date.now() };
+      const project = git ? await workspace.addProject(paper, 'StudyBuddy · Demo paper')
+        : { id: randomUUID(), name: 'StudyBuddy · Demo paper', path: fs.realpathSync(paper), createdAt: Date.now() };
       if (!git) store.saveProject(project);
       const preview = path.join(data, 'demo-preview');
       fs.mkdirSync(preview, { recursive: true });

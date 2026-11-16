@@ -2,7 +2,7 @@ import { spawn as nativeSpawn, spawnSync as nativeSpawnSync } from 'node:child_p
 import { createRequire } from 'node:module';
 import { commandSpec } from './platform.mjs';
 const require = createRequire(import.meta.url);
-// `papilot doctor` and --help also work before dependencies are installed.
+// `studybuddy doctor` and --help also work before dependencies are installed.
 let windowsSpawn;
 const crossSpawn = () => windowsSpawn ??= require('cross-spawn');
 

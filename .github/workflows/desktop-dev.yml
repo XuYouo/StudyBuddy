@@ -57,7 +57,7 @@ jobs:
       - name: Download the tested installers and update layer
         uses: actions/download-artifact@v4
         with:
-          pattern: Papilot-*
+          pattern: StudyBuddy-*
           merge-multiple: true
           path: release/desktop
       - name: Publish the dev build

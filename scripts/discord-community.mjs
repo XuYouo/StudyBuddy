@@ -3,10 +3,10 @@ import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
 const failed = new Set(['failure', 'timed_out', 'action_required', 'startup_failure']);
-const repo = 'PapilotAI/papilot';
+const repo = 'XuYouo/StudyBuddy';
 const root = `https://github.com/${repo}`;
 const safe = (value, max = 180) => String(value ?? '').replace(/[@<>\[\]`*_~\\]/g, '').slice(0, max);
-const envelope = embed => ({ username: 'Papilot Dev', allowed_mentions: { parse: [] }, embeds: [embed] });
+const envelope = embed => ({ username: 'StudyBuddy Dev', allowed_mentions: { parse: [] }, embeds: [embed] });
 
 export function runNotice(run, previous) {
   if (run.repository?.full_name !== repo || run.head_repository?.full_name !== repo || run.event === 'pull_request') return null;
@@ -18,7 +18,7 @@ export function runNotice(run, previous) {
     url: `${root}/actions/runs/${run.id}`,
     color: recovery ? 0x22c55e : 0xef4444,
     description: `${safe(run.head_branch)} · \`${safe(run.head_sha, 7)}\` · attempt ${run.run_attempt}\n${safe(run.display_title, 350)}`,
-    footer: { text: 'Papilot development • Open the run for logs and rerun controls' },
+    footer: { text: 'StudyBuddy development • Open the run for logs and rerun controls' },
   });
 }
 
@@ -93,7 +93,7 @@ export async function main() {
     }
     payload = weeklyDigest(issues);
   } else if (process.env.GITHUB_EVENT_NAME === 'workflow_dispatch') {
-    payload = envelope({ title: 'Papilot community automation connected', color: 0x22c55e,
+    payload = envelope({ title: 'StudyBuddy community automation connected', color: 0x22c55e,
       description: 'Development failure/recovery alerts and the weekly GitHub feedback digest are configured.', url: `${root}/actions` });
   }
   if (!payload) { console.log('No notification needed.'); return; }

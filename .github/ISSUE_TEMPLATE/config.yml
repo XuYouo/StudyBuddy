@@ -1,8 +1,8 @@
 blank_issues_enabled: true
 contact_links:
   - name: Questions and ideas
-    url: https://github.com/PapilotAI/papilot/discussions
-    about: Ask a question, share how you use Papilot or talk through an idea.
+    url: https://github.com/XuYouo/StudyBuddy/discussions
+    about: Ask a question, share how you use StudyBuddy or talk through an idea.
   - name: Security vulnerability
-    url: https://github.com/PapilotAI/papilot/security/advisories/new
+    url: https://github.com/XuYouo/StudyBuddy/security/advisories/new
     about: Report a vulnerability privately.

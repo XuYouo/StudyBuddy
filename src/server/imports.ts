@@ -28,7 +28,7 @@ function bytes(value: unknown) {
 type Config = typeof import('../../engine/src/core/config.ts');
 type LegacyState = typeof import('../../engine/src/core/legacy-state.ts');
 const configModule = (): Promise<Config> => import(pathToFileURL(path.join(ENGINE, 'src/core/config.ts')).href);
-// The settings Papilot saved for a paper in its Git directory. A folder that
+// The settings StudyBuddy saved for a paper in its Git directory. A folder that
 // is not its own repository yet has only those an earlier version kept in
 // the folder itself.
 async function config(root: string): Promise<Record<string, unknown>> {
@@ -118,17 +118,17 @@ async function repositoryRoot(root: string) {
   if (top && realPath(top) !== realPath(root)) throw new Error('This folder belongs to a parent Git repository. Select its root folder, or upload a copy.');
   return top;
 }
-export async function prepareRepository(root: string, message = 'Import paper into Papilot') {
+export async function prepareRepository(root: string, message = 'Import paper into StudyBuddy') {
   const top = await repositoryRoot(root);
   if (!top) await git(root, 'init', '-q');
   try { await git(root, 'rev-parse', '--verify', 'HEAD'); return; } catch { /* Empty repositories need their first snapshot. */ }
   // Do not change the author's global identity or overwrite their ignore rules.
   if (!fs.existsSync(path.join(root, '.gitignore'))) fs.writeFileSync(path.join(root, '.gitignore'), '*.aux\n*.log\n*.fls\n*.fdb_latexmk\n*.synctex.gz\n*.toc\n*.out\n.DS_Store\n');
   await git(root, 'add', '--all');
-  await git(root, '-c', 'user.name=Papilot', '-c', 'user.email=papilot@localhost', '-c', 'commit.gpgsign=false', '-c', 'core.hooksPath=/dev/null', 'commit', '-qm', message);
+  await git(root, '-c', 'user.name=StudyBuddy', '-c', 'user.email=papilot@localhost', '-c', 'commit.gpgsign=false', '-c', 'core.hooksPath=/dev/null', 'commit', '-qm', message);
 }
 // The desktop app opens a folder the way an editor does. A paper already in
-// Papilot opens again; any other folder with a clear main file is added as it
+// StudyBuddy opens again; any other folder with a clear main file is added as it
 // is and compiles in its own view. Only a folder with several possible main
 // files returns them, so the author can pick one.
 export async function openFolder(input: { path?: unknown; main?: unknown }, known: (root: string) => Project | undefined, register: (root: string, name: string) => Promise<Project>): Promise<{ project: Project } | { name: string; candidates: string[] }> {
@@ -194,7 +194,7 @@ export class PaperImports {
     let value = this.sessions.get(id);
     if (!value) {
       value = JSON.parse(fs.readFileSync(path.join(this.directory, 'imports', id + '.json'), 'utf8')) as PaperImport;
-      if (['building', 'repairing'].includes(value.phase)) Object.assign(value, { phase: 'failed', error: 'Papilot restarted. Retry compilation to continue this import.' });
+      if (['building', 'repairing'].includes(value.phase)) Object.assign(value, { phase: 'failed', error: 'StudyBuddy restarted. Retry compilation to continue this import.' });
       this.sessions.set(id, value);
     }
     return { ...value };

@@ -17,7 +17,7 @@ const runtime = { connected: true, authenticated: true, account: 'researcher.wit
   models: [{ id: 'model', name: 'Research model with extended context and high reasoning', isDefault: true, efforts: ['low', 'medium', 'high', 'xhigh'], defaultEffort: 'high' }] };
 const state = { version: '0.9.4-dev.' + 'a'.repeat(40), csrf: 'fixture', projects: [], tasks: [], requests: [], runtime };
 const update = { currentVersion: state.version, latestVersion: '0.9.4-dev.' + 'b'.repeat(40), phase: 'failed', checkedAt: 1, canUpdate: true, channel: 'dev',
-  error: 'Could not access C:\\Users\\Researcher\\AppData\\Local\\Papilot\\updates\\releases\\papilot-development-build-with-a-long-directory-name\\package.json' };
+  error: 'Could not access C:\\Users\\Researcher\\AppData\\Local\\StudyBuddy\\updates\\releases\\papilot-development-build-with-a-long-directory-name\\package.json' };
 const errors = [];
 let cases = 0;
 fs.mkdirSync('test-results', { recursive: true });

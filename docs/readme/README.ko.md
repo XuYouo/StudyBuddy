@@ -1,17 +1,16 @@
 <div align="center">
 
-<img src="../assets/wordmark.svg#gh-light-mode-only" width="220" height="69" alt="Papilot"><img src="../assets/wordmark-dark.svg#gh-dark-mode-only" width="220" height="69" alt="Papilot"><br>**차세대 AI LaTeX 편집기**
+<img src="../assets/wordmark.svg#gh-light-mode-only" width="270" height="66" alt="StudyBuddy"><img src="../assets/wordmark-dark.svg#gh-dark-mode-only" width="270" height="66" alt="StudyBuddy"><br>**차세대 AI LaTeX 편집기**
 
 # `.tex`을 읽거나 직접 작성하지 마세요<br>그저 <img src="../assets/pdf.svg" width="34" height="41" align="absmiddle" alt="PDF"> 위에서 작업하세요
 
 AI와 함께하는 책임감 있는 집필 및 조판의 **새로운 패러다임**.
 
 <!-- BEGIN BADGES -->
-[![License: MIT](https://img.shields.io/github/license/PapilotAI/papilot?style=flat&color=22c55e)](../../LICENSE)
-[![CI](https://img.shields.io/github/actions/workflow/status/PapilotAI/papilot/ci.yml?branch=main&style=flat&label=CI)](https://github.com/PapilotAI/papilot/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/PapilotAI/papilot?style=flat&label=release&color=0969da)](https://github.com/PapilotAI/papilot/releases/latest)
-[![GitHub total downloads](https://img.shields.io/github/downloads/PapilotAI/papilot/total?style=flat&logo=github&label=downloads&color=0969da)](https://github.com/PapilotAI/papilot/releases)
-[![npm monthly downloads](https://img.shields.io/npm/dm/papilot?style=flat&logo=npm&label=downloads&color=cb3837)](https://www.npmjs.com/package/papilot)
+[![License: MIT](https://img.shields.io/github/license/XuYouo/StudyBuddy?style=flat&color=22c55e)](../../LICENSE)
+[![CI](https://img.shields.io/github/actions/workflow/status/XuYouo/StudyBuddy/ci.yml?branch=main&style=flat&label=CI)](https://github.com/XuYouo/StudyBuddy/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/XuYouo/StudyBuddy?style=flat&label=release&color=0969da)](https://github.com/XuYouo/StudyBuddy/releases/latest)
+[![GitHub total downloads](https://img.shields.io/github/downloads/XuYouo/StudyBuddy/total?style=flat&logo=github&label=downloads&color=0969da)](https://github.com/XuYouo/StudyBuddy/releases)
 <!-- END BADGES -->
 
 <p data-language-switcher><sub><a href="../../README.md">English</a>&nbsp;· <a href="README.zh-CN.md">简体中文</a>&nbsp;· <a href="README.zh-Hant.md">繁體中文</a>&nbsp;· <a href="README.ja.md">日本語</a>&nbsp;· <a href="README.ko.md">한국어</a>&nbsp;· <a href="README.de.md">Deutsch</a>&nbsp;· <a href="README.fr.md">Français</a>&nbsp;· <a href="README.es.md">Español</a>&nbsp;· <a href="README.pt.md">Português</a>&nbsp;· <a href="README.it.md">Italiano</a>&nbsp;· <a href="README.sv.md">Svenska</a></sub></p>
@@ -60,7 +59,7 @@ AI와 함께하는 책임감 있는 집필 및 조판의 **새로운 패러다�
     <source media="(prefers-color-scheme: dark) and (max-width: 600px)" srcset="../assets/readme-showcase/notes-app-compact-dark.png">
     <source media="(prefers-color-scheme: dark)" srcset="../assets/readme-showcase/notes-app-dark.png">
     <source media="(max-width: 600px)" srcset="../assets/readme-showcase/notes-app-compact.png">
-    <img src="../assets/readme-showcase/notes-app.png" alt="PDF의 수식 주위에 상자 표시가 있고 문장이 강조 표시되어 있으며, 각각에 주석이 달리고 다음 작업에 추가된 Papilot 화면." width="900">
+    <img src="../assets/readme-showcase/notes-app.png" alt="PDF의 수식 주위에 상자 표시가 있고 문장이 강조 표시되어 있으며, 각각에 주석이 달리고 다음 작업에 추가된 StudyBuddy 화면." width="900">
   </picture>
 </p>
 
@@ -104,12 +103,12 @@ AI와 함께하는 책임감 있는 집필 및 조판의 **새로운 패러다�
 <!-- BEGIN DOWNLOADS -->
 | 운영체제 / 배포판 | 다운로드 / 패키지 | 설치 / 실행 |
 | --- | --- | --- |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="../assets/readme-icons/apple-dark.svg"><img src="../assets/readme-icons/apple.svg" width="18" height="18" align="absmiddle" alt=""></picture> **macOS** | [Apple Silicon](https://github.com/PapilotAI/papilot/releases/latest) · [Intel](https://github.com/PapilotAI/papilot/releases/latest)<br>DMG / ZIP | DMG를 열고 Papilot을 응용 프로그램 폴더로 드래그하세요. |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="../assets/readme-icons/windows-dark.svg"><img src="../assets/readme-icons/windows.svg" width="18" height="18" align="absmiddle" alt=""></picture> **Windows** | [설치 프로그램](https://github.com/PapilotAI/papilot/releases/latest) · [포터블 버전](https://github.com/PapilotAI/papilot/releases/latest)<br>x64 | 설치 프로그램을 실행하거나 포터블 버전을 바로 여세요. |
-| <img src="../assets/readme-icons/ubuntu.svg" width="18" height="18" align="absmiddle" alt=""> <img src="../assets/readme-icons/debian.svg" width="18" height="18" align="absmiddle" alt=""> **Ubuntu / Debian / Linux Mint** | [.deb](https://github.com/PapilotAI/papilot/releases/latest) | `sudo apt install ./Papilot-*.deb` |
-| <picture><source media="(prefers-color-scheme: dark)" srcset="../assets/readme-icons/linux-dark.svg"><img src="../assets/readme-icons/linux.svg" width="18" height="18" align="absmiddle" alt=""></picture> **Fedora / Arch / openSUSE** | [AppImage](https://github.com/PapilotAI/papilot/releases/latest) | `chmod +x Papilot-*.AppImage`<br>`./Papilot-*.AppImage` |
+| <picture><source media="(prefers-color-scheme: dark)" srcset="../assets/readme-icons/apple-dark.svg"><img src="../assets/readme-icons/apple.svg" width="18" height="18" align="absmiddle" alt=""></picture> **macOS** | [Apple Silicon](https://github.com/XuYouo/StudyBuddy/releases/latest) · [Intel](https://github.com/XuYouo/StudyBuddy/releases/latest)<br>DMG / ZIP | DMG를 열고 Papilot을 응용 프로그램 폴더로 드래그하세요. |
+| <picture><source media="(prefers-color-scheme: dark)" srcset="../assets/readme-icons/windows-dark.svg"><img src="../assets/readme-icons/windows.svg" width="18" height="18" align="absmiddle" alt=""></picture> **Windows** | [설치 프로그램](https://github.com/XuYouo/StudyBuddy/releases/latest) · [포터블 버전](https://github.com/XuYouo/StudyBuddy/releases/latest)<br>x64 | 설치 프로그램을 실행하거나 포터블 버전을 바로 여세요. |
+| <img src="../assets/readme-icons/ubuntu.svg" width="18" height="18" align="absmiddle" alt=""> <img src="../assets/readme-icons/debian.svg" width="18" height="18" align="absmiddle" alt=""> **Ubuntu / Debian / Linux Mint** | [.deb](https://github.com/XuYouo/StudyBuddy/releases/latest) | `sudo apt install ./StudyBuddy-*.deb` |
+| <picture><source media="(prefers-color-scheme: dark)" srcset="../assets/readme-icons/linux-dark.svg"><img src="../assets/readme-icons/linux.svg" width="18" height="18" align="absmiddle" alt=""></picture> **Fedora / Arch / openSUSE** | [AppImage](https://github.com/XuYouo/StudyBuddy/releases/latest) | `chmod +x StudyBuddy-*.AppImage`<br>`./StudyBuddy-*.AppImage` |
 | <img src="../assets/readme-icons/nixos.svg" width="18" height="18" align="absmiddle" alt=""> **NixOS** | [Nix flake](../nix.md#nixos-flake) | [`flake.nix`에 추가](../nix.md#nixos-flake) |
-| **macOS / Linux / Windows (CLI)** | [npm](https://www.npmjs.com/package/papilot) | `npm install -g papilot` |
+| **macOS / Linux / Windows (CLI)** | [npm](https://github.com/XuYouo/StudyBuddy/blob/main/docs/development-macos.md) | `npm install -g .` |
 
 Linux 패키지는 x86_64용이며 Ubuntu 22.04에서 테스트했습니다. 의존성과 AppImage/FUSE 사용법은 [데스크톱 설치 안내](../../desktop/README.md#build-and-run)를 참고하세요.
 
@@ -122,11 +121,11 @@ npm 패키지는 브라우저 인터페이스를 사용하며 Node.js 22.22+가 
 
 ## 🚀 시작하기
 
-1. **설치.** macOS, Linux, Windows용 [앱을 다운로드](#downloads)하거나 `npm install -g papilot`(Node.js 22.22+)을 실행하세요. 또한 Git과 TeX Live 또는 MacTeX이 필요합니다.
+1. **설치.** macOS, Linux, Windows용 [앱을 다운로드](#downloads)하거나 `npm install -g .`(Node.js 22.22+)을 실행하세요. 또한 Git과 TeX Live 또는 MacTeX이 필요합니다.
 2. **프로젝트 열기.** `.tex` 파일이 있는 폴더를 선택하세요. Papilot이 PDF를 빌드합니다.
 3. **에이전트 선택.** 이미 보유한 CLI 로그인이나 API 키를 사용한 뒤, 페이지에 표시를 남기세요.
 
-샘플을 먼저 체험해 보고 싶으신가요? `papilot demo`를 실행해 보세요. 자세한 내용은 [가이드](../guide.md#install-and-run)에 있습니다.
+샘플을 먼저 체험해 보고 싶으신가요? `studybuddy demo`를 실행해 보세요. 자세한 내용은 [가이드](../guide.md#install-and-run)에 있습니다.
 
 <a id="documentation-and-community"></a>
 
@@ -134,9 +133,9 @@ npm 패키지는 브라우저 인터페이스를 사용하며 Node.js 22.22+가 
 
 ## 🤝 커뮤니티
 
-<img src="../assets/readme-icons/issue.svg" width="20" height="20" align="absmiddle" alt=""> &nbsp;**버그를 발견하셨거나 필요한 기능이 있나요?** 간단한 내용이라도 좋으니 [이슈를 등록](https://github.com/PapilotAI/papilot/issues/new/choose)해 주세요.
+<img src="../assets/readme-icons/issue.svg" width="20" height="20" align="absmiddle" alt=""> &nbsp;**버그를 발견하셨거나 필요한 기능이 있나요?** 간단한 내용이라도 좋으니 [이슈를 등록](https://github.com/XuYouo/StudyBuddy/issues/new/choose)해 주세요.
 
-<img src="../assets/readme-icons/discussion.svg" width="20" height="20" align="absmiddle" alt=""> &nbsp;**질문이나 아이디어가 있으신가요?** [토론을 시작](https://github.com/PapilotAI/papilot/discussions)해 보세요.
+<img src="../assets/readme-icons/discussion.svg" width="20" height="20" align="absmiddle" alt=""> &nbsp;**질문이나 아이디어가 있으신가요?** [토론을 시작](https://github.com/XuYouo/StudyBuddy/discussions)해 보세요.
 
 <img src="../assets/readme-icons/pull-request.svg" width="20" height="20" align="absmiddle" alt=""> &nbsp;**기여자가 되어 주세요.** AI 에이전트와 함께 작성한 풀 리퀘스트(PR)를 포함하여 모든 기여를 환영합니다. [기여 가이드](../../.github/CONTRIBUTING.md)부터 확인해 보세요.
 
@@ -145,10 +144,10 @@ npm 패키지는 브라우저 인터페이스를 사용하며 Node.js 22.22+가 
 ## 기여자
 
 <p>
-  <a href="https://github.com/PapilotAI/papilot/graphs/contributors">
+  <a href="https://github.com/XuYouo/StudyBuddy/graphs/contributors">
     <picture>
       <source media="(max-width: 600px)" srcset="../assets/readme-contributors/compact.svg">
-      <img src="../assets/readme-contributors/desktop.svg" alt="Papilot 기여자">
+      <img src="../assets/readme-contributors/desktop.svg" alt="StudyBuddy 기여자">
     </picture>
   </a>
 </p>

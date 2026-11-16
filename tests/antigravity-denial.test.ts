@@ -12,7 +12,7 @@ import { taskFinished, type Task } from '../src/shared.ts';
 import type { ReviewClient } from '../src/server/review.ts';
 import { errorMessages } from '../src/web/locales/index.ts';
 
-const target = 'C:\\Users\\Author\\AppData\\Roaming\\Papilot\\environment.json';
+const target = 'C:\\Users\\Author\\AppData\\Roaming\\StudyBuddy\\environment.json';
 const step = (step_index: number, step_type: string, more: Record<string, unknown> = {}) => ({ event: 'step_update', step_update: { step_index, step_type, state: 'DONE', ...more } });
 // Replays the NDJSON lines once agy has read the prompt.
 function fakeAgy(lines: unknown[]) {

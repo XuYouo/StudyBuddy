@@ -38,7 +38,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
-          tag="$(gh api repos/PapilotAI/papilot/releases/latest --jq .tag_name)"
+          tag="$(gh api repos/XuYouo/StudyBuddy/releases/latest --jq .tag_name)"
           if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "::error::The latest published release does not have a stable version tag."; exit 1
           fi

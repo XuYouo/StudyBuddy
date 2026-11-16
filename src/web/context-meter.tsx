@@ -4,7 +4,7 @@ import { locale, t } from './i18n.ts';
 
 // How full the agent's context window is: a ring beside Send. Hovering it
 // gives the exact counts; clicking opens what fills the window, when the
-// agent can tell the parts apart (Papilot Writer names them; for Codex, the
+// agent can tell the parts apart (StudyBuddy Writer names them; for Codex, the
 // latest request's input, cached input and output).
 
 const PARTS: Record<string, () => string> = {

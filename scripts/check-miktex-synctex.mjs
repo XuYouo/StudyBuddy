@@ -1,4 +1,4 @@
-// Regression check for https://github.com/PapilotAI/papilot/issues/171.
+// Regression check for https://github.com/XuYouo/StudyBuddy/issues/171.
 // Run with Node >= 22.22: node --import tsx scripts/check-miktex-synctex.mjs
 // Add --native on Windows with MiKTeX to test its untouched compiler output.
 // Requires pdflatex. Keeps the compiled PDFs and round.json for inspection.

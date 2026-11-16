@@ -15,3 +15,5 @@ i18n/state/*.lock
 /result
 /result-*
 /.direnv/
+
+.studybuddy/

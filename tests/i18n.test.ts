@@ -38,7 +38,7 @@ test('every supported language covers the workspace catalog with intact placehol
   }
 });
 
-test('the browser language picks the first one Papilot speaks', () => {
+test('the browser language picks the first one StudyBuddy speaks', () => {
   assert.equal(browserLanguage(['zh-CN', 'en-US']), 'zh-Hans');
   assert.equal(browserLanguage(['zh-Hant']), 'zh-Hant');
   assert.equal(browserLanguage(['zh-Hans']), 'zh-Hans');

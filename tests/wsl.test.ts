@@ -8,16 +8,16 @@ import { pathToFileURL } from 'node:url';
 import http from 'node:http';
 import { decodeWsl, linuxArgs, linuxPath, readEnvironment, saveEnvironment, validEnvironment, reachableWsl } from '../desktop/wsl.ts';
 
-test('WSL readiness rejects another Papilot and unrelated services on the Windows port', async () => {
-  let health: any = { name: 'Papilot', desktopInstance: 'different-instance' };
+test('WSL readiness rejects another StudyBuddy and unrelated services on the Windows port', async () => {
+  let health: any = { name: 'StudyBuddy', desktopInstance: 'different-instance' };
   const server = http.createServer((_request, response) => { response.setHeader('Content-Type', 'application/json'); response.end(JSON.stringify(health)); });
   await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
   const url = `http://127.0.0.1:${(server.address() as any).port}`;
   try {
     assert.equal(await reachableWsl(url, 'our-instance'), false);
-    health = { name: 'Papilot' }; assert.equal(await reachableWsl(url, 'our-instance'), false);
+    health = { name: 'StudyBuddy' }; assert.equal(await reachableWsl(url, 'our-instance'), false);
     health = { name: 'Other service', desktopInstance: 'our-instance' }; assert.equal(await reachableWsl(url, 'our-instance'), false);
-    health = { name: 'Papilot', desktopInstance: 'our-instance' }; assert.equal(await reachableWsl(url, 'our-instance'), true);
+    health = { name: 'StudyBuddy', desktopInstance: 'our-instance' }; assert.equal(await reachableWsl(url, 'our-instance'), true);
   } finally { await new Promise<void>(resolve => server.close(() => resolve())); }
 });
 
@@ -50,11 +50,11 @@ test('WSL forwarding reports busy when the backend IPC closes during an idle che
   write(path.join(runtime, 'ready.json'), {}); write(path.join(runtime, 'bridge/package.json'), { type: 'module' });
   write(path.join(runtime, 'bridge/runtime.js'), `export * from ${module};`);
   const server = path.join(runtime, 'server');
-  write(path.join(server, 'package.json'), { name: 'papilot', version: '0.9.0', type: 'module' });
+  write(path.join(server, 'package.json'), { name: 'studybuddy', version: '0.9.0', type: 'module' });
   fs.symlinkSync(path.join(root, 'node_modules'), path.join(server, 'node_modules'), 'dir');
   write(path.join(server, 'src/server/start.ts'), `import fs from 'node:fs';import path from 'node:path';import http from 'node:http';const data=process.env.PAPILOT_DATA;
     fs.writeFileSync(path.join(data,'backend.pid'),String(process.pid));
-    const server=http.createServer((req,res)=>res.end(JSON.stringify({name:'Papilot',desktopInstance:process.env.PAPILOT_DESKTOP_INSTANCE})));
+    const server=http.createServer((req,res)=>res.end(JSON.stringify({name:'StudyBuddy',desktopInstance:process.env.PAPILOT_DESKTOP_INSTANCE})));
     server.listen(0,'127.0.0.1',()=>process.send({type:'papilot:ready',url:'http://127.0.0.1:'+server.address().port}));
     process.on('message',message=>{if(message.type==='papilot:can-switch') process.disconnect();});`);
   const config = Buffer.from(JSON.stringify({ id, fingerprint: '', nodeMajor: process.versions.node.split('.')[0] })).toString('base64');
@@ -146,18 +146,18 @@ for (const updating of [false, true]) test(`WSL stops a timed-out candidate befo
       let timer; const deadline=new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('fixture ready timeout')),1500)});
       return {...backend,ready:Promise.race([backend.ready,deadline]).finally(()=>clearTimeout(timer))}; }`);
   write(path.join(runtime, 'ready.json'), {});
-  write(path.join(bundle, 'package.json'), { name: 'papilot', version: '0.9.0', type: 'module' });
+  write(path.join(bundle, 'package.json'), { name: 'studybuddy', version: '0.9.0', type: 'module' });
   fs.symlinkSync(path.join(root, 'node_modules'), path.join(bundle, 'node_modules'), 'dir');
   fs.mkdirSync(path.join(bundle, 'engine'), { recursive: true });
   fs.symlinkSync(path.join(root, 'engine/node_modules'), path.join(bundle, 'engine/node_modules'), 'dir');
   write(path.join(bundle, 'src/server/start.ts'), `import fs from 'node:fs';import path from 'node:path';import http from 'node:http';
     const data=process.env.PAPILOT_DATA;
     const server=http.createServer((req,res)=>{if(req.url==='/activate'){process.send({type:'papilot:activate',...JSON.parse(fs.readFileSync(path.join(data,'activation.json'),'utf8'))});res.end('ok');}
-      else res.end(JSON.stringify({name:'Papilot',desktopInstance:process.env.PAPILOT_DESKTOP_INSTANCE}));});
+      else res.end(JSON.stringify({name:'StudyBuddy',desktopInstance:process.env.PAPILOT_DESKTOP_INSTANCE}));});
     server.listen(0,'127.0.0.1',()=>process.send({type:'papilot:ready',url:'http://127.0.0.1:'+server.address().port}));
     process.on('message',m=>{if(m.type==='papilot:shutdown')process.exit(0);});`);
   const makeLayer = () => {
-    write(path.join(layer, 'package.json'), { name: 'papilot', version: '0.9.1', type: 'module' });
+    write(path.join(layer, 'package.json'), { name: 'studybuddy', version: '0.9.1', type: 'module' });
     write(path.join(layer, 'desktop-layer.json'), { format: 1, version: '0.9.1', fingerprint });
     fs.mkdirSync(path.join(layer, 'engine'), { recursive: true });
     write(path.join(layer, 'src/server/start.ts'), `import fs from 'node:fs';import path from 'node:path';
@@ -218,13 +218,13 @@ for (const updating of [false, true]) test(`WSL shutdown prevents a new backend 
     export function startBackend(options) { const backend=start(options);
       fs.appendFileSync(path.join(options.data,'launches.jsonl'),JSON.stringify({pid:backend.child.pid,root:options.root})+'\\n');return backend; }`);
   write(path.join(runtime, 'ready.json'), {});
-  write(path.join(bundle, 'package.json'), { name: 'papilot', version: '0.9.0', type: 'module' });
+  write(path.join(bundle, 'package.json'), { name: 'studybuddy', version: '0.9.0', type: 'module' });
   fs.symlinkSync(path.join(root, 'node_modules'), path.join(bundle, 'node_modules'), 'dir');
   const source = `import fs from 'node:fs';import path from 'node:path';import http from 'node:http';const data=process.env.PAPILOT_DATA;
     if(fs.existsSync(path.join(data,'first.pid'))) {setInterval(()=>fs.appendFileSync(path.join(data,'late-writes'),'x'),50);}
     else {fs.writeFileSync(path.join(data,'first.pid'),String(process.pid));let stopping=0;
       const server=http.createServer((req,res)=>{if(req.url==='/activate') {process.send({type:'papilot:activate',...JSON.parse(fs.readFileSync(path.join(data,'activation.json'),'utf8'))});res.end('ok');}
-        else res.end(JSON.stringify({name:'Papilot',desktopInstance:process.env.PAPILOT_DESKTOP_INSTANCE}));});
+        else res.end(JSON.stringify({name:'StudyBuddy',desktopInstance:process.env.PAPILOT_DESKTOP_INSTANCE}));});
       server.listen(0,'127.0.0.1',()=>process.send({type:'papilot:ready',url:'http://127.0.0.1:'+server.address().port}));
       process.on('message',m=>{if(m.type==='papilot:can-switch')process.send({...m,busy:false});
         if(m.type==='papilot:shutdown') {fs.writeFileSync(path.join(data,'stopping'),'yes');if(++stopping===2)process.exit(0);}});}`;
@@ -247,7 +247,7 @@ for (const updating of [false, true]) test(`WSL shutdown prevents a new backend 
     const ready = JSON.parse(out.split('\n').find(line => line.startsWith('PAPILOT_CONTROL:'))!.slice(16));
     if (updating) {
       const layer = path.join(data, 'updates/desktop/layers/shutdown-layer/papilot');
-      write(path.join(layer, 'package.json'), { name: 'papilot', version: '0.9.1', type: 'module' });
+      write(path.join(layer, 'package.json'), { name: 'studybuddy', version: '0.9.1', type: 'module' });
       write(path.join(layer, 'desktop-layer.json'), { format: 1, version: '0.9.1', fingerprint });
       write(path.join(layer, 'src/server/start.ts'), source);
       write(path.join(data, 'activation.json'), { root: layer, version: '0.9.1' });
@@ -289,7 +289,7 @@ for (const { updating, active, health } of [
     export function startBackend(options) { const backend=start(options);
       fs.appendFileSync(path.join(options.data,'launches.jsonl'),String(backend.child.pid)+'\\n');return backend; }`);
   write(path.join(runtime, 'ready.json'), {});
-  write(path.join(bundle, 'package.json'), { name: 'papilot', version: '0.9.0', type: 'module' });
+  write(path.join(bundle, 'package.json'), { name: 'studybuddy', version: '0.9.0', type: 'module' });
   fs.symlinkSync(path.join(root, 'node_modules'), path.join(bundle, 'node_modules'), 'dir');
   const candidateSource = `import fs from 'node:fs';import path from 'node:path';import http from 'node:http';const data=process.env.PAPILOT_DATA;
     ${updating ? "fs.writeFileSync(path.join(data,'papilot.sqlite'),'candidate changed database');" : ''}
@@ -299,12 +299,12 @@ for (const { updating, active, health } of [
     process.on('message',m=>{if(m.type==='papilot:shutdown')process.exit(0);});`;
   write(path.join(bundle, 'src/server/start.ts'), updating || active ? `import fs from 'node:fs';import path from 'node:path';import http from 'node:http';const data=process.env.PAPILOT_DATA;
     const server=http.createServer((req,res)=>{if(req.url==='/activate'){process.send({type:'papilot:activate',...JSON.parse(fs.readFileSync(path.join(data,'activation.json'),'utf8'))});res.end('ok');}
-      else res.end(JSON.stringify({name:'Papilot',desktopInstance:process.env.PAPILOT_DESKTOP_INSTANCE}));});
+      else res.end(JSON.stringify({name:'StudyBuddy',desktopInstance:process.env.PAPILOT_DESKTOP_INSTANCE}));});
     server.listen(0,'127.0.0.1',()=>process.send({type:'papilot:ready',url:'http://127.0.0.1:'+server.address().port}));
     process.on('message',m=>{if(m.type==='papilot:shutdown')process.exit(0);});` : candidateSource);
   write(path.join(data, 'papilot.sqlite'), 'original database');
   const makeLayer = () => {
-    write(path.join(layer, 'package.json'), { name: 'papilot', version: '0.9.1', type: 'module' });
+    write(path.join(layer, 'package.json'), { name: 'studybuddy', version: '0.9.1', type: 'module' });
     write(path.join(layer, 'desktop-layer.json'), { format: 1, version: '0.9.1', fingerprint });
     write(path.join(layer, 'src/server/start.ts'), candidateSource);
   };

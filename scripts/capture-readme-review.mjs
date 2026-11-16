@@ -1,4 +1,4 @@
-// The README's screenshots of Papilot: the real web UI (dist/), review
+// The README's screenshots of StudyBuddy: the real web UI (dist/), review
 // engine and TeX renderer, on a disposable one-page example paper. No
 // account, agent or user manuscript is involved: /api/** is answered here
 // (the task, its conversation and the Git state are made up), while
@@ -22,7 +22,7 @@
 // - test-results/readme-review/review-app{,-dark}-raw{,.zh-CN}.png: the
 //   task's review in the desktop app, unframed and without the window
 //   controls, whose left 890 px scripts/capture-readme-showcase.mjs puts in
-//   the homepage's Papilot card.
+//   the homepage's StudyBuddy card.
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
@@ -161,7 +161,7 @@ Starting a task every ten minutes, each taking six, gives $A = 0.6$ and $C(2, A)
     });
     await page.route('**/review/paper/**', async route => {
       const url = new URL(route.request().url()), relative = url.pathname.slice('/review/paper'.length);
-      // Papilot itself serves the round's complete PDF, for the review's full paper.
+      // StudyBuddy itself serves the round's complete PDF, for the review's full paper.
       if (/^\/pdf\/[^/]+\/\d+$/.test(relative)) return route.fulfill({ contentType: 'application/pdf', body: fs.readFileSync(revised.pdf) });
       if (/^\/pdf\/[^/]+\/\d+\/passes$/.test(relative)) return route.fulfill({ json: { pass: null } });
       const response = await reviewServer.inject({ method: route.request().method(), url: relative + url.search, headers: { host: '127.0.0.1:9', 'x-review-token': app.csrf }, payload: route.request().postData() || undefined });
@@ -215,7 +215,7 @@ Starting a task every ten minutes, each taking six, gives $A = 0.6$ and $C(2, A)
     await page.close();
     if (!file) return;
 
-    // Frame the capture as a window, as the homepage draws Papilot. On a Mac
+    // Frame the capture as a window, as the homepage draws StudyBuddy. On a Mac
     // the window controls sit in the toolbar row, where desktop/main.ts puts
     // them (trafficLightPosition 18, 16).
     const frame = await browser.newPage({ colorScheme: scheme, viewport: { width: 1400, height: 1000 }, deviceScaleFactor: 2 });

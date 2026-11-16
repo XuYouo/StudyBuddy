@@ -57,7 +57,7 @@ export interface Task {
   /** How full the agent's context window was after its latest reply. */
   context?: ContextUsage | null;
   worktree: string; threadId: string | null; turnId: string | null; agent?: AgentId; model: string | null; effort?: string | null; serviceTier?: string;
-  // The agent's thread was started with Papilot's view_pdf tool.
+  // The agent's thread was started with StudyBuddy's view_pdf tool.
   viewPdf?: boolean;
   status: TaskStatus; createdAt: number; updatedAt: number; feedbackCursor: number;
   archivedAt?: number | null;
@@ -97,11 +97,11 @@ export interface TimelineItem { id: string; taskId: string; type: string; text: 
 export interface FileEdit { path: string; diff?: string; added: number; removed: number; places?: EditPlace[] }
 /** Changes within one part of the paper: its sections (innermost last), the page it starts on, and the lines changed. */
 export interface EditPlace { sections: { number: string; title: string }[]; page?: string; lines: string; added: number; removed: number }
-/** A page an agent looked at, kept by Papilot so the chat can show it. */
+/** A page an agent looked at, kept by StudyBuddy so the chat can show it. */
 export interface PageView { index: number; label: string | null; file: string }
 // A user message can run a skill or carry review feedback; the chat shows
 // those as what they are rather than as the prompt the agent receives.
-// Papilot itself sends the agent a build its own edits broke.
+// StudyBuddy itself sends the agent a build its own edits broke.
 export interface NoteAnchor { sources: { file: string; lines: [number, number] }[]; round?: number }
 // paper: where a note made in the task's PDF reader was, so its page can be
 // shown to the agent; context: what the agent is told beyond its location.
@@ -126,11 +126,11 @@ export interface FeedbackSummary { round: number | null; accepted: number; rejec
 export interface Skill { output?: 'annotations'; id: string; name: string; description: string; hint: string; icon?: SkillIcon; source: 'builtin' | 'user' | 'paper' }
 export interface PendingRequest { id: string; taskId: string; method: string; params: Record<string, any>; createdAt: number }
 export type AgentId = 'papilot' | 'codex' | 'claude' | 'antigravity' | 'kimi' | 'cursor' | 'copilot' | 'grok' | 'opencode' | 'qwen' | 'glm' | 'deepseek';
-// Every agent Papilot can drive, in menu order. Only the ones found on the host are offered.
+// Every agent StudyBuddy can drive, in menu order. Only the ones found on the host are offered.
 export const AGENT_IDS: AgentId[] = ['papilot', 'codex', 'claude', 'cursor', 'copilot', 'grok', 'antigravity', 'kimi', 'glm', 'deepseek', 'qwen', 'opencode'];
-export const AGENT_NAMES: Record<AgentId, string> = { papilot: 'Papilot Writer', codex: 'Codex', claude: 'Claude', cursor: 'Cursor', copilot: 'Copilot', grok: 'Grok', antigravity: 'Antigravity', kimi: 'Kimi', glm: 'GLM', deepseek: 'DeepSeek', qwen: 'Qwen', opencode: 'OpenCode' };
-// Papilot Writer's providers: subscriptions it signs in to, and API keys
-// stored by Papilot or read from the environment.
+export const AGENT_NAMES: Record<AgentId, string> = { papilot: 'StudyBuddy Writer', codex: 'Codex', claude: 'Claude', cursor: 'Cursor', copilot: 'Copilot', grok: 'Grok', antigravity: 'Antigravity', kimi: 'Kimi', glm: 'GLM', deepseek: 'DeepSeek', qwen: 'Qwen', opencode: 'OpenCode' };
+// StudyBuddy Writer's providers: subscriptions it signs in to, and API keys
+// stored by StudyBuddy or read from the environment.
 export interface WriterProvider { id: string; name: string; kind: 'login' | 'key'; env?: string; configured: boolean; source: 'stored' | 'environment' | null }
 export interface WriterLogin { id: string; provider: string; name: string; status: 'waiting' | 'done' | 'failed' | 'cancelled'; url: string | null; instructions: string | null; error: string | null; startedAt: number }
 export interface WriterAuth { providers: WriterProvider[]; logins: WriterLogin[] }

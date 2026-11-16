@@ -135,7 +135,7 @@ export class Deliveries {
       data.parent = last?.commit ?? await app.repo.revAsync(`${task.base}^`);
       current = await app.repo.blobsAsync(data.parent, files);
       const ref = await app.repo.textAsync(["show-ref", "--verify", "--hash", `refs/heads/${data.branch}`], { check: false });
-      if (ref !== (data.previous ?? "")) throw new Error("The task branch was changed outside Papilot. Nothing was committed.");
+      if (ref !== (data.previous ?? "")) throw new Error("The task branch was changed outside StudyBuddy. Nothing was committed.");
       await this.assertBranchAvailable(data.branch);
     } else {
       await this.assertNoMerge();

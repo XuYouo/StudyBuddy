@@ -92,7 +92,7 @@ test('a destination conflict writes no files and a task commit never overwrites 
     assert.equal(disk.read('paper/main.tex'), main);
     assert.equal(app.delivery.get(task.name), undefined);
     disk.repo.run(['branch', 'papilot/conflict']);
-    await assert.rejects(async () => app.delivery.deliver(task.name, 'branch', 'Commit'), /changed outside Papilot/);
+    await assert.rejects(async () => app.delivery.deliver(task.name, 'branch', 'Commit'), /changed outside StudyBuddy/);
   } finally { await disk.close(); }
 });
 

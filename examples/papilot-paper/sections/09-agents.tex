@@ -43,7 +43,7 @@ Codex speaks this protocol natively. Claude runs through the Claude Agent SDK,
 Antigravity runs the \texttt{agy} command line once per turn, and Kimi Code
 runs \texttt{kimi acp}; adapters translate their interfaces into the same
 requests and notifications. Kimi sessions resume after a restart. Each
-agent uses its own login on the host, and Papilot never reads, stores or
+agent uses its own login on the host, and StudyBuddy never reads, stores or
 forwards a credential. An agent that cannot ask for permission, such as a
 headless command line, is told in advance which tools it may not use.
 
@@ -72,7 +72,7 @@ turn must be paid for again, and so must the author's review of it.
 \subsection{Queueing}
 
 Tasks arrive at rate $\nu$ and occupy a slot for a mean time $1/\omega$. With
-$c$ slots, exponential times and offered load $A = \nu/\omega < c$, Papilot is
+$c$ slots, exponential times and offered load $A = \nu/\omega < c$, StudyBuddy is
 an $M/M/c$ queue~\cite{kleinrock1975}. The probability that a new task waits is
 given by the Erlang~C formula~\cite{erlang1917}:
 \begin{equation}
@@ -105,5 +105,5 @@ answers after a mean delay $\Theta$, the expected wall-clock time of the turn is
 \end{equation}
 which motivates reducing unnecessary approval requests. Codex and Claude can
 run sandboxed commands under their permission policies; Kimi uses manual
-approvals for tools on the host, without a Papilot sandbox. Antigravity edits
-files but cannot run shell commands in Papilot.
+approvals for tools on the host, without a StudyBuddy sandbox. Antigravity edits
+files but cannot run shell commands in StudyBuddy.

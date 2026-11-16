@@ -3,11 +3,11 @@
     "id": "example-clarity",
     "title": "Put the design philosophy into words",
     "agent": "codex",
-    "prompt": "Sharpen this illustrated Papilot introduction. Make the opening describe the workflow, spell out the author's review choices, and trim the two filler phrases. Keep the product images and design principles intact.",
+    "prompt": "Sharpen this illustrated StudyBuddy introduction. Make the opening describe the workflow, spell out the author's review choices, and trim the two filler phrases. Keep the product images and design principles intact.",
     "answer": "The opening now walks through **PDF notes → LaTeX edits → typeset review**. The philosophy names the author's actual choices: accept, reject, or request another pass. I removed the filler while preserving the illustrations, local-file ownership and agent choice. Use **LaTeX** to inspect the wording, or comment directly on either typeset change.",
     "edits": [
       {
-        "old": "Papilot brings PDF notes, coding agents, and typeset review into one workspace.",
+        "old": "StudyBuddy brings PDF notes, coding agents, and typeset review into one workspace.",
         "new": "Mark the PDF. Let your agent edit the LaTeX. Review every typeset change."
       },
       {
@@ -61,7 +61,7 @@
     "answer": "**Prepared demo result — no agent was run.**\n\nThe opening now names the three actions: mark the PDF, let your agent edit the LaTeX, and review each typeset change.",
     "edits": [
       {
-        "old": "Papilot brings PDF notes, coding agents, and typeset review into one workspace.",
+        "old": "StudyBuddy brings PDF notes, coding agents, and typeset review into one workspace.",
         "new": "Mark the PDF. Let your agent edit the LaTeX. Review every typeset change."
       }
     ]
@@ -151,7 +151,7 @@
     "notes": [
       "note-ending"
     ],
-    "prompt": "Use Download Papilot to run this workflow on a real project. Notes and the prepared reviews work here in the static demo.",
+    "prompt": "Use Download StudyBuddy to run this workflow on a real project. Notes and the prepared reviews work here in the static demo.",
     "answer": "**Prepared demo result — no agent was run.**\n\nThe closing line now spells out the next steps after download: open a local LaTeX project, connect an agent, and review a real edit.",
     "edits": [
       {

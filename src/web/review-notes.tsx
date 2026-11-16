@@ -228,7 +228,7 @@ export function ReviewNotes({ doc, task, onComment, railSlot }: { railSlot: HTML
     doc.addEventListener('pointerdown', press);
     doc.addEventListener('pointerup', marked);
     doc.addEventListener('touchend', tapEnd, { passive: false });
-    // Touch screens select glyphs with Papilot's own handles and menu
+    // Touch screens select glyphs with StudyBuddy's own handles and menu
     // (review-notes.css turns native selection off there).
     touch.current = touchSelection<Layer>(doc, {
       target: element => { const strip = element.closest('.pdf-text')?.closest<HTMLElement>('.pdf-strip'); return strip ? mounted.get(strip) : undefined; },

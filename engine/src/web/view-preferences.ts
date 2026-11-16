@@ -1,7 +1,7 @@
 // Whole paper ("paper") or changed sections only ("changes"). Reviews open on
 // the stored default: the changed sections, which show fastest, unless the
-// whole paper was chosen in Papilot's settings. Switching views lasts for the
-// open review only. A host such as Papilot shows its own switch and tells this
+// whole paper was chosen in StudyBuddy's settings. Switching views lasts for the
+// open review only. A host such as StudyBuddy shows its own switch and tells this
 // frame; storage events bring a new default to reviews already open.
 export const VIEW_STORAGE = "papilot:review:default-view";
 export const VIEW_EVENT = "papilot:review:view-changed";

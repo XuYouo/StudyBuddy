@@ -1,4 +1,4 @@
-// Real engine and Papilot routes, with only the agent and manuscript builds
+// Real engine and StudyBuddy routes, with only the agent and manuscript builds
 // replaced. All files and servers belong to this disposable fixture.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -104,7 +104,7 @@ try {
   assert.equal(app.review.pageState(task.name).decisions.c003, 'pending');
   assert.deepEqual(builds, []);
   assert.deepEqual(errors, []);
-  console.log('PASS: real Papilot decisions do not build the manuscript; desktop and phone batches include only comparable changes; failure keeps the inserted round and gates its missing comparison.');
+  console.log('PASS: real StudyBuddy decisions do not build the manuscript; desktop and phone batches include only comparable changes; failure keeps the inserted round and gates its missing comparison.');
 } finally {
   release(); Builder.prototype.build = original;
   await browser.close(); await server.close(); workspace.close(); store.close();

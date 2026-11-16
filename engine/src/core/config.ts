@@ -41,14 +41,14 @@ export function readBuildOverrides(root: string, defaults?: Record<string, unkno
 }
 export function saveBuildOverrides(root: string, settings: BuildOverrides) {
   const file = buildOverridesFile(root);
-  if (!file) throw new Error("The Papilot data directory is unavailable.");
+  if (!file) throw new Error("The StudyBuddy data directory is unavailable.");
   const project = realPath(root), folder = path.resolve(path.dirname(file));
   let ancestor = folder;
   while (!fs.existsSync(ancestor) && path.dirname(ancestor) !== ancestor) ancestor = path.dirname(ancestor);
   const location = path.join(realPath(ancestor), path.relative(ancestor, folder));
   const relative = path.relative(project, location);
   if (relative !== ".." && !relative.startsWith(".." + path.sep) && !path.isAbsolute(relative))
-    throw new Error("The Papilot data directory for build settings must be outside the paper.");
+    throw new Error("The StudyBuddy data directory for build settings must be outside the paper.");
   writeJson(file, { project, defaults: buildDefaults(readSettings(root)), settings }, 0o600);
 }
 
@@ -82,7 +82,7 @@ const PREFERRED = [
 const read = (root: string, file: string) =>
   fs.readFileSync(path.join(root, file), "utf8");
 /** A paper's settings, in its Git directory. Usually there are none: the
- *  root document and engine are detected, and Papilot saves what the author
+ *  root document and engine are detected, and StudyBuddy saves what the author
  *  chooses instead. */
 export const settingsFile = (root: string) => path.join(stateOf(root), "settings.json");
 // The settings file as the author finds it, for messages: relative to the

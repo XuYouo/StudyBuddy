@@ -17,7 +17,7 @@ export interface ViewRequest {
   locations?: string[];
   pages?: string[];
   accepted?: boolean;
-  /** Only compile and report problems, drawing no pages (Papilot Writer's check_build). */
+  /** Only compile and report problems, drawing no pages (StudyBuddy Writer's check_build). */
   check?: boolean;
   /** Compile every chapter, so the paper map includes the whole current outline. */
   full?: boolean;
@@ -44,7 +44,7 @@ export interface ViewResult {
   seconds?: number;
   errors?: string[];
   warnings?: string[];
-  /** With check: where the build is, for Papilot Writer's paper map. */
+  /** With check: where the build is, for StudyBuddy Writer's paper map. */
   compiled?: { pdf: string; root: string; cwd: string; sourceDir: string };
 }
 // How far from an asked-for line SyncTeX may look for one that printed

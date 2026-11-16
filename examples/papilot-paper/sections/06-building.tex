@@ -37,7 +37,7 @@ equal trees and, by \cref{eq:key}, equal keys.
 
 \subsection{When to build}
 
-While the PDF view is open, Papilot checks the working tree every second and
+While the PDF view is open, StudyBuddy checks the working tree every second and
 a half during a build, every fifteen seconds otherwise, and whenever the window
 regains focus. Let checks happen at rate at least $\varphi$, edits at rate
 $\mu$ and builds take time $\beta$. A build that is running when the tree
@@ -65,6 +65,6 @@ subsequence of their hashes,
   \text{ increasing},\ h(p_i) = h(p'_j)\ \forall (i,j) \in S \Bigr\},
 \end{equation}
 computed in $O\bigl((N + M) D\bigr)$ time, where $D = N + M - 2\abs{S}$ is the
-size of the edit script~\cite{myers1986}. Papilot's review goes further and
+size of the edit script~\cite{myers1986}. StudyBuddy's review goes further and
 renders only the strips of each page around the changed source lines, so that
 a one-word change is reviewed as one or two lines of typeset text.

@@ -1,4 +1,4 @@
-// The feedback route Papilot polls to bring the author's decisions, comments
+// The feedback route StudyBuddy polls to bring the author's decisions, comments
 // and build failures back to the agent.
 import { beforeEach, afterEach, it, expect } from "vitest";
 import { Fixture, METHOD, fakeRound } from "./helpers.ts";

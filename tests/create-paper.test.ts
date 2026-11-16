@@ -30,7 +30,7 @@ test('new paper has portable source and its own clean Git history, including Uni
   assert.equal(project.path, path.join(f.parent, input.name));
   assert.equal(fs.readFileSync(path.join(project.path, 'main.tex'), 'utf8'), NEW_PAPER_SOURCE);
   assert.equal(/[^\x00-\x7f]/.test(NEW_PAPER_SOURCE), false, 'A Unicode label does not require a Unicode TeX engine');
-  assert.equal(git(project.path, 'log', '-1', '--format=%s'), 'Create paper in Papilot');
+  assert.equal(git(project.path, 'log', '-1', '--format=%s'), 'Create paper in StudyBuddy');
   assert.equal(git(project.path, 'status', '--porcelain'), '');
   assert.deepEqual(git(project.path, 'ls-files').split('\n'), ['.gitignore', 'main.tex']);
   fs.writeFileSync(path.join(project.path, 'main.pdf'), 'compiled output');

@@ -67,11 +67,12 @@ test('the development desktop app ignores legacy web update state and rejects in
     const status = await (await fetch(url + '/api/updates')).json();
     assert.equal(status.currentVersion, version); assert.equal(status.phase, 'idle');
     assert.equal(status.canUpdate, false); assert.equal(status.channel, undefined, 'Only packaged apps choose a channel');
-    assert.equal(status.downloadUrl, 'https://github.com/PapilotAI/papilot/releases');
+    assert.equal(status.downloadUrl, undefined);
+    assert.equal(status.packageManager, 'managed');
     for (const [route, body] of [['install', { version: '999.0.0' }], ['channel', { channel: 'dev' }]] as const) {
       const response = await fetch(`${url}/api/updates/${route}`, { method: 'POST',
         headers: { 'Content-Type': 'application/json', Origin: url, 'X-Papilot-Token': state.csrf }, body: JSON.stringify(body) });
-      assert.equal(response.status, 400); assert.match(await response.text(), /desktop updates/);
+      assert.equal(response.status, 400); assert.match(await response.text(), /managed outside StudyBuddy/);
     }
     assert.deepEqual(readJson(path.join(data, 'updates/status.json')), saved);
   } finally { await backend.stop(); fs.rmSync(data, { recursive: true, force: true }); }
@@ -143,7 +144,7 @@ for (const mode of ['concurrent', 'failed send', 'throwing send', 'unresponsive'
 // A downloaded layer, laid out as the updater extracts it.
 function layer(data: string, version: string, shell = fingerprint) {
   const root = path.join(data, 'updates/desktop/layers', `${version}-x`, 'papilot');
-  write(path.join(root, 'package.json'), { name: 'papilot', version });
+  write(path.join(root, 'package.json'), { name: 'studybuddy', version });
   write(path.join(root, 'desktop-layer.json'), { format: 1, version, fingerprint: shell });
   write(path.join(root, 'src/server/start.ts'), '');
   fs.mkdirSync(path.join(root, 'engine'), { recursive: true });
@@ -152,7 +153,7 @@ function layer(data: string, version: string, shell = fingerprint) {
 function fixture() {
   const data = fs.mkdtempSync(path.join(os.tmpdir(), 'papilot-desktop-layers-'));
   const bundle: Bundle = { root: path.join(data, 'app/server'), version: '0.9.0', fingerprint };
-  write(path.join(bundle.root, 'package.json'), { name: 'papilot', version: '0.9.0' });
+  write(path.join(bundle.root, 'package.json'), { name: 'studybuddy', version: '0.9.0' });
   fs.mkdirSync(path.join(bundle.root, 'node_modules/.bin'), { recursive: true }); fs.mkdirSync(path.join(bundle.root, 'engine/node_modules'), { recursive: true });
   const folder = path.join(data, 'updates/desktop');
   return { data, bundle, active: path.join(folder, 'active.json'), status: path.join(folder, 'status.json'), lock: path.join(folder, 'install.lock'), close: () => fs.rmSync(data, { recursive: true, force: true }) };
@@ -174,7 +175,7 @@ test('the app runs a downloaded layer only on the installer shell it was built f
     write(f.active, { ...record, version: '0.9.2' });
     assert.equal(activeLayer(f.data, f.bundle), null, 'The recorded version must match the package');
     const outside = path.join(f.data, 'elsewhere/papilot');
-    write(path.join(outside, 'package.json'), { name: 'papilot', version }); write(path.join(outside, 'desktop-layer.json'), { version, fingerprint }); write(path.join(outside, 'src/server/start.ts'), '');
+    write(path.join(outside, 'package.json'), { name: 'studybuddy', version }); write(path.join(outside, 'desktop-layer.json'), { version, fingerprint }); write(path.join(outside, 'src/server/start.ts'), '');
     write(f.active, { ...record, root: outside });
     assert.equal(activeLayer(f.data, f.bundle), null, 'Only the updater directory is trusted');
   } finally { f.close(); }

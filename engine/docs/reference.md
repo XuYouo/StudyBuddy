@@ -1,6 +1,6 @@
 # Reference
 
-How Papilot's review engine works, for contributors. Papilot drives every step below over the engine's HTTP API.
+How StudyBuddy's review engine works, for contributors. StudyBuddy drives every step below over the engine's HTTP API.
 
 ## How it works
 
@@ -20,7 +20,7 @@ author:                             review page: Accept · Reject · Comment, pe
 - Exact equal word fragments nominate moved passages. A passage must share at least 20 letters and digits, or complete an already matched word split by typesetting. Matched occurrences are consumed individually, allowing compound moves. Source-owned moved words appear in light blue; untouched text reordered around a float remains context.
 - Equal text is also checked for glyph shape, colour, size and relative placement. Source layout and matched glyphs provide the alignment reference; aligned page ink at 2x resolution verifies candidate differences. This finite sampling is not a proof of arbitrary PDF equivalence.
 - Indirect comparison also includes non-text paths, images, masks and shading. PDF clip scopes provide shared drawing coordinates, so an entire clipped figure can reflow while a point moving within it remains a change. Without a separate scope, drawing primitives share the page frame; PDF does not always preserve an author's intended figure boundaries. Matched text glyphs provide the reference for changes in drawing/text overlap. Final composed pixels verify candidate effects, and their previews retain the full physical area, including margins and column boundaries.
-- Indirect changes, a setting in Papilot, additionally find effects outside an edit's own crop, such as macro uses and renumbered references. This option is off by default and persists for later publishes of the task. Extra variant compilations determine which combination of edits reproduces each final effect; identical requests are cached. The displayed combination is verified to be sufficient, including when individually sufficient edits cancel each other. It need not be minimal or enumerate every alternative cause. Accepting or rejecting still applies only to the selected edit. The first three previews load with the round; more load on request.
+- Indirect changes, a setting in StudyBuddy, additionally find effects outside an edit's own crop, such as macro uses and renumbered references. This option is off by default and persists for later publishes of the task. Extra variant compilations determine which combination of edits reproduces each final effect; identical requests are cached. The displayed combination is verified to be sufficient, including when individually sufficient edits cancel each other. It need not be minimal or enumerate every alternative cause. Accepting or rejecting still applies only to the selected edit. The first three previews load with the round; more load on request.
 - The comparison has no time-based partial result or variant-count cap. A renderer process timeout or compilation failure is reported as a failure, never as a successful truncated diff, and cannot establish a smaller sufficient combination.
 - Every build of a day prints the same date: TeX's `SOURCE_DATE_EPOCH` is set to noon UTC of the local date (with `FORCE_SOURCE_DATE`), unless you set it yourself, and it is part of the build cache key. A build kept from an earlier day therefore never differs from today's by `\today` alone; `\time` prints 12:00.
 - Each round shows what is still proposed and not accepted. Undecided changes carry over, and revised changes show the comment they answer.
@@ -28,7 +28,7 @@ author:                             review page: Accept · Reject · Comment, pe
 
 ## Configuration
 
-Usually none. The root document comes from `@default_files` in a `latexmkrc`, or is the only `.tex` file with `\documentclass`. The engine comes from a `% !TEX program` line, `$pdf_mode` in the latexmkrc, or the packages used (`fontspec` means XeLaTeX). Papilot saves the author's choices, and other overrides, in `.git/papilot/settings.json`.:
+Usually none. The root document comes from `@default_files` in a `latexmkrc`, or is the only `.tex` file with `\documentclass`. The engine comes from a `% !TEX program` line, `$pdf_mode` in the latexmkrc, or the packages used (`fontspec` means XeLaTeX). StudyBuddy saves the author's choices, and other overrides, in `.git/papilot/settings.json`.:
 
 | Setting | Meaning |
 | --- | --- |
@@ -41,13 +41,13 @@ Usually none. The root document comes from `@default_files` in a `latexmkrc`, or
 | `dependencies` | For partial builds: `\include` target → targets that must be compiled with it |
 | `figures` | Folders whose files are reviewed as whole figures (default: `figures/` or `figs/` beside the root document) |
 | `worktrees` | Where task worktrees go (default: `../<repository>-tasks/`) |
-| `build_workers` | Number of independent tasks compiled and rendered concurrently, from 1 to 8 (default: 1). Restart Papilot after changing it. |
+| `build_workers` | Number of independent tasks compiled and rendered concurrently, from 1 to 8 (default: 1). Restart StudyBuddy after changing it. |
 
 For example, add `"build_workers": 2` to let a small edit run while another task
 is building or rendering. Rounds of the same task still run in order, and repeated
 requests for a waiting round coalesce. Shared build snapshots retain their cache
 locks. Cache cleanup runs only when all publishing workers are idle.
-Papilot starts the engine with the new setting after it restarts. Let active
+StudyBuddy starts the engine with the new setting after it restarts. Let active
 builds finish before restarting.
 
 ## Limits and guarantees
@@ -57,7 +57,7 @@ builds finish before restarting.
 - A task's first publish compiles the whole document once; later rounds reuse it.
 - The user's branch, `HEAD` and staging area are never touched; snapshots use a private index. Writes are journaled, so an interrupted accept or undo completes when the server restarts.
 - State lives in `.git/papilot/` and `refs/papilot/`. Deleting a task removes its worktree, rounds and refs.
-- One local server per repository. It listens on 127.0.0.1 only, rejects cross-origin requests, restarts itself when Papilot is updated, and exits after 12 idle hours.
+- One local server per repository. It listens on 127.0.0.1 only, rejects cross-origin requests, restarts itself when StudyBuddy is updated, and exits after 12 idle hours.
 
 ## The example
 
@@ -83,6 +83,6 @@ tests/browser/             native selection, clipboard and review interaction
 scripts/                   pinned corpus validation
 ```
 
-The server retains the existing SQLite schema, task refs, worktrees and API routes. Updating Papilot rebuilds the UI; the client waits for an idle old server before restarting it, normally on the same port. Old rendered rounds remain readable, but need rerendering to gain a selectable text layer.
+The server retains the existing SQLite schema, task refs, worktrees and API routes. Updating StudyBuddy rebuilds the UI; the client waits for an idle old server before restarting it, normally on the same port. Old rendered rounds remain readable, but need rerendering to gain a selectable text layer.
 
 The preview uses paths for exact PDF appearance and transparent positioned Unicode glyphs for selection. Copying equations follows the PDF’s text extraction order; it does not reconstruct LaTeX. Source view remains available for exact TeX.

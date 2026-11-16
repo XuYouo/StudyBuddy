@@ -20,7 +20,7 @@ export function guard(app: FastifyInstance, { listener, csrf }: { listener: List
     const denied = authorize(request.headers, request.raw.socket.remoteAddress, listener.port, listener.publicOrigin, listener.owner);
     if (denied) return reply.code(403).send({ error: denied });
     // Serve authenticates the owner; Funnel must never expose the workspace.
-    if (request.headers['tailscale-funnel-request']) return reply.code(403).send({ error: 'Use your authorized Tailscale account to access Papilot.' });
+    if (request.headers['tailscale-funnel-request']) return reply.code(403).send({ error: 'Use your authorized Tailscale account to access StudyBuddy.' });
     if (!request.is404 && request.method === 'POST' && request.routeOptions.config.csrf !== false && !equals(String(request.headers['x-papilot-token'] || ''), csrf)) {
       return reply.code(403).send({ error: 'This page has expired. Refresh it and try again.' });
     }

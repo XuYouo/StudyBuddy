@@ -60,7 +60,7 @@ export class Store extends EventEmitter {
     this.project(id);
     const tasks = (this.db.prepare('SELECT id FROM tasks WHERE project_id=?').all(id) as { id: string }[]).map(row => row.id);
     this.transaction(() => {
-      // Only Papilot records are removed. Never finish review tasks or touch their files.
+      // Only StudyBuddy records are removed. Never finish review tasks or touch their files.
       this.db.prepare('INSERT OR IGNORE INTO deleted_tasks SELECT id, ? FROM tasks WHERE project_id=?').run(Date.now(), id);
       for (const table of ['items', 'runs', 'ai_review_inputs']) this.db.prepare(`DELETE FROM ${table} WHERE task_id IN (SELECT id FROM tasks WHERE project_id=?)`).run(id);
       for (const task of tasks) { const prefix = `note-options:${task}:`; this.db.prepare('DELETE FROM settings WHERE substr(key,1,?)=?').run(prefix.length, prefix); }

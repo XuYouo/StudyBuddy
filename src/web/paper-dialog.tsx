@@ -37,7 +37,7 @@ export function PaperDialog({ paper, save, remove, onClose }: { paper: Project; 
     <section className="modal paper-dialog">
       <button className="modal-close icon-button" aria-label={t('Close')} disabled={busy} onClick={onClose}><Icon name="close"/></button>
       <h2 id="paper-dialog-title">{confirming ? t('Remove paper?') : t('Edit paper')}</h2>
-      {confirming ? <><p className="paper-dialog-name">{paper.name}</p><p>{t('Remove this paper and its tasks, conversations and notes from Papilot?')}</p><p>{t('Files on disk, Git history and task worktrees will stay in place.')}</p></> : !nativeFolders && <p className="modal-description">{t('LaTeX Git repository · Requires a commit and latexmk')}</p>}
+      {confirming ? <><p className="paper-dialog-name">{paper.name}</p><p>{t('Remove this paper and its tasks, conversations and notes from StudyBuddy?')}</p><p>{t('Files on disk, Git history and task worktrees will stay in place.')}</p></> : !nativeFolders && <p className="modal-description">{t('LaTeX Git repository · Requires a commit and latexmk')}</p>}
       <form onSubmit={event => { event.preventDefault(); void submit(); }}>
         {!confirming && (nativeFolders ? <>
           <label>{t('Paper name')}<input name="name" value={form.name} onChange={event => setForm({ ...form, name: event.target.value })} required maxLength={120} disabled={busy} autoComplete="off"/></label>
@@ -65,7 +65,7 @@ export function PaperDialog({ paper, save, remove, onClose }: { paper: Project; 
         <div className="button-row paper-dialog-actions">
           {!confirming && <button type="button" data-remove className="button ghost danger-text paper-remove" disabled={busy} onClick={() => { setError(''); setConfirming(true); }}><Icon name="trash" size={15}/>{t('Remove paper')}</button>}
           <button type="button" data-cancel className="button secondary" disabled={busy} onClick={cancel}>{t('Cancel')}</button>
-          <button className={'button ' + (confirming ? 'danger' : 'primary')} type="submit" disabled={busy || (!confirming && (!form.name.trim() || !form.path.trim()))}>{busy ? confirming ? t('Removing…') : t('Saving…') : confirming ? t('Remove from Papilot') : t('Save')}</button>
+          <button className={'button ' + (confirming ? 'danger' : 'primary')} type="submit" disabled={busy || (!confirming && (!form.name.trim() || !form.path.trim()))}>{busy ? confirming ? t('Removing…') : t('Saving…') : confirming ? t('Remove from StudyBuddy') : t('Save')}</button>
         </div>
       </form>
     </section>

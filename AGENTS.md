@@ -1,6 +1,6 @@
-# Papilot development guide
+# StudyBuddy development guide
 
-Repository guidelines for coding agents working in Papilot. See [CONTRIBUTING](.github/CONTRIBUTING.md) for setup and pull request basics.
+Repository guidelines for coding agents working in StudyBuddy. See [CONTRIBUTING](.github/CONTRIBUTING.md) for setup and pull request basics.
 
 ## Workflow
 
@@ -33,7 +33,7 @@ For HTML, CSS and client-side JavaScript or TypeScript in `src/web/`, `engine/sr
 
 Run the CLI pinned to an exact release, `npx -y modern-web-guidance@1.0.0 <command>`, never `@latest`: published npm versions are immutable, so a later compromised release cannot run in the checkout. Bump the version in a reviewed change.
 
-1. Search once per platform capability or UI pattern with a generic 2–5 word query that names the UI primitive, without React, Papilot, file or manuscript names: `search "light dismiss dialog"`. If the results are weak, rephrase once with the concrete element (`dialog`, `popover`, `textarea`, `table`); if nothing matches, proceed without a guide.
+1. Search once per platform capability or UI pattern with a generic 2–5 word query that names the UI primitive, without React, StudyBuddy, file or manuscript names: `search "light dismiss dialog"`. If the results are weak, rephrase once with the concrete element (`dialog`, `popover`, `textarea`, `table`); if nothing matches, proceed without a guide.
 2. Retrieve the matching guides together with the discipline guide that applies (`html`, `css`, `forms`, `accessibility`, `performance`, `security`): `retrieve "dialog,accessibility"`. When the CLI saves long output to a temporary file, read that file in full.
 3. Adapt the vanilla examples to React without dropping the platform feature: call `showModal()` through refs, use `useId()` for per-instance IDs and anchor names, and keep `:root` and `@starting-style` rules unscoped. Check the result against the guide before finishing.
 4. Name the guide IDs that shaped the change, and the pitfall each avoided, in the final report and PR description.
@@ -96,4 +96,4 @@ Root tests use Node's test runner (`node --import tsx --test tests/NAME.test.ts`
   2. Keep `package.json`, `package-lock.json`, `CHANGELOG.md` (with compare links) and `docs/releases/VERSION/release-notes.md` consistent.
   3. Credit external contributors and issue reporters with verified GitHub handles and contribution links, keeping repository notes and the GitHub release body in sync.
   4. Verify tests, native platform results, translations, docs and visual assets; document user-visible changes, installation/update steps and known limitations.
-  5. Push a `vVERSION` tag to start the release workflow. The GitHub release title is `Papilot VERSION`, and its body uses curated versioned notes when available, otherwise the changelog. Verify the workflow, native installers, npm package and update assets through completion, with the update manifest uploaded last.
+  5. Push a `vVERSION` tag to start the release workflow. The GitHub release title is `StudyBuddy VERSION`, and its body uses curated versioned notes when available, otherwise the changelog. Verify the workflow, native installers, npm package and update assets through completion, with the update manifest uploaded last.

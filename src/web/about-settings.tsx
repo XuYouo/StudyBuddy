@@ -18,23 +18,23 @@ export function AboutSettings({ onLicenses }: { onLicenses: () => void }) {
     <section className="settings-card settings-card-body">
     <div className="settings-product">
       <img src={logo} width="52" height="52" alt=""/>
-      <div><div className="settings-product-name">Papilot <span className="settings-version" title={info.version}>v{versionLabel(info.version)}</span></div><p>{t('A workspace for your papers.')}</p></div>
+      <div><div className="settings-product-name">StudyBuddy <span className="settings-version" title={info.version}>v{versionLabel(info.version)}</span></div><p>{t('A workspace for your papers.')}</p></div>
     </div>
     <p className="settings-intro">{t('Read, annotate, and revise your papers with AI, all in one place.')}</p>
     </section>
     <section className="settings-card settings-resources">
       <SettingsLink href={info.repository} icon="github" title={t('GitHub repository')} detail={new URL(info.repository).pathname.slice(1)}/>
       <SettingsLink href={info.issues} icon="chat" title={t('Feedback & issues')} detail={t('Report a bug or suggest an improvement.')}/>
-      <SettingsLink href={`${info.repository}/blob/main/docs/guide.md`} icon="paper" title={t('User guide')} detail={t('Get started and make Papilot your own.')}/>
+      <SettingsLink href={`${info.repository}/blob/main/docs/guide.md`} icon="paper" title={t('User guide')} detail={t('Get started and make StudyBuddy your own.')}/>
       <SettingsLink href={`${info.repository}/blob/main/CHANGELOG.md`} icon="restore" title={t('Changelog')} detail={t('See what changed in each release.')}/>
-      <SettingsLink href={`${info.repository}/blob/main/.github/CONTRIBUTING.md`} icon="people" title={t('Contribute')} detail={t('Help improve Papilot with code, docs, and ideas.')}/>
+      <SettingsLink href={`${info.repository}/blob/main/.github/CONTRIBUTING.md`} icon="people" title={t('Contribute')} detail={t('Help improve StudyBuddy with code, docs, and ideas.')}/>
     </section>
     <section>
     <h3 className="settings-section-title">{t('Licenses & acknowledgments')}</h3>
     <div className="settings-card">
     <details className="settings-project-license">
-      <summary><span>{t('Papilot license')}</span><span className="settings-license-badge">{info.license}</span><Icon name="chevronDown" size={15}/></summary>
-      <pre tabIndex={0} aria-label={t('Papilot license')}>{info.licenseText}</pre>
+      <summary><span>{t('StudyBuddy license')}</span><span className="settings-license-badge">{info.license}</span><Icon name="chevronDown" size={15}/></summary>
+      <pre tabIndex={0} aria-label={t('StudyBuddy license')}>{info.licenseText}</pre>
     </details>
     <button type="button" className="settings-navigation-row settings-resource" data-settings-page="licenses" onClick={onLicenses}>
       <Icon name="code" size={18}/><span><strong>{t('Third-party licenses')}</strong><small>{t('Libraries, fonts, and the people behind them.')}</small></span><Icon name="chevronRight" size={15}/>
@@ -70,7 +70,7 @@ export function LicenseSettings() {
     </details>)}</div> : <p className="settings-license-empty">{t('No components match your search.')}</p>}
   </>;
   return <div className="license-settings settings-page">
-    <p className="settings-intro">{t('Libraries and fonts used by Papilot and its review engine. Each component is covered by its own license.')}</p>
+    <p className="settings-intro">{t('Libraries and fonts used by StudyBuddy and its review engine. Each component is covered by its own license.')}</p>
     <label className="settings-license-search"><Icon name="search" size={17}/><input type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder={t('Search components or licenses…')} aria-label={t('Search components or licenses')}/></label>
     {content}
   </div>;

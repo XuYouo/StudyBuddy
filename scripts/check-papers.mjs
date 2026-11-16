@@ -74,10 +74,10 @@ try {
   await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
   await page.setViewportSize({ width: 1280, height: 800 }); await page.emulateMedia({ colorScheme: 'light' });
   await edit('Relocated paper'); await dialog.getByRole('button', { name: 'Remove paper', exact: true }).click();
-  await confirmation.getByRole('button', { name: 'Remove from Papilot', exact: true }).click(); await confirmation.waitFor({ state: 'hidden' });
+  await confirmation.getByRole('button', { name: 'Remove from StudyBuddy', exact: true }).click(); await confirmation.waitFor({ state: 'hidden' });
   assert.deepEqual(state.projects.map(p => p.id), ['alpha']); assert.ok(await switcher.isVisible());
   await edit('Alpha paper'); await dialog.getByRole('button', { name: 'Remove paper', exact: true }).click();
-  await confirmation.getByRole('button', { name: 'Remove from Papilot', exact: true }).click(); await confirmation.waitFor({ state: 'hidden' });
+  await confirmation.getByRole('button', { name: 'Remove from StudyBuddy', exact: true }).click(); await confirmation.waitFor({ state: 'hidden' });
   await page.getByRole('heading', { name: 'Add your first paper', exact: true }).waitFor();
   state.projects = structuredClone(projects);
   await page.reload(); await edit('Beta paper');

@@ -33,7 +33,7 @@ When an editing turn receives PDF notes, its prompt requests the main revision a
 A compact four-stop slider sits on the right of the preference row: Off, Few (1–2, default), Balanced (2–3), or More (3–5). The current range appears above its slim track; a brief description stays on the left and detailed guidance is available on hover. Narrow screens keep the control right-aligned below the description. There is no separate enable switch. Off preserves the saved range for compatibility; selecting any count enables alternatives for future requests.
 The range excludes the main proposal and is guidance rather than a quota; the AI should not pad weak or repetitive choices.
 The parser accepts up to six well-formed alternatives, including useful responses outside the target range. The agent appends structured
-option data to its response; Papilot preserves the original response and displays only
+option data to its response; StudyBuddy preserves the original response and displays only
 the human summary in the conversation. Before making the review available, it validates
 the prepared source patches against the exact units linked to each note and saves the
 choices. Context may disambiguate a patch but cannot authorize changes to another note.

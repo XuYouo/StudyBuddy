@@ -88,7 +88,7 @@ export const ACP_PROFILES = {
     setup: 'Install Kimi Code CLI and run kimi login on this host, then select Reconnect. Set PAPILOT_KIMI_BIN if kimi is not on PATH.' },
   qwen: { id: 'qwen', name: 'Qwen', bin: 'qwen', binEnv: 'PAPILOT_QWEN_BIN', args: ['--acp'], modes: ['auto-edit', 'default'], permissionModes,
     setup: 'Install Qwen Code and sign in by running qwen once on this host, then select Reconnect. Set PAPILOT_QWEN_BIN if qwen is not on PATH.' },
-  // Papilot adds a per-session permission config option to DSH's ACP adapter.
+  // StudyBuddy adds a per-session permission config option to DSH's ACP adapter.
   // Read-only remains available for restricted task sessions, while the picker
   // offers sandboxed editing and full access.
   deepseek: { id: 'deepseek', name: 'DeepSeek', bin: 'dsh', binEnv: 'PAPILOT_DSH_BIN', args: ['acp'], modes: ['workspace-write'],
@@ -97,7 +97,7 @@ export const ACP_PROFILES = {
       'workspace-write': { label: 'Sandboxed edits', detail: 'Sandboxed; exceptions need approval' },
       'danger-full-access': { value: 'full', label: 'Bypass permissions', detail: 'Bypass sandbox and approvals' },
     },
-    setup: 'Install DeepSeek Harness, sign in with dsh web, then select Reconnect. Set PAPILOT_DSH_BIN if dsh is not on PATH. Papilot requires a compatible Harness ACP adapter.',
+    setup: 'Install DeepSeek Harness, sign in with dsh web, then select Reconnect. Set PAPILOT_DSH_BIN if dsh is not on PATH. StudyBuddy requires a compatible Harness ACP adapter.',
     env: () => ({ ...process.env, DSH_PERMISSION_MODE: 'workspace-write' }) },
   // OpenCode runs tools without asking by default. Its highest-precedence
   // config layer makes it ask before shell commands and anything outside the
@@ -127,7 +127,7 @@ export function opencodeConfig(own?: string) {
   } });
 }
 
-// ACP sessions are the thread IDs persisted by Papilot. The agent owns
+// ACP sessions are the thread IDs persisted by StudyBuddy. The agent owns
 // credentials and conversation storage; the adapter only translates JSON-RPC
 // over stdio.
 export class AcpAgent extends Adapter {
@@ -344,7 +344,7 @@ export class AcpAgent extends Adapter {
   private readModels(session: Session, initial = false) {
     const model = session.configOptions?.find(option => option.category === 'model' || option.id === 'model');
     const thinking = session.configOptions?.find(option => option.category === 'thought_level' || option.id === 'thinking');
-    // A "default" level is the model default Papilot already offers.
+    // A "default" level is the model default StudyBuddy already offers.
     const levels = choices(thinking).filter(choice => choice.value !== 'default'), level = thinking?.currentValue === 'default' ? null : thinking?.currentValue || null;
     const current = sessionModel(session);
     if (initial) this.defaultModel = current;

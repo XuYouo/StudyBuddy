@@ -113,7 +113,7 @@ try {
       { id: 'note-quick', text: 'At any time,', comment: 'Start with the action: “Inspect the LaTeX behind any edit.”', stamp: 'trim' },
       { id: 'note-equation', text: 'W', symbol: true, after: 'Its normalized coordinates are', occurrence: 1, comment: 'This assumes a zero origin. Use explicit page bounds and subtract the origin before normalizing, so cropped pages work too.', group: 'green' },
       { id: 'note-table', text: 'zero', comment: 'Show a nonzero page origin, such as (20,40), and shift the selection equally. The normalized box should stay the same.', kind: 'point' },
-      { id: 'note-ending', text: 'your own project', comment: 'Use Download Papilot to run this workflow on a real project. Notes and the prepared reviews work here in the static demo.', group: 'orange' },
+      { id: 'note-ending', text: 'your own project', comment: 'Use Download StudyBuddy to run this workflow on a real project. Notes and the prepared reviews work here in the static demo.', group: 'orange' },
     ];
     const notes = anchors.map(anchor => {
       for (let page = 0; page < pdf.length; page++) {

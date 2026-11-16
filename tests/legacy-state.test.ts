@@ -7,7 +7,7 @@ import { execFileSync } from 'node:child_process';
 import { moveLegacyStates } from '../src/server/state.ts';
 import { moveLegacyStorage } from '../engine/src/web/legacy-storage.ts';
 
-// Papilot 0.9.4 and earlier used the names of the review engine's former
+// StudyBuddy 0.9.4 and earlier used the names of the review engine's former
 // standalone skill for each paper's state and the viewer's browser storage.
 test('startup moves each paper\'s review state before anything reads it, and skips papers it cannot reach', async t => {
   const base = fs.mkdtempSync(path.join(os.tmpdir(), 'papilot-legacy-')), root = path.join(base, 'paper');

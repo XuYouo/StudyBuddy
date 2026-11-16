@@ -1,7 +1,7 @@
 \section{Concurrent tasks and conflicts}
 \label{sec:conflicts}
 
-Papilot runs up to $c = 2$ tasks at once, each against the manuscript as it was
+StudyBuddy runs up to $c = 2$ tasks at once, each against the manuscript as it was
 when the task started. Accepted text from one task can therefore overlap a
 later proposal from another, and \cref{eq:transform} then returns $\bot$.
 This section estimates how often that happens.
@@ -94,6 +94,6 @@ Apply \cref{prop:conflict} with $n$ replaced by $\nu n$.
 
 \Cref{cor:clustered} argues for fewer, longer tasks over many short ones that
 touch the same part of a paper, and for finishing the review of one task
-before starting another in the same section. It also explains why Papilot
+before starting another in the same section. It also explains why StudyBuddy
 surfaces conflicts from Git rather than resolving them: a resolution would
 have to choose between two texts the author has not yet compared.

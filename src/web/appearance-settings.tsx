@@ -52,7 +52,7 @@ export function AppearanceSettings({ theme, onTheme, resolved, appearance, onApp
   const customized = Object.values(appearance.colors).some(colors => colors.background || colors.foreground);
   // Each theme shows its surface and accent in the current mode; each accent its color.
   const themeSwatch = (id: PresetId) => `linear-gradient(135deg, ${PRESETS[id][resolved].background} 50%, ${PRESETS[id][resolved].accent} 50%)`;
-  const presets = [{ value: 'papilot', label: 'Papilot', swatch: themeSwatch('papilot') }, { value: 'paper', label: t('Paper'), swatch: themeSwatch('paper') }, { value: 'slate', label: t('Slate'), swatch: themeSwatch('slate') }];
+  const presets = [{ value: 'papilot', label: 'StudyBuddy', swatch: themeSwatch('papilot') }, { value: 'paper', label: t('Paper'), swatch: themeSwatch('paper') }, { value: 'slate', label: t('Slate'), swatch: themeSwatch('slate') }];
   const accents = [{ value: 'default', label: t('Default'), swatch: PRESETS[appearance.preset][resolved].accent }, { value: 'blue', label: t('Slate blue'), swatch: ACCENTS.blue }, { value: 'graphite', label: t('Graphite'), swatch: ACCENTS.graphite }, { value: 'stone', label: t('Stone'), swatch: ACCENTS.stone }];
   const changeColor = (name: 'background' | 'foreground', value: string) => onAppearance({ ...appearance, colors: { ...appearance.colors, [resolved]: { ...appearance.colors[resolved], [name]: value } } });
   return <div className="settings-page appearance-settings">

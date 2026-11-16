@@ -3,7 +3,7 @@ import { ActionMenu } from '../action-menu.tsx';
 import { Icon } from '../icons.tsx';
 
 // The same versioned installer names used by the website's download menu.
-const installer = (suffix: string) => `https://github.com/PapilotAI/papilot/releases/download/v${version}/Papilot-${version}-${suffix}`;
+const installer = (suffix: string) => `https://github.com/XuYouo/StudyBuddy/releases/download/v${version}/StudyBuddy-${version}-${suffix}`;
 
 function PlatformIcon({ platform }: { platform: string }) {
   if (platform === 'Linux') return <i className="demo-linux-icon" aria-hidden="true"/>;
@@ -27,7 +27,7 @@ export function DemoDownloads({ zh }: { zh: boolean }) {
       { label: 'Debian / Ubuntu', hint: 'x64 · .deb', href: installer('linux-amd64.deb') },
     ] },
   ];
-  return <div className="demo-downloads" role="group" aria-label={zh ? '下载 Papilot' : 'Download Papilot'}>
+  return <div className="demo-downloads" role="group" aria-label={zh ? '下载 StudyBuddy' : 'Download StudyBuddy'}>
     {platforms.map(platform => <ActionMenu key={platform.name} label={zh ? `下载 ${platform.name} 版` : `Download for ${platform.name}`} actions={platform.downloads} className="button secondary compact demo-platform" align="end">
       <PlatformIcon platform={platform.name}/><span>{platform.name}</span><Icon name="chevronDown" size={12}/>
     </ActionMenu>)}

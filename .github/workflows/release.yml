@@ -63,22 +63,22 @@ jobs:
               echo "::error::$release_notes is empty."; exit 1
             fi
           else
-            printf '```sh\nnpm install -g papilot@latest\n```\n' >> "$RUNNER_TEMP/notes.md"
+            printf '```sh\nnpm install -g .@latest\n```\n' >> "$RUNNER_TEMP/notes.md"
           fi
-          printf 'Papilot %s\n' "$version" > "$RUNNER_TEMP/title.txt"
+          printf 'StudyBuddy %s\n' "$version" > "$RUNNER_TEMP/title.txt"
       - run: npm ci
       - run: npm run setup:review
       - name: Download tested desktop installers
         uses: actions/download-artifact@v4
         with:
-          pattern: Papilot-*
+          pattern: StudyBuddy-*
           merge-multiple: true
           path: release/desktop
       - name: Require every tested desktop installer and the update layer
         run: |
           version="${GITHUB_REF_NAME#v}"
           for suffix in mac-arm64.dmg mac-arm64.zip mac-x64.dmg mac-x64.zip linux-x86_64.AppImage linux-amd64.deb win-x64.exe win-x64-portable.exe; do
-            test -s "release/desktop/Papilot-$version-$suffix"
+            test -s "release/desktop/StudyBuddy-$version-$suffix"
           done
           test -s "release/desktop/papilot-app-$version.tgz"
           test "$(node -p 'require("./release/desktop/desktop.json").version')" = "$version"

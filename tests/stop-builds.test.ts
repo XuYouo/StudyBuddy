@@ -24,7 +24,7 @@ test('stopping ends every compiler, also a background build paused for another',
     fs.writeFileSync(path.join(bin, 'pdflatex'), '#!/bin/sh\necho "pdfTeX 3.14 (fake)"\n', { mode: 0o755 });
     fs.writeFileSync(path.join(bin, 'latexmk'), `#!/bin/sh\necho $$ >> "${base}/pids"\nwhile true; do sleep 0.05; done\n`, { mode: 0o755 });
     process.env.PATH = `${bin}:${previousPath}`;
-    // The builds run in a server process that stops them and exits at once, as Papilot quits.
+    // The builds run in a server process that stops them and exits at once, as StudyBuddy quits.
     const script = path.join(base, 'server.mts');
     fs.writeFileSync(script, `
       import fs from 'node:fs';

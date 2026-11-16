@@ -13,8 +13,8 @@ export async function restartRelease(job: { id: string; root: string; version: s
   const folder = path.join(job.data, 'updates'), activeFile = path.join(folder, 'active.json'), statusFile = path.join(folder, 'status.json'), lock = path.join(folder, 'install.lock');
   const previous = readJson(activeFile), status = readJson(statusFile) || {};
   const database = path.join(job.data, 'papilot.sqlite'), backup = path.join(folder, 'before-update.sqlite');
-  const service = `gui/${process.getuid?.()}/local.papilot`, domain = `gui/${process.getuid?.()}`;
-  const plist = path.join(os.homedir(), 'Library/LaunchAgents/local.papilot.plist');
+  const service = `gui/${process.getuid?.()}/local.studybuddy`, domain = `gui/${process.getuid?.()}`;
+  const plist = path.join(os.homedir(), 'Library/LaunchAgents/local.studybuddy.plist');
   const alive = (pid: number) => { try { process.kill(pid, 0); return true; } catch { return false; } };
   const launchctl = (...args: string[]) => spawnSync('launchctl', args, { stdio: 'ignore', timeout: 15000 });
   let child: ChildProcess | undefined, parentStopped = false, backedUp = false;
@@ -39,7 +39,7 @@ export async function restartRelease(job: { id: string; root: string; version: s
     writeJson(activeFile, { root: job.root, version: job.version, channel: job.channel, id: job.id, phase: 'pending', pid: process.pid, previous });
     ready();
     for (let i = 0; i < 150 && alive(job.parent); i++) await sleep(100);
-    if (alive(job.parent)) throw new Error('Papilot did not finish shutting down.');
+    if (alive(job.parent)) throw new Error('StudyBuddy did not finish shutting down.');
     parentStopped = true;
     if (job.service) launchctl('bootout', service);
     if (fs.existsSync(database)) {

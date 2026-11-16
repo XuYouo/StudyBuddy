@@ -1,4 +1,4 @@
-// Papilot 0.9.4 and earlier stored the review viewer's preferences, shortcuts
+// StudyBuddy 0.9.4 and earlier stored the review viewer's preferences, shortcuts
 // and drafts under keys named after the review engine's former standalone
 // skill. Each entry point imports this module first, so the keys move before
 // anything reads them.

@@ -1,4 +1,4 @@
-// Browser -> Papilot -> real review server -> real Git and LaTeX.
+// Browser -> StudyBuddy -> real review server -> real Git and LaTeX.
 // Only the agent is inert. All repositories, state and browser profiles are disposable.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';

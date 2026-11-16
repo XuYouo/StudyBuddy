@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-// Papilot 0.9.4 and earlier named a paper's state after the review engine's
+// StudyBuddy 0.9.4 and earlier named a paper's state after the review engine's
 // former standalone skill: .git/latex-review/, refs/latex-review/ and
 // .latex-review.json in the working tree. A paper moves to the current names
 // the first time a newer version opens it. Nothing else reads these names.
@@ -63,7 +63,7 @@ function removeEmpty(dir: string) {
   } catch { /* Missing, or holds refs that stayed. */ }
 }
 // Rounds, jobs, cached builds and their SyncTeX record absolute paths into
-// the state folder, and Papilot names a manuscript build by its PDF's path.
+// the state folder, and StudyBuddy names a manuscript build by its PDF's path.
 // A link under the former name keeps every one of them valid; SyncTeX cannot
 // be rewritten to a path of another length.
 function moveFolder(from: string, to: string) {
@@ -77,7 +77,7 @@ function moveFolder(from: string, to: string) {
   } catch (error) {
     if (lstat(from)?.isDirectory() || !lstat(to))
       throw new Error(
-        `Papilot could not move ${from} to ${to} (${(error as Error).message}). Quit other programs that have this paper open, then try again.`,
+        `StudyBuddy could not move ${from} to ${to} (${(error as Error).message}). Quit other programs that have this paper open, then try again.`,
       );
     return;
   }

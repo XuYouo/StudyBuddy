@@ -6,7 +6,7 @@ import { ROOT, DATA } from '../src/server/paths.ts';
 import { serviceEnvironment } from '../src/server/service-environment.ts';
 
 if (process.platform !== 'darwin') throw new Error('This service installer is for macOS. On other systems run npm start with your process manager.');
-const label = 'local.papilot';
+const label = 'local.studybuddy';
 const domain = `gui/${process.getuid!()}`;
 const file = path.join(os.homedir(), 'Library/LaunchAgents', label + '.plist');
 if (process.argv[2] === 'stop') {

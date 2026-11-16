@@ -15,7 +15,7 @@ function repository() {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'papilot-changes-'));
   const git = (...args: string[]) => execFileSync('git', args, { cwd: root }).toString().trim();
   git('init', '-q');
-  // Papilot's own commits need an identity, which a CI runner lacks.
+  // StudyBuddy's own commits need an identity, which a CI runner lacks.
   for (const [key, value] of [['user.name', 'Test'], ['user.email', 'test@localhost'], ['commit.gpgsign', 'false']]) git('config', key, value);
   return { root, git, commit: (message: string) => git('commit', '-qm', message) };
 }

@@ -2,10 +2,10 @@ import { engine } from '../references.ts';
 import { toolError } from './policy.ts';
 import type { ReferenceCheck } from '../../shared.ts';
 
-// Finding and checking references for Papilot Writer. Search asks Crossref
+// Finding and checking references for StudyBuddy Writer. Search asks Crossref
 // and DBLP; BibTeX for a DOI comes from doi.org and for an arXiv ID from
 // arXiv, so an entry built from an identifier is the published record. A
-// hand-written entry is checked the way Papilot checks every bibliography,
+// hand-written entry is checked the way StudyBuddy checks every bibliography,
 // and only an entry the record confirms is added without asking.
 
 export interface Candidate { title: string; authors: string[]; year: number | null; venue: string | null; doi: string | null; arxiv: string | null; source: 'crossref' | 'dblp' }
@@ -19,7 +19,7 @@ interface Verify {
   Http: new (fetcher?: Fetch) => unknown;
 }
 const verify = async () => (await engine()) as unknown as Verify;
-const AGENT = 'Papilot (https://papilot.ai)';
+const AGENT = 'StudyBuddy (https://papilot.ai)';
 const TIMEOUT = 20000;
 
 async function json(fetcher: Fetch, url: string): Promise<any> {

@@ -50,7 +50,7 @@ test('older locations are recovered and review quotes survive shifted source lin
 
 test('a title word links to its definition even when SyncTeX points at maketitle', () => {
   const title: NoteSummary = { where: 'Page 1 · main.tex line 10', quote: 'Manuscripts', comment: 'Change this word.' };
-  const round: NoteRound = { round: 1, units: [{ id: 'c1', file: 'main.tex', old_start: 4, old_end: 4, old_text: '\\title{Papilot for LaTeX Manuscripts}', new_text: '\\title{Papilot for LaTeX Papers}' }], sections: [], loose: [{ kind: 'change', units: ['c1'] }] };
+  const round: NoteRound = { round: 1, units: [{ id: 'c1', file: 'main.tex', old_start: 4, old_end: 4, old_text: '\\title{StudyBuddy for LaTeX Manuscripts}', new_text: '\\title{StudyBuddy for LaTeX Papers}' }], sections: [], loose: [{ kind: 'change', units: ['c1'] }] };
   assert.equal(matchNoteChanges(title, round, {})[0]?.match, 'quote');
   const ambiguous = { ...round, units: [...round.units, { ...round.units[0], id: 'c2' }], loose: [...round.loose, { kind: 'change', units: ['c2'] }] };
   assert.deepEqual(matchNoteChanges({ ...title, quote: 'LaTeX' }, ambiguous, {}), [], 'a short repeated word is not enough to select a change');

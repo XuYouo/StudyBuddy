@@ -1,6 +1,6 @@
 {
   "ui": {
-    "author": "Papilot-teamet",
+    "author": "StudyBuddy-teamet",
     "back": "Alla artiklar",
     "blog": "Blogg",
     "breadcrumb": "Brödsmulor",
@@ -12,10 +12,10 @@
     "footerNavigation": "Sidfot",
     "indexDescription": "Om AI, LaTeX och vetenskapligt skrivande.",
     "indexSeoDescription": "Utforska PDF-centrerat samarbete med AI och LaTeX: kommentera direkt i manuskriptet, granska typsatta ändringar på plats och behåll det vetenskapliga omdömet.",
-    "indexSeoTitle": "Papilot-bloggen: AI och vetenskapligt skrivande i LaTeX",
+    "indexSeoTitle": "StudyBuddy-bloggen: AI och vetenskapligt skrivande i LaTeX",
     "indexTitle": "Blogg",
     "languageLabel": "Språk",
-    "latest": "Från Papilot-teamet",
+    "latest": "Från StudyBuddy-teamet",
     "mainNavigation": "Huvudnavigering",
     "minutes": "min läsning",
     "privacy": "Integritetspolicy",
@@ -44,7 +44,7 @@
     "comparison": "Samtalet flyttar åter till sidan",
     "comparisonDesc": "Till vänster en arbetsyta där källkod och PDF är åtskilda; till höger är PDF-dokumentet huvudarbetsyta med kommentarer direkt på manuskriptet.",
     "flow": "Ändringar börjar och slutar på sidan",
-    "flowDesc": "Författaren kommenterar manuskriptet, AI:n ändrar lokal LaTeX, Papilot kompilerar och författaren granskar på PDF-sidan samt reviderar vidare vid behov.",
+    "flowDesc": "Författaren kommenterar manuskriptet, AI:n ändrar lokal LaTeX, StudyBuddy kompilerar och författaren granskar på PDF-sidan samt reviderar vidare vid behov.",
     "newPath": "Läs · Kommentera · Granska",
     "now": "Manuskriptcentrerat",
     "old": "Källkodscentrerat",
@@ -67,7 +67,7 @@
         "Hitta och ändra lokal källkod."
       ],
       [
-        "Papilot",
+        "StudyBuddy",
         "Kompilera projektet",
         "Generera det typsatta dokumentet."
       ],

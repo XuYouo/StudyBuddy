@@ -185,7 +185,7 @@ html:is([lang=zh-CN],[lang=zh-Hant]) .hero .review-page :is(del,ins){white-space
 .latex sup{top:-.3em;margin:0 -.21em 0 -.47em;font-size:.7em;vertical-align:baseline}
 .latex sub{top:.22em;margin:0 -.125em 0 -.1667em;font-size:1em;vertical-align:baseline}
 
-/* The opening window is Papilot on a Mac, with its toolbar and marking
+/* The opening window is StudyBuddy on a Mac, with its toolbar and marking
    tools, reduced to the change: the PDF on the left, the chat on the right,
    and the rest of the text drawn as bars. The
    agent in the composer keeps changing, since any of them can do the work.
@@ -338,7 +338,7 @@ html:is([lang=zh-CN],[lang=zh-Hant]) .hero .review-page :is(del,ins){white-space
 .demo-note-send svg{width:15px;height:15px}
 .demo-note-send.pressed{transform:scale(.86)}
 
-/* The page, drawn from Papilot's review viewer: unchanged lines are bars, and
+/* The page, drawn from StudyBuddy's review viewer: unchanged lines are bars, and
    the change has a grey header with its number and actions, the typeset
    before and after (a coloured edge and a corner label on each) and its LaTeX
    source on request. Deciding resolves it as the viewer does: the side that
@@ -521,14 +521,14 @@ html:is([lang=zh-CN],[lang=zh-Hant]) .hero .review-page :is(del,ins){white-space
 
 /* Why: three ways to revise a LaTeX paper, each drawn as a small window that
    rises from its card. Code is monospaced, the page is serif; only the last
-   window has no code in it. The two older ways share a row; Papilot's is a
+   window has no code in it. The two older ways share a row; StudyBuddy's is a
    wide card of its own below them, its drawing beside its text. */
 .eras{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 .era{display:flex;flex-direction:column;min-width:0;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--bg);overflow:hidden}
 .era-text{padding:22px 24px 26px}
 /* As in a style guide's "don't" and "do" examples, a coloured rule under each
    drawing and a mark in its tag say which way of working a card shows: red
-   and a cross for the two older ones, blue and a tick for Papilot's. */
+   and a cross for the two older ones, blue and a tick for StudyBuddy's. */
 .era-tag{display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;color:var(--text-3)}
 .era-tag svg{flex:none;width:18px;height:18px;padding:3px;border-radius:50%;background:#dc2626;color:#fff}
 .era.old .era-tag{color:var(--red)}
@@ -568,7 +568,7 @@ html:is([lang=zh-CN],[lang=zh-Hant]) .hero .review-page :is(del,ins){white-space
 .mini-bar i{width:7px;height:7px;border-radius:50%;background:#ff5f57}
 .mini-bar i:nth-child(2){background:#febc2e}
 .mini-bar i:nth-child(3){background:#28c840}
-/* Papilot's drawing has the app's toolbar in that row: a segmented
+/* StudyBuddy's drawing has the app's toolbar in that row: a segmented
    control and the green compile button. */
 .mini-seg{display:flex;gap:2px;margin-left:10px;padding:1.5px;border:1px solid var(--line-strong);border-radius:4px;background:var(--bg-active)}
 .mini-seg b{width:14px;height:6px;border-radius:2px}
@@ -601,7 +601,7 @@ html:is([lang=zh-CN],[lang=zh-Hant]) .hero .review-page :is(del,ins){white-space
 .bar.short{width:58%}
 .only .mini-pdf{padding:12px 64px 0}
 .only .mini-page{padding:14px 18px 0}
-/* Papilot's drawing: a page with one change under review, its Comment
+/* StudyBuddy's drawing: a page with one change under review, its Comment
    chosen and a comment beside it. */
 .mini-heading{display:flex;align-items:center;gap:6px;margin-bottom:2px;font:700 9.5px/1 var(--serif);color:var(--text-3)}
 .mini-heading .bar{width:34%;height:5px;background:var(--line-strong)}
@@ -630,7 +630,7 @@ html:is([lang=zh-CN],[lang=zh-Hant]) .hero .review-page :is(del,ins){white-space
 .mini-comment i{display:grid;flex:none;place-items:center;width:15px;height:15px;border-radius:50%;background:var(--button);color:#fff}
 .mini-comment svg{width:9px;height:9px}
 /* Scrolling on, the older ways lose their colour (--old runs from 0 to 1 as
-   they pass the top of the window) and Papilot's comes in (--new). Only the
+   they pass the top of the window) and StudyBuddy's comes in (--new). Only the
    drawings and tags fade, so the text stays readable. */
 .era.old :is(.era-art,.era-tag){filter:grayscale(var(--old,0));opacity:calc(1 - var(--old,0) * .45)}
 .eras.staged .era.ours{opacity:var(--new,0);transform:translateY(calc((1 - var(--new,0)) * 28px))}

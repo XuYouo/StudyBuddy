@@ -1,7 +1,7 @@
 \section{Security}
 \label{sec:security}
 
-Papilot runs on the author's own computer and can be reached from other
+StudyBuddy runs on the author's own computer and can be reached from other
 devices over a private network. Its threat model is a web page in another tab
 that tries to act on the author's behalf, and a device on the network that is
 not the author's.
@@ -26,10 +26,10 @@ prefix of $\chi$ through timing.
 
 \subsection{Agents}
 
-Agents run with the author's own logins but within limits Papilot sets:
+Agents run with the author's own logins but within limits StudyBuddy sets:
 \begin{itemize}
   \item each task's agent works in its own worktree $w_i$ and is told never to
-    edit the manuscript checkout $w_0$, other worktrees, or Papilot itself;
+    edit the manuscript checkout $w_0$, other worktrees, or StudyBuddy itself;
   \item commands run in the agent's sandbox, and anything that leaves it is
     either brought to the author for approval or, for an agent that cannot
     ask, declined in advance;

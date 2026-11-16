@@ -52,11 +52,11 @@ export function annotateReviewState(value: unknown, tasks: readonly Task[]): unk
   let decisionLock: string | null = null;
   let commentLock: string | null = null;
   let rejectLock: string | null = null;
-  if (!task) decisionLock = commentLock = 'This task is no longer available in Papilot. Return to the workspace.';
+  if (!task) decisionLock = commentLock = 'This task is no longer available in StudyBuddy. Return to the workspace.';
   else if (state.closed) decisionLock = commentLock = 'This review is finished. Accepted changes are in your manuscript.';
   else if (task.status === 'deleting') decisionLock = commentLock = 'This task is being deleted. Review actions and comments are unavailable.';
-  else if (task.status === 'uncertain') decisionLock = 'Select Check status in Papilot before accepting, rejecting, or undoing changes. You can still add comments.';
-  else if (AGENT_TURN.includes(task.status) && !task.deferred) decisionLock = 'Pause this task in Papilot before accepting, rejecting, or undoing changes. You can still add comments.';
+  else if (task.status === 'uncertain') decisionLock = 'Select Check status in StudyBuddy before accepting, rejecting, or undoing changes. You can still add comments.';
+  else if (AGENT_TURN.includes(task.status) && !task.deferred) decisionLock = 'Pause this task in StudyBuddy before accepting, rejecting, or undoing changes. You can still add comments.';
   else if (task.pendingReview) decisionLock = 'Wait for the current review action before accepting, rejecting, or undoing changes. You can still add comments.';
   else if (task.reconciliation && (!task.reconciliation.ready || Number(state.round) <= task.reconciliation.round)) decisionLock = 'Wait for the merge suggestion before changing review decisions.';
   else if (task.delivery?.pending) decisionLock = 'Retry the pending delivery before changing review decisions.';
