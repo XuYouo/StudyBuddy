@@ -43,7 +43,7 @@ try {
   let previous = 'en';
   for (const { id, name } of LANGUAGES) {
     await page.setViewportSize({ width: 1440, height: 1000 });
-    await page.getByRole('button', { name: label(previous, 'Settings'), exact: true }).click();
+    await page.locator('.sidebar').getByRole('button', { name: label(previous, 'Settings'), exact: true }).click();
     await selectOption(page.getByRole('combobox', { name: label(previous, 'Language'), exact: true }), id);
     const dialog = page.getByRole('dialog', { name: label(id, 'Settings'), exact: true });
     await dialog.waitFor();
@@ -60,7 +60,7 @@ try {
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.keyboard.press('Escape');
     await page.reload();
-    await page.getByRole('button', { name: label(id, 'Settings'), exact: true }).waitFor();
+    await page.locator('.sidebar').getByRole('button', { name: label(id, 'Settings'), exact: true }).waitFor();
     assert.equal(await page.locator('html').getAttribute('lang'), id, 'preference survives reload');
     await page.locator('.home').getByRole('button', { name: label(id, 'Add paper'), exact: true }).click();
     await page.getByRole('textbox', { name: label(id, 'Folder path'), exact: true }).fill('/tmp/example');
@@ -74,7 +74,7 @@ try {
   // A stored preference from the existing app remains valid after migration.
   await page.evaluate(() => localStorage.setItem('papilot:language', 'zh-CN'));
   await page.reload();
-  await page.getByRole('button', { name: '设置', exact: true }).waitFor();
+  await page.locator('.settings-link').waitFor();
   assert.equal(await page.locator('html').getAttribute('lang'), 'zh-Hans');
   await context.close();
 

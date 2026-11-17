@@ -1,3 +1,4 @@
+import { expectComposerText } from './composer-fixture.mjs';
 import { readyRequirements } from './required-tools-fixture.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -241,10 +242,10 @@ try {
   await dialog.getByRole('button', { name: 'All skills', exact: true }).click();
   await expect(dialog.getByText('Discard unsaved skill changes?')).toBeVisible();
   await dialog.getByRole('button', { name: 'Keep editing' }).click();
-  await expect(instructions).toHaveValue('Keep this draft.');
+  await expectComposerText(instructions, 'Keep this draft.');
   await page.keyboard.press('Escape');
   await dialog.getByRole('button', { name: 'Keep editing' }).click();
-  await expect(instructions).toHaveValue('Keep this draft.');
+  await expectComposerText(instructions, 'Keep this draft.');
   await page.keyboard.press('Escape'); await dialog.getByRole('button', { name: 'Discard changes' }).click();
 
   // Chinese labels and the empty-workspace global library work without a paper.

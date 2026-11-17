@@ -1,3 +1,4 @@
+import { expectComposerText } from './composer-fixture.mjs';
 import { checkReviewTools } from './review-tools-checks.mjs';
 import { readyRequirements } from './required-tools-fixture.mjs';
 import assert from 'node:assert/strict';
@@ -171,7 +172,7 @@ try {
   await quote('after', 7, 'Make this more precise.');
   await expect(page.getByRole('textbox', { name: 'Comment 2', exact: true })).toHaveValue('Make this more precise.');
   await expect(page.locator('.review-draft-note').nth(1)).toContainText('After revision');
-  await expect(input()).toHaveValue('Keep the examples.');
+  await expectComposerText(input(), 'Keep the examples.');
   await expect(viewer().locator('.composer')).toHaveCount(0);
   assert.equal(writes.length, 0, 'Comments do not accept or reject changes');
   await viewer().locator('.change[data-stop="0"] .comment').first().click();
@@ -185,7 +186,7 @@ try {
   await expect(page.getByRole('textbox', { name: 'Comment 3', exact: true })).toBeFocused();
   await page.reload();
   await expect(page.getByRole('textbox', { name: 'Comment 1', exact: true })).toHaveValue('Keep this original term.');
-  await expect(input()).toHaveValue('Keep the examples.');
+  await expectComposerText(input(), 'Keep the examples.');
   await page.getByRole('textbox', { name: 'Comment 3', exact: true }).fill('');
   await expect(page.locator('.review-draft-note')).toHaveCount(3);
   await input().fill('');
@@ -213,7 +214,7 @@ try {
   await send().click(); await expect.poll(() => sent.length).toBe(3);
   // Receiving the POST is earlier than the client applying its success.
   // Reload only after the submitted text has been removed from the draft.
-  await expect(input()).toHaveValue('');
+  await expectComposerText(input(), '');
   assert.equal(sent[2].notes, undefined);
   await expect(page.locator('.review-draft-note')).toHaveCount(1);
   // An unwritten comment must not hide the save action after accepting everything.

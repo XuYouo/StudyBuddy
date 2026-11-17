@@ -1,3 +1,4 @@
+import { expectComposerText, composerCaretAtStart, composerCaretOffset } from './composer-fixture.mjs';
 import { readyRequirements } from './required-tools-fixture.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -92,7 +93,7 @@ try {
   assert.ok(savedRequest && savedRequest.length < 200, 'retry ID is durable without duplicating the long draft');
   assert.equal(JSON.parse(savedRequest).id, attempts[0].id);
   await page.reload(); await chooseReview();
-  await expect(page.getByRole('textbox', { name: 'Describe the revision' })).toHaveValue(instructions);
+  await expectComposerText(page.getByRole('textbox', { name: 'Describe the revision' }), instructions);
   await page.getByRole('button', { name: 'Start task', exact: true }).click();
   await page.locator('.task-link').first().click();
   await expect(page.locator('.message.assistant .message-body')).toHaveText('Clarify the assumptions behind the main claim.');
@@ -156,9 +157,9 @@ try {
   await expect(suggestions).toBeVisible();
   const composer = page.getByRole('textbox', { name: /^Instructions for / });
   await composer.fill('abc');
-  await composer.evaluate(element => element.setSelectionRange(0, 0));
+  await composerCaretAtStart(composer);
   await page.keyboard.press('ArrowRight');
-  assert.equal(await composer.evaluate(element => element.selectionStart), 1);
+  assert.equal(await composerCaretOffset(composer), 1);
   await expect(suggestions).toBeVisible();
   await composer.fill('');
   await suggestions.focus();

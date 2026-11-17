@@ -18,6 +18,7 @@ import { PassThrough } from 'node:stream';
 import type { Codex } from '../src/server/codex.ts';
 import type { ReviewClient } from '../src/server/review.ts';
 import { AGENT_IDS, type Annotation, type Task } from '../src/shared.ts';
+import { referenceText } from '../src/composer-reference.ts';
 
 const PUBLIC = 'https://mini.example.ts.net:8443';
 const LOCAL = { host: '127.0.0.1:7274' };
@@ -1707,6 +1708,141 @@ test('single-user routes expose the workspace without accounts and removed colla
   } finally { await f.close(); }
 });
 
+test('MCP status HTTP reads require local or owner access and expose only the status fields', async () => {
+  const f = await fixture(), calls: { method: string; params: any }[] = [];
+  try {
+    f.workspace.agents.codex.ready = true;
+    f.workspace.agents.codex.request = async (method, params) => {
+      calls.push({ method, params });
+      if (method === 'config/read') return { config: { mcp_servers: { research: { enabled: false, command: 'private-command', env: { TOKEN: 'private-token' }, url: 'https://private.example/path' } } }, layers: [{ contents: 'private-layer' }] };
+      return { data: [{ name: 'research', authStatus: 'oAuth', tools: { secretTool: { inputSchema: { secret: true } } }, toolsError: 'private-error', serverInfo: { name: 'private-server' }, httpOrigin: 'https://private.example' }], nextCursor: null };
+    };
+    const url = '/api/runtime/codex/mcp';
+    for (const headers of [
+      { host: 'untrusted.example' },
+      { ...LOCAL, origin: 'https://untrusted.example' },
+      { ...LOCAL, 'tailscale-funnel-request': '?1' },
+      { host: 'mini.example.ts.net:8443', 'tailscale-user-login': 'someone-else@example' },
+    ]) assert.equal((await f.local.inject({ url, headers })).statusCode, 403);
+    assert.equal(calls.length, 0, 'rejected HTTP callers never trigger native MCP discovery');
+    for (const headers of [LOCAL, { host: 'mini.example.ts.net:8443', 'tailscale-user-login': 'owner@example' }]) {
+      const response = await f.local.inject({ url, headers });
+      assert.equal(response.statusCode, 200, response.body);
+      assert.deepEqual(response.json(), { servers: [{ name: 'research', enabled: false, authStatus: 'oAuth' }] });
+      assert.doesNotMatch(response.body, /private|secret|inputSchema|httpOrigin|layers/);
+    }
+    assert.deepEqual(calls.map(call => call.method), ['config/read', 'mcpServerStatus/list', 'config/read', 'mcpServerStatus/list']);
+    assert.deepEqual(calls[1].params, { cursor: null, limit: 100, detail: 'toolsAndAuthOnly' });
+  } finally { await f.close(); }
+});
+
+test('MCP status HTTP errors preserve disconnected and malformed native states instead of reporting an empty inventory', async () => {
+  const f = await fixture();
+  try {
+    let calls = 0;
+    f.workspace.agents.codex.request = async method => { calls++; return method === 'config/read' ? { config: {} } : { data: null }; };
+    const url = '/api/runtime/codex/mcp';
+    const disconnected = await f.local.inject({ url, headers: LOCAL });
+    assert.equal(disconnected.statusCode, 400);
+    assert.match(disconnected.json().error, /not connected/);
+    assert.equal(calls, 0);
+    f.workspace.agents.codex.ready = true;
+    const malformed = await f.local.inject({ url, headers: LOCAL });
+    assert.equal(malformed.statusCode, 400);
+    assert.match(malformed.json().error, /Unable to load MCP status/);
+    f.workspace.agents.codex.request = async method => method === 'config/read' ? { config: {} } : { data: [], nextCursor: null };
+    const recovered = await f.local.inject({ url, headers: LOCAL });
+    assert.equal(recovered.statusCode, 200);
+    assert.deepEqual(recovered.json(), { servers: [] });
+  } finally { await f.close(); }
+});
+
+test('/init preflight uses the selected project or actual task worktree without creating a task or contacting an agent', async () => {
+  const f = await fixture(), base = fs.mkdtempSync(path.join(os.tmpdir(), 'studybuddy-init-api-'));
+  try {
+    const project = path.join(base, 'paper'), worktree = path.join(base, 'task');
+    for (const root of [project, worktree]) fs.mkdirSync(root);
+    fs.writeFileSync(path.join(project, 'AGENTS.md'), 'Accepted repository instructions.');
+    f.store.saveProject({ ...f.store.project('thesis'), path: project });
+    f.store.updateTask('thesis-task', { worktree });
+    let agentCalls = 0;
+    for (const agent of Object.values(f.workspace.agents)) agent.request = async () => { agentCalls++; throw new Error('Preflight must not contact an agent.'); };
+    const tasks = f.store.tasks(), runs = f.store.runs();
+    const projectUrl = '/api/projects/thesis/init', taskUrl = '/api/tasks/thesis-task/init';
+    for (const [url, exists] of [[projectUrl, true], [taskUrl, false]] as const) {
+      for (const headers of [LOCAL, { host: 'mini.example.ts.net:8443', 'tailscale-user-login': 'owner@example' }]) {
+        const response = await f.local.inject({ url, headers });
+        assert.equal(response.statusCode, 200, response.body); assert.deepEqual(response.json(), { exists });
+        assert.equal(response.headers['cache-control'], 'no-store');
+      }
+    }
+    assert.deepEqual((await f.local.inject({ url: `${taskUrl}?path=${encodeURIComponent(project)}&cwd=${encodeURIComponent(project)}`, headers: LOCAL })).json(), { exists: false }, 'query strings cannot redirect the fixed path check');
+    fs.symlinkSync(path.join(base, 'missing-target'), path.join(worktree, 'AGENTS.md'));
+    assert.deepEqual((await f.local.inject({ url: taskUrl, headers: LOCAL })).json(), { exists: true });
+    f.store.updateTask('thesis-task', { worktree: project });
+    assert.deepEqual((await f.local.inject({ url: taskUrl, headers: LOCAL })).json(), { exists: true }, 'a task that actually runs in the project root checks that root');
+    assert.equal(agentCalls, 0); assert.deepEqual(f.store.runs(), runs);
+    assert.deepEqual(f.store.tasks().map(task => task.id), tasks.map(task => task.id));
+    assert.equal(fs.readFileSync(path.join(project, 'AGENTS.md'), 'utf8'), 'Accepted repository instructions.');
+  } finally { await f.close(); fs.rmSync(base, { recursive: true, force: true }); }
+});
+
+test('/init preflight keeps the existing access guards and rejects missing or unprepared scopes', async () => {
+  const f = await fixture();
+  try {
+    for (const url of ['/api/projects/thesis/init', '/api/tasks/thesis-task/init']) {
+      for (const headers of [{ host: 'untrusted.example' }, { ...LOCAL, origin: 'https://untrusted.example' }, { ...LOCAL, 'tailscale-funnel-request': '?1' }, { host: 'mini.example.ts.net:8443', 'tailscale-user-login': 'someone-else@example' }]) {
+        assert.equal((await f.local.inject({ url, headers })).statusCode, 403);
+      }
+      const unavailable = await f.local.inject({ url, headers: LOCAL });
+      assert.equal(unavailable.statusCode, 400); assert.equal(unavailable.json().error, 'Unable to check AGENTS.md.');
+    }
+    for (const url of ['/api/projects/missing/init', '/api/tasks/missing/init']) assert.equal((await f.local.inject({ url, headers: LOCAL })).statusCode, 400);
+    f.store.updateTask('thesis-task', { worktree: '', status: 'preparing' });
+    const preparing = await f.local.inject({ url: '/api/tasks/thesis-task/init', headers: LOCAL });
+    assert.equal(preparing.statusCode, 400); assert.match(preparing.json().error, /still being prepared/);
+    f.store.updateTask('thesis-task', { status: 'failed' });
+    const failed = await f.local.inject({ url: '/api/tasks/thesis-task/init', headers: LOCAL });
+    assert.equal(failed.statusCode, 400); assert.match(failed.json().error, /Retry preparing/);
+  } finally { await f.close(); }
+});
+
+test('file search and referenced messages use the selected project or task root and preserve serialized offsets', async () => {
+  const f = await fixture(), base = fs.mkdtempSync(path.join(os.tmpdir(), 'studybuddy-reference-api-'));
+  try {
+    const project = path.join(base, 'paper'), worktree = path.join(base, 'task');
+    for (const root of [project, worktree]) { fs.mkdirSync(root); execFileSync('git', ['init', '-q', root]); }
+    fs.writeFileSync(path.join(project, 'manuscript.tex'), 'Accepted paper.');
+    fs.writeFileSync(path.join(worktree, 'proposal.tex'), 'Task proposal.');
+    f.store.saveProject({ ...f.store.project('thesis'), path: project });
+    f.store.updateTask('thesis-task', { worktree });
+    for (const [url, expected] of [['/api/projects/thesis/files', 'manuscript.tex'], ['/api/tasks/thesis-task/files', 'proposal.tex']]) {
+      assert.equal((await f.local.inject({ url, headers: { ...LOCAL, origin: 'https://untrusted.example' } })).statusCode, 403);
+      const response = await f.local.inject({ url, headers: LOCAL });
+      assert.equal(response.statusCode, 200); assert.deepEqual(response.json(), { files: [{ path: expected, label: expected, kind: 'file' }], more: false });
+    }
+    const file = { path: 'proposal.tex', label: 'proposal.tex', kind: 'file' as const }, text = '  🙂 ' + referenceText(file) + '  ';
+    const references = [{ ...file, from: 5, to: text.length - 2 }], url = '/api/tasks/thesis-task/messages';
+    const payload = { requestKey: 'reference-api', text, references };
+    assert.equal((await f.local.inject({ method: 'POST', url, headers: LOCAL, payload })).statusCode, 403);
+    assert.equal((await f.local.inject({ method: 'POST', url, headers: f.as, payload: { ...payload, requestKey: 'references-feedback', feedback: true } })).statusCode, 400);
+    assert.equal(f.store.runByKey('references-feedback'), undefined, 'automatic feedback cannot retain spans for authored text it does not send');
+    const response = await f.local.inject({ method: 'POST', url, headers: f.as, payload });
+    assert.equal(response.statusCode, 200, response.body);
+    const run = f.store.runByKey(payload.requestKey)!;
+    assert.equal(f.store.item('thesis-task', run.id)?.text, text);
+    assert.deepEqual(f.store.item('thesis-task', run.id)?.meta?.references, references);
+    assert.deepEqual((await f.local.inject({ url: '/api/tasks/thesis-task/queue', headers: LOCAL })).json().messages[0].references, references);
+    const missing = { path: 'manuscript.tex', label: 'manuscript.tex', kind: 'file' as const }, missingText = referenceText(missing);
+    const rejected = await f.local.inject({ method: 'POST', url, headers: f.as, payload: { requestKey: 'wrong-root-ref', text: missingText, references: [{ ...missing, from: 0, to: missingText.length }] } });
+    assert.equal(rejected.statusCode, 400); assert.equal(f.store.runByKey('wrong-root-ref'), undefined);
+    const editUrl = `/api/tasks/thesis-task/queue/${run.id}/edit`;
+    const edit = (await f.local.inject({ method: 'POST', url: editUrl, headers: f.as, payload: { action: 'begin' } })).json();
+    const saved = await f.local.inject({ method: 'POST', url: editUrl, headers: f.as, payload: { action: 'save', lease: edit.messages[0].editLease, text: 'Plain replacement.', references: [] } });
+    assert.equal(saved.statusCode, 200, saved.body); assert.deepEqual(f.store.item('thesis-task', run.id)?.meta?.references, []);
+  } finally { await f.close(); fs.rmSync(base, { recursive: true, force: true }); }
+});
+
 test('manual source edits need CSRF, refuse stale saves and wait for review writes', async () => {
   const f = await fixture(), root = fs.mkdtempSync(path.join(os.tmpdir(), 'papilot-api-source-'));
   const snapshot = path.join(root, '.compiled-main.tex');
@@ -1757,4 +1893,138 @@ test('manual source edits need CSRF, refuse stale saves and wait for review writ
     const place = await f.local.inject({ url: '/api/projects/thesis/manuscript/source/place?key=gone&file=main.tex&start=2&end=3', headers: LOCAL });
     assert.equal(place.statusCode, 404, 'a PDF that is no longer shown cannot place lines');
   } finally { await f.close(); fs.rmSync(root, { recursive: true, force: true }); }
+});
+
+test('task queue HTTP controls preserve task ownership, CSRF and snapshot visibility', async () => {
+  const f = await fixture();
+  try {
+    const first = await f.workspace.enqueue('thesis-task', 'First queued draft.', 'http-queue-first', false);
+    const second = await f.workspace.enqueue('thesis-task', 'Second queued draft.', 'http-queue-second', false);
+    const post = (suffix: string, payload: Record<string, unknown> = {}) => f.local.inject({ method: 'POST', url: `/api/tasks/thesis-task${suffix}`, headers: f.as, payload });
+    assert.equal((await f.local.inject({ method: 'POST', url: '/api/tasks/thesis-task/queue/pause', headers: LOCAL, payload: {} })).statusCode, 403);
+    const queue = (await f.local.inject({ url: '/api/tasks/thesis-task/queue', headers: LOCAL })).json();
+    assert.deepEqual(queue.messages.map((message: any) => message.id), [first.id, second.id]);
+    const wrongTask = await f.local.inject({ method: 'POST', url: `/api/tasks/grant-task/queue/${first.id}/remove`, headers: f.as, payload: {} });
+    assert.equal(wrongTask.statusCode, 400);
+    assert.equal(f.workspace.queue('thesis-task').messages.length, 2);
+    const editing = await post(`/queue/${first.id}/edit`, { action: 'begin' });
+    assert.equal(editing.statusCode, 200, editing.body);
+    const lease = editing.json().messages[0].editLease;
+    assert.equal((await post(`/queue/${first.id}/edit`, { action: 'save', lease: 'old', text: 'Lost edit.' })).statusCode, 400);
+    const saved = await post(`/queue/${first.id}/edit`, { action: 'save', lease, text: 'Saved queued draft.' });
+    assert.equal(saved.json().messages[0].text, 'Saved queued draft.');
+    assert.equal((await post('/queue/pause')).json().paused, 'paused');
+    assert.equal((await post('/queue/resume')).json().paused, null);
+    assert.equal((await post(`/queue/${second.id}/remove`)).json().messages.length, 1);
+    const state = (await f.local.inject({ url: '/api/state', headers: LOCAL })).json();
+    assert.equal(state.tasks.find((task: Task) => task.id === 'thesis-task').queue.messages[0].text, 'Saved queued draft.');
+    assert.equal((await post('/interrupt', { preserveQueue: true })).statusCode, 200);
+    assert.equal(f.workspace.queue('thesis-task').messages.length, 1);
+  } finally { await f.close(); }
+});
+
+test('compact HTTP acknowledges the native operation without claiming completion or permitting cross-origin writes', async () => {
+  const f = await fixture();
+  try {
+    f.store.updateTask('thesis-task', { threadId: 'compact-http-thread' });
+    (f.workspace as any).loaded.add('compact-http-thread');
+    (f.workspace.codex as any).ready = true;
+    f.workspace.runtime.authenticated = true;
+    const methods: string[] = [];
+    f.workspace.codex.request = async method => { methods.push(method); return method === 'thread/read' ? { thread: { status: { type: 'idle' }, turns: [] } } : {}; };
+    const url = '/api/tasks/thesis-task/compact';
+    assert.equal((await f.local.inject({ method: 'POST', url, headers: LOCAL, payload: {} })).statusCode, 403);
+    const accepted = await f.local.inject({ method: 'POST', url, headers: f.as, payload: {} });
+    assert.equal(accepted.statusCode, 202, accepted.body);
+    assert.equal(accepted.json().accepted, true);
+    assert.equal(accepted.json().compaction.state, 'pending');
+    assert.deepEqual(methods, ['thread/read', 'thread/compact/start']);
+    assert.equal((await f.local.inject({ method: 'POST', url, headers: f.as, payload: {} })).statusCode, 409);
+    f.store.updateTask('grant-task', { agent: 'claude' });
+    assert.equal((await f.local.inject({ method: 'POST', url: '/api/tasks/grant-task/compact', headers: f.as, payload: {} })).statusCode, 501);
+  } finally { await f.close(); }
+});
+
+test('native steering HTTP retains active-turn identity and is protected by the task and CSRF checks', async () => {
+  const f = await fixture();
+  try {
+    f.store.updateTask('thesis-task', { threadId: 'steer-http-thread', turnId: 'active-turn', status: 'running' });
+    const original = { id: 'active-run', taskId: 'thesis-task', requestKey: 'http-steer-original', prompt: 'Original.', status: 'running' as const, createdAt: 1, startedAt: 2, finishedAt: null, turnId: 'active-turn', reviewRound: 0 };
+    f.store.saveRun(original);
+    (f.workspace as any).active.set('thesis-task', original);
+    (f.workspace.codex as any).ready = true;
+    const queued = await f.workspace.enqueue('thesis-task', 'Selected additional instruction.', 'http-steer-queued', false);
+    const calls: { method: string; params: any }[] = [];
+    f.workspace.codex.request = async (method, params) => { calls.push({ method, params }); return { turnId: 'active-turn' }; };
+    const url = `/api/tasks/thesis-task/queue/${queued.id}/steer`;
+    assert.equal((await f.local.inject({ method: 'POST', url, headers: LOCAL, payload: {} })).statusCode, 403);
+    const response = await f.local.inject({ method: 'POST', url, headers: f.as, payload: {} });
+    assert.equal(response.statusCode, 200, response.body);
+    assert.equal(response.json().messages.length, 0);
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].method, 'turn/steer');
+    assert.equal(calls[0].params.expectedTurnId, 'active-turn');
+    assert.equal(calls[0].params.clientUserMessageId, queued.id);
+    assert.equal((await f.local.inject({ method: 'POST', url, headers: f.as, payload: {} })).statusCode, 200);
+    assert.equal(calls.length, 1);
+    assert.equal((await f.local.inject({ method: 'POST', url: `/api/tasks/grant-task/queue/${queued.id}/steer`, headers: f.as, payload: {} })).statusCode, 400);
+  } finally { await f.close(); }
+});
+
+test('Plan mode routes enforce CSRF and native capability, and bind decisions to the completed turn', async () => {
+  const f = await fixture();
+  try {
+    const url = '/api/tasks/thesis-task/collaboration';
+    assert.equal((await f.local.inject({ method: 'POST', url, headers: LOCAL, payload: { mode: 'plan' } })).statusCode, 403);
+    assert.equal((await f.local.inject({ method: 'POST', url, headers: f.as, payload: { mode: 'plan' } })).statusCode, 400);
+    f.workspace.runtime.collaborationModes = [{ name: 'Plan', mode: 'plan', model: null, reasoningEffort: null }];
+    const selected = await f.local.inject({ method: 'POST', url, headers: f.as, payload: { mode: 'plan' } });
+    assert.equal(selected.statusCode, 200); assert.equal(selected.json().collaborationMode, 'plan');
+    f.store.updateTask('thesis-task', { pendingPlan: { turnId: 'finished-plan', itemId: 'plan-item', text: '# Plan' } });
+    const stale = await f.local.inject({ method: 'POST', url: '/api/tasks/thesis-task/plan', headers: f.as, payload: { turnId: 'older-turn', action: 'implement', requestKey: 'stale-plan' } });
+    assert.equal(stale.statusCode, 400); assert.equal(f.store.runs().length, 0);
+    const skipped = await f.local.inject({ method: 'POST', url: '/api/tasks/thesis-task/plan', headers: f.as, payload: { turnId: 'finished-plan', action: 'skip' } });
+    assert.equal(skipped.statusCode, 200); assert.equal(f.store.task('thesis-task').collaborationMode, 'plan'); assert.equal(f.store.task('thesis-task').pendingPlan, null);
+    f.store.updateTask('thesis-task', { pendingPlan: { turnId: 'finished-plan', itemId: 'plan-item', text: '# Plan' } });
+    const payload = { turnId: 'finished-plan', action: 'implement', requestKey: 'accept-plan', text: '# Edited plan' };
+    for (let attempt = 0; attempt < 2; attempt++) assert.equal((await f.local.inject({ method: 'POST', url: '/api/tasks/thesis-task/plan', headers: f.as, payload })).statusCode, 200);
+    assert.equal(f.store.runs().length, 1); assert.equal(f.store.runs()[0].prompt, 'PLEASE IMPLEMENT THIS PLAN:\n# Edited plan'); assert.equal(f.store.runs()[0].collaborationMode, 'default');
+    f.store.updateTask('grant-task', { agent: 'claude' });
+    assert.equal((await f.local.inject({ method: 'POST', url: '/api/tasks/grant-task/collaboration', headers: f.as, payload: { mode: 'plan' } })).statusCode, 400);
+  } finally { await f.close(); }
+});
+
+test('Goal HTTP controls enforce capability, CSRF, owned resources and revision identity', async () => {
+  const f = await fixture(), folder = fs.mkdtempSync(path.join(os.tmpdir(), 'studybuddy-goal-http-'));
+  try {
+    const url = '/api/tasks/thesis-task/goal', payload = { action: 'set', objective: 'Check all references.', requestKey: 'http-goal', expectedRevision: 0 };
+    f.store.updateTask('thesis-task', { threadId: 'goal-http-thread', worktree: folder, status: 'idle', model: 'model' });
+    (f.workspace as any).loaded.add('goal-http-thread'); (f.workspace.codex as any).ready = true;
+    f.workspace.runtime.connected = true; f.workspace.runtime.authenticated = true;
+    assert.equal((await f.local.inject({ method: 'POST', url, headers: LOCAL, payload })).statusCode, 403);
+    assert.equal((await f.local.inject({ method: 'POST', url, headers: f.as, payload })).statusCode, 400);
+    f.workspace.runtime.goalAvailable = true;
+    const calls: { method: string; params: any }[] = []; let goal: any = null;
+    f.workspace.codex.taskPermissionConfig = async () => ({ thread: { sandbox: 'workspace-write' }, turn: { approvalPolicy: 'on-request', sandboxPolicy: { type: 'workspaceWrite' } } });
+    f.workspace.codex.request = async (method, params) => {
+      calls.push({ method, params });
+      if (method === 'thread/read') return { thread: { id: 'goal-http-thread', status: { type: 'idle' }, turns: [] } };
+      if (method === 'thread/goal/get') return { goal };
+      if (method === 'thread/goal/set') { goal = { threadId: 'goal-http-thread', objective: params.objective, status: 'active', tokenBudget: null, tokensUsed: 0, timeUsedSeconds: 0, createdAt: 1, updatedAt: 1 }; return { goal }; }
+      return {};
+    };
+    const injected = await f.local.inject({ method: 'POST', url, headers: f.as, payload: { ...payload, origin: 'system', threadId: 'foreign', cwd: '/' } });
+    assert.equal(injected.statusCode, 400); assert.equal(calls.length, 0);
+    const accepted = await f.local.inject({ method: 'POST', url, headers: f.as, payload });
+    assert.equal(accepted.statusCode, 200, accepted.body); assert.equal(accepted.json().goal.objective, payload.objective);
+    assert.equal((await f.local.inject({ method: 'POST', url, headers: f.as, payload })).statusCode, 200);
+    assert.equal(calls.filter(call => call.method === 'thread/goal/set').length, 1);
+    assert.equal(calls.some(call => call.method === 'turn/start'), false);
+    assert.equal((await f.local.inject({ method: 'POST', url, headers: f.as, payload: { ...payload, requestKey: 'stale-goal' } })).statusCode, 409);
+    assert.equal((await f.local.inject({ method: 'POST', url: url + '/check', headers: LOCAL, payload: {} })).statusCode, 403);
+    const checked = await f.local.inject({ url, headers: LOCAL }); assert.equal(checked.statusCode, 200); assert.equal(checked.json().goal.threadId, 'goal-http-thread');
+    assert.equal((await f.local.inject({ url: '/api/tasks/missing/goal', headers: LOCAL })).statusCode, 400);
+    f.store.updateTask('grant-task', { agent: 'claude' });
+    assert.equal((await f.local.inject({ method: 'POST', url: '/api/tasks/grant-task/goal', headers: f.as, payload })).statusCode, 400);
+  } finally { await f.close(); fs.rmSync(folder, { recursive: true, force: true }); }
 });

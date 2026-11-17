@@ -1,3 +1,4 @@
+import { expectComposerText } from './composer-fixture.mjs';
 import { readyRequirements } from './required-tools-fixture.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -658,7 +659,7 @@ try {
   await expect(send()).toBeEnabled();
   await setSelection(check('n3'), true);
   await expect(send()).toBeEnabled();
-  await expect(prompt()).toHaveValue('');
+  await expectComposerText(prompt(), '');
   fail = true; await send().click();
   await expect(page.getByRole('alert').filter({ hasText: 'Try again.' })).toBeVisible();
   assert.deepEqual(notes, original);
@@ -689,10 +690,11 @@ try {
   await setSelection(check('n2'), true); await setSelection(check('n4'), true);
   await expect(instruction('Yellow')).toHaveValue('Explain the reasoning step by step.');
   await expect(instruction('Purple')).toHaveValue('Shorten this wording.');
-  await page.locator('.new-task-panel').getByRole('button', { name: 'Agent settings', exact: true }).click();
-  await page.getByRole('option', { name: / · Claude$/ }).first().click();
-  await page.keyboard.press('Escape');
-  await expect(prompt()).toHaveValue('');
+  await page.locator('.new-task-panel .codex-model-trigger').click();
+  const modelMenu = page.locator('.codex-model-menu[data-open="true"]');
+  if (await modelMenu.locator('.codex-effort-model').count()) await modelMenu.locator('.codex-effort-model').click();
+  await modelMenu.getByRole('menuitemradio', { name: / · Claude$/ }).first().click();
+  await expectComposerText(prompt(), '');
   await page.setViewportSize({ width: 390, height: 844 });
   await page.getByRole('group', { name: 'Manuscript view' }).getByRole('button', { name: 'New task', exact: true }).click();
   await page.screenshot({ path: 'test-results/group-instructions-mobile.png', fullPage: true, animations: 'disabled' });
@@ -727,7 +729,7 @@ try {
   await expect(mobileTaskCard.getByRole('textbox')).toHaveCount(0);
   await page.screenshot({ path: 'test-results/note-selection-mobile.png', fullPage: true, animations: 'disabled' });
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth), 390);
-  await expect(prompt()).toHaveValue('');
+  await expectComposerText(prompt(), '');
   await send().click();
   await expect.poll(() => sent.length).toBe(4);
   assert.deepEqual(sent[3].annotations, ['n6']);

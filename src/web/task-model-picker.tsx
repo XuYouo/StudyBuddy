@@ -1,17 +1,20 @@
-import { type ReactNode, useEffect, useRef, useState } from 'react';
+import { type ReactNode, type Ref, useEffect, useRef, useState } from 'react';
 import { AGENT_NAMES, type RuntimeStatus, type Task } from '../shared.ts';
-import { AgentPicker } from './agent-picker.tsx';
+import { AgentPicker, type AgentPickerControl } from './agent-picker.tsx';
+import { CodexModelPicker } from './codex-model-picker.tsx';
 import { t } from './i18n.ts';
 
 type Settings = Pick<Task, 'model' | 'effort' | 'serviceTier'>;
 const settingsOf = (task: Settings): Settings => ({ model: task.model, effort: task.effort, serviceTier: task.serviceTier });
 
-export function TaskModelPicker({ task, runtime, disabled, reconnecting, onReconnect, save, onSaving, refresh, reportError, permissions, restart }: {
+export function TaskModelPicker({ task, runtime, disabled, reconnecting, onReconnect, save, onSaving, refresh, reportError, permissions, restart, controlRef, variant }: {
   task: Task; runtime?: RuntimeStatus; disabled: boolean; reconnecting: boolean; onReconnect: () => void;
   save: (settings: { model: string; effort: string; serviceTier?: string }) => Promise<Task>;
   onSaving: (saving: boolean) => void; refresh: () => void; reportError: (error: unknown) => void;
   permissions?: ReactNode;
   restart?: ReactNode;
+  controlRef?: Ref<AgentPickerControl>;
+  variant?: 'composer';
 }) {
   const [choice, setChoice] = useState(() => settingsOf(task));
   const current = useRef(choice), saved = useRef(choice), pending = useRef(0), queue = useRef(Promise.resolve());
@@ -33,7 +36,14 @@ export function TaskModelPicker({ task, runtime, disabled, reconnecting, onRecon
       }
     });
   }
-  return <AgentPicker agents={[{ value: agent, label: AGENT_NAMES[agent], runtime }]} agent={agent}
+  if (variant === 'composer') return <CodexModelPicker controlRef={controlRef} agents={[{ value: agent, label: AGENT_NAMES[agent], runtime }]} agent={agent}
+    allowUnknownDefault={!choice.model} model={choice.model || ''} effort={choice.effort || ''} fast={Boolean(choice.serviceTier && choice.serviceTier !== 'default')}
+    disabled={disabled} reconnecting={reconnecting} onReconnect={onReconnect} description={pending.current ? t('Saving…') : undefined}
+    onConfigurationSelect={next => {
+      const model = runtime?.models.find(model => model.id === next.model);
+      change({ model: next.model, effort: next.effort || null, serviceTier: next.fast ? model?.fastMode?.serviceTier || 'default' : 'default' });
+    }}/>;
+  return <AgentPicker controlRef={controlRef} agents={[{ value: agent, label: AGENT_NAMES[agent], runtime }]} agent={agent}
     permissions={<>{permissions}{restart}</>}
     permissionMode={task.mode !== 'review' ? task.permissions || 'workspace' : undefined}
     allowUnknownDefault={!choice.model}

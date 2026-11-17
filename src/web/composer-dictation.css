@@ -1,0 +1,12 @@
+.composer-dictation-button { display: inline-flex; align-items: center; justify-content: center; width: 28px; min-width: 28px; height: 28px; border: 0; border-radius: 50%; padding: 0; color: var(--text); background: transparent; cursor: pointer; }
+.composer-dictation-button:hover { background: var(--hover); }
+.composer-dictation-button:disabled { opacity: .4; cursor: default; }
+.composer-dictation-button:focus-visible { outline: 2px solid var(--accent, #2674cd); outline-offset: 2px; }
+.composer-dictation-button span { font-size: 20px; line-height: 1; }
+.composer-dictation { display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 8px; }
+.composer-dictation canvas { flex: 1; min-width: 0; height: 32px; color: var(--text); }
+.composer-dictation-status { flex: 1; min-width: 0; text-align: center; font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+.composer-dictation-status[role="alert"] { color: var(--red); }
+.composer-dictation-launch { display: flex; align-items: center; }
+@media (pointer: coarse) { .composer-dictation-button { min-width: 40px; width: 40px; height: 40px; } }
+.composer-footer[hidden] { display: none; }

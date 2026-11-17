@@ -48,6 +48,7 @@ export function visibleTimeline<T extends { id: string; type: string; text: stri
     }
   }
   return items.filter(item => {
+    if (item.type === 'codeReviewMarker') return false;
     const key = message(item);
     return item.status !== undefined || !key || !completed.get(key)?.has(item.text);
   });

@@ -10,7 +10,7 @@ engine/dist/
 engine/.cache/
 test-results/
 .desktop/
-release/desktop/
+/release/
 i18n/state/*.lock
 /result
 /result-*

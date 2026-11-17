@@ -63,7 +63,7 @@ export class Store extends EventEmitter {
       // Only StudyBuddy records are removed. Never finish review tasks or touch their files.
       this.db.prepare('INSERT OR IGNORE INTO deleted_tasks SELECT id, ? FROM tasks WHERE project_id=?').run(Date.now(), id);
       for (const table of ['items', 'runs', 'ai_review_inputs']) this.db.prepare(`DELETE FROM ${table} WHERE task_id IN (SELECT id FROM tasks WHERE project_id=?)`).run(id);
-      for (const task of tasks) { const prefix = `note-options:${task}:`; this.db.prepare('DELETE FROM settings WHERE substr(key,1,?)=?').run(prefix.length, prefix); }
+      for (const task of tasks) for (const prefix of [`note-options:${task}:`, `goal-operation:${task}:`]) this.db.prepare('DELETE FROM settings WHERE substr(key,1,?)=?').run(prefix.length, prefix);
       for (const table of ['tasks', 'annotations']) this.db.prepare(`DELETE FROM ${table} WHERE project_id=?`).run(id);
       this.db.prepare('DELETE FROM projects WHERE id=?').run(id);
     });
@@ -89,9 +89,10 @@ export class Store extends EventEmitter {
   private readonly boot = randomUUID().slice(0, 8);
   private revision = 0;
   private itemRevisions = new Map<string, Map<string, number>>();
+  private itemDeletions = new Map<string, number>();
   itemsSince(taskId: string, since?: string): { items: TimelineItem[]; revision: string; partial?: true } {
     const revision = `${this.boot}:${this.revision}`, match = /^([0-9a-f]{8}):(\d{1,15})$/.exec(since || ''), after = match ? Number(match[2]) : NaN;
-    if (!match || match[1] !== this.boot || after > this.revision) return { items: this.items(taskId), revision };
+    if (!match || match[1] !== this.boot || after > this.revision || (this.itemDeletions.get(taskId) || 0) > after) return { items: this.items(taskId), revision };
     const changed = [...this.itemRevisions.get(taskId) || []].filter(([, at]) => at > after).map(([id]) => id);
     if (changed.length > 500) return { items: this.items(taskId), revision };
     const items = changed.length ? (this.db.prepare(`SELECT data FROM items WHERE task_id=? AND id IN (${changed.map(() => '?').join()}) ORDER BY created,rowid`).all(taskId, ...changed) as { data: string }[]).map(r => JSON.parse(r.data) as TimelineItem) : [];
@@ -102,6 +103,12 @@ export class Store extends EventEmitter {
     let revisions = this.itemRevisions.get(item.taskId);
     if (!revisions) this.itemRevisions.set(item.taskId, revisions = new Map());
     revisions.set(item.id, ++this.revision);
+    this.emit('change');
+  }
+  removeItem(taskId: string, id: string) {
+    this.db.prepare('DELETE FROM items WHERE task_id=? AND id=?').run(taskId, id);
+    this.itemRevisions.get(taskId)?.delete(id);
+    this.itemDeletions.set(taskId, ++this.revision);
     this.emit('change');
   }
   saveReviewInput(taskId: string, snapshot: ReviewSnapshot) { this.db.prepare('INSERT INTO ai_review_inputs VALUES(?,?) ON CONFLICT(task_id) DO UPDATE SET data=excluded.data').run(taskId, JSON.stringify(snapshot)); }
@@ -130,7 +137,7 @@ export class Store extends EventEmitter {
       this.db.prepare('DELETE FROM runs WHERE task_id=?').run(id);
       this.db.prepare('DELETE FROM ai_review_inputs WHERE task_id=?').run(id);
       this.db.prepare('DELETE FROM tasks WHERE id=?').run(id);
-      const prefix = `note-options:${id}:`; this.db.prepare('DELETE FROM settings WHERE substr(key,1,?)=?').run(prefix.length, prefix);
+      for (const prefix of [`note-options:${id}:`, `goal-operation:${id}:`]) this.db.prepare('DELETE FROM settings WHERE substr(key,1,?)=?').run(prefix.length, prefix);
     });
     this.itemRevisions.delete(id);
     this.emit('change');
@@ -138,10 +145,33 @@ export class Store extends EventEmitter {
   transaction<T>(fn: () => T): T { this.db.exec('BEGIN IMMEDIATE'); try { const result = fn(); this.db.exec('COMMIT'); return result; } catch (e) { this.db.exec('ROLLBACK'); throw e; } }
   recover() {
     this.transaction(() => {
+      for (const t of this.tasks().filter(t => t.compaction && ['pending', 'running'].includes(t.compaction.state))) {
+        const compaction = { ...t.compaction!, state: 'unknown' as const, error: 'The server restarted before context compaction was confirmed.' };
+        this.updateTask(t.id, { compaction });
+        this.saveItem({ id: compaction.id, taskId: t.id, type: 'contextCompaction', text: '', status: 'unknown', detail: compaction.error, createdAt: compaction.requestedAt });
+      }
+      for (const r of this.runs().filter(r => r.editLease)) { const { editLease: _, ...run } = r; this.saveRun(run); this.updateTask(r.taskId, { queuePaused: 'restarted' }); }
+      for (const r of this.runs().filter(r => r.steering)) { this.saveRun({ ...r, steering: { ...r.steering!, state: 'unknown' }, queueError: 'The server restarted before delivery was confirmed.' }); this.updateTask(r.taskId, { queuePaused: 'unconfirmed' }); }
       for (const t of this.tasks().filter(t => t.titleGeneration === 'pending')) this.updateTask(t.id, { titleGeneration: 'failed' });
       for (const t of this.tasks().filter(t => t.status === 'deleting')) this.updateTask(t.id, { error: 'The server restarted during deletion. Retry deletion to confirm cleanup.' });
       for (const t of this.tasks().filter(t => t.pendingReview)) this.updateTask(t.id, { status: 'uncertain', error: 'The server restarted before a review action was confirmed. Select Check status before continuing.' });
-      for (const r of this.runs().filter(r => r.status === 'running')) this.saveRun({ ...r, status: 'interrupted', finishedAt: Date.now() });
+      for (const t of this.tasks().filter(t => t.fork?.stage === 'pending')) this.updateTask(t.id, { fork: { ...t.fork!, stage: 'unknown' }, status: 'uncertain', error: 'The server restarted before the fork was confirmed. Check its status before continuing.' });
+      for (const t of this.tasks().filter(t => t.goalControl && (t.goalControl.sync !== 'ready' || t.goal?.status === 'active' || t.goalControl.workPending))) this.updateTask(t.id, { goalControl: { ...t.goalControl!, revision: t.goalControl!.revision + 1, sync: 'unknown', nativeStatus: 'notLoaded', error: 'The server restarted before the goal state was confirmed.' } });
+      for (const t of this.tasks()) {
+        const operation = t.goalControl?.operation;
+        if (!operation || operation.sent) continue;
+        const key = `goal-operation:${t.id}:${operation.requestKey}`;
+        if (this.preference<{ state: string }>(key)?.state === 'done') continue;
+        this.savePreference(key, { operation, state: 'failed', error: 'Unable to update goal' });
+        const unresolved = t.goal?.status === 'active' || t.goalControl?.workPending || Boolean(t.turnId);
+        this.updateTask(t.id, { initialGoal: null, ...(unresolved ? {} : { status: 'failed', error: 'Unable to update goal' }),
+          goalControl: { ...t.goalControl!, revision: t.goalControl!.revision + 1, sync: unresolved ? 'unknown' : 'ready', error: 'Unable to update goal' } });
+      }
+      for (const r of this.runs().filter(r => r.status === 'running')) {
+        const native = r.kind === 'goal' || r.kind === 'codeReview' || r.goalCreatedAt !== undefined || this.task(r.taskId).goalControl?.operation?.runId === r.id;
+        this.saveRun({ ...r, status: native ? 'uncertain' : 'interrupted', ...(native ? {} : { finishedAt: Date.now() }) });
+        if (native) this.updateTask(r.taskId, { status: 'uncertain', pendingRunId: r.id, error: r.kind === 'codeReview' ? 'The server restarted before code review was confirmed.' : 'The server restarted before the goal state was confirmed.' });
+      }
       for (const t of this.tasks().filter(t => ['running', 'waiting_input'].includes(t.status) || (t.mode === 'review' && t.status === 'building'))) this.updateTask(t.id, { status: 'interrupted', turnId: null, error: 'The server restarted and interrupted the previous turn. Continue in the same conversation.' });
     });
   }

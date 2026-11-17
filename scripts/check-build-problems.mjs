@@ -1,3 +1,4 @@
+import { readComposerText } from './composer-fixture.mjs';
 import { readyRequirements } from './required-tools-fixture.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -99,7 +100,7 @@ try {
   await button.click();
   await panel.getByRole('button', { name: 'Fix with an agent…' }).click();
   await expect(page.locator('.composer-skill .skill-chip')).toContainText('Fix LaTeX warnings');
-  const draft = await page.getByRole('textbox', { name: 'Describe the revision' }).inputValue();
+  const draft = await readComposerText(page.getByRole('textbox', { name: 'Describe the revision' }));
   assert.match(draft, /^Fix these problems from the last compilation:\n- sections\/intro\.tex:9 — Undefined reference `sec:missing`\n/);
   assert.match(draft, /08-mechanization\.tex:123 — Undefined citation `knuth84`/);
   assert.match(draft, /sections\/intro\.tex:6–7 — Overfull line, 48\.1pt too wide$/);

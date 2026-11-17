@@ -259,9 +259,9 @@ export const zhCN: Record<string, string> = {
 
   // Chat
   'Details (optional)': '补充说明（选填）',
-  '{agent} needs your input': '{agent} 需要你的回答', 'Approve this action': '批准此操作', 'Or type your own answer': '或输入你自己的回答',
+  '{agent} needs your input': '{agent} 需要你的回答', 'Or type your own answer': '或输入你自己的回答',
   '{agent} is requesting permission for this action.': '{agent} 请求执行此操作的权限。', 'Apply file changes': '应用文件修改',
-  'Decline': '拒绝', 'Submitting…': '正在提交…', 'Reply to {agent}': '回复 {agent}', 'Allow this action': '允许此操作',
+  'Submitting…': '正在提交…', 'Reply to {agent}': '回复 {agent}',
   'Copied': '已复制', 'Copy message': '复制消息', 'Copy': '复制',
   'You, {time}': '你，{time}', 'Note on the PDF': 'PDF 上的批注', '{n} notes on the PDF': 'PDF 上的 {n} 条批注', 'Marked region': '标记的区域',
   '{n} accepted': '{n} 处已接受', '{n} rejected': '{n} 处已拒绝', '{n} comment': '{n} 条评论', '{n} comments': '{n} 条评论', '{n} undone': '{n} 处已撤销', 'build error': '编译错误',
@@ -281,7 +281,7 @@ export const zhCN: Record<string, string> = {
   '{agent} is working on this task': '{agent} 正在处理此任务', 'Task saved. Waiting for an available {agent} session.': '任务已保存。正在等待可用的 {agent} 会话。',
   '{n} change to review': '{n} 处修改待审阅', '{n} changes to review': '{n} 处修改待审阅',
   'Open review': '打开审阅', 'This step needs attention': '此步骤需要处理', 'Latest messages': '最新消息',
-  'Instructions for {agent}': '给 {agent} 的指令', 'Queue instructions for the next turn…': '添加后续指令…', 'Ask a question or request changes…': '继续提问，或提出修改要求…',
+  'Instructions for {agent}': '给 {agent} 的指令', 'Queue instructions for the next turn…': '添加后续指令…',
   'Pause task': '暂停任务', 'Pause {agent}': '暂停 {agent}', 'Send instructions': '发送指令', 'Send (Enter) · New line (Shift+Enter)': '发送（Enter）· 换行（Shift+Enter）',
 
   // Git
@@ -416,7 +416,7 @@ export const zhCN: Record<string, string> = {
   'Confirm whether the task is still running before generating a PDF comparison.': '请先确认任务是否仍在运行，再生成 PDF 对比。',
 
   // Home
-  'Opening your workspace': '正在打开工作区', 'Connecting to your papers and tasks…': '正在连接你的论文和任务…', 'What are we revising next?': '接下来要修改什么？',
+  'Opening your workspace': '正在打开工作区', 'Connecting to your papers and tasks…': '正在连接你的论文和任务…',
   'Describe the revision': '描述修改',
   'Start task': '开始任务', 'Start task (Enter)': '开始任务（Enter）',
   'Task added: {title}': '已添加任务：{title}',

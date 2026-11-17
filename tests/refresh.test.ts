@@ -190,3 +190,10 @@ test('agent events find their task and message without reading the whole history
   assert.equal(store.item('new', 'new:1:a')?.createdAt, 5);
   assert.equal(store.item('old', 'new:1:a'), undefined, 'messages stay with their task');
 });
+
+
+test('native code review lifecycle markers stay hidden while real agent output remains visible', () => {
+  const item = { taskId: 'task', createdAt: 1, text: 'Review output', status: 'completed' };
+  const result = { ...item, id: 'reply', type: 'assistant' };
+  assert.deepEqual(visibleTimeline([{ ...item, id: 'entered', type: 'codeReviewMarker' }, result, { ...item, id: 'exited', type: 'codeReviewMarker' }]), [result]);
+});

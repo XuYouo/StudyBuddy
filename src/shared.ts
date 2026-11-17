@@ -1,5 +1,6 @@
 import type { GroupInstructions, NoteGroup } from './note-groups.ts';
 import type { SkillIcon } from './skill-icons.ts';
+import type { CodexGoal, GoalControl } from './codex-goal.ts';
 export type TaskStatus = 'preparing' | 'idle' | 'queued' | 'running' | 'waiting_input' | 'building' | 'reviewing' | 'interrupted' | 'failed' | 'uncertain' | 'deleting';
 export interface Project { id: string; name: string; path: string; createdAt: number }
 export const MAX_ATTACHMENTS = 10;
@@ -42,7 +43,38 @@ export interface TaskReconciliation {
 // Adapter-owned IDs; workspace is the backwards-compatible default.
 export type TaskPermissions = string;
 export interface TaskPermissionOption { value: TaskPermissions; label: string; detail: string }
+export interface TaskCompaction {
+  id: string; state: 'pending' | 'running' | 'completed' | 'failed' | 'interrupted' | 'unknown';
+  requestedAt: number; turnId?: string; finishedAt?: number; error?: string;
+  /** Item completion can precede turn completion; queued work waits for both. */
+  turnFinished?: boolean;
+  /** Native turns observed before this operation; replay cannot complete a new request. */
+  previousTurns?: string[];
+}
+export interface TaskQueueSnapshot {
+  taskId: string; revision: number; paused: string | null;
+  waiting?: 'goal';
+  messages: { id: string; text: string; status: 'queued' | 'editing' | 'sending' | 'unconfirmed'; editable: boolean; steerable: boolean; steerUnavailable?: 'note-alternatives'; editLease?: string; error?: string; attachments?: Attachment[]; references?: ComposerReference[]; meta?: MessageMeta }[];
+  capabilities: { compact: boolean; steer: boolean };
+}
+export interface ChatTurn { id: string; runId: string; startedAt: number; finishedAt: number | null; durationMs?: number; status: Run['status'] }
 export interface Task {
+  /** Forks keep their native history and get their own editable worktree. */
+  fork?: { taskId: string; sourceThreadId: string; operationId: string; stage: 'copy' | 'pending' | 'unknown' | 'complete'; lastTurnId?: string; source?: { sourceRoot: string; commonDir: string; head: string; snapshot: string }; threadId?: string; requestedAt?: number };
+  initialCodeReview?: { target: import('./code-review.ts').CodeReviewTarget; operationId: string; source?: { sourceRoot: string; commonDir: string; head: string; snapshot: string } } | null;
+  goal?: CodexGoal | null;
+  completedGoal?: CodexGoal | null;
+  goalControl?: GoalControl;
+  initialGoal?: { tokenBudget?: number | null } | null;
+  /** Source of our file-backed objective; never resolve a path from arbitrary native text. */
+  goalSource?: { nativeObjective: string; objective: string; directory: string | null };
+  collaborationMode?: 'plan' | 'default';
+  pendingPlan?: { turnId: string; itemId: string; text: string } | null;
+  /** Computed in the workspace snapshot, never stored as a second queue. */
+  queue?: TaskQueueSnapshot;
+  chatTurns?: ChatTurn[];
+  queuePaused?: string | null; queueRevision?: number;
+  compaction?: TaskCompaction | null;
   // A fresh session replaying another task's original request. Provider sessions are never reused.
   restart?: { taskId: string; draftAttachments?: Attachment[] };
   permissions?: TaskPermissions;
@@ -83,9 +115,22 @@ export function taskFinished(task: Task) {
 }
 // reviewRound is 0 while awaiting a result, null when no changes were produced,
 // or the published round. Older runs omit it.
-export interface Run { id: string; taskId: string; requestKey: string; prompt: string; attachments?: Attachment[]; feedbackCursor?: number; status: 'queued' | 'running' | 'completed' | 'failed' | 'interrupted' | 'uncertain'; createdAt: number; finishedAt: number | null; reviewRound?: number | null; noteRounds?: Record<number, number>; noteOptionsRequested?: boolean; noteOptions?: PreparedNoteOptions[] }
+export interface Run { id: string; taskId: string; requestKey: string; prompt: string; attachments?: Attachment[]; feedbackCursor?: number; status: 'queued' | 'running' | 'completed' | 'failed' | 'interrupted' | 'uncertain'; createdAt: number; startedAt?: number; turnId?: string; finishedAt: number | null; durationMs?: number; reviewRound?: number | null; noteRounds?: Record<number, number>; noteOptionsRequested?: boolean; noteOptions?: PreparedNoteOptions[];
+  codeReviewTarget?: import('./code-review.ts').CodeReviewTarget;
+  reviewPreviousTurns?: string[];
+  reviewSubmitted?: boolean;
+  kind?: 'message' | 'goal' | 'codeReview';
+  goalCreatedAt?: number;
+  collaborationMode?: 'plan' | 'default';
+  /** Only the author's text is replaced; feedback, notes and attachment instructions stay intact. */
+  editablePrompt?: { before: string; after: string; empty?: string }; editLease?: string;
+  steering?: { state: 'sending' | 'unknown'; turnId: string; runId: string; requestedAt: number };
+  steeredInto?: string; queueError?: string;
+}
 /** One part of what fills the context window; ids are named in the web app. */
 export interface ContextPart { id: string; tokens: number }
+/** Public status fields only; configuration and authentication secrets stay on the host. */
+export interface McpServerStatus { name: string; enabled: boolean; authStatus: 'unsupported' | 'notLoggedIn' | 'bearerToken' | 'oAuth' }
 /** breakdown: the parts, when the agent can tell them apart, adding up to the window. */
 export interface ContextUsage { tokens: number; window: number; breakdown?: ContextPart[] }
 /** What a tool call did, when the agent says so: the chat words, groups and marks it by kind. */
@@ -117,14 +162,23 @@ export const MAX_NOTE_ALTERNATIVES = 6;
 // Prepared by the editing agent in the same turn, before review-unit IDs exist.
 export interface PreparedNoteOptions { note: number; current: { label: string; reason: string }; options: { label: string; reason: string; edits: { file: string; find: string; replace: string }[] }[] }
 export interface NoteOptions { before?: Record<string, string>; round: number; key: string; options: NoteOption[]; selected?: string; locked?: string; comparisonKey?: string }
-export interface MessageMeta { attachments?: Attachment[]; skill?: { id: string; name: string; icon?: SkillIcon }; notes?: NoteSummary[]; groupInstructions?: GroupInstructions; feedback?: FeedbackSummary; sendsFeedback?: boolean; build?: BuildFailure; author?: Author }
+export interface ComposerFile { path: string; label: string; kind: 'file' | 'directory' }
+/** UTF-16 offsets covering the complete serialized Markdown link in authored text. */
+export interface ComposerReference extends ComposerFile { from: number; to: number }
+export interface MessageMeta { goal?: boolean; attachments?: Attachment[]; references?: ComposerReference[]; skill?: { id: string; name: string; icon?: SkillIcon }; notes?: NoteSummary[]; groupInstructions?: GroupInstructions; feedback?: FeedbackSummary; sendsFeedback?: boolean; build?: BuildFailure; author?: Author }
 // Historical attribution on messages and notes from older shared workspaces.
 export interface Author { id: string; name: string }
 // A failed review build as the engine reports it; log is the compiler log's path.
 export interface BuildFailure { error: string; details: string[]; log?: string }
 export interface FeedbackSummary { round: number | null; accepted: number; rejected: number; undone: number; comments: { where: string; text: string }[]; buildError?: boolean }
 export interface Skill { output?: 'annotations'; id: string; name: string; description: string; hint: string; icon?: SkillIcon; source: 'builtin' | 'user' | 'paper' }
-export interface PendingRequest { id: string; taskId: string; method: string; params: Record<string, any>; createdAt: number }
+export interface ApprovalChoice {
+  id: string;
+  kind: 'once' | 'session' | 'rule' | 'network' | 'decline' | 'cancel';
+  detail?: string;
+  networkAction?: 'allow' | 'deny';
+}
+export interface PendingRequest { id: string; taskId: string; method: string; params: Record<string, any>; createdAt: number; approvalChoices?: ApprovalChoice[] }
 export type AgentId = 'papilot' | 'codex' | 'claude' | 'antigravity' | 'kimi' | 'cursor' | 'copilot' | 'grok' | 'opencode' | 'qwen' | 'glm' | 'deepseek';
 // Every agent StudyBuddy can drive, in menu order. Only the ones found on the host are offered.
 export const AGENT_IDS: AgentId[] = ['papilot', 'codex', 'claude', 'cursor', 'copilot', 'grok', 'antigravity', 'kimi', 'glm', 'deepseek', 'qwen', 'opencode'];
@@ -142,7 +196,8 @@ export interface UsageWindow { usedPercent: number; minutes: number | null; rese
 export interface Usage { plan: string | null; windows: UsageWindow[]; credits: { unlimited: boolean; balance: number | null } | null; reached: boolean }
 // installed is false when the agent was not found on the host (no CLI, SDK
 // credentials or key); such agents are not offered. Older servers omit it.
-export interface RuntimeStatus { permissionOptions?: TaskPermissionOption[]; connected: boolean; authenticated: boolean; account: string | null; error: string | null; models: AgentModel[]; usage?: Usage | null; installed?: boolean }
+export interface CollaborationPreset { name: string; mode: 'plan' | 'default'; model: string | null; reasoningEffort: string | null }
+export interface RuntimeStatus { goalAvailable?: boolean; dictationAvailable?: boolean; collaborationModes?: CollaborationPreset[]; permissionOptions?: TaskPermissionOption[]; connected: boolean; authenticated: boolean; account: string | null; error: string | null; models: AgentModel[]; usage?: Usage | null; installed?: boolean }
 export interface DiagnosticCheck { id: string; ok: boolean; severity: 'error' | 'warn' | 'info'; detail: string; fix: string | null }
 // A compact summary of the host tools required to work on papers.
 export interface SystemRequirements {

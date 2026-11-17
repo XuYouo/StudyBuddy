@@ -1,3 +1,4 @@
+import { expectComposerText } from './composer-fixture.mjs';
 import { readyRequirements } from './required-tools-fixture.mjs';
 import assert from 'node:assert/strict';
 import path from 'node:path';
@@ -65,10 +66,10 @@ await page.route('**/api/**', async route => {
 try {
   await page.goto(origin);
   const originalDraft = page.getByRole('textbox', { name: 'Instructions for Codex' });
-  await expect(originalDraft).toHaveValue('My unsent instructions.');
+  await expectComposerText(originalDraft, 'My unsent instructions.');
   const activity = page.locator('.activity-panel');
-  await activity.getByRole('button', { name: 'Agent settings', exact: true }).click();
-  await page.getByRole('button', { name: 'Restart with another agent…', exact: true }).click();
+  await activity.getByRole('button', { name: 'Chat actions', exact: true }).click();
+  await page.getByRole('menuitem', { name: 'Restart with another agent…', exact: true }).click();
   const dialog = page.getByRole('dialog', { name: 'Restart with another agent', exact: true });
   await expect(dialog).toBeVisible();
   await expect(dialog).toContainText('current manuscript');
@@ -90,10 +91,10 @@ try {
   await expect(dialog).toHaveCount(0);
   assert.equal(restarts[1].id, restarts[0].id, 'A failed or lost response retries the same replacement');
   const replacementDraft = page.getByRole('textbox', { name: 'Instructions for Claude' });
-  await expect(replacementDraft).toHaveValue(/My unsent instructions\./);
-  await expect(replacementDraft).toHaveValue(/Keep the notation\./);
-  await expect(replacementDraft).toHaveValue(/Round 2 · main.tex:12/);
-  await expect(replacementDraft).toHaveValue(/Explain this\./);
+  await expectComposerText(replacementDraft, /My unsent instructions\./);
+  await expectComposerText(replacementDraft, /Keep the notation\./);
+  await expectComposerText(replacementDraft, /Round 2 · main.tex:12/);
+  await expectComposerText(replacementDraft, /Explain this\./);
   await expect(activity).toContainText('Original request.');
   await expect(activity).toContainText('Restarted from');
   await expect(activity).toContainText('draft-reference.txt');
@@ -101,12 +102,12 @@ try {
   assert.equal(await page.evaluate(id => localStorage.getItem('papilot:draft-skill:' + id), restarts[1].id), 'polish');
   assert.equal(messages.length, 0);
   await activity.locator('.restart-link button').click();
-  await expect(originalDraft).toHaveValue('My unsent instructions.');
+  await expectComposerText(originalDraft, 'My unsent instructions.');
   await expect(activity).toContainText('Replacement task');
   await page.setViewportSize({ width: 390, height: 844 });
   await page.getByRole('button', { name: 'Chat', exact: true }).click();
-  await activity.getByRole('button', { name: 'Agent settings', exact: true }).click();
-  await page.getByRole('button', { name: 'Restart with another agent…', exact: true }).click();
+  await activity.getByRole('button', { name: 'Chat actions', exact: true }).click();
+  await page.getByRole('menuitem', { name: 'Restart with another agent…', exact: true }).click();
   await expect(dialog).toBeVisible();
   await expect(dialog.getByRole('button', { name: 'Cancel', exact: true })).toBeInViewport();
   await page.screenshot({ path: 'test-results/task-restart-mobile.png', animations: 'disabled' });

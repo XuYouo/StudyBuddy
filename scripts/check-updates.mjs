@@ -37,13 +37,13 @@ try {
   });
   const page = await context.newPage();
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto(origin); await page.getByRole('button', { name: '设置', exact: true }).waitFor();
+  await page.goto(origin); await page.locator('.settings-link').waitFor();
   assert.equal(await page.locator('.update-badge').count(), 0, 'Up-to-date installations do not show an update badge');
   await expect(page.locator('.brand-version')).toHaveText('v0.6.0');
   update = { ...update, latestVersion: '0.7.0', phase: 'available' };
   await page.evaluate(() => window.dispatchEvent(new Event('online')));
   const badge = page.locator('.update-badge'); await badge.waitFor();
-  const settings = await page.getByRole('button', { name: '设置', exact: true }).boundingBox(), tag = await badge.boundingBox();
+  const settings = await page.locator('.settings-link').boundingBox(), tag = await badge.boundingBox();
   assert.ok(Math.abs(tag.y + tag.height / 2 - settings.y - settings.height / 2) < 1, 'The version and update dot stay on the same row as Settings');
   await expect(badge).toHaveText('v0.6.0');
   await expect(badge).toHaveAccessibleName(/有新版本.*v0\.7\.0/);
@@ -76,10 +76,10 @@ try {
   offline = false; update.phase = 'updated'; update.currentVersion = state.version = '0.7.0';
   await Promise.all([page.waitForNavigation(), page.evaluate(() => window.dispatchEvent(new Event('online')))]);
   assert.equal(await page.evaluate(() => localStorage.getItem('papilot:update-test-draft')), 'keep this draft');
-  await page.getByRole('button', { name: '设置', exact: true }).waitFor();
+  await page.locator('.settings-link').waitFor();
   assert.equal(await page.locator('.update-badge').count(), 0);
   await expect(page.locator('.brand-version')).toHaveText('v0.7.0');
-  await page.getByRole('button', { name: '设置', exact: true }).click();
+  await page.locator('.settings-link').click();
   await page.getByRole('button', { name: '版本更新', exact: true }).click();
   const settingsDialog = page.getByRole('dialog', { name: '版本更新', exact: true });
   const channel = settingsDialog.getByRole('combobox', { name: '更新通道', exact: true });
@@ -103,7 +103,7 @@ try {
   update.error = null; update.phase = 'updated'; update.currentVersion = state.version = devVersion;
   await Promise.all([page.waitForNavigation(), page.evaluate(() => window.dispatchEvent(new Event('online')))]);
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.getByRole('button', { name: '设置', exact: true }).click();
+  await page.locator('.settings-link').click();
   await page.getByRole('button', { name: '版本更新', exact: true }).click();
   await expect(channel).toHaveAttribute('data-value', 'dev');
   await selectOption(channel, 'stable');
@@ -133,7 +133,7 @@ try {
   state.version = '0.8.0';
   update = { currentVersion: '0.8.0', latestVersion: null, phase: 'idle', checkedAt: null, error: null, canUpdate: false, downloadUrl: 'https://github.com/XuYouo/StudyBuddy/releases' };
   await page.reload();
-  await page.getByRole('button', { name: '设置', exact: true }).click();
+  await page.locator('.settings-link').click();
   await page.getByRole('button', { name: '版本更新', exact: true }).click();
   await expect(settingsDialog.getByRole('button', { name: '检查更新', exact: true })).toBeVisible();
   assert.equal(await channel.count(), 0, 'The development desktop app runs its checkout');
@@ -142,7 +142,7 @@ try {
   // Packaged desktop apps choose Stable or Dev and update in place.
   update = { currentVersion: '0.8.0', latestVersion: '0.8.0', phase: 'idle', checkedAt: Date.now(), error: null, canUpdate: true, channel: 'stable' };
   await page.reload();
-  await page.getByRole('button', { name: '设置', exact: true }).click();
+  await page.locator('.settings-link').click();
   await page.getByRole('button', { name: '版本更新', exact: true }).click();
   await expect(settingsDialog.getByRole('button', { name: '检查更新', exact: true })).toBeVisible();
   await expect(settingsDialog.getByText('你已在使用此通道的最新版本。', { exact: true })).toBeVisible();
@@ -164,7 +164,7 @@ try {
   assert.equal(await dialog.getByText(/npm/).count(), 0, 'A release that needs a new installer is not an npm problem');
   await page.screenshot({ path: 'test-results/desktop-installer-dialog.png' });
   await dialog.getByRole('button', { name: '稍后', exact: true }).click();
-  await page.getByRole('button', { name: '设置', exact: true }).click();
+  await page.locator('.settings-link').click();
   await page.getByRole('button', { name: '版本更新', exact: true }).click();
   await expect(settingsDialog.getByRole('link', { name: '下载桌面版更新', exact: true })).toBeVisible();
   await expect(settingsDialog.locator('#update-latest-version')).toContainText('0.9.0');
@@ -177,7 +177,7 @@ try {
   for (const [packageManager, notice] of [['managed', '更新不由 StudyBuddy 管理。'], ['nix', '更新由 Nix 管理。']]) {
     update = { currentVersion: '0.9.0', latestVersion: null, phase: 'idle', checkedAt: null, error: null, canUpdate: false, packageManager };
     await page.reload();
-    await page.getByRole('button', { name: '设置', exact: true }).click();
+    await page.locator('.settings-link').click();
     await page.getByRole('button', { name: '版本更新', exact: true }).click();
     await expect(settingsDialog.getByText(notice, { exact: true })).toBeVisible();
     await expect(settingsDialog.locator('.update-current-version code')).toHaveText('0.9.0');

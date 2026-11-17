@@ -135,7 +135,7 @@ try {
   await failed.context.close();
 
   const ready = await fixture({ missing: [] });
-  await ready.page.getByRole('button', { name: 'Settings', exact: true }).click();
+  await ready.page.locator('.settings-link').click();
   await goTo(ready.page.getByRole('dialog'), 'git');
   await status(ready.page.getByRole('dialog'), 'Ready');
   assert.equal(await ready.page.locator('.requirements-banner').count(), 0);

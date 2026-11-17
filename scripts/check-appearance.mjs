@@ -42,7 +42,7 @@ await context.route('**/review/**', route => route.fulfill({ contentType: 'text/
 const dialog = page.locator('.settings-dialog');
 const modes = dialog.getByRole('radiogroup', { name: 'Mode', exact: true });
 const open = async () => {
-  await page.getByRole('button', { name: 'Settings', exact: true }).click();
+  await page.locator('.settings-link').click();
   await dialog.getByRole('button', { name: 'Appearance', exact: true }).click();
 };
 const variable = (target, name) => target.locator('html').evaluate((el, name) => getComputedStyle(el).getPropertyValue(name).trim(), name);

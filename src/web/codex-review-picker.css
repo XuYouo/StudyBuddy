@@ -1,0 +1,13 @@
+@import './codex-command-menu.css';
+.codex-review-menu .codex-menu-option { font-size: 12px; line-height: 17.142857px; padding: 4px 8px; }
+.codex-review-menu .codex-menu-option:disabled { cursor: default; opacity: .5; }
+.codex-review-error { display: flex; flex-direction: column; gap: 8px; padding: 12px 8px; text-align: center; font-size: 12px; }
+.codex-review-error button { color: var(--accent); font: inherit; font-weight: 500; }
+.codex-review-menu .codex-menu-option > span:first-child { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.codex-review-menu .codex-action-described { gap: 8px; }
+.codex-review-menu .codex-action-described > .codex-action-icon { flex: none; display: grid; place-items: center; }
+.codex-review-menu .codex-action-described > .codex-action-title { flex: none; max-inline-size: 60%; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+.codex-action-description { flex: 1; min-width: 0; color: var(--cx-text-secondary); white-space: nowrap; text-overflow: ellipsis; overflow: hidden; text-align: start; }
+@supports (position-area: block-start span-inline-end) {
+  .codex-review-menu { position-area: block-start span-inline-end; position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline; margin-block-end: 6px; }
+}

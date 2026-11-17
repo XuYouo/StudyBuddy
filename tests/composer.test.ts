@@ -192,3 +192,26 @@ test('feedback-only retry identity survives reload without consuming typed instr
   await reopened.submit('feedback', async message => assert.equal(message.requestKey, key));
   assert.equal(reopened.text, 'Next instruction');
 });
+
+test('rich drafts preserve exact text, references and retry identity across reload', async () => {
+  const { draft, create } = setup();
+  const text = '  🧪 [paper.tex](paper.tex)  ';
+  const references = [{ from: 5, to: text.length - 2, path: 'paper.tex', label: 'paper.tex', kind: 'file' as const }];
+  draft.edit(text, references);
+  let sent: Message | undefined;
+  await assert.rejects(draft.submit('draft', async message => { sent = message; throw Error('offline'); }));
+  assert.equal(sent?.text, text); assert.deepEqual(sent?.references, references);
+  const reopened = create(); assert.deepEqual(reopened.references, references);
+  await reopened.submit('draft', async message => assert.deepEqual(message, sent));
+  assert.deepEqual(reopened.references, []);
+});
+
+test('late rich submission cannot clear a newer draft with the same text and changed metadata', async () => {
+  const { draft, create } = setup();
+  const text = '[paper.tex](paper.tex)';
+  draft.edit(text, [{ from: 0, to: text.length, path: 'paper.tex', label: 'paper.tex', kind: 'file' }]);
+  const gate = deferred(), pending = draft.submit('draft', () => gate.promise);
+  const reopened = create(); reopened.edit(text, []);
+  gate.resolve(); await pending;
+  assert.equal(draft.text, text); assert.deepEqual(draft.references, []);
+});

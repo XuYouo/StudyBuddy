@@ -1,3 +1,4 @@
+import { expectComposerText } from './composer-fixture.mjs';
 import { readyRequirements } from './required-tools-fixture.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -177,12 +178,12 @@ try {
   await details.locator('.git-detail-switcher').getByRole('button', { name: 'Changes', exact: true }).click();
   await expect(details.getByRole('region', { name: 'Changes in references.bib', exact: true })).toBeVisible();
   await page.locator('.task-link').click();
-  const chat = page.locator('.activity-panel textarea').first();
+  const chat = page.locator('.activity-panel .composer-input').first();
   await chat.fill('Keep this task draft');
   await openGit();
   await expect(message).toHaveValue('Keep this commit draft');
   await page.locator('.task-link').click();
-  await expect(chat).toHaveValue('Keep this task draft');
+  await expectComposerText(chat, 'Keep this task draft');
   await openGit();
   // Commit operations stay pinned while the changed files scroll independently.
   git.files.push(...Array.from({ length: 60 }, (_, i) => ({ path: `sections/section-${i}.tex`, status: 'M', staged: false, unstaged: true })));

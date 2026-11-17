@@ -1,0 +1,33 @@
+/* Measured from the official VS Code webview at 537 CSS px, 13 px UI font.
+   StudyBuddy supplies the agent identity and real settings destinations. */
+.codex-chrome { flex: none; min-width: 0; color: var(--cx-text); font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.codex-titlebar { display: flex; align-items: center; gap: 4px; min-height: 32px; padding: 2px 8px; }
+.codex-titlebar h2 { margin: 0; font-size: 13px; font-weight: 500; }
+.codex-chrome-spacer { flex: 1; min-width: 0; }
+.codex-navigation { display: flex; align-items: center; gap: 4px; min-width: 0; min-height: 30px; padding: 4px 12px; }
+.codex-navigation-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+.codex-navigation-actions { display: flex; align-items: center; gap: 4px; flex: none; }
+.codex-chrome .codex-ghost { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 22px; height: 22px; min-width: 22px; padding: 2px; color: inherit; background: transparent; border: 1px solid transparent; border-radius: 50%; cursor: pointer; box-shadow: none; }
+.codex-chrome .codex-ghost:hover, .codex-chrome .codex-ghost[aria-expanded="true"] { background: var(--cx-row-hover); }
+.codex-chrome .codex-ghost:focus-visible, .codex-history-item:focus-visible { outline: 2px solid var(--cx-accent); outline-offset: 1px; }
+.codex-history-progress { display: inline-block; flex: none; width: 12px; height: 12px; border: 1.4px solid color-mix(in srgb, currentColor 25%, transparent); border-top-color: currentColor; border-right-color: currentColor; border-radius: 50%; animation: codex-history-spin 1s linear infinite; }
+@keyframes codex-history-spin { to { transform: rotate(360deg); } }
+.codex-history, .action-menu.codex-chrome-menu { position: fixed; inset: auto; margin: 0; max-width: calc(100vw - 16px); padding: 4px; color: var(--cx-text); background: color-mix(in srgb, var(--cx-surface-elevated) 90%, transparent); border: 0; border-radius: 18px; box-shadow: 0 0 0 .5px var(--cx-border), 0 8px 16px -4px #0000001f; font: 13px/19.5px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; backdrop-filter: blur(8px); z-index: 100; }
+.codex-history:not([popover])[hidden] { display: none; }
+.codex-history { overflow: auto; }
+.codex-history-search { display: flex; align-items: center; gap: 8px; margin: 0 8px 4px; padding: 5px 2px 4px; border-bottom: 1px solid var(--cx-border-subtle); }
+.codex-history-search input { flex: 1; min-width: 0; width: 0; padding: 0; color: inherit; background: transparent; border: 0; border-radius: 0; font: inherit; box-shadow: none; }
+.codex-history-search input:focus { outline: none; box-shadow: none; }
+.codex-history-search input::placeholder { color: var(--cx-text-secondary); opacity: 1; }
+.codex-history ul { margin: 0; padding: 0; list-style: none; }
+.codex-history-item { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 29px; padding: 4px 10px; color: inherit; background: transparent; border: 0; border-radius: 16px; text-align: start; font: inherit; cursor: pointer; box-shadow: none; }
+.codex-history-item:hover, .codex-history-item:focus-visible { background: var(--cx-row-hover); }
+.codex-history-item > span:first-child { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.codex-history-item small { flex: none; color: var(--cx-text-secondary); font: inherit; font-size: 12px; }
+.codex-history > p { margin: 8px 10px; color: var(--cx-text-secondary); }
+.action-menu.codex-chrome-menu { min-width: 220px; padding: 8px 4px; }
+.action-menu.codex-settings-menu { min-width: 240px; }
+.action-menu.codex-chrome-menu > button, .action-menu.codex-chrome-menu > a, .action-menu.codex-chrome-menu .menu-item-row > button { min-height: 25px; padding: 3px 8px; border-radius: 14px; gap: 8px; font-size: 13px; font-weight: 400; }
+.codex-empty-mark { display: block; flex: none; width: 48px; height: 48px; color: color-mix(in srgb, var(--cx-text) 20%, transparent); }
+@media (pointer: coarse) { .codex-chrome .codex-ghost { width: 28px; height: 28px; } .codex-history-item { min-height: 36px; } }
+@media (prefers-reduced-motion: reduce) { .codex-history-progress { animation: none; } }

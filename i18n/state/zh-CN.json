@@ -1,0 +1,737 @@
+{
+  "AGENTS.md already exists here. Skipping /init to avoid overwriting it": {
+    "revision": "935f08d4ed148c5d6560f44e98abd81411e7cee60e2e6402d1a1e03da3ae9d1b",
+    "textHash": "17a309755a61adf732d279a070d4b58c2ac419179ae00e2bf1a1704f434411b9",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow all edits": {
+    "revision": "a6b1d42bd3b1e27d277e4fac11e0fc20bde9224c3feb728a0203a8eb45a4afbe",
+    "textHash": "d8d49dd3cce9220073a9f22fdf9d306e7c327ea6727ab4b5232409a657bb073c",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow once": {
+    "revision": "510226cfa9edfc594554c8209248c4bc491cf0d33083340d388f09cf4bed62e2",
+    "textHash": "4a6d8d490c54d4381c980e8e2805fc57a62a96451fc60c82b976c4ffd431ad07",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow similar commands": {
+    "revision": "3c49c712e3f21f073e44230a8918db0170e4e19039611daaf1ff601ea79ad606",
+    "textHash": "afe02d1b353646a82767b8ba80d2ebb3ce7004bb2cc8d8f62580612c84db921d",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow this conversation": {
+    "revision": "a33891869ed62f939636e778a0ede30d2f5b8c353edf2ca382c97bae9921e742",
+    "textHash": "56f98b7f98fda51744cd4191817ebe8e94e9a1ba72178c86390baa060e58e128",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow {agent} to connect to the internet?": {
+    "revision": "b11621051c1862a7b1a97ed4e4422aa79f2226d81ba7f22e6e9ef2d2ea6f1579",
+    "textHash": "2e6145f6d9e98ec2b1a0303953f7f01130158049eb7abc76f893709c036d0745",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow {agent} to connect to {host}?": {
+    "revision": "8bcf1e72f51fbbf9275432011269fe8432d2f84b0535e00b1c555b0601339e9a",
+    "textHash": "3520f2045f6720753aa4283e6b03ab41a24c77739174f0b794cb1a0217fc0857",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow {agent} to edit the contents of {paths}?": {
+    "revision": "8b0a0397c64170e99f3f794a0c45372d39033b994068399a2cbc0216bd712e4f",
+    "textHash": "e34f249d3170a2cbe008c65f839700ea541fc34127f8091e10527635c54e5d17",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow {agent} to edit the following file?": {
+    "revision": "8166a20c99815e5981094b9ee1b991c38498b26cfad5fde688a5f64c56299b70",
+    "textHash": "bc24ba99c4470bd4d60c4782295535650ddb55a4f3624ae1ae8b723bf5af1691",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow {agent} to edit the following files?": {
+    "revision": "a50df6568966e45981b676ec8c583dfffadb0eb93a6aa28cc00115a1be8fd534",
+    "textHash": "bc24ba99c4470bd4d60c4782295535650ddb55a4f3624ae1ae8b723bf5af1691",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow {agent} to view and edit the contents of {paths}?": {
+    "revision": "070f41b9c9579f17d9426f35e659c21add6b448ab9995ff721be0a6b460dd987",
+    "textHash": "80ce00a2001a0f5c06bc8bb4168e3a41ac185fe575f4857382bb1ec7bb776668",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow {agent} to view the contents of {paths}?": {
+    "revision": "c0c3ca2d276d64cf2a153a57ed996117292014b7981f717c87d7e5e62720c3ee",
+    "textHash": "e404f5b401676928abdbb39ce2cfdc5a89caed45f033425ec9fd975871985297",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow {agent} to {actions}?": {
+    "revision": "4bec57a5f450fe3bd9067527c1ce9ce258fbe7be7939d204c34c27073a1f4910",
+    "textHash": "febfd575d8d99859ebc76988223a701a414e529db4bf649fd56acc0e758e49c0",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Always allow": {
+    "revision": "062cc996d056d721472bb5e4e522f5fb92b036185754bfc0c536f31ee4b88fcc",
+    "textHash": "04c7fd9eef8d6804f24912fff3b16d18d1ef45e65743a7403ec8e7546a457221",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Approval options": {
+    "revision": "75628bd28cd49f2566cd77eef066c79c270b8f5b069adea025e7343d423114b2",
+    "textHash": "a9cbe2fce82407faa641e916bd2271ca74443e8c07c4eb2c69b1d8c9a615aa32",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Arrow": {
+    "revision": "a1ced72a631733fabc6843720a9b45be051f7d20c30fbe5a20f3fcc3b6c1956c",
+    "textHash": "83fa01a2d7805b1badb2a9fa78954b617b69a5a6a490e6035d4d5a241b4554ca",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Attach sketch": {
+    "revision": "a7e90339e86526b150b3d7b65aa054ff50fb21afbf2ea8bb66f9ddf063615037",
+    "textHash": "f885db18c8de93b426283929db751acbbd5266f471ec40bdd93769c970a14a63",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Auth unsupported": {
+    "revision": "e7e880900431cfe75ffba47f18153c3408a363917aa9bd2b0e0be8995e6d34dc",
+    "textHash": "a5d822c938dde08f2b61b0519101c68017f2e967e5fbc3d901c21a588cc288fe",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Authenticated (API key)": {
+    "revision": "c00a8bea60fd2305f6e9608158c6904efc8b66a2c0085a22407b27298f157f8d",
+    "textHash": "5bd84e65cf39c16ba89f8356698265f6a098db21f9d6c568167deb105f4ad77c",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Authenticated (OAuth)": {
+    "revision": "4cf1c419091cb5eca71a22ea306206bc981dd06ee212228baa64772b8477499b",
+    "textHash": "fd4a21a41d48295bd560994bdb4e676cd6ddcbbc228682e3f7049cae3d13bc7d",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Cancel dictation": {
+    "revision": "7da335dacc1582109ed45922587c87587940b6e83411c73ad36d60b0a305a1e8",
+    "textHash": "12e6846dac1851cd77ae2cc52980ce905caa60f070c52ae5655ca334e2fbb722",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Cancel transcription": {
+    "revision": "1b790acac91baed7ced8ec7a48f72b6985aa0a7dc574c0c8a2df8a2364f25472",
+    "textHash": "c374b50c0babf2b8547961655ecac57e69e60c5e08ab30752dd47626c415a6bd",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Choose a custom color": {
+    "revision": "db191b22a7347be0c966a0ccb2c9b39986cc8030c6e7425e7b66ba7a28ae2817",
+    "textHash": "e65c45a05191096ee568e1f7f23cbd9a2647cab8867b90aeb5576346dfc69bef",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Clear goal": {
+    "revision": "bb84a1362994066c19220f51f41bd9a9cd290f731f56fc8d934dae32a544bc0b",
+    "textHash": "d4eeca487cf3fe5c687cdb30ade8bbf2a89b710e6442cd422fc6bff8bd0e5f08",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Close sketch editor": {
+    "revision": "2fa9ad4ea02316c7fb02caf869b46f0b64f98e029e2e5394abb55b4f389957d6",
+    "textHash": "70e3f8edae14cce3bf9a7f114f26543306dbf2bbad36ddb9e84a381e476f16f5",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Code review": {
+    "revision": "2f0f140860c943c993c3b7879d9aaf9441d5a38196599dbf3cfaa61a309fc782",
+    "textHash": "1fa3244c050f16b11fae7dba4a4dc58a96a590839ccc7575490997908a1828e0",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Collapse": {
+    "revision": "e4d30376a7cff33bbde86e9e8a0eabc6f7a3a7026f05fdd0da024730edc10afc",
+    "textHash": "84a07f292f1f78cc4d24cfe118da88225195e44636ff8608db4ac874e3d6d347",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Collapse plan summary": {
+    "revision": "232ac3464012dac1c062afc27e4f43eccb6e0a75e85c5e406b2e1708b18ab2bb",
+    "textHash": "a19b859b1b1e3552b771ed932a0bc2b3a406a60ae61f458cf8c54fa1d7cdec2c",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Create a plan": {
+    "revision": "08a1e35eecf7235c3757ced94c88dd020aee1009c09de7a0aab521b5f113ff97",
+    "textHash": "f06738024f990f9d06a10f9e5ede9df1926a8798157e6eea5f6214d02aee9fd2",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Deny": {
+    "revision": "f83c53746b8e29270fe1c82322ef35e8c752bfbcf7c0fc764266f5355b9faf85",
+    "textHash": "136de7a8c46fc8031b2243ef930866dba2e3bb42984596cb4e31824a0d050371",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Diamond": {
+    "revision": "30e0bcbb5bd23ecec02bdb964c0f0b27e02c030c7fdf7bf22ad7b44052645fa3",
+    "textHash": "960748c01415d3444fdeb5b8e38415a13ec30c0e1135ae8e755b876af792e362",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Dictate": {
+    "revision": "ba618b9d29b853de44a8c549a8b0ce84a3b80e0593ad114f616f149a17effd8b",
+    "textHash": "a44d14888ce8f079340c065c41fe16ed8d66dd13f864e1bfd72a4d4cbe548dbe",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Dictation is active and in use": {
+    "revision": "f78c182668d5a644f51f1eaef1a1ea3da3e8172b93a24d650de4b744eb5e3217",
+    "textHash": "a20d41148a7ff1c74a1faff44668ae75834df1856a05a27f5b9f2735892d7c79",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Disabled": {
+    "revision": "2686fac72ba0fb359998ad34c31a7d460d168acd66e9b0a64ff1d3ed1b52bcc2",
+    "textHash": "bc5a87a757a557d91ab153a8e500d490fdad9b1e88108603f25f48ed681ab365",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Discard changes?": {
+    "revision": "d0eb1bae93141d71eb3fcb39baddac262a5c9f9f948c953436c7b72899f32a72",
+    "textHash": "980f28d33b7512d77ed564bdae92e8f25a24118cc9fa398c085a2cd89b712910",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Dismiss": {
+    "revision": "57e62537c4668df6aa10a710efd25119a31719867e3dfc917176d314e40f0369",
+    "textHash": "6e90ac940752ebf13ab2d29a0d0d635ea9596d2e6d112962644b3d3dcb364eee",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Done": {
+    "revision": "82dc94132e755dcb2c3b4fd85f33e2b71a106489a29b3be9be4e29eec6b889b1",
+    "textHash": "c0b3fbff51ccc40b8bf1a81666e7ecced016187cbe2ac6f1d627e0d7a287e04d",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Download plan": {
+    "revision": "c5c68344648c8ec47850f96ee95d5e073d3bc4c871ac9da8ac9387fe7dd57068",
+    "textHash": "c69eded58bbce68773ce1680d30f125ff851f635ebf2575112f092e5cc7d9004",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Drawing tools": {
+    "revision": "abb5e75e1331d12bff2f1d3d5802795e590a1a55a414b868e1cdbe7bed40db18",
+    "textHash": "dc851eff4b93451f47b35832a16836568e4ed131a2d0103414716029299727e5",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Edit files": {
+    "revision": "dd21a1cae35e84e4f87ff17c86d1f688e8c74db2640f2385ddb3866f5e9104fc",
+    "textHash": "60ed265346273d74e28d46b8c3111ff47a0ae6db305266a71371639c920d1418",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Edit goal": {
+    "revision": "8d0c1f2c834ec77ae87aaa70332e5e4e29b822a02b4f2b1cf433e33a3442892e",
+    "textHash": "127636b82d8bcadf29453d4722c5bffc20a13f2ea7899b00d41954e2f8e69002",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Ellipse": {
+    "revision": "ae62b69b8875d88b532fec701f5f77bc167aa7d06ac416c89f33a3729a3c51f1",
+    "textHash": "7cd7a8146fca51e07b5ff5ccab5883bdd9deafe75fb7b522a44f469280c6288d",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Enabled": {
+    "revision": "b5979f3ce37ae39b5b3162ab4e32d86e5a22a0b68c70b6028f3a10b53c354976",
+    "textHash": "dfb802238b38fbd49560b461d3ff1ee5cef3a72077c37a1325cb4892c10fd1c8",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Eraser": {
+    "revision": "7d9db99b429a0580d32da4eeb9c87eaffa0893bf3b7f0f4711dd39cf65b92d61",
+    "textHash": "05cf56410be36b1c7d51b94f0d04500744590738c2af59e9ba62490f64c253cc",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Eraser size": {
+    "revision": "299563551774e29284f34f4e0d1718478c1974ada84565c57b8f8b8b3f0a7524",
+    "textHash": "7557deea3380de4de918b70a16becb9d7d8ba6f5d86ebe945cb9000ad8c8170e",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Expand plan": {
+    "revision": "960e53251250e5fed0ddd1c53c6ee7a9965fb2caad6c4f128dd4666a14f8fe6a",
+    "textHash": "4128911608b959c36cf512d371e38be37158f4263c48cc996c79402117720b8f",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Expand plan summary": {
+    "revision": "b904a21dc4132e24e73ee392f0f85f47e0dc050d70b1ddc3c85c749e518fa359",
+    "textHash": "24afd7a704d5bf2944b53a902f6caeb9b55e80bc9f11d119edeb68eb39d30219",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Failed to fork chat": {
+    "revision": "3f87bf7bf17a013e4bdb88fc2df7ae04606abffb88b2a6856f4cb3135b5da142",
+    "textHash": "6183714386e10e6706e40da651f6764b6bea789a74c3304f7d109cabc12a7cfe",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Failed to start code review": {
+    "revision": "adfc9c9de8115a2123710fb3740916927afb1449d2fe5c8ab596ef8a86d994f9",
+    "textHash": "c235aacb227b9d67f4107b8eb968422bd9a5f61e291cfc1f71ec0717dba925c3",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Files and folders": {
+    "revision": "c897a72fc87752c9b8bba274bedb6ad3f9e13883210f5b7f25101db0773845bd",
+    "textHash": "71f5aec401174f5063347a103c6bfe04404f1abf5739a72dd55f080715f22c3a",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Finish typing before inserting the transcript.": {
+    "revision": "1d1533a1d54cbc35f7e648be3834f0f2baf99197a011e9e8f8a8cd8a2de79348",
+    "textHash": "50ce4699164eaf45e3127ac186fbd3299c5e29998bb279a3975961bff493e161",
+    "model": "codex-manual"
+  },
+  "Finishing dictation": {
+    "revision": "7ee228369e1b324f7455b22e90ab33f57419cd280d32e56428c6da244423984e",
+    "textHash": "8f60200062b5f7791b9274b4bf4c3345c1a1c2fba1937705e96a5220436276df",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Fork chat": {
+    "revision": "be573ae9ed8e45bf72db6d736d6e3f23801e91e8e477bfebc8a1f352d1bfa59a",
+    "textHash": "3bc123f6cbd4e69da014965a8dbc5a486faf4676b75ddb1b90f2a097a910661d",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Fork this chat in a new worktree": {
+    "revision": "767c8453516a7ea2773e34c38f12a5270924ba86fc1b0a9d80945b48ee972f37",
+    "textHash": "f4f60885d95773427e204c9f73b4da8d88678856b7d118b3e038264bea915de7",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Fork this chat into an isolated worktree": {
+    "revision": "1761b82eb77a7f9a9a75d06ffc531952669cccbaec45e63e65f6ffb300cce95d",
+    "textHash": "882da77fba898a766b53b67fe79d09c62bacd439908d4c9051cb9d742a157dad",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Goal": {
+    "revision": "1c27c9fbb98a66242268aa2f6cf57f99283f3043ae41d963ec37343ea2a741b3",
+    "textHash": "57060c88a36bf3d073db72f91153d060b56ca2ee56d1b0291c8e2794cc998865",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Goal achieved": {
+    "revision": "eedb7483ba2c9a890ae231242acea8064c0f6cdc41820aff3ea2d6615184bde3",
+    "textHash": "7d6667c86ebec2fa840f103ccb653ea68b0da01fd165560c39f9e6a65b750b4c",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Goal limited": {
+    "revision": "f9c81b0bdc84f3bbe36ea34ef1bf850210c97e85e6a7114b4fd265bdfe029c01",
+    "textHash": "4a2345883e1b1d626aaa5c46f84b3ae29b8d3cd4b83fa7a5eb3f705e7369008f",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Goal stalled": {
+    "revision": "448e1c359c5d7b057412725a10241f654db81a3f6df78e93ba42d98e1718ac2c",
+    "textHash": "40872fc58350bd656dc193fc34d63b2dcede4c03ff0eb47b73394a99cb4362b4",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Goal usage limited": {
+    "revision": "76db3f1721bb360c0330431029bcd13f06e9b4998fb77d40338200515c8c72eb",
+    "textHash": "c8fb9e13e776596a571317cc97d0e717a4af1b11f43922363a670c1fd3cf9cc9",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Heart": {
+    "revision": "fc6b21cc2224e52b80ac9c5aa0a1eb0d8ffa94d007d11c75e3348e6d039979d4",
+    "textHash": "c2e1f17f72c191abc16a882561cf8d3bd07c04a3de145588cef9eb6f69078149",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Implement this plan?": {
+    "revision": "2224fffe109ea127be144539af488a1e89758c26647fc95a683e9b780ce56285",
+    "textHash": "0d1c1e85a8bdf883c8440f7d443a5bf083d330f0cc3125c2bf5dc16a2aa2c334",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Init": {
+    "revision": "3db7df06434543b030fdddad155520ea522b7c65a6251d6c87de9dcc08f4a0f1",
+    "textHash": "65622e8ee9fb116bb6babe770e1bf1d3c09fee9df2f0f2e5ddaabc6921bd488e",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Ink color": {
+    "revision": "e305748f054f92159d7ed40e2d2395db65a4bd005b2b7f5f835ec9bc153f5678",
+    "textHash": "604d3db31f2b604357ee7af7623d74491f9c6f7e8bddcf8fc96ca837b0fd197f",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Internet access": {
+    "revision": "457a7e2da2ec2c10373f503788e15bbabf0262967aac330096142c122b967337",
+    "textHash": "ec192e98fb19d0923fe8ba26000e7e5a01b87d2ada588830fb84007b60b7751b",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Line": {
+    "revision": "9904ef0a87b163e5982d31865a6bec7d8cd9f9774fe3f335dd493c142b57bdd7",
+    "textHash": "c94b5ebf51692703d1f83b71c71d28e3c5a39ce0159c869f58275071ff3ab7fe",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Loading MCP status…": {
+    "revision": "8284c479d69bf7f281ba9450ea7f45865f41e901eec53eeabae6494237631722",
+    "textHash": "94f2c72a5f02146de7eb1a00c6e331bc4ab566ec8fdb707f516abfca55bfb4c5",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Loading branches…": {
+    "revision": "39fa0f44e9dc95de7f5694a436b4916cc7378f62ddfb58bba9062887664487ae",
+    "textHash": "399c672ee0062238e58066c7a2489fced6807f7474303997ea8f2e820f16a7c5",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "MCP": {
+    "revision": "7a32cec927db0e997c36ff2c73ea0f4c52d4f8cca2f2dcf4ca99663e9e6d1f66",
+    "textHash": "53f13ae99ed53bd346eb8e1c8cefb7ef8260683b50401caf101360967ea052aa",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Microphone access was denied. Allow microphone access and try again.": {
+    "revision": "424d0dd85ee58c33f134908ea4d5d5ea2f9bdd19fb11b8adce73b93c5edf5a02",
+    "textHash": "802f411375812b79f4697c97f905a9b6646d5becef04f211261119b96b261231",
+    "model": "codex-manual"
+  },
+  "Next question": {
+    "revision": "cc65d4b0be6affbd3807bdaee8cb6247a1f58b9243572a3734352ec68c5102b3",
+    "textHash": "ce4c5d8ca6ff4c9b6016c6d04943af1311a6a21be06ff17d364f1df89a41af02",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "No MCP servers configured": {
+    "revision": "d92c464dac729dd05bee49e7147de810a29187b06c7cd6d13dde93bdf57a99e2",
+    "textHash": "167f6adca6d85ed47adcc94b65cd89d071d08df69a1ec36d9f9fae10ae73190b",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "No audio recorded. Please try again.": {
+    "revision": "2402bee8c3d4f3838df221737424c8e36ae0f27387a092e03fe5f35b96bd8667",
+    "textHash": "711b1315c91ff61632d1461ad883ab86cb4c6f920cb3416e8867ad4ed2741395",
+    "model": "codex-manual"
+  },
+  "No speech detected. Please try again.": {
+    "revision": "8470bc7a5d1215010408a1d417437a0602c88a556f3f54bd9142cebd5ffe60f6",
+    "textHash": "481031b70a46341466f218e5b52d63d5eb9bd4f85a550e1cca88fb4973d04bb7",
+    "model": "codex-manual"
+  },
+  "No, and tell ChatGPT what to do differently": {
+    "revision": "a1640d252dceb2cd60364161ff8330b96dc19f7c477cb08559c4961073e6b28a",
+    "textHash": "ef3fa91c72e7aa9f1433c6e745ae0eee3861ae95ae95df309b74ce61a2bceb84",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Not authenticated": {
+    "revision": "557129675d21a3091ecb68a0e4c1a26437b893322671ae5747af3aa545d7a0a8",
+    "textHash": "f9e1fcf1e399ec5a799da0315d85331cb41eb38af0df1585f1d566cc0f568020",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Open": {
+    "revision": "7ca6679a8f28fd509ddf66096797edbe458d8b53b0f76dab284ee544c4a3c742",
+    "textHash": "c771248e511fbf9328abdf31f3f2472d14940144c3ef819c3ec3bd8c2631738e",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Pause goal": {
+    "revision": "b3019d53cbd974ec873712eae82c97503c21ce090a41ccad2242f0aab2ca1197",
+    "textHash": "34a8a93ff639915f12a37aa13a7d2e1f7de94fbc350a3395adcd9ee59c72e3de",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Paused goal": {
+    "revision": "0d3d1a2355f9db164414c220157793d9c791e98405647a10048c1e3a94c35541",
+    "textHash": "916a15661d20131c4e2d5c537333d7f80061a0824b48a7843c846f3f7099ed9a",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Plan mode": {
+    "revision": "597c9751a270bfc428989d68f1e80fef51a583e3c0d8429068fc82566f0b22b1",
+    "textHash": "7cbb85b7e8519070363f7c915d55db2c212fb04bbd166f5a4b0e3afcb7fb16f4",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Previous question": {
+    "revision": "fa2096f84123c85ca0a0319f55cf76b6b84dd7556fcd02c9e830101771f573a3",
+    "textHash": "e175d0cd4920a8d5c3066a9bb850e480cbc6e00b69c15b0cac0a3cf106ab04b6",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Pursuing goal": {
+    "revision": "5d3562b799746cbecae748c416e7a147cb1a2e70f40f76779e47e72dd466f307",
+    "textHash": "43fc32e85fb21c539c8ae425177487281eceaaaf5714fc5989093cee8dfa17d4",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Recommended": {
+    "revision": "163c8c4a0f9d04c21cc68d727c642e8f9b2de43a4ca08f3c982c9da784ddd33f",
+    "textHash": "1452deafc6d96546b7ab40acde3d93027b476b3609202fef2ffc875644ada8f6",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Recording is too large. Please try a shorter recording.": {
+    "revision": "eb4de0c5e98ac1ca3a87b3cb0c1b834af68bc3818deb117fa84a5162efaf14a8",
+    "textHash": "64233a3c0df0840093774e4216440aeb93cba70fb1909784f2eeabe278f89ba6",
+    "model": "codex-manual"
+  },
+  "Recording…": {
+    "revision": "2bf822b3120a5d687bb13f6d287b791edbab454f2ad02f901be87893ed5bdf93",
+    "textHash": "7ee05857ee3c369089222ea334c1f833c1412fdd48b3e8955b8d0e9376edce3c",
+    "model": "codex-manual"
+  },
+  "Rectangle": {
+    "revision": "08408aa571ac68e448de22353e9f978993e30f142228e79d1ab597938d255211",
+    "textHash": "88b75a101595a23afc92d9a290b08c542fa4ef661559538ffd7239796476bfea",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Replace current goal?": {
+    "revision": "ad2c9afa10ee824f76e960db4e8e35db8b719ea6fc34926dc897dac5076c8f87",
+    "textHash": "a582cae4af491de05820d9fa1c1d4cdf8cdbfe738204c244935783efc107f42a",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Replace goal": {
+    "revision": "a7a8eb7c7718c017a7720fe2c1d416020dcfbef7875d97d72dd6c9672cf8afff",
+    "textHash": "3add72357ca6ce2b1eb7dd2f868a304b5b291e37c1dd260899c7452cad8bf80f",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Resume goal": {
+    "revision": "af7af10a1c1c7c0c025fa48c2fb4c06454a79d031e47afbe504332810ed343e8",
+    "textHash": "caecb5d342cc889a76e34ab3f4517577015e6385bbe38e92085d6e18c9fa3d0b",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Retry dictation": {
+    "revision": "adc218957aab5abe053c05215caae803b95ecb5499f66ce754f7e1ce19ee0742",
+    "textHash": "69be90c393f11218f05a17f7ed3078cc8ff02af97c8755fdc56474fa1f93c720",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Review against a base branch": {
+    "revision": "d03b7e17920fd2cdc194a032ef1dd90d3a9fb08897a11e071393e60b067e985c",
+    "textHash": "766ec3f2f5cad2b8a930a43923a41ec0e71d69d34178e1ce89dc19584c36c6a7",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Review uncommitted changes": {
+    "revision": "003aa4e2f205111f11e466ba1f5b645d49efc585e6f43aaf175cb8b85efbafc1",
+    "textHash": "d393faeeb610c91e9fb4084d4550cc1ecd3aaf1378df550156153c2477a76184",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Review uncommitted changes or compare against a branch": {
+    "revision": "531cee8c93665bb7a0eab3ee583c2ac8a0d8cce4238441b30a1dfbe687698e42",
+    "textHash": "fb3b04ed096bf2a974a658feacd52ccda342de484727b83d3134c01462eb8509",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Saving sketch": {
+    "revision": "7435413910c61aa7a0221bb2cb3154a3a13301e84838f29bbc04363ca718bfb6",
+    "textHash": "b0ab9a3a0470f55c963ac257b26fe1d7e7b57c9937351d9f7f99fa9bfd19b4ea",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Searching files…": {
+    "revision": "5885182e2ec320df92a0069be98184ee082a18567d12859d35a1d92fcadb327e",
+    "textHash": "d76070b24357be060d7c332322098a374be469e63439f1d347a9f6a938e52f40",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Sent as goal": {
+    "revision": "14585f069f433e3306c0827fc698d46f3eabdc29867d60411d28385ef211d89f",
+    "textHash": "376df1782ce1735ca1140efb9014424b52c4d7d6c3b3853c6efa559bec399eb4",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Set a goal to keep pursuing": {
+    "revision": "61499cd8bcf90d5d10e7eb92eb77062be2c19ddc44f6f77a19420ba4b267290b",
+    "textHash": "5ba74297d34a4671bcabb865b568bd862efc84fbe4a0fd6a2b20b3e7b7e304a2",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Shapes": {
+    "revision": "5b72d6f846fc1f06bfb3c6287680dd0b3ecb412d4a5f44dc1493e3a3da2b406c",
+    "textHash": "c2f71c1b10ef9d80fd9451fda2a3fbcf4d5dfe823aba4806a2e08301f286f5cc",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Sketch": {
+    "revision": "8460b5a95aa907df1b545c4a84e23f2c295d4c89e7e9588c7a6ae95e69cb7bd3",
+    "textHash": "ae0faa3203a931c6bb8c10627de16930a17a4c3e72017984df321d8e79c98d4d",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Sketch canvas": {
+    "revision": "79180bc103c948089f54eac9b65f9fb0b0f513082ae0005bff67bcf840a22ef7",
+    "textHash": "ba50b18e1af61d87aba4e43ab2074ece833f63ee7c59700a55cd3ce106508320",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Sketch editor": {
+    "revision": "abc1974503b2a9cc9a7f87440b397c3fcb9b959f358a5693a72be9111686a15b",
+    "textHash": "704104c11a86a5eae1d7f4a9292833ad04a89bdaf28a687499484b97a3840165",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Skip": {
+    "revision": "0515cdcee160dfe4d31ef1763e29a97676a6d8d7a7c9ff10b3e5715422b7d302",
+    "textHash": "fc50a99caae0cddc10e0d3f953c48b08c35f1139fcefcc83f01a81bf92124aa1",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Star": {
+    "revision": "66c44bd2e56ba111470ef6052d5dcf0e25dab42d53ab7b17481f8a5b6d094153",
+    "textHash": "59983f97d2e08a2905cc1f908fc0d21862d2505b5cb532c6e226a67b53ce8c2a",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Starting dictation…": {
+    "revision": "ca1b0039c8b1f086132191dbb2f9ef0d732540453e3b57ea51787a9e03a1a6ef",
+    "textHash": "ba26e969d8301777c5b2add43f562eb15dc2ca4d1093661b60576085c6a0e140",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Stop dictation": {
+    "revision": "9f45bdc9d1f3a5a0cdc32d031574209c86d76ba208c5d120951307fbe9d3c795",
+    "textHash": "3d6c71698aa35d43a144a86dabe51e4bd11cb00b7ab946325e042daae44bd5b0",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Stroke width": {
+    "revision": "5826c01565591464757c1d58602a10216e3d7f33250ab711e576cbe58fd559c9",
+    "textHash": "73d8bb90844dfbde94af2060e7814ee6bce94a1a0c798e1d4c52112caa828a64",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Submit": {
+    "revision": "44e3bcf0c36a0120fd280ac71d6da4a7e994e0d56cf4400da4b4dd7f4a5ce3cf",
+    "textHash": "08a85f4ab4bab9cac9adb34251164b48c783698f43a1978166000d48015fa2ca",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Terminal": {
+    "revision": "1b9f7c29a311df24317e04030e3dd414d3f95b0110daf6799292c53aa83f8376",
+    "textHash": "e2a76ef1f12e147fe9f6914b57698fecf0b42a88ab1bd864cfbc205bf9bff739",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Text": {
+    "revision": "07e3a10f70c81ae98992c1ae98242a2dfa944e317172673c6ed8b0cac1515624",
+    "textHash": "dd81861811e57bf7d235568e929fd62cac6a2aefa0743e141ae8af8862dea346",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Text size": {
+    "revision": "41c5111a245aaef5cb2de1f0587bb74dfe8f7e214f9f2e68eb09e2adf4f79034",
+    "textHash": "52826b6a046f60d14a8fb362025fa891fdf65c8c5094ea90a39beab358f182cb",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "This will keep the chat but replace the saved goal with your current composer text": {
+    "revision": "c8282ea40f7c03ff048dd9ee2e36bfa9fcfe1559927e16359daf122ecac81059",
+    "textHash": "75e2c6fe8d877dfd6876fe7a72c85f8f51daec510b6444f713c1d83889389444",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Transcribe and send": {
+    "revision": "7f0d0acbdb91b58085bb06727a092f51fd8f4f6afbd0f14846dedbb886f4fc3c",
+    "textHash": "3a24af128554e3d349112e31c3c437e06e967974b55fabdafb5588cea41e0896",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Transcribing": {
+    "revision": "268c1859cd20a29e7ee9534eba20018eed0001d5f00daac7d73979e6daa616a5",
+    "textHash": "e78e705bd94a293388e77e70e82f105e931969e62f26d79444f29493973d3b20",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Triangle": {
+    "revision": "0e19490260489d9f0be32c6c7aac76aa2e1fc7f075396d5f96fd36144d4befd6",
+    "textHash": "3ecb2130838315af56aad575ec820023e5047d5e7114c625f02cbd9370f59d06",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Turn plan mode off": {
+    "revision": "7687147dfe63004bb99d64c7605a950c05a6bed9c8dda51b0d109ba1a4d9cacd",
+    "textHash": "f3d52724af1ac157b0278dfe0908da2367967a72ab931d0e6e770a208978db9b",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Turn plan mode on": {
+    "revision": "0ad452efd3c8e756f248cf01a57adbc59ac6150e0f5ee4c46e89f3d327a1865d",
+    "textHash": "c147ca34bb1c1e33c0211aecf01bb4f4c600867f99b788b673769c7b13756b5f",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Type to search for files": {
+    "revision": "2b23956ec42a7e84fc0c28c79741654b914ba6ee7709974686abbf2027e41cfc",
+    "textHash": "fe462e311d193dd17bd6c0ab520e17a252e774f8e7705336067d6810d93f0643",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Unable to load MCP status": {
+    "revision": "ca65f7fc458359a10361604dd8c162dcd26290b19f01cb40944779acdb625307",
+    "textHash": "f600e2933e2b715955e2ab65cab40dbaa4858d262e72ea3c3e12e569e153c80e",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Unable to load branches": {
+    "revision": "78c6953559d1bcab9e8a69ff2730ec302cc41be94667b6559727987ef0d82093",
+    "textHash": "e28f51898f0cb9f97ca0ec77249adada5df117925d15e9358980fff977c49a22",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Unable to record audio. Please try again.": {
+    "revision": "84a75c311fede360c5a8dcbddd6a19a430a5f36ed693b7953bf7239ec58dc35a",
+    "textHash": "cacd93778c8ee53999f59b3435e156b590ddde67252f7572b37f059e0c185416",
+    "model": "codex-manual"
+  },
+  "Unable to search files": {
+    "revision": "1bf95d231872c56c40d53610d0ea9e79f1603ecfb1f3c6f5bd0c2ba6ec2aaae6",
+    "textHash": "186c1114acb919076cd8608a071de81843c7fbabf4cfadcec29f4fe4b10f7597",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Unable to stop recording. Please try again.": {
+    "revision": "23a5dbf1d3ac41e003a1a4f08c9d120255b7ba62959c4858bcdd1e94067c2436",
+    "textHash": "ac9619b19f11b3282988da10300ed5b03bac60e17300248479a895ee09d3dd6c",
+    "model": "codex-manual"
+  },
+  "Unable to transcribe audio. Please try again.": {
+    "revision": "9bff040daf0f710e7c72011d6b650775c14e5ca155030abe2a3a523cd8a77657",
+    "textHash": "d298372081e028f024670e6ffd1786fd1ebb18297ba1b1c681c3410c70e623fd",
+    "model": "codex-manual"
+  },
+  "Use black": {
+    "revision": "ecd98bf7f57f2782b7d9c325d17009dc11b1dbd4cb77754404297fa5dfc2b20c",
+    "textHash": "4796a07adc6862d4827a35b65f0e4806c771eb2a75aac54f274a0c1fa4488063",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use blue": {
+    "revision": "b1a53249ec66e145cb64a7159f32f1cb3894db141faa2b1967dc26a2e024ff95",
+    "textHash": "85453709ac6fe33dd907e532f3e170e18934be50910927130051958d87629e34",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use brown": {
+    "revision": "10bb8ffaab1c6b36099d8cb1724e9a0eeed0a58a3a5eda151bd2ff44ad549f20",
+    "textHash": "b40a1d01e7a4842658219b0fc2e774138ce8be9d78c0c17e3a3c6a4ed006f7d3",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use cyan": {
+    "revision": "e980516028a0ddd40a785a1cb4273fbb3c27807697e7716673f76c0cb34de783",
+    "textHash": "2d4e1f27a6ce474811b9392fe4862d551ae28855ea0c1117756313ed5d85e34f",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use gray": {
+    "revision": "5e6e9217c137fa2f8512cb3898a72257857bf3404c978e6d645735680e5db52e",
+    "textHash": "207b2864e567c20d6a67cfdf543bdd48facc6734c5412ed1d77df75d02a71766",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use green": {
+    "revision": "16e059f6184eee4a0ea0300c0b06484c08f51ab6c9f429d3a789cbf7c5c0daea",
+    "textHash": "7df91d5fa8de1b5b3999bacd787cecb7a042953e472889642dd70fea7974c163",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use indigo": {
+    "revision": "c7a4f98aaeb2e44b1ccf582a94b836ceff23de5a6143f8309736860e9535e04f",
+    "textHash": "8c7cf8238dc65c9d4ece4ee55d566dc961b3a0c2e293c4535be8bdea569a2523",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use orange": {
+    "revision": "fe1d80c071517c32007bbffb7e15041576c04923bfe84496a7bb7685be061f3f",
+    "textHash": "591b49cf88dffad218c44c15f2767c28911ce3c377352fec10f920289b99dc1e",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use pink": {
+    "revision": "aab72c61a085b64af18ff8b608cdf5b49c17cf8f20752ce2b8a710c0ff0d6afc",
+    "textHash": "0639e1be1ec1e441370c5c7ced499f84009f8f45c24e440c1affd60e0004c612",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use purple": {
+    "revision": "91d9774183dc41044a052beb831c34879053490ebeb90dd7b233da438f8143ad",
+    "textHash": "ba9395e2030971cb8dce31c24c96b59d3640fb4b9a99ef1d49acd6f7573c730e",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use red": {
+    "revision": "ff3758357cc4332cc28b4e220d18ad03faf4947fa69f4d728df3b7998a5d0a83",
+    "textHash": "3eec95339962538ec497be0edda9cb1e6c793f5f896ab1dba808fdb8b3f7faa4",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use teal": {
+    "revision": "7749e777e4d74962daf88ec03e4d88d1d0e78f4187be12d7a324ded7065e2558",
+    "textHash": "7bac389ab9d52dd7b50015fea177b094c5e08bb70b6dad27c9d537346e1b4d19",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use the plan skill": {
+    "revision": "9e6bf5ebd59cd40bab434a323fae2fba5416edaa2f8de13dc2026d3be3262914",
+    "textHash": "e49dd584bdf4abc23a2228c6f544db0e606b663b6593795680a5c32c28cb2d7a",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use white": {
+    "revision": "ac15dd6fa668e3a5dbfccdd3f236c7733b88aba0ec5e00753a497e4c70fe339e",
+    "textHash": "7cc1250f93d5a963dcc4d9d537319202ca8fa407944aae40b188e0d316e660a6",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use yellow": {
+    "revision": "94a8d08fe014f97734087f33d2ef38213393a9a7d2aaf739097dc1c349ed3afe",
+    "textHash": "5ee62e76b3f657e2621e2d75656b233370176b9ad73abbbb56d23bd9baf74fb0",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Width cannot be changed after partial erasing. Use the selection handles to resize.": {
+    "revision": "885dce579c29fda30126a97ff92d571e4518705cfe24cf1fff0025e2fd7e010a",
+    "textHash": "064117e722665c8c29c852148a0049089b4cc6290f572705f89d0385dd2449b7",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Yes, implement this plan": {
+    "revision": "c7287306f97c1e0e7bde5b7a85073c944622fd9070d6384ace9e920745b018d1",
+    "textHash": "3bc52141f741b346caa1989149ee7c94c2986fd2e2a2d5b3f091176a19681430",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Your changes won't be saved": {
+    "revision": "957754f107d8d5d315fd9f2258e097a33e8aacd90375edcf43deb5499478acc4",
+    "textHash": "cce2c3a440fa778526cbe6987fbaa48142aea3cb1eadfedde82ba5f275060a0c",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "connect to the internet": {
+    "revision": "9b692debebba4316972e6819244e882f83f21821d92f403ce6262e92de28be06",
+    "textHash": "7126259aa554260ae1b2912178c5f3486a19fb23e0ec6ba7900b170f691451cc",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "edit the contents of {paths}": {
+    "revision": "d40c66386cb615d63abaffe96cc364bd1e90529509d1ea14c4e607b60385f89b",
+    "textHash": "bfb5f8113cf6938ba5569b9b7a4f349fc6a590a4477ece35228cfe58d22035fa",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "plan": {
+    "revision": "804f3ec2c926aaf81f2ac56250dbfd46058a8ac3bb4bdb00a3d8a95207531de4",
+    "textHash": "c1cfa1340c62d3da906375d0908f78bbca18679b4584de58e4ca8142dbcbfcb4",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "view and edit the contents of {paths}": {
+    "revision": "ff76acdbae2af0bdebff934c57b3139cbe53eb92e7b0cb59773c5ed0ed51c93f",
+    "textHash": "7d1a752d729702cb2fe4495c761146a74b7e0e6a7933d994fdc0ef8a17497605",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "view the contents of {paths}": {
+    "revision": "e316e40c0be87514e36d7d2c3da7421ce9538882b8a64ca625e2afb7f3b352af",
+    "textHash": "d7702063cb55f08f4ee2a8ab37685f3dd52520b160a48526d5b423d352159449",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "{used} / {budget}": {
+    "revision": "ca787fd8e4ba4dbe9387a9644bc9846c4cc5c2ca1e0c4040117333b2cdfd4532",
+    "textHash": "08fa358ed02b1f21e7d6e4c5ceacb5fb4727cc7c5aea6d7a8bd6b062a3393025",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  }
+}

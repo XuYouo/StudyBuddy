@@ -5,6 +5,7 @@ import path from 'node:path';
 import os from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { renderReadme, scopeValidation } from '../scripts/i18n/scopes.ts';
+import { collectErrorCatalog } from '../scripts/i18n/catalog.ts';
 import { LANGUAGES } from '../engine/src/locales.ts';
 // @ts-expect-error The static site's build helpers are plain JavaScript.
 import { translatedSite } from '../scripts/site-i18n.mjs';
@@ -12,6 +13,32 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 
 // Every scope's translations are checked by `npm run i18n -- check` in CI.
 const locales = Object.keys(JSON.parse(fs.readFileSync(`${root}/i18n/config.json`, 'utf8')).locales);
+test('persisted queue errors are included in the product error catalog', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'studybuddy-error-catalog-'));
+  try {
+    fs.mkdirSync(path.join(directory, 'src/server'), { recursive: true });
+    fs.writeFileSync(path.join(directory, 'src/server/queue.ts'), "const result = { queueError: 'Delivery is unconfirmed.', error: 'Task failed.', text: 'Internal prompt.' };\n");
+    assert.deepEqual(collectErrorCatalog(directory).messages.map(message => message.source).sort(), ['Delivery is unconfirmed.', 'Task failed.']);
+  } finally { fs.rmSync(directory, { recursive: true, force: true }); }
+});
+test('explicit named error messages are extracted without evaluating bindings or source code', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'studybuddy-error-constants-'));
+  const file = path.join(directory, 'src/server/dictation.ts');
+  try {
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    fs.writeFileSync(file, `// i18n: error\nconst SIGN_IN = 'Sign in to use dictation.';
+// i18n: error\nconst FAILED = ready ? 'Recording failed.' : \`Try again.\`;
+const INTERNAL = 'Internal diagnostic.';
+function fail(SIGN_IN: string) { throw new DictationError(SIGN_IN); }
+throw new DictationError('Recording expired.');
+const NEVER_EXECUTE = (() => { throw 'Do not execute source'; })();\n`);
+    assert.deepEqual(collectErrorCatalog(directory).messages.map(message => message.source).sort(), ['Recording expired.', 'Recording failed.', 'Sign in to use dictation.', 'Try again.']);
+    fs.writeFileSync(file, '// i18n: error\nconst FAILED = getProviderError();\n');
+    assert.throws(() => collectErrorCatalog(directory), /requires a const with static message values/);
+    fs.writeFileSync(file, '// i18n: error\nlet FAILED = "Changing value";\n');
+    assert.throws(() => collectErrorCatalog(directory), /requires a const with static message values/);
+  } finally { fs.rmSync(directory, { recursive: true, force: true }); }
+});
 test('website rendering requires translated content and retains inline markup', () => {
   const source = '<html lang="en"><head><title>Title</title></head><body><span lang="en">Read <b>PDF</b></span><span lang="zh-CN">阅读 PDF</span></body></html>';
   const rendered = translatedSite(source, { Title: '標題', 'Read <b>PDF</b>': '閱讀 <b>PDF</b>' });

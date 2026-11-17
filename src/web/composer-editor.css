@@ -1,0 +1,16 @@
+.composer-editor { min-width: 0; }
+.composer-input { position: relative; width: 100%; min-height: 42px; max-height: 260px; padding: 0; overflow-y: auto; white-space: pre-wrap; overflow-wrap: anywhere; color: inherit; font: inherit; line-height: 22px; outline: none; cursor: text; }
+.composer-input p { margin: 0; min-height: 22px; }
+.composer-input[data-empty=true]::before { content: attr(data-placeholder); color: var(--muted); pointer-events: none; position: absolute; }
+.composer-input:focus-visible { outline: none; }
+.composer-input[aria-readonly=true] { cursor: default; }
+.composer-file-mention { color: var(--accent); font-weight: 500; white-space: normal; }
+.composer-file-icon { display: inline-block; width: 10px; height: 10px; margin-inline-end: 2px; vertical-align: baseline; }
+.composer-file-menu { z-index: 30; }
+.composer-file-menu .codex-command-option { min-height: 32px; }
+.composer-file-menu small { color: var(--muted); overflow: hidden; text-overflow: ellipsis; }
+.composer.codex-composer .composer-input { box-sizing: border-box; min-block-size: 40px; max-block-size: min(25dvh, 240px); padding: 0 12px; margin-block: 0 8px; color: var(--cx-text); font: 13px/20px -apple-system, system-ui, sans-serif; }
+.composer.codex-composer .composer-input p { min-height: 20px; }
+.composer.codex-composer .composer-input[data-empty=true]::before { color: var(--cx-text-tertiary); }
+@media (pointer: coarse) { .composer.codex-composer .composer-input { font-size: 16px; } }
+@media (forced-colors: active) { .composer-input:focus-visible { outline: 1px solid Highlight; outline-offset: 2px; } }

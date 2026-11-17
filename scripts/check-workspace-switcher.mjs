@@ -1,3 +1,4 @@
+import { expectComposerText } from './composer-fixture.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -63,10 +64,10 @@ try {
     const instructions = page.getByRole('textbox', { name: 'Instructions for Codex', exact: true });
     await instructions.fill('Keep this unsent task draft.');
     await begin(); await expect(selected).toHaveText('Manuscript');
-    await release(); await expect(draft).toHaveValue('Keep this unsent manuscript draft.');
+    await release(); await expectComposerText(draft, 'Keep this unsent manuscript draft.');
     // A quick second invocation returns to the last task, independent of list order.
     await page.keyboard.press(`${modifier}+Backquote`); await expect(taskLink('b')).toHaveAttribute('aria-current', 'page');
-    await expect(instructions).toHaveValue('Keep this unsent task draft.');
+    await expectComposerText(instructions, 'Keep this unsent task draft.');
     await taskLink('a').click();
     // Events from the embedded review reach the host, and Escape restores its focus.
     const review = page.frameLocator('iframe.review-frame').getByRole('textbox', { name: 'Review comment' });
@@ -110,7 +111,7 @@ try {
     await release(); await expect(page.getByRole('heading', { name: 'Task a', exact: true })).toBeAttached();
     await page.getByRole('searchbox', { name: 'Search tasks' }).fill('');
     // Existing dialogs retain their keyboard interaction.
-    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    await page.locator('.settings-link').click();
     await page.keyboard.press(`${modifier}+Backquote`); await expect(chooser).toHaveCount(0);
     await page.getByRole('button', { name: 'Keyboard shortcuts', exact: true }).click();
     await expect(page.getByText('Hold ' + modifierLabel + ' and press ` to cycle. Shift reverses; release ' + modifierLabel + ' to switch. Esc cancels.', { exact: true })).toBeVisible();

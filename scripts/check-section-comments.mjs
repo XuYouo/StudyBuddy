@@ -113,9 +113,10 @@ try {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.getByRole('textbox', { name: 'Describe the revision', exact: true }).fill('Improve these comments together.');
   // Choose StudyBuddy Writer using the normal composer model picker.
-  await page.getByRole('button', { name: 'Agent settings', exact: true }).click();
-  await page.getByRole('option', { name: /Writer test.*StudyBuddy Writer/ }).last().click();
-  await page.keyboard.press('Escape');
+  await page.locator('.new-task-panel .codex-model-trigger').click();
+  const modelMenu = page.locator('.codex-model-menu[data-open="true"]');
+  if (await modelMenu.locator('.codex-effort-model').count()) await modelMenu.locator('.codex-effort-model').click();
+  await modelMenu.getByRole('menuitemradio', { name: /Writer test.*StudyBuddy Writer/ }).click();
   await page.getByRole('button', { name: 'Start task', exact: true }).click();
   await expect.poll(() => sent.length).toBe(1);
   assert.deepEqual([...sent[0].annotations].sort(), ['child-a', 'child-b', 'outside']);

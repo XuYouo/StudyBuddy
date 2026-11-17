@@ -1,3 +1,4 @@
+import { expectComposerText, readComposerText } from './composer-fixture.mjs';
 import { readyRequirements } from './required-tools-fixture.mjs';
 import assert from 'node:assert/strict';
 import path from 'node:path';
@@ -103,6 +104,11 @@ await page.route('**/api/**', async route => {
   if (url.pathname === '/api/note-alternatives') {
     if (route.request().method() === 'POST') ({ noteAlternatives, noteAlternativeRange } = route.request().postDataJSON());
     return route.fulfill({ json: { noteAlternatives, noteAlternativeRange } });
+  }
+  if (url.pathname.startsWith('/api/requests/')) {
+    const body = route.request().postDataJSON();
+    assert.deepEqual(body, { answers: { choice: 'Model' }, skipped: [] });
+    snapshot.requests = []; return json({ ok: true });
   }
   if (url.pathname === '/api/state') {
     if (stateFailure) return route.fulfill({ status: 503, json: { error: 'Host unavailable.' } });
@@ -257,7 +263,7 @@ try {
   assert.doesNotMatch(await page.locator('body').innerText(), /\p{Script=Han}/u);
 
   // Appearance changes live in both documents without losing a chat draft.
-  const settingsButton = page.getByRole('button', { name: 'Settings', exact: true });
+  const settingsButton = page.locator('.settings-link');
   const settingsDialog = page.locator('dialog').filter({ has: page.locator('.settings-dialog') });
   const closeSettings = async () => { await page.keyboard.press('Escape'); await settingsDialog.waitFor({ state: 'hidden' }); };
   const chooseTheme = async name => { await settingsButton.click(); await settingsDialog.getByRole('button', { name: 'Appearance', exact: true }).click(); await settingsDialog.getByRole('radio', { name, exact: true }).check(); await closeSettings(); };
@@ -508,7 +514,7 @@ try {
   await chooseTheme('Dark');
   await page.emulateMedia({ colorScheme: 'light' });
   await themeIs('dark');
-  assert.equal(await page.getByRole('textbox', { name: 'Instructions for Codex' }).inputValue(), 'Preserve this draft while changing appearance.');
+  assert.equal(await readComposerText(page.getByRole('textbox', { name: 'Instructions for Codex' })), 'Preserve this draft while changing appearance.');
   assert.equal(await page.locator('.main').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(38, 39, 43)');
   assert.equal(await page.locator('html').evaluate(el => getComputedStyle(el).colorScheme), 'dark');
   await page.reload();
@@ -531,12 +537,12 @@ try {
   await page.getByRole('dialog', { name: '设置' }).getByText('外观', { exact: true }).waitFor();
   await page.keyboard.press('Escape');
   assert.equal(await page.locator('html').getAttribute('lang'), 'zh-Hans');
-  await page.getByRole('button', { name: '设置', exact: true }).waitFor();
-  assert.equal(await page.getByRole('textbox', { name: '给 Codex 的指令' }).inputValue(), 'Keep this draft across languages.');
+  await page.locator('.settings-link').waitFor();
+  assert.equal(await readComposerText(page.getByRole('textbox', { name: '给 Codex 的指令' })), 'Keep this draft across languages.');
   await page.waitForFunction(() => document.querySelector('.review-frame')?.getAttribute('src')?.endsWith('&lang=zh-Hans'));
   assert.match(await page.getByRole('link', { name: '在新标签页中打开审阅' }).getAttribute('href'), /&lang=zh-Hans$/);
   await page.reload();
-  await page.getByRole('button', { name: '设置', exact: true }).click();
+  await page.locator('.settings-link').click();
   await selectOption(page.getByRole('dialog', { name: '设置' }).getByRole('combobox', { name: '语言' }), 'zh-Hant');
   const hant = JSON.parse(fs.readFileSync('src/web/locales/zh-Hant.json', 'utf8'));
   await page.getByRole('dialog', { name: hant.Settings }).getByRole('combobox', { name: hant.Language }).waitFor();
@@ -546,7 +552,7 @@ try {
   await page.waitForFunction(() => document.querySelector('.review-frame')?.getAttribute('src')?.endsWith('&lang=zh-Hant'));
   await page.screenshot({ path: 'test-results/i18n-workspace-zh-Hant.png', fullPage: true });
   await page.reload();
-  await page.getByRole('button', { name: hant.Settings, exact: true }).click();
+  await page.locator('.settings-link').click();
   await selectOption(page.getByRole('dialog', { name: hant.Settings }).getByRole('combobox', { name: hant.Language }), 'system');
   await settingsDialog.waitFor();
   await closeSettings();
@@ -856,7 +862,7 @@ try {
   await contentsTrigger.click();
   await page.getByRole('tab', { name: 'New task', exact: true }).click();
   await expect(contents).toBeHidden();
-  assert.equal(await prompt.inputValue(), 'Keep this draft beside the PDF.');
+  assert.equal(await readComposerText(prompt), 'Keep this draft beside the PDF.');
   await page.screenshot({ path: 'test-results/new-task-beside-pdf.png', fullPage: true });
   const beforeCollapseWidth = (await page.locator('.manuscript-pages').boundingBox()).width;
   const collapsePanel = page.getByRole('button', { name: 'Collapse manuscript panel', exact: true });
@@ -874,7 +880,7 @@ try {
   await expandPanel.press('Enter');
   await manuscriptSide.waitFor();
   assert.equal(await mountedPdf.evaluate(el => el.isConnected), true);
-  assert.equal(await prompt.inputValue(), 'Keep this draft beside the PDF.');
+  assert.equal(await readComposerText(prompt), 'Keep this draft beside the PDF.');
   assert.equal(Math.round((await manuscriptSide.boundingBox()).width), originalSideWidth);
   assert.equal(await page.getByLabel('Page number').inputValue(), '2');
   await page.waitForFunction(() => document.activeElement === document.querySelector('.manuscript-side-header .manuscript-panel-toggle'));
@@ -1071,7 +1077,7 @@ try {
   // Text fields keep native undo even when a deleted annotation can be restored.
   await prompt.fill(''); await prompt.pressSequentially('Undo this text');
   await prompt.press(process.platform === 'darwin' ? 'Meta+z' : 'Control+z');
-  assert.ok((await prompt.inputValue()).length < 'Undo this text'.length, 'native undo edits the text');
+  assert.ok((await readComposerText(prompt)).length < 'Undo this text'.length, 'native undo edits the text');
   assert.equal(annotations.length, 0); await prompt.fill('');
   const markingTools = page.getByRole('toolbar', { name: 'Marking tools', exact: true });
   const regionTool = markingTools.getByRole('button', { name: 'Region', exact: true });
@@ -1167,7 +1173,7 @@ try {
   await page.getByRole('button', { name: 'Note 1: Define the operator here.', exact: true }).click();
   await clickNote(notesPanel.getByRole('button', { name: 'Include note 1 in this task', exact: true }));
   assert.equal(await page.getByRole('tab', { name: 'Notes', exact: true }).count(), 0);
-  assert.equal(await prompt.inputValue(), '');
+  assert.equal(await readComposerText(prompt), '');
   await page.getByRole('button', { name: 'Start task', exact: true }).click();
   await page.locator('.task-list').getByRole('button', { name: /^Define the operator here/ }).waitFor();
   assert.equal(await prompt.isVisible(), true);
@@ -1189,7 +1195,7 @@ try {
   await gitPanel.getByRole('group', { name: 'Changes', exact: true }).waitFor();
   assert.equal(await gitPanel.getByRole('region', { name: 'Commit graph', exact: true }).count(), 0);
   assert.equal(await gitPanel.getByRole('region', { name: 'Worktrees', exact: true }).count(), 0);
-  await page.getByRole('button', { name: 'Settings', exact: true }).click();
+  await page.locator('.settings-link').click();
   await page.locator('.settings-dialog').getByRole('button', { name: 'Git', exact: true }).click();
   await page.getByRole('switch', { name: 'Show advanced Git features', exact: true }).check();
   await page.locator('.settings-dialog').getByRole('button', { name: 'Close', exact: true }).click();
@@ -1391,129 +1397,103 @@ try {
   await prompt.pressSequentially('Preserve the technical content.');
   await prompt.press('Enter');
   await page.locator('.new-task-panel').getByRole('alert').waitFor();
-  assert.equal(await prompt.inputValue(), 'Shorten the introduction.\nPreserve the technical content.');
+  assert.equal(await readComposerText(prompt), 'Shorten the introduction.\nPreserve the technical content.');
   // The new-task panel shows the Codex account's usage.
   const usage = page.getByRole('region', { name: 'Codex usage' });
   await usage.locator('summary').click();
   assert.equal(await usage.getByRole('meter', { name: 'Weekly limit used' }).getAttribute('aria-valuenow'), '83');
   assert.match(await usage.innerText(), /Pro[\s\S]*Weekly limit[\s\S]*83% used[\s\S]*resets [\s\S]*12,418 credits/);
   await usage.locator('summary').click();
-  // One picker lists every agent's models with a search; one choice sets the
-  // agent and its model, and effort and fast mode follow the chosen model.
-  const settingsTrigger = page.getByRole('button', { name: 'Agent settings', exact: true });
-  const agentSettings = page.getByRole('dialog', { name: 'Agent settings', exact: true });
-  await settingsTrigger.click();
-  const search = agentSettings.getByRole('combobox', { name: 'Search models', exact: true });
-  const models = agentSettings.getByRole('listbox', { name: 'Models', exact: true });
-  // A recent choice is listed again under its agent; the agent's own entry is the last.
-  const option = name => models.getByRole('option', { name, exact: true }).last();
-  const choose = name => option(name).click();
-  const groupNames = () => models.getByRole('group').evaluateAll(groups => groups.map(group => group.getAttribute('aria-label')));
+  // The footer opens the official effort slider, then the model menu. Slash
+  // /model provides editor filtering while retaining the existing task draft.
+  const settingsTrigger = page.locator('.new-task-panel .codex-model-trigger');
+  const agentSettings = page.locator('.codex-model-menu[data-open="true"]');
   const effortChoice = agentSettings.getByRole('slider', { name: 'Reasoning effort', exact: true });
-  const fastMode = agentSettings.getByRole('switch', { name: 'Fast mode' });
-  assert.equal(await search.evaluate(el => el === document.activeElement), true, 'typing searches right away');
+  const openPicker = async () => { if (!await agentSettings.count()) await settingsTrigger.click(); };
+  const openModels = async () => { await openPicker(); if (await agentSettings.locator('.codex-effort-model').count()) await agentSettings.locator('.codex-effort-model').click(); };
+  const option = name => agentSettings.getByRole('menuitemradio', { name, exact: true });
+  const choose = async name => { await openModels(); await option(name).click(); };
+  const groupNames = () => agentSettings.locator('.codex-menu-group').allInnerTexts();
+  const chooseFast = async fast => { await openModels(); await agentSettings.getByRole('button', { name: /^Fast mode/ }).click(); await option((fast ? 'Fast' : 'Standard') + ' · Codex').click(); };
+  await openModels();
   assert.deepEqual(await groupNames(), ['Codex', 'Claude', 'Antigravity', 'Kimi']);
-  assert.equal(await option('Fast model · Codex').getAttribute('aria-selected'), 'true');
-  assert.deepEqual(await option('Default model · Antigravity').locator('small').allInnerTexts(), ['Unavailable']);
-  // Without a choice, a task reasons at high effort, not the catalog default (Medium here).
+  assert.equal(await option('Fast model · Codex').getAttribute('aria-checked'), 'true');
   assert.match(await settingsTrigger.innerText(), /High/);
-  assert.equal(await fastMode.count(), 0);
-  await choose('Deep model · Codex');
-  assert.match(await settingsTrigger.innerText(), /High/);
-  await effortChoice.press('End');
-  assert.equal(await effortChoice.getAttribute('aria-valuetext'), 'Xhigh');
-  await fastMode.check();
-  await search.press('Escape');
-  await agentSettings.waitFor({ state: 'hidden' });
-  assert.equal(await settingsTrigger.evaluate(el => el === document.activeElement), true);
-  assert.match(await settingsTrigger.getAttribute('title'), /Codex.*Deep model.*Xhigh.*Fast/);
-  // Recent choices come first; a search covers every agent and Enter takes the first match.
-  await settingsTrigger.click();
-  assert.deepEqual(await groupNames(), ['Recent', 'Codex', 'Claude', 'Antigravity', 'Kimi']);
-  assert.deepEqual(await models.getByRole('group', { name: 'Recent', exact: true }).getByRole('option').evaluateAll(options => options.map(option => option.getAttribute('aria-label'))), ['Deep model · Codex']);
-  await search.fill('haiku');
-  assert.deepEqual(await models.getByRole('option').evaluateAll(options => options.map(option => option.getAttribute('aria-label'))), ['Haiku 5.5 · Claude']);
-  await search.press('Enter');
-  assert.deepEqual(await page.evaluate(() => [localStorage.getItem('papilot:agent'), localStorage.getItem('papilot:model:claude')]), ['claude', 'haiku']);
-  assert.match(await settingsTrigger.innerText(), /Claude\s*Haiku 5\.5/);
-  await search.fill('no such model');
-  await agentSettings.getByText('No models match “no such model”', { exact: true }).waitFor();
-  await search.fill('claude');
-  await search.press('ArrowDown');
-  const active = await search.getAttribute('aria-activedescendant');
-  assert.equal(await agentSettings.locator(`[id="${active}"]`).getAttribute('aria-label'), 'Haiku 5.5 · Claude');
-  await search.press('ArrowUp');
-  await search.press('Enter');
-  assert.equal(await option('Opus 5.5 · Claude').getAttribute('aria-selected'), 'true');
-  await search.fill('');
+  await choose('Deep model · Codex'); await openPicker();
   assert.equal(await effortChoice.getAttribute('aria-valuetext'), 'High');
-  await effortChoice.press('Home');
-  assert.equal(await effortChoice.getAttribute('aria-valuetext'), 'Low');
-  await agentSettings.getByRole('button', { name: 'Model default', exact: true }).click();
-  assert.equal(await effortChoice.getAttribute('aria-valuetext'), 'Model default');
-  assert.equal(await fastMode.count(), 0);
-  await choose('Haiku 5.5 · Claude');
-  // An agent that cannot be used says why, with Reconnect, inside the same menu.
-  await choose('Default model · Antigravity');
+  await effortChoice.press('End');
+  assert.equal(await effortChoice.getAttribute('aria-valuetext'), 'Extra High');
+  await chooseFast(true);
+  assert.match(await settingsTrigger.getAttribute('aria-description'), /Codex.*Deep model.*Extra High.*Fast/);
+  const savedPrompt = await readComposerText(prompt);
+  const openSearch = async query => {
+    // Multiline contenteditable.fill can leave the DOM caret before its final
+    // character. Place it deliberately, then exercise real command typing.
+    await prompt.fill(savedPrompt); await prompt.press('End');
+    await prompt.pressSequentially(' /model'); await prompt.press('Enter');
+    await expect(agentSettings).toBeVisible(); await expectComposerText(prompt, savedPrompt + ' /');
+    await prompt.pressSequentially(query);
+  };
+  await openSearch('haiku');
+  assert.deepEqual(await agentSettings.getByRole('option').evaluateAll(options => options.map(option => option.getAttribute('aria-label'))), ['Haiku 5.5 · Claude']);
+  await prompt.press('Enter');
+  assert.equal(await readComposerText(prompt), savedPrompt + ' ');
+  assert.deepEqual(await page.evaluate(() => [localStorage.getItem('papilot:agent'), localStorage.getItem('papilot:model:claude')]), ['claude', 'haiku']);
+  await openSearch('no such model');
+  await agentSettings.getByText('No models match “no such model”', { exact: true }).waitFor();
+  for (const _ of 'no such model') await prompt.press('Backspace');
+  await prompt.pressSequentially('claude'); await prompt.press('ArrowDown');
+  const active = await prompt.getAttribute('aria-activedescendant');
+  assert.equal(await agentSettings.locator(`[id="${active}"]`).getAttribute('aria-label'), 'Opus 5.5 · Claude');
+  await prompt.press('Enter'); await expectComposerText(prompt, savedPrompt + ' '); await prompt.fill(savedPrompt);
+  await openPicker(); assert.equal(await effortChoice.getAttribute('aria-valuetext'), 'High');
+  await effortChoice.press('Home'); assert.equal(await effortChoice.getAttribute('aria-valuetext'), 'Low');
+  await page.keyboard.press('Escape'); await choose('Haiku 5.5 · Claude');
+  // Unavailable agents retain their connection diagnostics and recovery path.
+  await choose('Default model · Antigravity'); await openPicker();
   await agentSettings.getByRole('status').getByText('spawn agy ENOENT', { exact: true }).waitFor();
-  assert.equal(await page.locator('.new-task-panel > .inline-error[role=status]').count(), 0);
   const reconnectsBeforePicker = reconnects;
   await Promise.all([page.waitForResponse(response => response.url().endsWith('/api/state')), agentSettings.getByRole('button', { name: 'Reconnect', exact: true }).click()]);
   assert.equal(reconnects, reconnectsBeforePicker + 1);
   assert.equal(await agentSettings.isVisible(), true);
-  await page.keyboard.press('Escape');
-  await agentSettings.waitFor({ state: 'hidden' });
-  assert.equal(await settingsTrigger.locator('.agent-status-mark').count(), 1);
-  await settingsTrigger.click();
+  await page.keyboard.press('Escape'); await agentSettings.waitFor({ state: 'hidden' }); await openPicker();
   await agentSettings.getByRole('status').getByText('spawn agy ENOENT', { exact: true }).waitFor();
-  // An agent that connects later offers its models with the next state.
   snapshot.runtimes.kimi = { connected: true, authenticated: true, account: 'Local Kimi configuration', error: null, models: [{ id: 'kimi/k3', name: 'K3', isDefault: true, efforts: ['low', 'high', 'max'], defaultEffort: 'high' }] };
   await page.evaluate(() => window.dispatchEvent(new Event('online')));
-  await option('K3 · Kimi').waitFor();
-  await choose('K3 · Kimi');
-  assert.equal(await effortChoice.getAttribute('aria-valuetext'), 'High');
-  await effortChoice.press('End');
+  await option('K3 · Kimi').waitFor(); await choose('K3 · Kimi'); await openPicker();
+  assert.equal(await effortChoice.getAttribute('aria-valuetext'), 'High'); await effortChoice.press('End');
   assert.deepEqual(await page.evaluate(() => [localStorage.getItem('papilot:agent'), localStorage.getItem('papilot:model:kimi'), localStorage.getItem('papilot:effort:kimi')]), ['kimi', 'kimi/k3', 'max']);
-  assert.equal(await fastMode.count(), 0);
   await page.screenshot({ path: 'test-results/kimi-agent-settings.png', fullPage: true });
-  // Only agents the host has are offered: one found later appears with the next state.
   snapshot.runtimes.qwen = { installed: false, connected: false, authenticated: false, account: null, error: null, models: [] };
   snapshot.runtimes.opencode = { installed: true, connected: true, authenticated: true, account: 'Local OpenCode configuration', error: null, models: [{ id: 'deepseek/deepseek-v4-pro', name: 'deepseek/DeepSeek V4 Pro', isDefault: true, efforts: ['low', 'high'], defaultEffort: null }] };
-  await page.evaluate(() => window.dispatchEvent(new Event('online')));
+  await page.evaluate(() => window.dispatchEvent(new Event('online'))); await openModels();
   await option('deepseek/DeepSeek V4 Pro · OpenCode').waitFor();
-  assert.deepEqual((await groupNames()).filter(name => name !== 'Recent'), ['Codex', 'Claude', 'Antigravity', 'Kimi', 'OpenCode']);
+  assert.deepEqual(await groupNames(), ['Codex', 'Claude', 'Antigravity', 'Kimi', 'OpenCode']);
   await page.screenshot({ path: 'test-results/detected-agent-settings.png', fullPage: true });
   snapshot.runtimes.copilot = { installed: true, connected: true, authenticated: true, account: 'Local Copilot configuration', error: null, models: [{ id: 'copilot-model', name: 'Copilot model', isDefault: true, efforts: ['low', 'high'], defaultEffort: 'low' }] };
   await page.evaluate(() => window.dispatchEvent(new Event('online')));
-  await option('Copilot model · Copilot').waitFor();
-  await choose('Copilot model · Copilot');
+  await option('Copilot model · Copilot').waitFor(); await choose('Copilot model · Copilot'); await openPicker();
   assert.equal(await effortChoice.getAttribute('aria-valuetext'), 'High');
   assert.deepEqual(await page.evaluate(() => [localStorage.getItem('papilot:agent'), localStorage.getItem('papilot:model:copilot')]), ['copilot', 'copilot-model']);
-  assert.equal(await agentSettings.getByRole('group', { name: 'Copilot', exact: true }).locator('[data-brand=copilot]').count(), 1);
   await page.screenshot({ path: 'test-results/copilot-agent-settings.png', fullPage: true });
   snapshot.runtimes.grok = { installed: true, connected: true, authenticated: true, account: 'Local Grok configuration', error: null, models: [{ id: 'grok-model', name: 'Grok model', isDefault: true, efforts: ['low', 'high'], defaultEffort: 'low' }] };
-  await page.evaluate(() => window.dispatchEvent(new Event('online')));
-  await option('Grok model · Grok').waitFor();
-  await choose('Grok model · Grok');
+  await page.evaluate(() => window.dispatchEvent(new Event('online'))); await openModels();
+  await option('Grok model · Grok').waitFor(); await choose('Grok model · Grok'); await openPicker();
   assert.equal(await effortChoice.getAttribute('aria-valuetext'), 'High');
   assert.deepEqual(await page.evaluate(() => [localStorage.getItem('papilot:agent'), localStorage.getItem('papilot:model:grok')]), ['grok', 'grok-model']);
-  assert.equal(await agentSettings.getByRole('group', { name: 'Grok', exact: true }).locator('[data-brand=grok]').count(), 1);
   await page.screenshot({ path: 'test-results/grok-agent-settings.png', fullPage: true });
   const claudeRuntime = structuredClone(snapshot.runtimes.claude);
   Object.assign(snapshot.runtimes.claude, { connected: false, authenticated: false, error: 'Claude needs an Anthropic API key: Start StudyBuddy with ANTHROPIC_API_KEY set to use Claude.' });
   await page.evaluate(() => window.dispatchEvent(new Event('online')));
-  await option('Haiku 5.5 · Claude').getByText('Unavailable', { exact: true }).waitFor();
-  await choose('Haiku 5.5 · Claude');
+  await choose('Haiku 5.5 · Claude'); await openPicker();
   await agentSettings.getByRole('status').getByText('Claude needs an Anthropic API key', { exact: true }).waitFor();
   await agentSettings.getByText('Connection details', { exact: true }).click();
   await agentSettings.getByText(snapshot.runtimes.claude.error, { exact: true }).waitFor();
-  await choose('Deep model · Codex');
+  await choose('Deep model · Codex'); await openPicker();
   assert.equal(await agentSettings.locator('.agent-connection').count(), 0);
-  assert.equal(await settingsTrigger.locator('.agent-status-mark').count(), 0);
   snapshot.runtimes.claude = claudeRuntime;
-  assert.equal(await option('Deep model · Codex').getAttribute('aria-selected'), 'true');
-  assert.equal(await effortChoice.getAttribute('aria-valuetext'), 'Xhigh');
-  assert.equal(await fastMode.isChecked(), true);
+  assert.equal(await effortChoice.getAttribute('aria-valuetext'), 'Extra High');
+  assert.equal(await page.evaluate(() => localStorage.getItem('papilot:fast:codex')), 'true');
   assert.deepEqual(await page.evaluate(() => [localStorage.getItem('papilot:agent'), localStorage.getItem('papilot:model:claude')]), ['codex', 'haiku']);
   await page.screenshot({ path: 'test-results/agent-settings.png', fullPage: true });
   await page.keyboard.press('Escape');
@@ -1566,11 +1546,11 @@ try {
   await closeSettings();
   await page.locator('.manuscript-link').click();
   await page.getByRole('tab', { name: 'New task', exact: true }).click();
-  assert.match(await settingsTrigger.getAttribute('title'), /Codex.*Deep model.*Xhigh.*Fast/);
+  assert.match(await settingsTrigger.getAttribute('aria-description'), /Codex.*Deep model.*Extra High.*Fast/);
   console.log('PASS: Default effort slider follows model capabilities, resets, persists, fits narrow screens and synchronizes with new tasks');
   failCreate = false;
   await page.getByRole('button', { name: 'Start task' }).click();
-  await page.waitForFunction(() => document.querySelector('.new-task-panel textarea')?.value === '');
+  await expectComposerText(page.locator('.new-task-panel .composer-input'), '');
   assert.equal(await prompt.isVisible(), true);
   assert.equal(await page.locator('.task-link.active').count(), 0);
   assert.equal(creates.length, 2);
@@ -1593,7 +1573,7 @@ try {
   await input.fill('Keep this unsent draft.');
   await page.screenshot({ path: 'test-results/send-review-decisions.png', fullPage: true });
   await page.getByRole('button', { name: 'Send instructions', exact: true }).click();
-  await expect(input).toHaveValue('');
+  await expectComposerText(input, '');
   assert.equal(messages[0].feedback, undefined);
   assert.equal(messages[0].text, 'Keep this unsent draft.');
   task.review.unsent = 0;
@@ -1610,13 +1590,13 @@ try {
   releaseMessage();
   holdMessage = null;
   await page.waitForFunction(() => !document.querySelector('.send-button').disabled);
-  assert.equal(await input.inputValue(), 'New text typed during submission.');
+  assert.equal(await readComposerText(input), 'New text typed during submission.');
   assert.notEqual(messages[0].requestKey, messages[1].requestKey);
   await page.reload();
   // The deliberate stale selection injected on every load returns to the welcome view.
   await page.getByRole('button', { name: /^Clarify the introduction/ }).click();
   await input.waitFor();
-  assert.equal(await input.inputValue(), 'New text typed during submission.');
+  assert.equal(await readComposerText(input), 'New text typed during submission.');
   console.log('PASS: Feedback shares the chat submission, and in-flight typing survives reload');
   const secondTask = { ...task, id: 'fixture-task-0002', name: 'p-second', title: 'Check the notation', review: null };
   snapshot.tasks.push(secondTask);
@@ -1742,14 +1722,14 @@ try {
   releaseMessage(); holdMessage = null;
   await page.waitForFunction(() => !document.querySelector('.send-button').disabled);
   assert.equal(messages.length, beforeNavigationSend + 1);
-  assert.equal(await input.inputValue(), 'New text typed during submission.');
+  assert.equal(await readComposerText(input), 'New text typed during submission.');
   console.log('PASS: Task navigation retains pending sends and cannot duplicate a message');
   const beforeEnterSend = messages.length;
   await input.fill('First line');
   await input.press('Shift+Enter');
   await input.pressSequentially('Second line');
   await input.press('Enter');
-  await page.waitForFunction(() => document.querySelector('.composer textarea').value === '');
+  await expectComposerText(page.locator('.composer .composer-input'), '');
   assert.equal(messages.length, beforeEnterSend + 1);
   assert.equal(messages.at(-1).text, 'First line\nSecond line');
   await input.fill('New text typed during submission.');
@@ -1784,45 +1764,45 @@ try {
   task.status = 'waiting_input';
   await page.reload();
   await page.getByRole('button', { name: /^Clarify the introduction/ }).click();
-  await page.getByRole('heading', { name: 'Codex needs your input' }).waitFor();
+  await page.getByRole('heading', { name: 'Which section should I revise?' }).waitFor();
   assert.equal(await page.title(), `(1) ${task.title} · StudyBuddy`);
-  assert.equal(await page.getByRole('button', { name: 'Reply to Codex' }).isDisabled(), true);
-  await page.getByRole('button', { name: /Introduction/ }).click({ timeout: 3000 });
-  assert.equal(await page.getByRole('button', { name: 'Reply to Codex' }).isEnabled(), true);
-  console.log('PASS: Codex reply requires an answer and shows an accessible pending-input indicator');
-  await page.getByRole('textbox', { name: 'Which section should I revise?' }).fill('Keep the theorem statement.');
+  const questionCard = page.locator('.codex-question-card');
+  await expect(questionCard.getByRole('radio', { name: 'Introduction', exact: true })).toBeVisible();
+  await expect(input).toBeHidden();
+  console.log('PASS: Native Codex questions replace the composer and retain the pending-input indicator');
+  const answer = questionCard.getByRole('textbox', { name: 'No, and tell ChatGPT what to do differently' });
+  await answer.fill('Keep the theorem statement.');
   await page.getByRole('button', { name: /^Check the notation/ }).click();
   await page.getByRole('button', { name: /^Clarify the introduction/ }).click();
-  assert.equal(await page.getByRole('textbox', { name: 'Which section should I revise?' }).inputValue(), 'Keep the theorem statement.');
+  await expectComposerText(answer, 'Keep the theorem statement.');
   console.log('PASS: Unsent answers survive switching tasks');
-  // An agent that can only take one of its options (Kimi's ACP choices) gets no free-form answer.
   const question = snapshot.requests[0];
-  snapshot.requests = [{ ...question, id: 'choice', params: { questions: [{ id: 'choice', question: 'Which section should Kimi edit?', isOther: false, options: [{ label: 'Introduction' }, { label: 'Model' }] }] } }];
+  snapshot.requests = [{ ...question, id: 'choice', params: { questions: [{ id: 'choice', question: 'Which section should Codex edit?', isOther: false, options: [{ label: 'Introduction' }, { label: 'Model' }] }] } }];
   await page.reload();
   await page.getByRole('button', { name: /^Clarify the introduction/ }).click();
-  const choice = page.locator('.request-card').getByRole('button', { name: 'Model', exact: true });
+  const choice = questionCard.getByRole('radio', { name: 'Model', exact: true });
   await choice.waitFor();
-  assert.equal(await page.getByRole('textbox', { name: 'Which section should Kimi edit?' }).count(), 0);
+  assert.equal(await questionCard.getByRole('textbox').count(), 0);
   await choice.click();
-  assert.equal(await page.getByRole('button', { name: 'Reply to Codex' }).isEnabled(), true);
-  console.log('PASS: Questions without an "Other" choice offer only their options');
+  await expect(questionCard).toBeHidden();
+  console.log('PASS: Questions without an "Other" choice send only an offered option');
   snapshot.requests = [question];
   await page.reload();
   await page.getByRole('button', { name: /^Clarify the introduction/ }).click();
-  await page.getByRole('heading', { name: 'Codex needs your input' }).waitFor();
+  await page.getByRole('heading', { name: 'Which section should I revise?' }).waitFor();
 
 
   for (const width of [320, 390, 768]) {
     await page.setViewportSize({ width, height: width === 320 ? 568 : 844 });
     if (width < 681) await page.getByRole('button', { name: 'Chat (reply needed)', exact: true }).click();
-    await input.waitFor();
-    assert.equal(await input.inputValue(), 'New text typed during submission.');
+    await questionCard.waitFor();
+    await expect(input).toBeHidden();
     const overflow = await page.evaluate(() => {
       const containers = ['.app-shell', '.workspace-navigation', '.panel-tools', '.view-selector', '.review-tools', '.composer-wrap'];
       return containers.filter(selector => { const el = document.querySelector(selector); return el && el.clientWidth && el.scrollWidth > el.clientWidth + 1; });
     });
     assert.deepEqual(overflow, [], `overflow at ${width}px`);
-    const send = await page.getByRole('button', { name: 'Send instructions', exact: true }).boundingBox();
+    const send = await questionCard.getByRole('button', { name: 'Skip', exact: true }).boundingBox();
     assert.ok(send.x >= 0 && send.x + send.width <= width);
     if (width < 681) {
       await page.getByRole('button', { name: /Review/ }).first().click();
@@ -1894,23 +1874,22 @@ try {
       await page.getByRole('button', { name: 'New task', exact: true }).click();
       await prompt.fill('A task beside the PDF\nKeep the manuscript composer visible.');
       await page.getByRole('button', { name: 'Start task' }).click();
-      await page.waitForFunction(() => document.querySelector('.new-task-panel textarea')?.value === '');
+      await expectComposerText(page.locator('.new-task-panel .composer-input'), '');
       assert.equal(await prompt.isVisible(), true);
       await expect(page.locator('.sidebar')).toBeHidden();
       assert.equal(await page.getByRole('button', { name: 'New task', exact: true }).getAttribute('aria-pressed'), 'true');
       await page.getByRole('button', { name: 'Show task list', exact: true }).click();
       await page.locator(`[data-task="${task.id}"] .task-link`).click();
       await page.getByRole('button', { name: 'Chat (reply needed)', exact: true }).click();
-      await input.waitFor();
+      await questionCard.waitFor();
     } else await page.getByRole('button', { name: 'Hide task list', exact: true }).first().click();
   }
   console.log('PASS: 320px, 390px, and tablet layouts; draft persistence; zoom; drawer; project dialog');
   await page.setViewportSize({ width: 390, height: 844 });
   await page.getByRole('button', { name: /^Review/ }).first().click();
   await page.getByRole('button', { name: 'Chat (reply needed)', exact: true }).click();
-  await input.waitFor({ state: 'visible' });
+  await questionCard.waitFor({ state: 'visible' });
   assert.equal(await page.getByRole('button', { name: 'Chat (reply needed)', exact: true }).getAttribute('aria-pressed'), 'true');
-  assert.equal(await input.inputValue(), 'New text typed during submission.');
   await openDelete();
   await page.getByRole('dialog', { name: 'Delete task?' }).waitFor();
   await page.getByRole('button', { name: 'Cancel', exact: true }).click();
@@ -1922,13 +1901,14 @@ try {
   snapshot.requests = []; task.status = 'reviewing';
   await page.evaluate(() => window.dispatchEvent(new Event('online')));
   await page.locator(`.task-row[data-task="${task.id}"] .status`).filter({ hasText: 'Ready for review' }).waitFor();
+  await expectComposerText(input, 'New text typed during submission.');
   await input.fill('Keep this draft through connection recovery.');
   await page.getByRole('button', { name: 'Hide task list', exact: true }).first().click();
   stateFailure = true;
   await page.evaluate(() => window.dispatchEvent(new Event('online')));
   await page.getByText('Connection lost. Showing the last update; your draft is kept.').waitFor();
   assert.equal(await page.getByRole('button', { name: 'Retry connection' }).isVisible(), true);
-  assert.equal(await input.inputValue(), 'Keep this draft through connection recovery.');
+  assert.equal(await readComposerText(input), 'Keep this draft through connection recovery.');
   stateFailure = false;
   await page.getByRole('button', { name: 'Retry connection' }).click();
   await page.locator('.connection-banner').waitFor({ state: 'hidden' });
@@ -1948,7 +1928,7 @@ try {
   await page.getByRole('button', { name: 'Reload review', exact: true }).click();
   await page.frameLocator('.review-frame').locator('#paper').waitFor({ state: 'visible' });
   assert.equal(await page.locator('.review-viewport').getAttribute('aria-busy'), 'false');
-  assert.equal(await input.inputValue(), 'Keep this draft through connection recovery.');
+  assert.equal(await readComposerText(input), 'Keep this draft through connection recovery.');
   console.log('PASS: Failed conversation and iframe loads recover in place without losing the draft');
   await page.getByRole('button', { name: /^Check the notation/ }).click();
   reviewStarting = true;
@@ -1988,10 +1968,10 @@ try {
   assert.equal(await work.locator('.tool-item').first().isVisible(), false);
   await page.locator('.tool-group > summary').click();
   assert.deepEqual(await work.locator('.tool-label').allInnerTexts(), ['cat main.tex', 'git status --short', 'Edited main.tex']);
-  assert.equal(await page.locator('.thread > .tool-item .tool-label').innerText(), 'latexmk -pdf main.tex');
+  assert.equal(await page.locator('.thread .codex-turn > .tool-item .tool-label').innerText(), 'latexmk -pdf main.tex');
   // A task on the host's default model names that model.
-  assert.equal(await page.locator('.activity-panel .agent-picker .agent-model-name').innerText(), 'Fast model');
-  assert.equal(await page.locator('.activity-panel .agent-picker .agent-model-label small').innerText(), 'Medium');
+  assert.equal(await page.locator('.activity-panel .codex-model-trigger > span:first-child').innerText(), 'Fast model');
+  assert.equal(await page.locator('.activity-panel .codex-model-effort').innerText(), 'Medium');
   console.log('PASS: Notes sent from the PDF read as notes, and consecutive commands fold into one line with task paths');
 
   history = Array.from({ length: 120 }, (_, i) => ({ id: `history-${i}`, taskId: task.id, type: 'assistant', text: `Message ${i}: A detailed review of the argument.`, createdAt: i + 1 }));
@@ -2107,7 +2087,7 @@ try {
   await manuscriptDraft.fill('Continue editing this paper after reload.');
   await papersPage.reload();
   await manuscriptDraft.waitFor();
-  assert.equal(await manuscriptDraft.inputValue(), 'Continue editing this paper after reload.');
+  assert.equal(await readComposerText(manuscriptDraft), 'Continue editing this paper after reload.');
   assert.equal(await papersPage.locator('.task-grid').count(), 0);
   assert.equal(await papersPage.getByRole('button', { name: /^Paper:/ }).getAttribute('aria-label'), 'Paper: Second paper');
   assert.deepEqual(await papersPage.evaluate(() => [localStorage.getItem('papilot:task'), localStorage.getItem('papilot:project')]), ['', otherPaper.id]);
@@ -2138,12 +2118,15 @@ try {
   await restrictedPage.goto(origin);
   const restrictedInput = restrictedPage.getByRole('textbox', { name: 'Instructions for Codex' });
   await restrictedInput.fill('A usable draft with storage disabled.');
-  assert.equal(await restrictedInput.inputValue(), 'A usable draft with storage disabled.');
+  assert.equal(await readComposerText(restrictedInput), 'A usable draft with storage disabled.');
   assert.deepEqual(restrictedErrors, []);
   await restricted.close();
   console.log('PASS: Blocked browser storage does not prevent loading or editing');
   assert.deepEqual(pageErrors, []);
   console.log('PASS: No uncaught browser errors');
+} catch (error) {
+  await page.screenshot({ path: 'test-results/ui-failure.png', fullPage: true }).catch(() => {});
+  throw error;
 } finally {
   await browser.close();
   await server.close();

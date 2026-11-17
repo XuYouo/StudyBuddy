@@ -18,7 +18,7 @@ export async function checkDesktopNotifications(application, page, snapshot) {
   });
   const calls = () => application.evaluate(() => globalThis.notificationCalls.map(n => ({ title: n.title, body: n.body, silent: n.silent })));
   const openSettings = async () => {
-    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    await page.locator('.settings-link').click();
     await page.getByRole('button', { name: 'Notifications', exact: true }).click();
   };
   const fixture = structuredClone(snapshot);

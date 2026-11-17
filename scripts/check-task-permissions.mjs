@@ -76,10 +76,10 @@ await page.route('**/api/**', async route => {
 try {
   await page.goto(origin);
   await page.getByRole('button', {name:'Chat', exact:true}).click();
-  const trigger = page.locator('.activity-panel').getByRole('button', { name: 'Agent settings', exact: true });
-  const menu = page.getByRole('dialog', { name: 'Agent settings', exact: true });
-  const workspace = menu.getByRole('radio', { name: 'Workspace access', exact: true });
-  const full = menu.getByRole('radio', { name: 'Full access', exact: true });
+  const trigger = page.locator('.activity-panel').getByRole('button', { name: 'Permissions', exact: true });
+  const menu = page.getByRole('menu', { name: 'Permissions', exact: true });
+  const workspace = menu.getByRole('menuitemradio', { name: 'Workspace access', exact: true });
+  const full = menu.getByRole('menuitemradio', { name: 'Full access', exact: true });
   const open = async (button = trigger) => { if (!await menu.isVisible()) await button.click(); };
   const choose = async (radio) => {
     await open();
@@ -92,28 +92,32 @@ try {
   await expect(page.getByRole('combobox', { name: 'Permissions', exact: true })).toHaveCount(0);
   await open();
   await expect(workspace).toBeDisabled();
-  await expect(menu.getByRole('slider', { name: 'Reasoning effort', exact: true })).toBeEnabled();
-  await expect(menu.getByRole('group', { name: 'Permissions', exact: true })).toBeVisible();
+  await menu.press('Escape');
+  await page.locator('.activity-panel .codex-model-trigger').click();
+  await expect(page.locator('.codex-model-menu').getByRole('slider', { name: 'Reasoning effort', exact: true })).toBeEnabled();
+  await page.keyboard.press('Escape');
+  await open();
+  await expect(menu).toBeVisible();
   await expect(menu.getByText('Pause to change', { exact: true })).toBeVisible();
   task.status = 'reviewing'; await page.reload(); await open();
   await expect(workspace).toBeEnabled();
-  await expect(workspace).toBeChecked();
+  await expect(workspace).toHaveAttribute('aria-checked', 'true');
   await page.screenshot({ animations: 'disabled', path: 'test-results/task-permissions-menu.png' });
   await choose(full);
-  await expect(full).toBeChecked();
+  await expect(full).toHaveAttribute('aria-checked', 'true');
   await expect(trigger.locator('.agent-permission-label')).toHaveText('Full access');
   assert.equal(task.permissions, 'full');
   await page.screenshot({ animations: 'disabled', path: 'test-results/task-permissions-full.png' });
   await menu.press('Escape');
   await page.screenshot({ animations: 'disabled', path: 'test-results/task-permissions-collapsed.png' });
-  await page.reload(); await open(); await expect(full).toBeChecked();
+  await page.reload(); await open(); await expect(full).toHaveAttribute('aria-checked', 'true');
   await choose(workspace);
-  await expect(workspace).toBeChecked();
+  await expect(workspace).toHaveAttribute('aria-checked', 'true');
   await expect(trigger.locator('.agent-permission-label')).toHaveText('Workspace access');
   permissionFailure = true;
   await choose(full);
   await expect(page.getByText('Permission change failed.', { exact: true })).toBeVisible();
-  await expect(workspace).toBeChecked();
+  await expect(workspace).toHaveAttribute('aria-checked', 'true');
   await expect(trigger.locator('.agent-permission-label')).toHaveText('Workspace access');
   permissionFailure = false;
   // The save response confirms the mode even when the separate state refresh
@@ -125,16 +129,16 @@ try {
     await choose(full);
     await expect.poll(() => stateReads).toBeGreaterThan(beforeReads);
     if (stateFailure) await expect.poll(() => stateFailures).toBeGreaterThan(beforeFailures);
-    await expect(full).toBeChecked();
+    await expect(full).toHaveAttribute('aria-checked', 'true');
     await expect(trigger.locator('.agent-permission-label')).toHaveText('Full access');
     // A failed downgrade keeps the last confirmed Full mode in both places.
     permissionFailure = true;
     await choose(workspace);
-    await expect(full).toBeChecked();
+    await expect(full).toHaveAttribute('aria-checked', 'true');
     await expect(trigger.locator('.agent-permission-label')).toHaveText('Full access');
     permissionFailure = false;
     await choose(workspace);
-    await expect(workspace).toBeChecked();
+    await expect(workspace).toHaveAttribute('aria-checked', 'true');
     await expect(trigger.locator('.agent-permission-label')).toHaveText('Workspace access');
     assert.deepEqual(permissionChanges.slice(beforeChanges), [{ permissions: 'full' }, { permissions: 'workspace' }, { permissions: 'workspace' }]);
     await menu.press('Escape');
@@ -146,7 +150,7 @@ try {
     stateFailure = false; holdState = null; releaseState?.();
     await Promise.all([page.waitForResponse(response => response.url().endsWith('/state') && response.status() === 200), page.evaluate(() => window.dispatchEvent(new Event('online')))]);
     await expect(trigger.locator('.agent-permission-label')).toHaveText('Workspace access');
-    await open(); await expect(workspace).toBeChecked();
+    await open(); await expect(workspace).toHaveAttribute('aria-checked', 'true');
   }
   // Sending and model changes wait for a permission save; permission changes
   // also wait for the existing model-save queue.
@@ -158,18 +162,20 @@ try {
   await expect(trigger).toBeDisabled();
   await expect(page.getByRole('button', { name: 'Send instructions', exact: true })).toBeDisabled();
   releasePermission(); holdPermission = null;
-  await expect(trigger).toBeEnabled(); await open(); await expect(full).toBeChecked();
+  await expect(trigger).toBeEnabled(); await open(); await expect(full).toHaveAttribute('aria-checked', 'true');
   holdModel = new Promise(resolve => { releaseModel = resolve; });
-  await menu.getByRole('option', { name: 'Deep model · Codex', exact: true }).last().click();
-  await expect(full).toBeDisabled();
-  releaseModel(); holdModel = null;
-  await expect(full).toBeEnabled();
   await menu.press('Escape');
+  await page.locator('.activity-panel .codex-model-trigger').click();
+  await page.locator('.codex-effort-model').click();
+  await page.getByRole('menuitemradio', { name: 'Deep model', exact: true }).click();
+  await expect(trigger).toBeDisabled();
+  releaseModel(); holdModel = null;
+  await expect(trigger).toBeEnabled();
   await page.setViewportSize({ width: 390, height: 844 });
   await page.getByRole('button', { name: 'Chat', exact: true }).click();
   const taskTrigger = await trigger.boundingBox(), taskSend = await page.getByRole('button', { name: 'Send instructions', exact: true }).boundingBox();
   assert.ok(taskTrigger.x >= 0 && taskTrigger.x + taskTrigger.width <= taskSend.x, 'existing-task settings must not overlap send');
-  await open(); await expect(full).toBeChecked();
+  await open(); await expect(full).toHaveAttribute('aria-checked', 'true');
   const taskMenu = await menu.boundingBox();
   assert.ok(taskMenu.x >= 0 && taskMenu.x + taskMenu.width <= 390 && taskMenu.y >= 0 && taskMenu.y + taskMenu.height <= 844);
   await page.screenshot({ animations: 'disabled', path: 'test-results/task-permissions-task-mobile.png' });
@@ -177,28 +183,28 @@ try {
   task.agent = 'claude';
   await page.reload(); await open();
   await expect(trigger.locator('.agent-permission-label')).toHaveText('Bypass permissions');
-  await expect(menu.getByRole('radio', { name: 'Sandboxed edits', exact: true })).toBeVisible();
-  await choose(menu.getByRole('radio', { name: 'Sandboxed edits', exact: true }));
+  await expect(menu.getByRole('menuitemradio', { name: 'Sandboxed edits', exact: true })).toBeVisible();
+  await choose(menu.getByRole('menuitemradio', { name: 'Sandboxed edits', exact: true }));
   await expect(trigger.locator('.agent-permission-label')).toHaveText('Sandboxed edits');
   await expect(menu.getByText('Sandboxed; other requests denied', { exact: true })).toBeVisible();
-  assert.equal(await menu.locator('.task-permission-detail').evaluate(el => el.scrollWidth <= el.clientWidth), true, 'permission descriptions must not be truncated');
+  assert.equal(await menu.locator('.menu-detail').first().evaluate(el => el.scrollWidth <= el.clientWidth), true, 'permission descriptions must not be truncated');
   await page.screenshot({ animations: 'disabled', path: 'test-results/task-permissions-claude.png' });
   // The backend platform controls the label, even in a browser on another OS.
   const sandboxedOptions = snapshot.runtimes.claude.permissionOptions;
   snapshot.runtimes.claude.permissionOptions = Object.assign(new ClaudeAgent(undefined, undefined, undefined, 'win32'), { cli: '/fixture/claude.exe' }).permissionOptions();
   await page.reload(); await open();
-  await expect(menu.getByRole('radio', { name: 'Accept edits', exact: true })).toBeChecked();
-  await expect(menu.getByRole('radio', { name: 'Sandboxed edits', exact: true })).toHaveCount(0);
+  await expect(menu.getByRole('menuitemradio', { name: 'Accept edits', exact: true })).toHaveAttribute('aria-checked', 'true');
+  await expect(menu.getByRole('menuitemradio', { name: 'Sandboxed edits', exact: true })).toHaveCount(0);
   await expect(trigger.locator('.agent-permission-label')).toHaveText('Accept edits');
   await expect(menu.getByText('No sandbox; Other requests denied', { exact: true })).toBeVisible();
-  await choose(menu.getByRole('radio', { name: 'Bypass permissions', exact: true }));
-  await choose(menu.getByRole('radio', { name: 'Accept edits', exact: true }));
+  await choose(menu.getByRole('menuitemradio', { name: 'Bypass permissions', exact: true }));
+  await choose(menu.getByRole('menuitemradio', { name: 'Accept edits', exact: true }));
   assert.equal(task.permissions, 'workspace');
   await page.screenshot({ animations: 'disabled', path: 'test-results/task-permissions-claude-windows.png' });
   await menu.press('Escape'); await page.setViewportSize({ width: 390, height: 844 });
   await page.reload(); await page.getByRole('button', { name: 'Chat', exact: true }).click(); await open();
   await expect(menu.getByText('No sandbox; Other requests denied', { exact: true })).toBeVisible();
-  assert.equal(await menu.locator('.task-permission-detail').evaluate(el => el.scrollWidth <= el.clientWidth), true);
+  assert.equal(await menu.locator('.menu-detail').first().evaluate(el => el.scrollWidth <= el.clientWidth), true);
   await page.screenshot({ animations: 'disabled', path: 'test-results/task-permissions-claude-windows-mobile.png' });
   await menu.press('Escape'); await page.setViewportSize({ width: 1440, height: 900 });
   snapshot.runtimes.claude.permissionOptions = sandboxedOptions;
@@ -207,8 +213,8 @@ try {
   await expect(menu.getByText('Sandboxed; exceptions need approval', { exact: true })).toBeVisible();
   task.agent = 'kimi'; task.model = null;
   await page.reload(); await open();
-  await expect(menu.getByRole('radio')).toHaveCount(4);
-  await choose(menu.getByRole('radio', { name: 'Auto', exact: true }));
+  await expect(menu.getByRole('menuitemradio')).toHaveCount(4);
+  await choose(menu.getByRole('menuitemradio', { name: 'Auto', exact: true }));
   await expect(trigger.locator('.agent-permission-label')).toHaveText('Auto');
   assert.equal(task.permissions, 'auto');
   await page.screenshot({ animations: 'disabled', path: 'test-results/task-permissions-kimi.png' });
@@ -218,13 +224,13 @@ try {
     await page.reload();
     await page.getByRole('button', { name: 'Chat', exact: true }).click();
     await open();
-    for (const radio of await menu.locator('.task-permission-option').all()) {
+    for (const radio of await menu.getByRole('menuitemradio').all()) {
       const box = await radio.boundingBox();
       assert.ok(box && box.x >= 0 && box.x + box.width <= viewport.width && box.y >= 0 && box.y + box.height <= viewport.height, 'all native modes must fit on mobile');
     }
-    await choose(menu.getByRole('radio', { name: 'YOLO', exact: true }));
+    await choose(menu.getByRole('menuitemradio', { name: 'YOLO', exact: true }));
     await expect(trigger.locator('.agent-permission-label')).toHaveText('YOLO');
-    await choose(menu.getByRole('radio', { name: 'Default', exact: true }));
+    await choose(menu.getByRole('menuitemradio', { name: 'Default', exact: true }));
     await expect(trigger.locator('.agent-permission-label')).toHaveText('Default');
     await page.screenshot({ animations: 'disabled', path: `test-results/task-permissions-kimi-${viewport.width}.png` });
     await menu.press('Escape');
@@ -232,40 +238,45 @@ try {
   await page.setViewportSize({ width: 1440, height: 900 });
   task.agent = 'cursor'; snapshot.runtimes.cursor = { ...runtime, permissionOptions: new CursorAgent().permissionOptions() };
   await page.reload(); await open();
-  await choose(menu.getByRole('radio', { name: 'Unrestricted', exact: true }));
+  await choose(menu.getByRole('menuitemradio', { name: 'Unrestricted', exact: true }));
   await expect(trigger.locator('.agent-permission-label')).toHaveText('Unrestricted');
-  await choose(menu.getByRole('radio', { name: 'Sandbox', exact: true }));
+  await choose(menu.getByRole('menuitemradio', { name: 'Sandbox', exact: true }));
   await expect(trigger.locator('.agent-permission-label')).toHaveText('Sandbox');
   task.agent = 'cursor'; snapshot.runtimes.cursor = { ...runtime, permissionOptions: [] };
-  await page.reload(); await open(); await expect(menu.getByRole('group', { name: 'Permissions', exact: true })).toHaveCount(0);
-  await expect(trigger.locator('.agent-permission-label')).toHaveCount(0);
+  await page.reload(); await expect(trigger).toHaveCount(0);
   task.agent = 'codex'; task.mode = 'review';
-  await page.reload(); await open(); await expect(menu.getByRole('group', { name: 'Permissions', exact: true })).toHaveCount(0);
-  await expect(trigger.locator('.agent-permission-label')).toHaveCount(0);
+  await page.reload(); await expect(trigger).toHaveCount(0);
   delete task.mode; snapshot.tasks = [];
   await page.evaluate(() => localStorage.removeItem('papilot:task'));
   await page.reload();
-  const fresh = page.locator('.new-task-panel').getByRole('button', { name: 'Agent settings', exact: true });
+  const fresh = page.locator('.new-task-panel').getByRole('button', { name: 'Permissions', exact: true });
   await expect(fresh).toHaveCount(1);
   await expect(fresh.locator('.agent-permission-label')).toHaveText('Workspace access');
-  await open(fresh); await expect(workspace).toBeChecked();
-  await full.check(); await expect(full).toBeChecked();
-  await expect(menu.getByRole('slider', { name: 'Reasoning effort', exact: true })).toBeVisible();
+  await open(fresh); await expect(workspace).toHaveAttribute('aria-checked', 'true');
+  await full.click(); await open(fresh); await expect(full).toHaveAttribute('aria-checked', 'true');
   await expect(page.locator(':popover-open')).toHaveCount(1);
   await page.screenshot({ animations: 'disabled', path: 'test-results/task-permissions-new.png' });
-  // Switching agents updates permissions inside the same open menu.
-  await menu.getByRole('option', { name: 'Kimi K3 · Kimi', exact: true }).last().click();
-  await menu.getByRole('radio', { name: 'Auto', exact: true }).check();
+  // Model selection and permission selection are separate native popovers.
+  const chooseAgentModel = async name => {
+    if (await menu.isVisible()) await menu.press('Escape');
+    await page.locator('.new-task-panel .codex-model-trigger').click();
+    const modelMenu = page.locator('.codex-model-menu[data-open="true"]');
+    if (await modelMenu.locator('.codex-effort-model').isVisible()) await modelMenu.locator('.codex-effort-model').click();
+    await modelMenu.getByRole('menuitemradio', { name, exact: true }).click();
+    await open(fresh);
+  };
+  await chooseAgentModel('Kimi K3 · Kimi');
+  await menu.getByRole('menuitemradio', { name: 'Auto', exact: true }).click(); await open(fresh);
   await expect(fresh.locator('.agent-permission-label')).toHaveText('Auto');
-  await menu.getByRole('option', { name: 'Opus · Claude', exact: true }).last().click();
-  await expect(menu.getByRole('radio', { name: 'Sandboxed edits', exact: true })).toBeChecked();
+  await chooseAgentModel('Opus · Claude');
+  await expect(menu.getByRole('menuitemradio', { name: 'Sandboxed edits', exact: true })).toHaveAttribute('aria-checked', 'true');
   await expect(fresh.locator('.agent-permission-label')).toHaveText('Sandboxed edits');
-  await menu.getByRole('radio', { name: 'Bypass permissions', exact: true }).check();
-  await expect(menu.getByRole('radio', { name: 'Bypass permissions', exact: true })).toBeChecked();
+  await menu.getByRole('menuitemradio', { name: 'Bypass permissions', exact: true }).click(); await open(fresh);
+  await expect(menu.getByRole('menuitemradio', { name: 'Bypass permissions', exact: true })).toHaveAttribute('aria-checked', 'true');
   await expect(fresh.locator('.agent-permission-label')).toHaveText('Bypass permissions');
-  await expect(menu.getByRole('radio', { name: 'Full access', exact: true })).toHaveCount(0);
-  await menu.getByRole('option', { name: 'Deep model · Codex', exact: true }).last().click();
-  await expect(full).toBeChecked();
+  await expect(menu.getByRole('menuitemradio', { name: 'Full access', exact: true })).toHaveCount(0);
+  await chooseAgentModel('Deep model · Codex');
+  await expect(full).toHaveAttribute('aria-checked', 'true');
   await menu.press('Escape');
   const creates = [];
   await page.route('**/api/tasks', async route => {
@@ -284,20 +295,20 @@ try {
     await open(fresh);
     const panel = await menu.boundingBox();
     assert.ok(panel.x >= 0 && panel.x + panel.width <= viewport.width && panel.y >= 0 && panel.y + panel.height <= viewport.height, 'all settings share one menu within the viewport');
-    await workspace.check(); await expect(workspace).toBeChecked();
+    await workspace.click(); await open(fresh); await expect(workspace).toHaveAttribute('aria-checked', 'true');
     await expect(fresh.locator('.agent-permission-label')).toHaveText('Workspace access');
-    await workspace.press('ArrowDown'); await expect(full).toBeChecked();
+    await workspace.focus(); await workspace.press('ArrowDown'); await expect(full).toBeFocused(); await full.press('Enter'); await open(fresh); await expect(full).toHaveAttribute('aria-checked', 'true');
     await page.screenshot({ animations: 'disabled', path: `test-results/task-permissions-mobile-${viewport.width}.png` });
     await menu.press('Escape');
     const mode = fresh.locator('.agent-permission-label');
     await expect(mode).toHaveText('Full access');
-    assert.ok(await mode.evaluate(el => el.scrollWidth <= el.clientWidth), 'the collapsed permission mode must remain readable');
+    await expect(fresh).toHaveAttribute('aria-description', /Full access/);
     await page.screenshot({ animations: 'disabled', path: `test-results/task-permissions-collapsed-${viewport.width}.png` });
   }
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.emulateMedia({ colorScheme: 'dark' }); await open(fresh);
   await page.screenshot({ animations: 'disabled', path: 'test-results/task-permissions-dark.png' });
   assert.deepEqual(errors, []);
-  console.log('PASS: shared agent menu, native permission options, busy/save locks, delayed/failed refresh consistency, persistence, error recovery, provider/review restrictions, creation, keyboard and narrow-screen layout.');
+  console.log('PASS: separate composer menus, native permission options, busy/save locks, delayed/failed refresh consistency, persistence, error recovery, provider/review restrictions, creation, keyboard and narrow-screen layout.');
 } catch (error) { await page.screenshot({ path: 'test-results/task-permissions-failure.png' }); throw error; }
 finally { releaseState?.(); await browser.close(); await server.close(); }

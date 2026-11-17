@@ -39,6 +39,11 @@
     "textHash": "2cc9fe35a4f6d059d2c051f8bec8bdeeaeb70d8f940705b480f1b21105fe2227",
     "model": "gemini-4-argon-medium"
   },
+  "AGENTS.md already exists here. Skipping /init to avoid overwriting it": {
+    "revision": "6a1396959cea9bb2049d03f6b020751efaf334bbce0b26e392aeb440583e70ec",
+    "textHash": "23c067a2eb65bf6a22419ebda6deaf1f238cfcac7845a33588d05ca368720371",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "AI is resolving conflicts…": {
     "revision": "48e9a4e3175f9fe02e85eb4c325877999438c05809b1ed89d2242e583cc2a110",
     "textHash": "7ec5bd73f098e07882ba4bce110a03d0661ab7727cd67341399aa7cda84b29a4",
@@ -259,10 +264,65 @@
     "textHash": "880869794c92cfe3d9b8580fdd478dfd92537f2b725a9b318aaeaf7560864233",
     "model": "gemini-4-argon-medium"
   },
-  "Allow this action": {
-    "revision": "d3a9c01fbbf80e38084a78b3a67d93d88a7ede79bf1de58aae63e773df04e7fb",
-    "textHash": "32438b5f6a706ec591547c333f0f0d8ed6355e3f8b31546f0731d6129d5cf8f0",
-    "model": "gemini-4-argon-medium"
+  "Allow all edits": {
+    "revision": "b93e20b424eb38289302863596e92d1957ef44738b77fe35a93ffdff94aad03e",
+    "textHash": "422254f26005c49e25511086f7e25f4adc8c2e21dceb12e3ddb3f040fbced77c",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow once": {
+    "revision": "783a5b474bf397f6067616c4aeebc322eac2438c7f81815a317d70e63a4a85c3",
+    "textHash": "dfac592ce183c8702be30938a467da580fe736062b4f3a0a4b46f9bdf98f1b56",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow similar commands": {
+    "revision": "9921669696e2e7af64a53eab8a698d04bfee601febf5d34d4649bd7fb6fdcdc9",
+    "textHash": "c9b78ac2e988d59818626d1e9aab18dfbc18d08f14a6cf15cea89be59324d184",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow this conversation": {
+    "revision": "d3930ada758d6b9df64e48750479e93abde852dd0bbf7f6935ded35f205b68ba",
+    "textHash": "a4bb9765b82158ed598ebc8b6bd5c64caa7f48418c53ee2a065df74ee928d5ec",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow {agent} to connect to the internet?": {
+    "revision": "f6baaa2f300a14e7097218e7c5c3d3c701498bd21a31f8743ac2fb530e90dff2",
+    "textHash": "9633920c8c6370c9c5653285be7815fda226560345b278c030d8737875018b38",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow {agent} to connect to {host}?": {
+    "revision": "4fdf63a25272d4b66b4e94a800213a03a941ce8c24cb4d7266ee4be05fbc50a3",
+    "textHash": "c8107b603404e311340dbd92b96a7b9b447c9077069c4dfa1d041e4cfe8f0edf",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow {agent} to edit the contents of {paths}?": {
+    "revision": "6c8850e4e12c549c3c8a08adfbc50d670ea715dd085c24dc9ee0d3ad371b91b2",
+    "textHash": "7f387721036d4cfdca8a0eca9b25aee67bd3e5a23bafd202ffd1f038970a77c7",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow {agent} to edit the following file?": {
+    "revision": "5779e903f4a63aeaf3d419a73cf5e1bc706118f5c7e76416e873067b599d3889",
+    "textHash": "ca8026d4bd5905f2e469240a6cd5cd5c9cf29f07840fe23adab2fcb36e2de936",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow {agent} to edit the following files?": {
+    "revision": "91d5a94c2f168189cc14ad6702b82def14e0ef0b44f3f6ff6131cd012a4df53a",
+    "textHash": "ca8026d4bd5905f2e469240a6cd5cd5c9cf29f07840fe23adab2fcb36e2de936",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow {agent} to view and edit the contents of {paths}?": {
+    "revision": "107d4e9f7ef031d8f795a184cfc1d6b20ce14658c3dfdaf97850c8573c3f8c38",
+    "textHash": "d4959a5bc3cc084123925d687617deeb14cc46da27d205e23c2d5d1660d311aa",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow {agent} to view the contents of {paths}?": {
+    "revision": "8f9679d46dc95ba9f9d8a9367e9e845c8c3f506591c360e9daf4bdb5615d3268",
+    "textHash": "ac21223fcc351dd7e261357d55819de667bbab5ad355e3c7f529178d56eaa9bb",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Allow {agent} to {actions}?": {
+    "revision": "7b3b26679cd7f36ccba5cbc16dc4f19f70b982be1eadc251bdd7cc5aaf791668",
+    "textHash": "1ccf694bd0c4aa85fa2a0468a44116b63f7e43a9ad195adbc2aead927c17cde6",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Already set up?": {
     "revision": "6fd96a75c6fb001167392d663d1ba25d584d1f6fe3bfeb524eacc858e190c9de",
@@ -273,6 +333,11 @@
     "revision": "65442f2e5c4974262a261866977851aa7e06c4b1863c0a484300c59e27914786",
     "textHash": "4b94524e7a08bd1b552104ac0e74a98d332d62e2706bb165c95889b232b10032",
     "model": "gemini-4-argon-medium"
+  },
+  "Always allow": {
+    "revision": "3beef655a63f0e31fdd476dc8bd2042106d375b966f3231349c6da64caa81fb0",
+    "textHash": "32d0fc029420c375e225b6b68cd5155e7fdf82e0761e3beed5384571525b4e4a",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "An environment variable set in a new terminal does not reach an already running server. Restart StudyBuddy with the credentials; Reconnect alone cannot change its environment.": {
     "revision": "c4c7720b32ef3b3b6f2622461ce9fb54a571663b356d1efb0c71c3a0eb13a454",
@@ -320,7 +385,7 @@
     "model": "gemini-4-argon-high"
   },
   "Apply file changes": {
-    "revision": "52b1b5a56e02fed1ce5ebe36da249b3a3a2cf040f137fc0fdf099033b5a1ae7a",
+    "revision": "381f5d0d6d0f64bee665764de594c1a453038230f7678a4f8aafb0a240c05918",
     "textHash": "7338ef7aa2bd9f71325c6393ea6c7957c8f60ddbd2bf8a885abc7f527e1cc72a",
     "model": "gemini-4-argon-medium"
   },
@@ -339,14 +404,14 @@
     "textHash": "304d48a5d22e10a36296b8b26b36d2316e3e4808aecc3b07950fdeed580c384d",
     "model": "gemini-4-argon-medium"
   },
+  "Approval options": {
+    "revision": "3eb179a04e8854b8cbf02c75d4faf2e413a882bb364a05bf292b87bb974e9d38",
+    "textHash": "a992e6d24bcf3a90fd02bd8f52ebfe6f70009f1a778831eb59ec6cf5be79a419",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Approval requests": {
     "revision": "106a52d7cdf4382344571e474b6591a2068a5750ab0c1220243f4bb32a3f259e",
     "textHash": "c1f6e0c48552beb7e6b54cba08c717011a21f0caad9b6498154f11db8af96cd2",
-    "model": "gemini-4-argon-medium"
-  },
-  "Approve this action": {
-    "revision": "060198007e4a430ab158495c06dacf4628bc628f70f1bb4c497e55388dcc554c",
-    "textHash": "da7f7991cb6ebb1b7e232d8cb81b12cd549441c152c56370836d71e6c83e9a18",
     "model": "gemini-4-argon-medium"
   },
   "Archive": {
@@ -369,10 +434,10 @@
     "textHash": "1cc0923a92f9a77b8e61cda4e209a0fad9e51063ea4327bef974c79add89a49b",
     "model": "gemini-4-argon-medium"
   },
-  "Ask a question or request changes…": {
-    "revision": "c034fa83a3bbc90b8f9886bb18dea7ace3a792e157ae64e267a16fed1d2bc7bc",
-    "textHash": "7ea289ed9e6198c2bf0e9c74e46a6337a18036212afac60fc0e9448c48a1ad1f",
-    "model": "gemini-4-argon-medium"
+  "Arrow": {
+    "revision": "6bb61a70064cec2ea3de763c842ac642c27a16342070209d15db07cc8da77d21",
+    "textHash": "2785ce58df740e52a9350ad23006f0af5707be2ce5740b0471b60cc7db9d3602",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Ask an agent to look into {n} problem": {
     "revision": "5291f0fd599bb8e0832d8cbebb954716cec48926790b2d1cd1c742cfd2c236c2",
@@ -389,13 +454,18 @@
     "textHash": "5e8595cee4decba839507615a0c82ecab344db1f2d85454ea546ef9276dde267",
     "model": "gemini-4-argon-medium"
   },
+  "Attach sketch": {
+    "revision": "b3ea8e244794e580e5b7185eb4950ee8febbcbed7b16a615deba5e5ca353ec38",
+    "textHash": "1b95c122bd693d1e297c0a34f75deeef763c005fda91240b4a586aa3297c353c",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Attach up to 10 files per message.": {
     "revision": "630bd5d8cc4c08bb2c6cad6d9d5e81980bd9b42b463c2a6725b3694361b38fbf",
     "textHash": "bf3c3d61d6994f6b95e896cf28cb4ec69f73ffc60fd77f38cd16bd777c529d8b",
     "model": "gemini-4-argon-medium"
   },
   "Attachments": {
-    "revision": "da0c0457c02e2c873bc3c02c33921959cd164df335889d745c2d215cf2057e8b",
+    "revision": "1b64967352dce116702e64c0c1d94685fed84a0d8bab958161e9c4f68457d50d",
     "textHash": "a39edaa52b23d856554272a4190a8597aa58d7de062729d2d1ae6f0c229ed41c",
     "model": "gemini-4-argon-medium"
   },
@@ -403,6 +473,21 @@
     "revision": "abb1926d3f0954573c0832bf310a3569060aa9c6c5b17bc50732fdb299a6c69d",
     "textHash": "2a8477a5e8230169615173f224cb356df90c8ef0fcd678391237056a17adafc5",
     "model": "gemini-4-argon-medium"
+  },
+  "Auth unsupported": {
+    "revision": "a818969b15a35c199dd50c1fd482396ea239519deb5071cc64d60612d4d048d4",
+    "textHash": "98adb6c97c9245ec83baf3b7a4602912119e9e9f4e9dc1579dcc2be7a7ff2fe4",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Authenticated (API key)": {
+    "revision": "cf26a57edc332f591ef74fd1fbb76cc96dce8165a833c58ff0a1bee699915163",
+    "textHash": "90350f4d508c80a234fe0b93cfe46cdb5bbc64b7d218e48fd01f3aced655ceb8",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Authenticated (OAuth)": {
+    "revision": "4d137f02855b4de152ea4864395819acb9e1e4781f8a6a35aa5b20f4df29c36f",
+    "textHash": "00a6fab6849c87d254eb105747f611be91ec865840a764a311152e83c0f1ea3f",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Authors": {
     "revision": "af0a22414b3a12d46d9cc79d4edca3df26701b4cae54c30ced0ec2d8a35fb959",
@@ -480,9 +565,19 @@
     "model": "gemini-4-argon-medium"
   },
   "Cancel": {
-    "revision": "c7bdbf295c2042a8273e0e0d2b474c9e760cd991c6591dd7846d723926b29b70",
+    "revision": "ddc67fda51747c2408b7cb72067577447426ee592c1edcccd66274c51dd4c153",
     "textHash": "be876433993ab7ba221512b5703b32060626f390aa50d7ed464a847a34539a6c",
     "model": "codex-reviewed"
+  },
+  "Cancel dictation": {
+    "revision": "968b7d0a5f92936e2fd87d07b86028073a51a36a044815eae7722ba1c05d80fb",
+    "textHash": "a54a68c898b0bfe758e1f57e4898e4caa49670826e5fda6ed986115ea2c2a7ac",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Cancel transcription": {
+    "revision": "a3d8d2d484f59a0b31e4e94695ecb2c3cbbf52efcee3418ffba093c4dd1ef752",
+    "textHash": "7e3e1f2bc51eb7ebe1b2eff3c97d9961e62ad4b22059d219fe0cb33fa5c567f4",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Change shortcut: {action}": {
     "revision": "4be738f43ccfa3e7cd3b48596c16da75d8c809563a7c6ee0662951bdda691a14",
@@ -535,7 +630,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Chat only": {
-    "revision": "3c4b8d15755626e4a4bac7d13868f64b25893e2949b59c3f973e108b45d8e8e3",
+    "revision": "ab403990c091fc7f07d7e0dbc960fc07ba845acb83cf6a153e269b50663d784e",
     "textHash": "5a90f71d8790a79ebd69f79af83b0c15cefac1cf60aedaf0d84c84bffdb24b28",
     "model": "gemini-4-argon-medium"
   },
@@ -570,7 +665,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Check status": {
-    "revision": "a189fce1123d95687ac937eda0dcb72376f1db01e9be362fc263652d4d192d84",
+    "revision": "0b6cbb3923e043ba586ed84e7c3353e462fcceee9b872829931f38eb5bf98313",
     "textHash": "7e0de4165b8eba223c191ffa8fc6a3d04a82af9232ecc7c5f7f9ab7f6b8aaaf6",
     "model": "gemini-4-argon-medium"
   },
@@ -585,7 +680,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Check task status before sending": {
-    "revision": "607adc6d7b4f68dc8261d7371600794c7545878251fc9d0ad36e098fcb2f97e0",
+    "revision": "fd51ad35702d7136e84c4504ffd7dfc581a329c2018dd9c6b13d44db7df7dfe8",
     "textHash": "ad4297e5c0137e494af38ad0f8cd6e8c483df052574d61fa3cbacaed1dbd32e6",
     "model": "gemini-4-argon-medium"
   },
@@ -648,6 +743,11 @@
     "revision": "e5756b336ae86090f00ddacefbef2500b11e1f7fd36cff9f99ef97c192c35316",
     "textHash": "476ee3efcfa28dd37a2578b6d6904ad647c0f4d06f287246482982c57c2e51bb",
     "model": "gemini-4-argon-medium"
+  },
+  "Choose a custom color": {
+    "revision": "569ae76fe99d6c21f469dacc8969d9f76042c12bf2da26ac7dfcf1ff48fe6dbd",
+    "textHash": "4c0a1202c52f16dc13cda152767622babf3e2cf3ab8e545f40b4000eb9df68b2",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Choose a folder or ZIP, or drag it here.": {
     "revision": "21ef6188bea5ba97aee01946ebb8bfe1bf13dcc5d142ef5875a429b7097163fc",
@@ -719,6 +819,11 @@
     "textHash": "73c27aba4c474e30311b2db291699ba0a8610d454ef6b4daf49371e44639ad40",
     "model": "gemini-4-argon-medium"
   },
+  "Clear goal": {
+    "revision": "f8a753b111674c4ca04bc5d42042bdcb77ac53cb9c9d24569f37f07cd7c5b2a4",
+    "textHash": "e440af9938fa61118d72997b207b1210f05a4ef72c934f851be6445be88e0ecb",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Clear task search": {
     "revision": "185b634982bb94fe504f76e2091d7029339372dc5cd88e1b624316c243c8e64f",
     "textHash": "9143c8f67c4baa9591dcfc2c6fff88cadc787788c69cb45f13324933d6bf0ab0",
@@ -745,7 +850,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Close": {
-    "revision": "293bc0ffad821773d126fdb149f85464b431bcd6b77a06c79116de8fab4c57ff",
+    "revision": "c7b4eb5c65c4fc1446a8c3384cb38927574b47846c03f9bbb2fd1338a19d868f",
     "textHash": "1e8c10206f5b35bd96122e14038b5afd38e326a758874332b3931d6db9b25259",
     "model": "gemini-4-argon-medium"
   },
@@ -773,6 +878,11 @@
     "revision": "946c6714d1273ed87928637f4f8241e5620511e0eca2331e556660bdcb5b4ef4",
     "textHash": "d5868003c32abbd6d78374d2011e818df6ec8aef066e5f9c2e7b2c93b6a27446",
     "model": "gemini-4-argon-medium"
+  },
+  "Close sketch editor": {
+    "revision": "4e4dcea551aef0fb3d2f6bd5d9bac3a9a96ce977302b0f60d2b36dcabf6cd62a",
+    "textHash": "82bf2bd673b27e5e4bf87ad39c32aef01534a724cf69f6cab8df35b6cb0aec2a",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Close suggestion": {
     "revision": "07f558168d1cdb1a594de64a8bf25e3302663370bba7e1aaf6be352539adc8da",
@@ -804,10 +914,25 @@
     "textHash": "f3cd31eef45be9bc28cda4c4904680cb34aa2d3d67b22289719da28d1e260dd7",
     "model": "gemini-4-argon-medium"
   },
+  "Code review": {
+    "revision": "deb3cdb44550a31d74882ddd65ba125de76c1d1a329dc88fd269126ea102ba2e",
+    "textHash": "e4601a2e0741695c6c36cfe1b0979bd0e79f42e538378f07ab3c4fedebcedd68",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Collapse": {
+    "revision": "46fecf9674c68fbecfe459674d205b75930a54d5b3a16de97c3423d06d006ed2",
+    "textHash": "69d1c530729872d39529a10ce23373394941aa6423b9ff118d059fa65dc902f4",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Collapse manuscript panel": {
     "revision": "898c1b3ed8de335bfe74eddc0084a3a5c17510483d584ac5746d762d2b861d6d",
     "textHash": "8d9df95462f422fd2f00a3b28770d86560cd8ded06596e1081ba7402139eeca6",
     "model": "gemini-4-argon-medium"
+  },
+  "Collapse plan summary": {
+    "revision": "221efd0f1b6fc214d887dc549490ecc4aa0fb122f3b7526552f9913ab1a5e6ec",
+    "textHash": "4dc4ebd9709d0d20671b3cd27a80cb58bb6ebaf4ee0eacddc0e70e1a42ee1ec2",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Collapse {group} notes": {
     "revision": "ad7a89585e200bd2527028cb733d385625036e24ec96c5d7178beeab6c38ef7e",
@@ -1100,7 +1225,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Copied": {
-    "revision": "d11c21df3058931c1dffe23b427f76b5a1353d239d342b31b938ff42c39c331a",
+    "revision": "b7254642c2fb6e8b875d6bb8c71402ce3ad1303304e8880c3ac6cb3caf9cc997",
     "textHash": "9693e1eb3edb1291eb33d04471b0e546fbc0c789095623a03158b35da32f9074",
     "model": "gemini-4-argon-medium"
   },
@@ -1110,7 +1235,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Copy": {
-    "revision": "52b3159ef50658936b2a3f103009c6e6ae7a0851aa8bda1a6075b521665ce671",
+    "revision": "516ea41f815e479f1717db910dffbe2c55ea0c7ba5f1b0642a6428bccffab9c1",
     "textHash": "37b3d3b11b2637f6449dc624c288f92076677b75a6569ffe7e34f48b9676ea22",
     "model": "gemini-4-argon-medium"
   },
@@ -1224,6 +1349,11 @@
     "textHash": "1ba5fd6a741eaa44dd6007bb065a53eca9023df1077c37931c096bce52d1a254",
     "model": "gemini-4-argon-medium"
   },
+  "Create a plan": {
+    "revision": "ff9a569b791fd2ed7f3cd90fd4627ccfbeb77a7b3a8867e555cffe78d61f3a8c",
+    "textHash": "fa56f7f036ab0829a928a134232be7a28b388f458775105e6e70f8f7e5fce6ac",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Credits available": {
     "revision": "ac9d35e1a857de19be2b3509010714d611f0a4288fca5a5653924e4f3fac7a1c",
     "textHash": "b670f69740f614bc30d7c8702cb7b910727b94eccdc33a2e7fecb1a290534ffe",
@@ -1269,11 +1399,6 @@
     "textHash": "f1c3b57377016c9c29076b3c776831f89ebac35f4a37a7785427763ae9eea5b6",
     "model": "gemini-4-argon-medium"
   },
-  "Decline": {
-    "revision": "4ae93835aaa20041a9e400f7afa35f096e44aa14d56201d031c567619d60e4f9",
-    "textHash": "cc6314d04dbd1563ff5a34b8a4be0ff0a26c8b2058ac5eff392fdf20a5d328bb",
-    "model": "gemini-4-argon-medium"
-  },
   "Declined": {
     "revision": "6a7d875a8f1cf09891cc802283ed3b8ef7ae264e7f566210cb63ab5f6b72898b",
     "textHash": "f2501555ed188445061bc542ac4d394060c502bc8a8621e09a18a71a9fa6c410",
@@ -1285,7 +1410,7 @@
     "model": "manual-review"
   },
   "Default model": {
-    "revision": "e310b1b041d32257ee7fa14be282f8fb773ea2dd528af67ae0d8f6f64b9ddfd6",
+    "revision": "7412af3e69cba4192327cd8ca69ca836f9361d06288f601e38b7388815200b2c",
     "textHash": "0ac4579b33c891f907b173b9be435fc008131b44acd71dc771074f88c6cf0ccf",
     "model": "gemini-4-argon-high"
   },
@@ -1389,6 +1514,11 @@
     "textHash": "01a9bb8ba4dcdf76671b874faf67733f4add31f6782ef99fede0968daaeb7f74",
     "model": "gemini-4-argon-medium"
   },
+  "Deny": {
+    "revision": "563f7c43e25df67db7c6c63f02497151ff5769eefc8108c700d5879ae8e7b383",
+    "textHash": "e3ecc00b93afe3685a0377ce0602620df553688df89b577777f1f7dbcf0f1749",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Describe the revision": {
     "revision": "5af87ab5b10642e3819faf1e92a2d55bddfe8fec3de5dada590ad822ca0ae71b",
     "textHash": "f81270cdc34886717c8b457a8ccc199a4362d22c855201713de26de722a87115",
@@ -1424,10 +1554,30 @@
     "textHash": "e24c511216df92797df6389dde6fc5f768d04262cbaaa5a3f37f973aeca01764",
     "model": "gemini-4-argon-medium"
   },
+  "Diamond": {
+    "revision": "be483920abe779d56448c3d3ca3c35ca94670657d7e3e275af72feb7b80d8132",
+    "textHash": "14003b5eda435fb08b7ce7a326484ba8f2c90124b9e8aaa1d348e9f23e604505",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Dictate": {
+    "revision": "8b6c68eb8f1cef544bccfb3dc591ad34d89e7739ce84ffe4e37d85872ced0a2f",
+    "textHash": "ab55b5be9bc80a72a3ea81a7574fd0ef64e526f6930a6230fc44b2032b7b02be",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Dictation is active and in use": {
+    "revision": "b3e00a9b99a6c128b02a55715ccd48951db2dad709997f1aa134eb8cf332a423",
+    "textHash": "9f9bd5243e8e33fa6a602646ec023bf6b5b76068e43a5c7fa31b9a4a8210224e",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Differs": {
     "revision": "6b62968fc57e6ce19fa0ce04dbaa261449422455a136fab90350a7670f46a36c",
     "textHash": "37d6f52a7f9ee686f0e5fdd53dbe8b978f9c73a6e98e32f5fc08362dd40be91f",
     "model": "gemini-4-argon-medium"
+  },
+  "Disabled": {
+    "revision": "bb4e8957bbb4631d3f6226c998ef3711fa75d51b18f196424ab8ac3984a80625",
+    "textHash": "cb0f8c54ddc9dd4d28df8086b0fe1c75d9f500737ea3eba3b0fc0b7ca45df793",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Discard all changes": {
     "revision": "8abb188e0d53c45c24e5cae00d81c4753f3b7571cb815a0082118419d96af7a1",
@@ -1435,7 +1585,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Discard changes": {
-    "revision": "08ebb3fc7802cb3ebff7012b4d385dd89239e71a13cedea4e9c43fc79bdf49f9",
+    "revision": "9a6c50b73466d34814c6039794ba1218a4be04242494650f5e517b3730ec90ba",
     "textHash": "2c1b980599fa5a1c97278eef1b580aadad453cd78ccc2516fde0e66387f37181",
     "model": "gemini-4-argon-medium"
   },
@@ -1459,6 +1609,11 @@
     "textHash": "dd840b8686810eeaa26d04a1924e51644466d016317a127acf27f9c1f61dcf7f",
     "model": "gemini-4-argon-medium"
   },
+  "Discard changes?": {
+    "revision": "d7d51dd6cd22fd1723898dfbbeebeb897ed504814c9959bab268c15ef60b553b",
+    "textHash": "1b944a455a8e0eff6856e0ca650ed8cd6ec864a67f1aaf9b9faea1081463229a",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Discard unsaved skill changes?": {
     "revision": "4343a1e274a118e3341e3a63beff884591c46929f62150891faac83d57965af9",
     "textHash": "ddd14a9df05ecb74a113eea0ff42c5dbcb58e7adb513a399ef2626c1ba91d478",
@@ -1474,6 +1629,11 @@
     "textHash": "67f0bf978faa18158995fcebaa88099a4dc48903fb8f7746ba6083db770333e2",
     "model": "gemini-4-argon-medium"
   },
+  "Dismiss": {
+    "revision": "4770045fa629d721fdaaced41242331f19709febad4855ea2570cb022846bfe5",
+    "textHash": "3c26be061547e256591c9650664e7b6936a5c4a86c3a4e3a739287406e034501",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Dismiss error": {
     "revision": "99206ce1d9dbb36a1aba62c4794341028c1bd223ece7935d00981fe3d7f60d47",
     "textHash": "7b89ee4994cb35d5c013e2129e3b93c330321f34428b6b2435e9e26914938712",
@@ -1484,10 +1644,20 @@
     "textHash": "237a4c94e60e06bdcaab2769f2a86ef6bf9e08cd6477440fcc1c4c7e5110334c",
     "model": "gemini-4-argon-medium"
   },
+  "Done": {
+    "revision": "9d125f03073957b8c945c2627876aaf5ba73ba6741561a26c3b2e5a0aa160920",
+    "textHash": "727333ab0740d7d836c51a87d1dcef355fdd8f0bd796815ab577483b354cf012",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Download desktop updates": {
     "revision": "211bb685ce4fe3a81df3dc6efd500e46d856c3846781d3f2e5e296573095980b",
     "textHash": "63f4d17478d5a25331c9f5c109cad5de56370ab592b1e7773710d37716302b5f",
     "model": "gemini-4-argon-high"
+  },
+  "Download plan": {
+    "revision": "b78c317f8a03a8ccdb02f5fee4ae4f07995ea98913649605a9d0bd655986dba2",
+    "textHash": "507b4008d1af7ba229f7530ba4938291b95814c715134b0a3368b221623bcffb",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Download the latest desktop app for your system from GitHub Releases. Your papers and settings stay in place.": {
     "revision": "7f56112b24fa227f6b155235e75f973db6cf38bf396278da7d672423efc08aa3",
@@ -1534,6 +1704,11 @@
     "textHash": "c776467b7e28479f877f3b643bfb1b7b54fec81a5e75b0928e45369a6d0ef9a1",
     "model": "gemini-4-argon-medium"
   },
+  "Drawing tools": {
+    "revision": "932eec135470157a85a1243920985348f19fb9eccc9effbfceb84ed24823aecc",
+    "textHash": "f345d5762a8ba0d6a27b35a7f62462356828f91a31857b50edfc7d6682ed8d1a",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Drop files to attach": {
     "revision": "b2e3210af9a744578d8f5a52987b6c2f3355c124c08ddae25860ea0a698f9d34",
     "textHash": "d17640b6851891e4a9b379e001bdd82c26fc59cc8a95701efd00b08246496fae",
@@ -1558,6 +1733,16 @@
     "revision": "4b7dd00b1a306042d0cd88422c992439a0f6a79c01800ec8fae6be4bb1f2338b",
     "textHash": "bae1307e304b8780c77ba237cb91d58612cbeb2f9b75282a1882fdaca05027ce",
     "model": "gemini-4-argon-medium"
+  },
+  "Edit files": {
+    "revision": "4b380342e354b1a42acbe364f28301131a0708531f82abb6743a000c65b0d41e",
+    "textHash": "8191cb75d5c685450d14d431acbcced9212579743f6043f3ef2a4a34c11d4f0d",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Edit goal": {
+    "revision": "e28b0ff9b3eda8788b7d78f7939b7c84a008e4059a6953fb7b1f2352716abebe",
+    "textHash": "3a5fca450165109bc1d3f04d9d258073f41dcda8bb64b69b90d6d451ddc953af",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Edit note": {
     "revision": "73e2c0334e624b19b9ea19e1457d1cb2f0b6271d187eaa0fd72825c414244d0d",
@@ -1614,15 +1799,35 @@
     "textHash": "cc11d99d0c5d1567b01c0c629e383d974c5a71745ab13cb8b9559182d98670cb",
     "model": "gemini-4-argon-medium"
   },
+  "Ellipse": {
+    "revision": "33dc4133cb527397fba17712fed844deefc0948a4914b4f18552906af3e0c277",
+    "textHash": "59adec0fb6e4a8a66f8dbce8bd04eb7f2f2299ccb841e4878fce16c37843fb55",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Enable shortcut: {action}": {
     "revision": "d82184818cee39970bfd0f1a84b158c6737cfd0065862cd34795ef75bce496a1",
     "textHash": "fd6b7b24b1d318c2ff8db1894f301da57880b5a6876986fe309b6cc9969de30f",
     "model": "gemini-4-argon-medium"
   },
+  "Enabled": {
+    "revision": "ccb701c82081d50c95226e97a07e7dd783468a8942191c2096a830a282b5fc59",
+    "textHash": "d5739d72cac0c7a2c9bd4c5c09e0b14bb8f12a53ecab3835e66babbbdb0920e9",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Environment variable": {
     "revision": "027ff981b0ca369053c093016e32dae5f4536948ca68a65e398afb116346450f",
     "textHash": "6eeb4713cc7e4553bdd124297e1c6d1373b5024eaefa186a51a7c6a9ef6fe8d4",
     "model": "gemini-4-argon-medium"
+  },
+  "Eraser": {
+    "revision": "c94a8c814b96824d723a0f57148d14fa9e98d26049c190dd4807adbb422eefa5",
+    "textHash": "d8ce7221b93e9feaaae92f3b1f1f5ec74153813910204b5d47c04a9d4a79fd36",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Eraser size": {
+    "revision": "2ade8ece4a2497e0a9c2a2e4974c38f11c7fe534385223acde437ff1ba7ce411",
+    "textHash": "0d7010f3cf76486054d641a89ae24692885f24b77748b9030cb07e53ea0aa588",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Errors": {
     "revision": "0108db3cdbe1aa62a4482c37ee7a74424da3c6ccf99e32f2be67183815586cdf",
@@ -1630,7 +1835,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Expand": {
-    "revision": "5d24e0434842657abb068064bc57fcb6fcc03e14bc8450fea971e6d8ab2b5d40",
+    "revision": "35f388325211921277f2a22513ec49752cf70b147589f6797b0692e30b8332f8",
     "textHash": "0e3859a85d8908494cb71df4f51fb693554847c69bb414166debe80b314658e2",
     "model": "gemini-4-argon-medium"
   },
@@ -1638,6 +1843,16 @@
     "revision": "79b528eadec037e4321291946558a1ee05ec0efeecf2942c935f99260b9c28c7",
     "textHash": "6937b7724204db38825a186cabe879415e16436665465448597a6191ce04abf6",
     "model": "gemini-4-argon-medium"
+  },
+  "Expand plan": {
+    "revision": "6acbef354dea5705042b75f77376839e004120d79689068462a6af9c53aec7c6",
+    "textHash": "75840d4429d5fae80af212066606e162ea38cd6bbd9d202e58b119432ef9e9e3",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Expand plan summary": {
+    "revision": "1c6eb4a869d960f8e602b4b7ab1deeb1f6f7377c2baec2bd6bce24468333ec6a",
+    "textHash": "711b9829caf3918d78d52eec9cbc93b6c8841cbacf0c149ca40c5f303a6134d2",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Expand {group} notes": {
     "revision": "9faa590c3e8f92841e9b8e19af171f66042f73ef5e020f7f45811f07fd2bbdad",
@@ -1659,13 +1874,23 @@
     "textHash": "2743911f83e1da696cb0821bbb3698ac205610fc98b960fe9956f4b5f4c9c191",
     "model": "gemini-4-argon-medium"
   },
+  "Failed to fork chat": {
+    "revision": "50cf0a49574520a4c76017ac74e4b406d70d36c737443da9c94f7b4e2e2f16f6",
+    "textHash": "07b7b0f2de790beab274b79dfe89709d4242671dfb2487f48110ef1b61501159",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Failed to start code review": {
+    "revision": "20cba04b468799a50fc2d20c6d796be0e61b865d0cb7ce290e4c62f5b522fba5",
+    "textHash": "e238c0070560e72e43a4f884179e8c26bfae067feb4baa15c64bc22bb93dc008",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Fast": {
-    "revision": "9dbbaf6601639b0dfccadba34abb41ead2224877e9445ade81193ff468bf87ae",
+    "revision": "e3624f48e1e11f9942c1ab8b22e93413f2457b2f076b1127900cb316ea07002b",
     "textHash": "32a8354e2e344b15b483b53faf9ce22eb580446a444e9893165ecd9e7ab08107",
     "model": "gemini-4-argon-medium"
   },
   "Fast mode": {
-    "revision": "344f05c7f3a9e7bb05d10133de9ddc479e80dd8ef057f477798ff21b129628a9",
+    "revision": "3ac787d9cdffacae0d4067966c2c45ce1b1b0df0ef6939ea38e4775380b6d0b2",
     "textHash": "5dd7dd5921c7f21edf6f6e21f0b52028bfcf3c3fd7bb5f1a1d1ca143b8a08e68",
     "model": "gemini-4-argon-medium"
   },
@@ -1678,6 +1903,11 @@
     "revision": "63b785c8ef543f35451f1698deca65dfbfee7bf5c0501a7c7d7880b31e65b97f",
     "textHash": "a5b323ca24665eacb1c94719f915ad34615f5a1244226bd9b5dad69b31fe4c15",
     "model": "gemini-4-argon-medium"
+  },
+  "Files and folders": {
+    "revision": "8101ff4fe4616bcc1fa2c126794c4e135cfc54ceb917e756eef59c6a1d7c9829",
+    "textHash": "1f43a5ddffda820311903c0dbc70f05f4862effccb5543ff482f7cb0fbacf14d",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Files must be 25 MB or smaller.": {
     "revision": "b07a09ceb82af79b1fe8ca950f833eaafa443c503ef25646c4ad362085d570dc",
@@ -1724,6 +1954,16 @@
     "textHash": "fdcdb2cbc1cba6357ebd6c06c7378aa1ca96d5233056b7ff4df9ed6feacb6443",
     "model": "gemini-4-argon-medium"
   },
+  "Finish typing before inserting the transcript.": {
+    "revision": "683967a63936d46a813942dd2e69bf6447c5ce4191e23c2b00e58f603a908f96",
+    "textHash": "1f15da2f1e9f4c4cdde7db83b132a99be58ccb143db71fd9fccb97398eb001fd",
+    "model": "codex-manual"
+  },
+  "Finishing dictation": {
+    "revision": "69c458d5e4077f131a6df845691d01bb140b984575ba54243dfedf64c9bf0eae",
+    "textHash": "4c7f27a6fe7486c5f6c843e55c12ae5de8b61dc3f32dc0e22103fd01fdf3c5ec",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Fit page": {
     "revision": "680734ccd99a868dedd20f42cb4dd4e19b6e6658c9d51716d88a125c286ce980",
     "textHash": "8996f3fce680268c7e3513a58bd02a9476ec3d0e2ecb15366066f70ed6d6fb8e",
@@ -1768,6 +2008,21 @@
     "revision": "c0bd176c86e67867b3610e751ea1a73eba10ee6ebdca545c5ddc75b5d157c73c",
     "textHash": "7abc22ae9b61206683a2f133917a34b36364e27d4059d800b57f068b0056365f",
     "model": "gemini-4-argon-medium"
+  },
+  "Fork chat": {
+    "revision": "09345c6b5a82a01bf222ca145809b385f168172873dc971d8dd6e46d2803f07d",
+    "textHash": "a2baa049363b47ebe96c2ce9a0626f3b4c6791c698a42d5330b91b836777b5cb",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Fork this chat in a new worktree": {
+    "revision": "fa8d5f9ab3d6ec5cfe867b29f9dc5ed1b258eeb6bc53e23a187a5ed1d94ca469",
+    "textHash": "169c914dc5564f836e88a10bdb460e416348855454aba91b941f4d9c9e76e1a2",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Fork this chat into an isolated worktree": {
+    "revision": "7dafbe0b6f4c8544738cf04a92b4357207654af9011c4d25f0e99c063e2a52b6",
+    "textHash": "81b6bf7a6c26be51827ca5b0b7f6975eea1b052d364937e4f531719732330c0d",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "From review round {n}": {
     "revision": "7834698f1b2e2e09d2873ae2ef9a0ba2c35d47f52f91b295807f08b9ee471e4f",
@@ -1834,6 +2089,31 @@
     "textHash": "e406b009c47edf5fb9bee79ef8853d36841f41523c85589fc8439fcb56244dec",
     "model": "gemini-4-argon-medium"
   },
+  "Goal": {
+    "revision": "79b0c393416acdd61a744f255d8668fa9d07bd0c596f1029158d8235d858e647",
+    "textHash": "3182dd7d3d31e49a00b946d7651b21a13beed68948e0a1a40c2444718d98503c",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Goal achieved": {
+    "revision": "e4e2931a30c32e8ad1fea4eaa3dd64004646288c9707250dbfc51f66a6e780f9",
+    "textHash": "4322b0a63514b839bd3a7097a5b61b20a5070c5fcbf7574ce44d5b3497c5bdb1",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Goal limited": {
+    "revision": "d7009313a9a4abff3b90d0ffac6731d55c1a27aa695ffe25c4e52e913fad2d43",
+    "textHash": "be47d315a0ac0574407664534c1c7b6d71b819be8d94ae6a0558aaebe90b72e7",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Goal stalled": {
+    "revision": "153961bcca40e4b072fc1b9448dac0e799b074a5e5907206372668df11082959",
+    "textHash": "90ba8e97b4bbc41b735e1ef23c83278c522a84034804ed8e4f4da6b961962af5",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Goal usage limited": {
+    "revision": "c2cea80ddd57543d88fb8b6359aeb3038c03c0c11d3685bdb5c14965b3b1f799",
+    "textHash": "78c653f049ef61ea498eef2e608cde23705fe226c93fae59c2f0131b2390c354",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Graphite": {
     "revision": "a60346f9c36d09773f2a8c1c92d235b0382733478ba686ee7755cd7d2417ae6f",
     "textHash": "6f8697efc226a390c9d849b41100264dd588b6d9bd2dcde5a4a66291b16b2f6c",
@@ -1848,6 +2128,11 @@
     "revision": "cd18f256254bc8969195c0a4468ea0e857856db8cc961783c2648d5d043cfed5",
     "textHash": "6c503a36c19a0a2434b9fa84e41697543b30f4022198d7f6f92bd45ff1eab271",
     "model": "gemini-4-argon-medium"
+  },
+  "Heart": {
+    "revision": "1452cefa78fb999ad56a2e223045b85f1fc6a32e3ef791896ff4435b145259cd",
+    "textHash": "9bf66dbdf93a0677d29e089ab59a07fbdbc981a33f3be805e66061bbf9418f05",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Help fix compilation": {
     "revision": "c1ed901b707eb68d04a2f4619a406f0b47d0500726e8f822536fd778bff724a8",
@@ -1914,6 +2199,11 @@
     "textHash": "735892edd60bde7b69d0d6c14bce1bcfa5d40c2c1dc754b297e06f3ae3d339bf",
     "model": "gemini-4-argon-medium"
   },
+  "Implement this plan?": {
+    "revision": "54d3ca02aeace38c23dfa9728cea6170e8924427983862e3a607546a625a2c70",
+    "textHash": "db205c08283fddab97c2a114bfa822ed1e6182de3dc3d810e6e491ca04cfc57c",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Import a ZIP": {
     "revision": "154d99db1b6623bda0c0aea01bf1aee4c13998e084556e29867afd9521267c67",
     "textHash": "d870948b227719641cc528cbe350941fc2c8202652aefc4a500ce21f96cb666e",
@@ -1953,6 +2243,16 @@
     "revision": "eacef4f74a1f8fe7993bd1e60333f59610b894693f3eeb16f5b26fe6003c92ee",
     "textHash": "e648f3dfa2bdfcf476cd4c7d4650a10f130931b7a9caea2d6354f24cc1f5baf6",
     "model": "gemini-4-argon-medium"
+  },
+  "Init": {
+    "revision": "5a2fb422ea0eba9a9d586612d5caadf4cc146011c888fbc4d4013767c0aee5f4",
+    "textHash": "893f3d9463683c71bf5eeca6a25c54fac365b5dbd5d7b69bbc0f5e82f5f72c70",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Ink color": {
+    "revision": "6a1731b9545ca5dd81577c5c9ac5552fd96cdd456714d0b09cd22dbe4f0519c3",
+    "textHash": "533a1c550b73a5199cf4286faff03de2c8bd5d9a657543b2230c3393e31e771d",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Input needed": {
     "revision": "a74bfe8141450876961ce11609ced19b0644658b8c083c4c4b67a0ba535066b0",
@@ -2014,13 +2314,18 @@
     "textHash": "be00d32e76e56c0da4508c1301e010cb16bbcd0d18705daf012fec9eed6f51a6",
     "model": "gemini-4-argon-medium"
   },
+  "Internet access": {
+    "revision": "d603483baf53f3c25b8ae35d514f39d33044cb7da36d880731f33ecdfad33cbc",
+    "textHash": "77210b66f80b92c71cc86f838e9645409c9917a7672f23a242cc580de8cef4d2",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Jump to the next change that still needs a decision.": {
     "revision": "d51c0d4fc8cfd2abe2c383cebc9aa48eb1d2de24ebda66a020d7d082b27bad5b",
     "textHash": "9447e3b21ef70a9ad7f4a5e27d373034524dd88670e396d2fd9fbefa101f3040",
     "model": "gemini-4-argon-medium"
   },
   "Keep editing": {
-    "revision": "d96097f06a80c50da22efc821a802965c467642c32ce6b701c07527dfc9fe8a9",
+    "revision": "84cbc84fb518083394a14b48613cdb139b388f5a0897de928a3c55d6e07442af",
     "textHash": "0120b5eb9a8d6f42ef3a5ae5f69ce687291c40d54e7192b3b5bc29074c9773ac",
     "model": "gemini-4-argon-medium"
   },
@@ -2060,7 +2365,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Keyboard shortcuts": {
-    "revision": "fa69026d429cedd45de73adc56a3ba561888a792b50b59fffcd2ffde6bd37055",
+    "revision": "ef6400ca887406bd492add510daa99f340f519ea7d1de4ca333ee8c1e89fc3ca",
     "textHash": "61c5231bf19f43887e4b1f9607d4bcc2a4bc6109e24a44fdea4944a06e8a2bb2",
     "model": "gemini-4-argon-medium"
   },
@@ -2144,6 +2449,11 @@
     "textHash": "9b3e153f87d8860eda57ef43f08c536b6bdb529781c8816b3452d982dfa182a1",
     "model": "gemini-4-argon-medium"
   },
+  "Line": {
+    "revision": "e57977368fab83ed8097a8dac71fb8453e1b4e91f42fc5942e343210614bffb9",
+    "textHash": "ca8a8225e4286f7100688c375fd80b59df212a1a39bf657874866afc495b72c6",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Line break": {
     "revision": "3b8654f83aa24aefed55977074800052e86c8e2140142ce45c4d7ac45ab92d0f",
     "textHash": "075731e17d73ba1dc2e412ee2aafab626a3645485e05101122a5bb0e5eeda230",
@@ -2169,10 +2479,20 @@
     "textHash": "bcfcd160b4b259c4c30e7a096b4e2cd5e5542b517d1b6b3f222ab66714609d49",
     "model": "gemini-4-argon-medium"
   },
+  "Loading MCP status…": {
+    "revision": "f57a6934c4c1312661d74880b948f456117eacc7a030dac19e0ba4ead3fc6878",
+    "textHash": "93fc094266baced9497b0a80e937c9619fa9649e34ce0324e122f8a4ea6afb7d",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Loading PDF review…": {
     "revision": "f367ae336b7463e6958f4e3ffe0d7762d12cebbfcfa924e77be44bf57ccd0e9a",
     "textHash": "90acf6e1c0ddf4a5f85029039eb39adcf1006c7276ab783c4317acc0726c168e",
     "model": "gemini-4-argon-medium"
+  },
+  "Loading branches…": {
+    "revision": "d8c29710e0045cd84c39534f5f0a31461e453c60dd8852ba77398ce4948bfc74",
+    "textHash": "648d61d591c00ef8acebf244f0b12a9ded8a6ab9a9484a4a3a0ea3d64515ed08",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Loading conversation…": {
     "revision": "d31fbe6c7029608de63139f6364d2a59b654ae23e184aff2b0dfd048f2a7fdb0",
@@ -2195,7 +2515,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Loading…": {
-    "revision": "210fbf12e9b8c9708d3184a9af21e73ac73f4b5825261350b9149726fbc8969d",
+    "revision": "2769a00805e6f412edb721876ef4e28c076705096486152b1aa708c72582a603",
     "textHash": "8bf609c884cab593bf97920607df7164e47b6f00d1c28bd6fb0d9d87ed425da2",
     "model": "gemini-4-argon-medium"
   },
@@ -2213,6 +2533,11 @@
     "revision": "79a53cf3446ee277727c418ef6eafc05fa47d5fdb285178dc7416109abfdb0dd",
     "textHash": "f7f44ba2d681babf632300d72242902b8b7bb04ede76b2b4022b554898065846",
     "model": "gemini-4-argon-medium"
+  },
+  "MCP": {
+    "revision": "238e9e51a0a33d83c28af6e51da6d480b039a204be2964d1d7a44e63a21b4f91",
+    "textHash": "53f13ae99ed53bd346eb8e1c8cefb7ef8260683b50401caf101360967ea052aa",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Made by Cui Chen and the Papilot contributors.": {
     "revision": "81ab6d7822bbae55422ddc05a3fe5934f17cb5ce37e1385f79301a2f82a187ee",
@@ -2314,6 +2639,11 @@
     "textHash": "aa8bebe9eebfa4dcf693cdd33d3540cdb1d11ff1c5375b1770ab3f638211f12d",
     "model": "gemini-4-argon-medium"
   },
+  "Microphone access was denied. Allow microphone access and try again.": {
+    "revision": "155287f2b5a883cb4c43ccfe45349d00d9c74f3740f64d754ffd44d0c6aade81",
+    "textHash": "59d9abd7a7355137c7c5538a06c02e37bd60fb023b00404811df9d5516ee8bd8",
+    "model": "codex-manual"
+  },
   "Minimize window": {
     "revision": "a986bf8c699954395d86551659718042bc373cd7260f2fda7efe86601077d1b4",
     "textHash": "c9193d5474bb7f51f0cc82adf9f663df54ec6103b06ffb4aced7d3c1d0177815",
@@ -2350,7 +2680,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Models": {
-    "revision": "89c20dc3c829205ddec04d450d503d166e5a3d6606005e6491d2720078ecbfb7",
+    "revision": "a4064beedfb12b4bb63e0da51c83d2065522441fbc6ad8905db8c7acff39e8a5",
     "textHash": "f9f4d4113aa12904499042e0dbb50c3b5495db071956b974ecf3d7fd44c9995c",
     "model": "gemini-4-argon-medium"
   },
@@ -2424,6 +2754,11 @@
     "textHash": "40fbac76c13b2d8f204e0472a3d68e243a848a20b49c076d2d45fb19262306a4",
     "model": "gemini-4-argon-medium"
   },
+  "Next question": {
+    "revision": "a3f67525cb5e02c38566c7f6ceb10cf43ee628e95e36f69e8b20acf99d56fe44",
+    "textHash": "53733984e8a95bb4ece8512ceec32b4f37e85e2437a05f5932e1615a5d22700c",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Next suggestion": {
     "revision": "20fbebb0c8ae24869df3485364451d09cea5e1ff292c6aa6933a97c320811904",
     "textHash": "7b99728e14e903deeca88b7f55229fed3b6d9e44317362f54f310ea26000e328",
@@ -2454,10 +2789,20 @@
     "textHash": "ba278e8a0020c7b2d5388885c96d70da0a06c4aa0603ad82763a9c05956223ab",
     "model": "gemini-4-argon-medium"
   },
+  "No MCP servers configured": {
+    "revision": "8c6b76b1d53e85f62612228b668a921308d2bd6716fbedadf83cf832eabaf6a6",
+    "textHash": "1f170b59144ebce18a5ec2662c83c666bd978bf2556fa326d974a983c1acc3c0",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "No archived tasks": {
     "revision": "2471697685b3e58d5efe830bf7171431e02590616ccc2b032a80c66c5233e940",
     "textHash": "94d36c9590e6b3fe22b094f4a8374e369c17bc658e37faca6b3b99933b50179f",
     "model": "gemini-4-argon-medium"
+  },
+  "No audio recorded. Please try again.": {
+    "revision": "7ed90423b7c8d5c9bf9900cfd2c3bc5c08c7b5e5202254bc5c7f3367ed3398c7",
+    "textHash": "e798a2aa0757ba789f60472ad6bcb249d53fa8a673ec4995633dfad886ccef89",
+    "model": "codex-manual"
   },
   "No commits yet": {
     "revision": "9d43f6bfab96a0e9ba08d8867d46aed0fe44dd3efc3cb1167079c50f36ba0b5b",
@@ -2510,17 +2855,17 @@
     "model": "gemini-4-argon-medium"
   },
   "No matching skills": {
-    "revision": "685a44f32d546ecc4c070efd7ae8ae49f33f3fcc34489860a989f878faf362ec",
+    "revision": "f1994aa1129c01bab6dd2b84646b1a185e4ec31f0a81433f1a57765bf3137374",
     "textHash": "cc0d09c3819f05b37b0ff79f9f69eafa9e00c4f1fa3b481cc5dfdc75d002b40b",
     "model": "gemini-4-argon-medium"
   },
   "No matching tasks": {
-    "revision": "3acd7d4f9b590b43e3ef64ead2c76a636dcae64970962186e4fa8b627558d4c4",
+    "revision": "a3b78bda327e470e47e6bc82a0933d720bbc7de9868831690c72e466dcb8ca00",
     "textHash": "d1f0e4c8c7354b7675b44144693b2f3d70817f108e3a91a691ea4bc048963528",
     "model": "gemini-4-argon-medium"
   },
   "No models match “{query}”": {
-    "revision": "e2673db1bc70a889b82f3c0a8f0cd8aaea45bf7f1b0710fa30fbf29b4aec83e3",
+    "revision": "e25dbb075b15309f3a116e07aacf9158c81ec0f74dff8713431e15ce0b3d5dcf",
     "textHash": "114a7858317645c20faec7342be6e826cb30f762ec4993c2fb4685ef86a159bc",
     "model": "gemini-4-argon-medium"
   },
@@ -2554,8 +2899,13 @@
     "textHash": "fa0f6678e9fbfded898f6f180d368c08afe6e5670f749adbc2dcc37cade07e59",
     "model": "gemini-4-argon-medium"
   },
+  "No speech detected. Please try again.": {
+    "revision": "83a7562a63a0bfe2be07270186548ba7ddb57a58ed4b0c6af7610aac22c53d53",
+    "textHash": "36cde06c0d5c9edcf49f46af3ff960f1ae8a9ec8a57867ad613f696bd92a1379",
+    "model": "codex-manual"
+  },
   "No tasks yet": {
-    "revision": "f426fdeb90a5128c0334f4a079b793d958ba9d03a9506dcab238142597b79c22",
+    "revision": "e171ea39298e6a3c83d5e719fc67bdcbf794dbcc11a56e57cb90c5c7ac67461d",
     "textHash": "995091bdd3d6d3f210831ab97e5e38d5c571957c3789e6971945040535bc91db",
     "model": "gemini-4-argon-medium"
   },
@@ -2574,10 +2924,20 @@
     "textHash": "b2a2cfa8f20a704a8c072f01699f30ff393f959662fb996acece6ae5a4e91821",
     "model": "gemini-4-argon-medium"
   },
+  "No, and tell ChatGPT what to do differently": {
+    "revision": "7cf3cab24977a68c7a58a0da8e1557eca6b5e11dea8a8d9b86b997611d16bdc8",
+    "textHash": "1989ce5f04b14dbb904eb4c7982946a086a606de069bf48520823b2a0d31fc89",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Not assigned": {
     "revision": "9ba655c276db2edaadc97831f8ca21e640c68754d53df5b06c0af9b9d50e687a",
     "textHash": "656d192df94c73c642fb382a2c9bbfcc5ec6d9df6e3b640327ebee1e69734f78",
     "model": "gemini-4-argon-medium"
+  },
+  "Not authenticated": {
+    "revision": "ec5d181d97647eed07cc024722f6351ccfe2b5f26e6309cfdcb68a13525dc249",
+    "textHash": "465864fbb8a0c236406726c558768ecb8451483c37c80c6c1a3f5319a01584e3",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Not checked": {
     "revision": "462e914c0d5c1ead7296716d65ff932e8f74be0cdf8b69b8047b1a9e483d1f8f",
@@ -2709,6 +3069,11 @@
     "textHash": "a25611310558574c24f0d98a71ea07dc714dd34430db3b52be5486e8ad754234",
     "model": "gemini-4-argon-medium"
   },
+  "Open": {
+    "revision": "c7d0103baf427cb104eaa26e63a0c91077d3f6bdf6f2d1c811f38bc208d12a1f",
+    "textHash": "2668bc818e5bb92383e10eda13c33daaac9eb267906aae71b48ac507176b6e9e",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Open PDF": {
     "revision": "b6cfb0b2b17a1f35e266c239287e8dafbb9107cf85db424a21d697bf1248d840",
     "textHash": "34cc41d7e2f7915d5796dc3677a3bbb6bdd8c66d7534457ec78026b79816cc22",
@@ -2795,7 +3160,7 @@
     "model": "gemini-4-argon-high"
   },
   "Or type your own answer": {
-    "revision": "3533d90a0bca0a4d30808002cb53ad7e3f4a78dbea34d7426073f5407d020d5e",
+    "revision": "f3453e9c388e0d206c6765daa0ba065b98e6caf7004ac68cf622a1a2c7bff2ed",
     "textHash": "511e4c79d3d8748d11756801144eb1ba8edf9b1ca433ff3efc4f98d693498cf1",
     "model": "gemini-4-argon-medium"
   },
@@ -2924,51 +3289,6 @@
     "textHash": "4e085ba204a3b4362e2b94836dc996f6b6c6ce61571a4fc2d32df76294194d05",
     "model": "gemini-4-argon-medium"
   },
-  "StudyBuddy cannot find npm on this computer. Updates are unavailable until npm is installed.": {
-    "revision": "0f28fce7ee3c3671f62d63e423fc0164b81f30e9f30ce7b574f2295838f06554",
-    "textHash": "de5c5fb0fbacca4521bd03dd2d2eb990b333894a89f615e3f35cb81b460d447a",
-    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
-  },
-  "StudyBuddy could not establish a working connection to this agent. The latest connection error is shown below.": {
-    "revision": "0c24ace418b8ee7f6d22363cbe05766b21928049e0cc5468b2f4eec95abe9119",
-    "textHash": "d20d9c84a0d80ca4b79d383513da092998f9cd704c6560383cbed0ddd7c67820",
-    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
-  },
-  "StudyBuddy could not prepare the files for compilation. This is an application error, not a LaTeX error.": {
-    "revision": "25fd79316cdca0110ea025392e03e9906eddc0095f18901141ffbce9c0ceaf5b",
-    "textHash": "b74ec94749b3ad8c53f93b8becf98504de7d58cfe82e071ff80001704c3701de",
-    "model": "gemini-4-argon-high + manual StudyBuddy rename"
-  },
-  "StudyBuddy keeps this list for you, so your phone and computer offer the same notes.": {
-    "revision": "7cf37148ab55995a67bde2d950496fcedfed0a77155b9daa33ade74ee100833b",
-    "textHash": "02a75d2ab4848413adc876721a7109a292756333808b25da1f74fab9bb20ea1c",
-    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
-  },
-  "StudyBuddy license": {
-    "revision": "bcfce8f3f17ff7c44e58fb882182c71438f76e9f42ea08de9d794d4bdc8c52e5",
-    "textHash": "8f19b9b3e07a54c3b83bddd7922dd92ced57f99d831c0a6e926818c920128586",
-    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
-  },
-  "StudyBuddy reached this agent, but could not confirm a signed-in account on this host.": {
-    "revision": "56e06fd4ec0a81001c6d633aa5afd07fbf58212453cbc94609bf2fe266ad72d7",
-    "textHash": "fba70d7771b9dd31deeb2dcce139474eaaccd9f1502d6015f883bef0f9ff0f70",
-    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
-  },
-  "StudyBuddy sent the build error to {agent}, {time}": {
-    "revision": "e60aed184478570f77c4e3135a471d68d5917404ed427f95bcf45bd70dc7f345",
-    "textHash": "4b9c9c87aaf3b13e38c569131775b671a0104b8e7f731d8ac128343bb105a46f",
-    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
-  },
-  "StudyBuddy will tell you here when a task needs you.": {
-    "revision": "2de361ef5f104221d6f0ea59827e516cac616291da9af12a60ab8c1f0fa2e51f",
-    "textHash": "6232d46f83626ad90b3c04149628d7e2fa15ba9d5bc30245790d475429097fcf",
-    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
-  },
-  "StudyBuddy {version}": {
-    "revision": "704bcb75c1dbfeec2cd21c7533b1509ab8b7ba67a01a802040719d292b53961a",
-    "textHash": "b6a22f1932a5858a4ca5c5669f8097413a3a2422cf8c68b017da07195e2861f1",
-    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
-  },
   "Passed": {
     "revision": "3cfe923a8f052f0fee9fcf70f695cb4d82322de24ab679009cbcf8c363a367a7",
     "textHash": "8646a02a6878f10e01de892c86c34c30e646dee8c7344dd78d388ee6fd90c363",
@@ -2978,6 +3298,11 @@
     "revision": "14bf0e4b337cdb65600c6ca43c9ebbc1869cbb51b13c1c8381bc110f9dcacccf",
     "textHash": "4f51c0c8ada89f288d8e0346284155e587765c4a303601ac703c89e02b4ac4f7",
     "model": "gemini-4-argon-medium"
+  },
+  "Pause goal": {
+    "revision": "9110bfbb7a883d03e7b647a20aece00a6aa60044f6d5342add7b4b02b19e21db",
+    "textHash": "43e12830856147f1df476d7beaedbbf5a459ffc7a0f9888a9e0a49c6de1242a9",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Pause task": {
     "revision": "426de669b9d0ef381c848f6b52be756425b1c625367bd72f6a84914256765b07",
@@ -2999,8 +3324,13 @@
     "textHash": "3e9ed62878ae443abdda3051bac00ef6fe73dbe28bb6c7cdeeaa1f8d9d72ca04",
     "model": "gemini-4-argon-medium"
   },
+  "Paused goal": {
+    "revision": "1dec436c81e2c829a9c7c4f39dd45b8305b6f253eb72a60bc1a38b65b162ad6c",
+    "textHash": "e1d65cf445809d04cf9b51199f41ffe0694a2fc478e557783380caa4bec17f20",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Pen": {
-    "revision": "cffcae2304f15e57cdc384fc357b27254cf08cd7db0aae0c2418ec8641731f50",
+    "revision": "3645d88294a5e6d097782e4c373ecedaca7b2eea87dcdec66e41d6e1197352ba",
     "textHash": "e414ad855b8d4825e031bebe97ba8d73df57483f91801b35665623d4ae0b7bac",
     "model": "gemini-4-argon-medium"
   },
@@ -3008,6 +3338,11 @@
     "revision": "5e0cb2b4badef20d66c6795b54c46f2b99e772f702628cadb07f3164101d21f4",
     "textHash": "9b679df05d68aaba608e3c266d1f710cf940df6f714a0700bdaf1bc5f6d3536a",
     "model": "gemini-4-argon-medium"
+  },
+  "Plan mode": {
+    "revision": "3510d400f7c95cf71404035c2951db6c076568939d7501772067b06020cd3e41",
+    "textHash": "abbd7cb6801ed7cf41e4253dc18a7b9299b192c3baa327d97dacfcdb9f694379",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Polish": {
     "revision": "6ebd8c23fd300fefa2920ece188c6238b922fa81277be9d68bcf2878e4e18d43",
@@ -3079,6 +3414,11 @@
     "textHash": "891a8a6c4323f0795d8c2d3a5de90251f36daaa4274857dab485656089d33ea6",
     "model": "gemini-4-argon-medium"
   },
+  "Previous question": {
+    "revision": "7b2918125f9d5b4dbc3f02dcb37b4c5c509bd1f1531e2c50667a3a601ac5999c",
+    "textHash": "50ff4cd18ad1018c0098afa94c8f28a10706e7338a53fbb71ae360cc3358c729",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Previous suggestion": {
     "revision": "06ad9c89d02c49969b0acf7d55f93e204017643fc1e907c2fe1675b3b01d69ff",
     "textHash": "257691d49b0ecde13cb50d832ec4117f1665c89722d4ebb7c9e5cb8b5387ea30",
@@ -3133,6 +3473,11 @@
     "revision": "689e73f80ed782d5949890cd43031bf1c25dc6b7b4eeb3a96beb55ff3508c46a",
     "textHash": "aa4155165c4852a943b9741240d0d02377d8d6071a52bf7e01ae070829739d94",
     "model": "gemini-4-argon-medium"
+  },
+  "Pursuing goal": {
+    "revision": "bf6865c1c923483dd8b3af170c289a493a78fa4d7505fcf7aff33adf095b13e1",
+    "textHash": "78a94b902ed2a48f47251a2727f1e2cc0edc4ae5c9e945e5f8aa4b97217b910a",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Push": {
     "revision": "90274cf2311565974643ab9cb2109a881be800c360fa640386a8d27f8c02d5aa",
@@ -3245,7 +3590,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Reasoning effort": {
-    "revision": "f8b1af3b7ac85100712a1a5bf8a82bd048ff4135b01f528abdd32de6c4066f97",
+    "revision": "676ee39c12fec309bb0da16233363385f075da7ba2925b7c01fd96c97dc40ee0",
     "textHash": "7ad065b06006462f3dd4838815ec2b882a3262dedfec49f4d2647d9726f6b0a9",
     "model": "gemini-4-argon-medium"
   },
@@ -3253,6 +3598,11 @@
     "revision": "968a7c0bd263945cef8ec837a992e5842805f9e9df341916bffed61a2a45040b",
     "textHash": "8124e8864e492d6db495ec3996e4d1e452f9930d1191d937d837cb9210a96071",
     "model": "gemini-4-argon-medium"
+  },
+  "Recommended": {
+    "revision": "bc3eb8b2c8db3af9dd565f581e9f652a45f357ab5c82ed7814b9c0fb726126fe",
+    "textHash": "5891b70a9b6fdf41d3b66ede01b27aba448e53e2379b76180997715a7a6cf44d",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Recompile PDF": {
     "revision": "7f4780dfacb92a254de778293b3f3af1b0e3d33fe4c41b96ea72c0e4ba34dece",
@@ -3278,6 +3628,21 @@
     "revision": "ae5f79fc964ee1558c59c21e142622f1cf6923e026608eb2159357a16232fcfd",
     "textHash": "0247119ace1daf9b1518eaa180d86908777cf079bdf8538136c051f006f7fd6e",
     "model": "gemini-4-argon-medium"
+  },
+  "Recording is too large. Please try a shorter recording.": {
+    "revision": "bd18c0591049cb622b2ea8f9c1a0c9699bf821f7779eabcaae2b2edfb02d763b",
+    "textHash": "80037d57b15b998df7323bf0664569a355fc3a9f7c34ae3f27b46a3a37659236",
+    "model": "codex-manual"
+  },
+  "Recording…": {
+    "revision": "9ead9ef3b501178d72409a0e5c1fd38bdcf959f614cb0618d4dc808f7b0d197c",
+    "textHash": "1c437edde16ac7ef2e219f51b69a313e3d0a03595559460a79e6314c5d9002fe",
+    "model": "codex-manual"
+  },
+  "Rectangle": {
+    "revision": "fbda0e025e6fe11b6f3d70506142996c611d35df1d575658f69c5f8ed9f6302f",
+    "textHash": "dc0760235344004ebef870b8a31f2d9f3cda204b338c59ecd6bd93ca9ccd014e",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Red": {
     "revision": "9d99f295c9c0bf3d4e9adf8715757592b871c526c60b07a75271961baa1d648f",
@@ -3424,6 +3789,16 @@
     "textHash": "d099b53833565802b0bd1b445777833cfcfaea33d2f3083e27e841405a133bed",
     "model": "gemini-4-argon-medium"
   },
+  "Replace current goal?": {
+    "revision": "fb6b2b070437068c33fa56d348e63d45d088d47b8fe63c72a24d8cea39249d11",
+    "textHash": "1b874118cb172132ee4b52ec5cf05fc6bfe54a453269e155e6793b8eebcd62c7",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Replace goal": {
+    "revision": "515c32109196c8697d7bcbf0746ab3b75313e6afd93c2cd2d315c989dcfc1713",
+    "textHash": "51a80d003568a403d6f5de3c93d353e2572490bf73ef55c68d01d65041797025",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Replace with: {text}": {
     "revision": "aade14202f01cb84c20722798b403019f83aafb796c05b366162317f2247f931",
     "textHash": "4786c1ed4a11d9803a3ab2de1f82e21a06baf8b04ae7b712c6311626795cbde5",
@@ -3450,7 +3825,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Reply to {agent}": {
-    "revision": "5d38619f0ccdc3c296498c4d84d81f2dc44270958bfc6a32c888d737ffcf7107",
+    "revision": "45ef1c584669032ff8765d274c64c0ce98c465cce9fdb6b8083df04224371a20",
     "textHash": "0907ec13a0487ed862c9683c02e250a6738acf78484f7c53157577141371a9e8",
     "model": "gemini-4-argon-medium"
   },
@@ -3475,7 +3850,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Request failed. Please try again.": {
-    "revision": "80ffc9305d45ac71bac9f30795f554032dfdc6246c32a46c66db20dfdee4a57c",
+    "revision": "89bcc206cb78ae59f02b421e0ee7e8a196cffbb10685cd876eb15e94fcb0641d",
     "textHash": "cfc551f50dcaedb80afa4f981335447a4173ea56c8036ca7bc13f71e4ce72425",
     "model": "gemini-4-argon-medium"
   },
@@ -3534,8 +3909,13 @@
     "textHash": "65b598a24f2094cd8327554ab9cded1bff655b4b92a497c36054e6c1ae23b8f8",
     "model": "gemini-4-argon-medium"
   },
+  "Resume goal": {
+    "revision": "9708da7015d8c00eee8c133d863e67cc3723f3c6dccebd2236c883ff55712ba8",
+    "textHash": "5f65d5352aea6988972b92e6af09c7479914144c568eea8929d8009f1424b486",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Retry": {
-    "revision": "4b292aa7c3c58d43cbbf5864766fadd4630907b93e256c96c62337f6bd3f9662",
+    "revision": "1fd440697b8b5b639296b342ae581752b0dc695e9a0ad2f47c6bcf2c58dda0fa",
     "textHash": "196856a662bd90843ddb2e1f68e1cc74617b43b35778c7b5f520c38ea80038e1",
     "model": "gemini-4-argon-medium"
   },
@@ -3569,6 +3949,11 @@
     "textHash": "a2f7e411e7297e589581fc459a880c21bc42d596c26b01ab299b84dfe0aae121",
     "model": "gemini-4-argon-medium"
   },
+  "Retry dictation": {
+    "revision": "dc6ecbae5a04e6f78353cd51fe7ad028b8d80964b18b3185c1e48e112de59738",
+    "textHash": "9f49afc7652f7b6331bd7e2c55ad1a4712cdc5a3567d4a2ce8163d82927ddbbd",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Retry linking changes": {
     "revision": "74a9533f43705c0636f693f67610943fa80b5bd716a29bd7cccf9157927b376e",
     "textHash": "86956684db084fe6bc57e0d61295714e09837f305fed927050001aa6a975c978",
@@ -3599,8 +3984,13 @@
     "textHash": "7e0e212667f735a4ed33b98de25a804c20bc29714b318cac041768909f463a7d",
     "model": "gemini-4-argon-medium"
   },
+  "Review against a base branch": {
+    "revision": "b04c0f22c6f5d6410a3297b3cac3e608c555269a0c3f4a28adee8e4c5f9261f5",
+    "textHash": "726882a5f4c13faa513472fac42ba73f0e9c5a087040fa47a0a57ad6420e2310",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Review and chat side by side": {
-    "revision": "6e13ff5be6d86662f1b5fb6d5fa46b3a1eab1566f49a42cee12dcb7e981e5ff3",
+    "revision": "7b1115e9c0f6b46386f85f41941eda9cab388bd8ded8b35be69b3094aa00ea77",
     "textHash": "47bdb2344d61740f635ec5e4ae6a77bb6b523f68dea826dabb6a08bdeec0a3a4",
     "model": "gemini-4-argon-medium"
   },
@@ -3669,6 +4059,16 @@
     "textHash": "27633ba0edab9132f5580ea4838df39b095225bf15edb9ea9a83065055e83ffc",
     "model": "gemini-4-argon-high"
   },
+  "Review uncommitted changes": {
+    "revision": "f4672a487f61709559da639b4e7497eae210fff331c412d7d418436a6b1b5af9",
+    "textHash": "984bc1085991dbf444db2910ab9ea6b16e6469de42de1ebf71c8e0ce6b92ccf3",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Review uncommitted changes or compare against a branch": {
+    "revision": "99c2163e0ba94e0b3536084f7f6d5a2df727cb32143230ab99f6b26d498c037c",
+    "textHash": "1c01c5a2abcdf2f4c2427c754e431bc21727653692bd39f71fdf0a02c2567ec7",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Review, {n} to decide": {
     "revision": "32b253a0f093d3d54e68ac0363788c430da314df56e66118baad5db24633463d",
     "textHash": "0256738355fdb51e2115a4a892890948683b605ac25c507ca14c6692b4e475b8",
@@ -3715,7 +4115,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Save": {
-    "revision": "6d92e976545c2f6a66e3ee5420fc516106a5cb4ff1087425c718068651b05188",
+    "revision": "f769e3cd5043c428cf2a9afd31822b1879e0bca797e782e23ccd3ddee71cb089",
     "textHash": "5fb926229090001c0a61d0ca8909524ecbe038017748f156cfb17d813cc20660",
     "model": "codex-reviewed"
   },
@@ -3739,8 +4139,13 @@
     "textHash": "22a8165127180140419013f4dfdfd613a562c3ddb63553075e085d4009483a3f",
     "model": "gemini-4-argon-medium"
   },
+  "Saving sketch": {
+    "revision": "5b9acc7b8cb8f081e9956638dfd1894c01a8a6fe4bdc7a066fe686aac2fcd5f7",
+    "textHash": "b5e609529209281f1765fe38e6bb006a856e7eae1f89cf1158a029c55d9f4443",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Saving…": {
-    "revision": "5b5bfd12bf2db3be36dc2e49cc2d02fff9545c27da5de0774e81998b0ebf0fa6",
+    "revision": "bce210d66110b1af1c74ac98fdfab91a7efe03370180e7fcf9c53605b70b16e7",
     "textHash": "88daaeedfe4c69c68eeda01631b0508074020419598dc25d2df198704dce36ed",
     "model": "gemini-4-argon-medium"
   },
@@ -3750,7 +4155,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Search": {
-    "revision": "5e3c5a430ea7a19256998bf4723af5118862ffdf72221399f6be3b5f50f1973e",
+    "revision": "f40ce9087e7693a2b64ea72216af10327fb77030fea295ae4cb2ff577a39104d",
     "textHash": "4b8d541ebe6d9003aba399fbbc7244810563833ce89058628536a099c386ef46",
     "model": "gemini-4-argon-medium"
   },
@@ -3804,6 +4209,11 @@
     "textHash": "66ef8a240bb3d37ec60072fa2e8bfb092ca02c759f1706862b62447d579d6b3d",
     "model": "gemini-4-argon-medium"
   },
+  "Searching files…": {
+    "revision": "3615d39b9b6a021ab40d46cff1b6c2e1bc22b935990dc1fc8ea5b15f97b3f248",
+    "textHash": "d9d1a23780c6366c8993e3e701a3d36cbf71e7277d5a1412249b6bc0c782276b",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "See license notice": {
     "revision": "a3e9e0fd8ea9de8562af993c9f79c622afb0cff896f2a3fc70b361bc6c1f1fe9",
     "textHash": "6d815f49d71bc45d63a288d59c57a387c654ce5bbc6c1cc8a07dabbf975cd82e",
@@ -3815,7 +4225,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Select": {
-    "revision": "1ef4e86430ffed6de59fc63f245324b76c9859fc7565af9c2c2397f533f5ca4c",
+    "revision": "209bd41652b4fc3739fd803b700f7dbd5178b1b08cc066ee4cf649cefa7d1abe",
     "textHash": "8d1a750c9351d1b803fc94973fe32aad800263e2cc68f1d13e8eb3539fc6a4ab",
     "model": "gemini-4-argon-medium"
   },
@@ -3865,9 +4275,14 @@
     "model": "gemini-4-argon-medium"
   },
   "Sending…": {
-    "revision": "35b7779a5a8172b1648b7beb14e06fd54596277e01455e9f2b9ce45b082a0fff",
+    "revision": "170cb69523befaa713bbd1287060a66f08ab197d13ce85ccaeea8f8c59b7c319",
     "textHash": "e9df042ad1aaf767c9166af222628cf573ff38dba7b63fbfe4acc58b8f60ca4e",
     "model": "codex-reviewed"
+  },
+  "Sent as goal": {
+    "revision": "2055911480a2ec96219ea1b92be0b838948c3edf5032362eb12ee9dcb22f52f0",
+    "textHash": "283443628be632fb06a75c02c0a6038b0de97d85b48d3b1b60a60c69149f8770",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Sent. If nothing appeared, allow notifications for this browser in your system settings.": {
     "revision": "019797a1c80354dc756c24910cc0e410c9d233ee7cd66c1efc297121056fb2a6",
@@ -3878,6 +4293,11 @@
     "revision": "2e29d783a5b06ba66194d8765e8787ca51c3f49528cb69d911d417b12592530d",
     "textHash": "534078dee67d269b42a158e58ea0ca905ee3c4d8e3e11734e79530d1c3cae8a0",
     "model": "gemini-4-argon-medium + manual StudyBuddy rename"
+  },
+  "Set a goal to keep pursuing": {
+    "revision": "e2b285267ccb6fcb128c8346cee028f30c298217fe03163ddd47da722bada88d",
+    "textHash": "6690b3fe93542f8bf91109caa3f98d3664023908e8c017767805d251ef87398b",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Set up on the host": {
     "revision": "b9fc3056f751e28e3265076da521321f18b0297a097925318c4ca43fc6383f9e",
@@ -3890,7 +4310,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Settings": {
-    "revision": "e9f5a4d975c34eff5f72daf585b9ccf43b3e0a5d5982873bba67e40732ca8e42",
+    "revision": "0f263d02cf271f017c5406e01f0a8c411aef574156c94db18238689a7ee834c2",
     "textHash": "115bced49291a6a0df971e8cd50b00fad1ea43e34be6d37b41f7128b3cf6a65d",
     "model": "gemini-4-argon-medium"
   },
@@ -3908,6 +4328,11 @@
     "revision": "6d16a1081df669948248426f6a7d6748bd62ef4c58bea7e221fa5ef2f37a8892",
     "textHash": "2ee6ab5c2644573fcfed4d53d3eab7d716413ac97043b7267fa59050fc28e6d3",
     "model": "gemini-4-argon-medium"
+  },
+  "Shapes": {
+    "revision": "d3901e31cbae80ed1d3d03db2d9248debd4693731cd4f963e4b51867d41712ea",
+    "textHash": "802a73301104486f31232efc6b3e4d4a5646af27dec8b8d513476b2b667876f9",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Share": {
     "revision": "4889a45137ea151a22ec1c8c506395eb695ee8680440f846d5c287e9bea85b8b",
@@ -4039,6 +4464,21 @@
     "textHash": "1d7f7973d0747ed856d6526d2993e50be935234d59dd8a4fb96fbe7cb2540786",
     "model": "gemini-4-argon-medium"
   },
+  "Sketch": {
+    "revision": "b9d420f60ce48a5e6e2ee964851b36c9ac46881a7da8aa3283a7c53868c23bfa",
+    "textHash": "786e532c858feded25f807af98b8692a91f16d23fb6dd59166c9375051d597e6",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Sketch canvas": {
+    "revision": "0e1409fd7543025e77a7428d633f88259e20cb55c4aa28135e70514bb86754cd",
+    "textHash": "e384b276ac34efbaa603bc2ab9a8e9668a1f277c793ea46807a48bb80bdca8cb",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Sketch editor": {
+    "revision": "13440e0ef0c8619156c02dd37040f41d2f295d6102e45742e5fb9bed9e0cb604",
+    "textHash": "966408dd95086a8f2eafcd8c0ae139b9222a1ca8756f3305541edeb677301457",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Skill ID": {
     "revision": "c71e8b9d425953362ca6b7464a922f85335123dbb634efd3c27621afaa0fe5ce",
     "textHash": "b3febbe79aa83d9c388bef29a38d3f1211df4f06419c764cc1bc62d5eec921a7",
@@ -4080,9 +4520,14 @@
     "model": "gemini-4-argon-medium"
   },
   "Skills": {
-    "revision": "cbdee66fc9de3bdfa72608e19f195c64d60dc2132ed85257ce58102e0433174f",
+    "revision": "f77e36d17c7cf458033299b55b14a3dd851204d75b41f55e2a6d5031b2507579",
     "textHash": "2a84c94ce3470ab2e486d581aa2f1e5b1f4b831f1b6b092ef6786c16b9d57ee6",
     "model": "gemini-4-argon-medium"
+  },
+  "Skip": {
+    "revision": "ef7f3a4fcf929304e48ababadb6f631bfc143b3ec890b1132d6273bd4030b99f",
+    "textHash": "b6962f6d1b037bc892a7ccbcc7223cd5157af58618710745a16933bf0b1e855d",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Slate": {
     "revision": "1d4a0a0c51e0c04effef83e9acb0ac519a1a846c3337cf83359b22f32d24af5c",
@@ -4154,6 +4599,11 @@
     "textHash": "083774a93bbc6f528ba0c5e53b55d9aaff670d5dc766cc583dc7f98679fcce96",
     "model": "gemini-4-argon-medium"
   },
+  "Star": {
+    "revision": "f500830330e481bcb52655472db614a4aa4b534c00858f247704f0f7ced9d693",
+    "textHash": "ae3fc36d3a72017f758a7202fee5022dbc4321245d278ac3fe5e3b1361517ce2",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Start task": {
     "revision": "2386c6af5f726070842393e3748c4e3f44f89a639a223fc1f8527a2425ce0120",
     "textHash": "ffcdc83beca5da31592e8d0d653e7ad96c23727da1212da20ac9de0eb904ca06",
@@ -4163,6 +4613,11 @@
     "revision": "2813440de189e876b70a9359bed6abafdd5522a8aba11ed7fb4b72be8691d473",
     "textHash": "94b1834f2a49ac9c10e5b01e75fc9ceac1c7730fef06ef3452e19cb7f6a2729f",
     "model": "gemini-4-argon-medium"
+  },
+  "Starting dictation…": {
+    "revision": "4e0ec543460be3ea155f351944f7bd7af4c00a521ee1c7126c9aecc04053e14a",
+    "textHash": "47c866de34b6cca369435dae96b75dade7ec3c60c81f9a39b9f260af1b5b96f5",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Status unavailable": {
     "revision": "c86cd95bcaa34840557f9de70085b6ec0844cc9b04f637b449274981e94d8104",
@@ -4179,13 +4634,73 @@
     "textHash": "7287a7c881d2071573e3b94034a729ffc100ab3bfb521d442652c6d88cc84854",
     "model": "gemini-4-argon-medium"
   },
+  "Stop dictation": {
+    "revision": "49bfccb780a4ec5d8fbdc34c2ccdaca671ed7873bcd6a6095cc73d41e36beea3",
+    "textHash": "badffd39bc703f4925e566ea048540ed87a0663c903146338f56ad65e1901363",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Strike out text to ask for it to be removed. Open the mark to give a replacement.": {
     "revision": "c3fa2841afcc72f5c72ee9cddfcdb4a17cd3b3c08719452cb45876bee50675c7",
     "textHash": "8da7ea43cb1d62b5440afdd7eac614c098df036d0b3c8f46e66b1ff02b427365",
     "model": "gemini-4-argon-medium"
   },
+  "Stroke width": {
+    "revision": "ed6b941bb9e4643905f4541499ff03d0bcd1d50cbdc283b22a5710aaea328d04",
+    "textHash": "70ec2d232b4ffd38b1b7b7b54519685f41ae8acf1e7395ad5485398ff6cdd14d",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "StudyBuddy cannot find npm on this computer. Updates are unavailable until npm is installed.": {
+    "revision": "0f28fce7ee3c3671f62d63e423fc0164b81f30e9f30ce7b574f2295838f06554",
+    "textHash": "de5c5fb0fbacca4521bd03dd2d2eb990b333894a89f615e3f35cb81b460d447a",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
+  },
+  "StudyBuddy could not establish a working connection to this agent. The latest connection error is shown below.": {
+    "revision": "0c24ace418b8ee7f6d22363cbe05766b21928049e0cc5468b2f4eec95abe9119",
+    "textHash": "d20d9c84a0d80ca4b79d383513da092998f9cd704c6560383cbed0ddd7c67820",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
+  },
+  "StudyBuddy could not prepare the files for compilation. This is an application error, not a LaTeX error.": {
+    "revision": "25fd79316cdca0110ea025392e03e9906eddc0095f18901141ffbce9c0ceaf5b",
+    "textHash": "b74ec94749b3ad8c53f93b8becf98504de7d58cfe82e071ff80001704c3701de",
+    "model": "gemini-4-argon-high + manual StudyBuddy rename"
+  },
+  "StudyBuddy keeps this list for you, so your phone and computer offer the same notes.": {
+    "revision": "7cf37148ab55995a67bde2d950496fcedfed0a77155b9daa33ade74ee100833b",
+    "textHash": "02a75d2ab4848413adc876721a7109a292756333808b25da1f74fab9bb20ea1c",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
+  },
+  "StudyBuddy license": {
+    "revision": "bcfce8f3f17ff7c44e58fb882182c71438f76e9f42ea08de9d794d4bdc8c52e5",
+    "textHash": "8f19b9b3e07a54c3b83bddd7922dd92ced57f99d831c0a6e926818c920128586",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
+  },
+  "StudyBuddy reached this agent, but could not confirm a signed-in account on this host.": {
+    "revision": "56e06fd4ec0a81001c6d633aa5afd07fbf58212453cbc94609bf2fe266ad72d7",
+    "textHash": "fba70d7771b9dd31deeb2dcce139474eaaccd9f1502d6015f883bef0f9ff0f70",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
+  },
+  "StudyBuddy sent the build error to {agent}, {time}": {
+    "revision": "e60aed184478570f77c4e3135a471d68d5917404ed427f95bcf45bd70dc7f345",
+    "textHash": "4b9c9c87aaf3b13e38c569131775b671a0104b8e7f731d8ac128343bb105a46f",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
+  },
+  "StudyBuddy will tell you here when a task needs you.": {
+    "revision": "2de361ef5f104221d6f0ea59827e516cac616291da9af12a60ab8c1f0fa2e51f",
+    "textHash": "6232d46f83626ad90b3c04149628d7e2fa15ba9d5bc30245790d475429097fcf",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
+  },
+  "StudyBuddy {version}": {
+    "revision": "704bcb75c1dbfeec2cd21c7533b1509ab8b7ba67a01a802040719d292b53961a",
+    "textHash": "b6a22f1932a5858a4ca5c5669f8097413a3a2422cf8c68b017da07195e2861f1",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
+  },
+  "Submit": {
+    "revision": "7e46a29051cc5efc74aaad7cdb236930ee875c7141c969bf59588b5c7929c50a",
+    "textHash": "f1bc63f28f270133de374b6868ad2c0d5e06689bb8ff5220380fb71f8364c333",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Submitting…": {
-    "revision": "b0470068f9e63b5e170cf95a8ffbe2a5e749331c44f751807f0692df1901f5ae",
+    "revision": "dbd1fd26e57c22e3618fad70d38ba2b85f5882a624c0399262bcaecbb81571f7",
     "textHash": "234789f775a73215ca00a99a2c5b60456bbbf804f3234369864bb6fe272926e4",
     "model": "gemini-4-argon-medium"
   },
@@ -4263,6 +4778,21 @@
     "revision": "191590f26485c0edcb292675b9eec2031f7bc804585ccc5d38d2ae8197261040",
     "textHash": "01dfd369cfa718dda5f1906bbfe64d4dbd50dd2c62251854cd300a6c0d1e789e",
     "model": "gemini-4-argon-medium"
+  },
+  "Terminal": {
+    "revision": "e629541b684c02f1ad39cc0d06a9479be22569bb1a07ad13a4f5b6f8182c913e",
+    "textHash": "35644dd12da28567a6c0ecbf7ea78cfa8592677d821294e59e78cbf86c61eeb1",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Text": {
+    "revision": "6c6c247bff5d8eba9760defc0d58211bbaac2c9428b408ec3f047b5f2fca30cb",
+    "textHash": "258ad4b095a1841bac56196a2dbbe06d27614ed06f970cee72fc6db619f100e8",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Text size": {
+    "revision": "7f6accdbfe434f7f26d6d8b7e0016f89a1a271660880980ac715e3643fad9c64",
+    "textHash": "6e9918d4d5da23a9619339e07541cf910313561f4481802337237cce1894a07e",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "The PDF could not be opened: {error}": {
     "revision": "3be6b83879d7702dbe86010651c7a01ae4ddeb6e17fef982040570e2e62776cf",
@@ -4465,7 +4995,7 @@
     "model": "gemini-4-argon-medium"
   },
   "This paper": {
-    "revision": "8837a9d6e1b0d24056831b640e55eb115c2346d8bb47d3d0c743d9a762c4690b",
+    "revision": "9e3ec72914e2b30d9d5c8be3e2230221cb6902f49c012035ebdc98a311ad8410",
     "textHash": "3ff147ea0e5a9522face27a92a2d64b51124d609f2ee72568f905315e12fba7a",
     "model": "gemini-4-argon-medium"
   },
@@ -4544,6 +5074,11 @@
     "textHash": "4456fdad6d2a4fb63734b39dc9cf6676b9382105880b32d873ef67e87caedcaf",
     "model": "gemini-4-argon-medium"
   },
+  "This will keep the chat but replace the saved goal with your current composer text": {
+    "revision": "0f80924685f9ca98563f04d2f50df18e8b46dbd3d0702fff351e7d77d89971bd",
+    "textHash": "aa4af3644c87d5f615c7d9f85a5933149a952cf7ff581d92531383fd99c3c711",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "This worktree’s HEAD is outside the displayed history.": {
     "revision": "bc54286ea171e8f77f22eabce95c693e4061ad601ce4cf5c3fb600e55c5d6949",
     "textHash": "1f7a196352e0978f93dc6384b1c3392e4592e2f7b997c60aa37ebcd618b5a4a3",
@@ -4569,10 +5104,40 @@
     "textHash": "4cfbcd45bc35b21de31f37d2db45957774927f60fac56a8d4379371e30833c2f",
     "model": "gemini-4-argon-medium"
   },
+  "Transcribe and send": {
+    "revision": "756cade6f3ce8e84934d6cf977c753414f15c7e7c5c689fea82a3a19f1d34275",
+    "textHash": "8cacf028a33ceb08331ac236c9da07ee4591618964af3e8be022c924c21e0b11",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Transcribing": {
+    "revision": "ea409c9381b6b946a559640223a144883ea087376c54e806800e22ecfbcc55c8",
+    "textHash": "9f290990f6edfc404c8271d810a418dbe499c08bb90628b71fd22f712fb6cfaf",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Triangle": {
+    "revision": "690ff5621ee5a34db18db26d2d459e4a92454f39ca5a5223c8f3f3fe2945225f",
+    "textHash": "7b94635a444be0c25794cf4c9714b8a2a752e931d46fea1e3ed1ed2e2d6881ce",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Turn plan mode off": {
+    "revision": "ca906f57d2423a65acbfafb3b98cdb15c24307a9fced3f52034d253bcac091a7",
+    "textHash": "f25390c1b02103cca35659f12b7e9fde90d32426600b7b33047f8542cbc3bc38",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Turn plan mode on": {
+    "revision": "81f8725a6c20b123deeb15c1f86913e04944dc5f2debea224cc0a4b40e590cff",
+    "textHash": "a9156c4f5e80a48b7c790e84b51dd5055198b7866f08b6b71587c8a8d5712357",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Type changed": {
     "revision": "79c085f966231e09b3d9bc0249f8ec1305f711645eadb9bba1832b2fa8c728bb",
     "textHash": "f841b76f40b5109e839e91c1c3437a3724b3f640a77bcd38aa8727004b7ec9ab",
     "model": "gemini-4-argon-medium"
+  },
+  "Type to search for files": {
+    "revision": "ed70b95aee7c303d47ac72e90728921eca5f0c309218d338233e40c889d50a47",
+    "textHash": "74ef8aa84371fa9991ba74de62fdc415c9861c46e7edd461c70efab41c9ab975",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Typesetting and other remarks": {
     "revision": "266c4f22c38b511f4ae2d0ec6a31fcbda98a10fdb7b396ae87a0408692ec507c",
@@ -4584,8 +5149,38 @@
     "textHash": "38ba8ab63f8f5c13db5403bbecfa774f47d78e5ecd8b1e17cd6a404ebbccca2f",
     "model": "gemini-4-argon-medium"
   },
+  "Unable to load MCP status": {
+    "revision": "456884230545af310cb726505b3f3903513b4f3047db8eae532dc169c4e63e9f",
+    "textHash": "67f15c44d2e3d2e178da1616012c743ee8c6f6e7ae3cf347b6b668b2f83c7a2c",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Unable to load branches": {
+    "revision": "f69702d0db624c231736805b85c8a691d43471eb0bb945eee774a8a64400d366",
+    "textHash": "3f97c9420f6ae06d065ac0f0aa7c37da8f2ee478da53469d1fec16340420ed2a",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Unable to record audio. Please try again.": {
+    "revision": "331ea1546d8abdfd958f27afdebf22826dfc6e1a49a6c04d0bc8a8973009e8ea",
+    "textHash": "969fe3a594b1de6f5a50b36c3545488d8484349fc4fa77e2cb27bec9b9265255",
+    "model": "codex-manual"
+  },
+  "Unable to search files": {
+    "revision": "322cd0fe7c9b8c9a2a4e3a02261b0b83b71aed1be1a379985b10c50a6e6cbc70",
+    "textHash": "c4407e37fbbcf94a07a6e99de8724b7e768e42f0b1960c70938edb78e3f7b89a",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Unable to stop recording. Please try again.": {
+    "revision": "83e0fa419260516edae9e6b172a0d4795af9d68e9ca0fbf8ede127b6f5d4f786",
+    "textHash": "968dcdf9bfce409aa02057a346e054dfd92299871c66d80663eb2bc624fdd7a6",
+    "model": "codex-manual"
+  },
+  "Unable to transcribe audio. Please try again.": {
+    "revision": "c4fe801fc36c5f76e554c2890726e348b39f5fa129ed3f50c95821c1f484a3b3",
+    "textHash": "fab048b2a9194cd96dbc859110cd4b6b742cf9a117a037f0986d297745cc0a49",
+    "model": "codex-manual"
+  },
   "Unavailable": {
-    "revision": "b47f2d1c48696934c96073c62fa9061330da256a3c61b23d624d0a1d73474157",
+    "revision": "c4db2f5eae05a672cbbe5f2bcc0092ba1654f6b07d5712e8176e4a234751d78e",
     "textHash": "94238f856f841fb0c5572f22f49482003519175cdadc3773be6481109237b906",
     "model": "gemini-4-argon-medium"
   },
@@ -4610,7 +5205,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Undo": {
-    "revision": "e405314ec38a4e6310d35937a713b888e42ab9f58b4b9053fa389c917377346b",
+    "revision": "548396110b7a546a99ae1a9f799bedcb07b75b69da2cd42cdbea77889ef5a01a",
     "textHash": "ce706412fa752a6192bfa7ec8f04c8c032b97b0ea1b962d73d6fbdeaeeb3f60d",
     "model": "gemini-4-argon-medium"
   },
@@ -4794,15 +5389,90 @@
     "textHash": "c4eaf4a0444b507c35472e8cbd70bbde637ee3fe4a0c4e9d76ae922b454d7df5",
     "model": "gemini-4-argon-medium"
   },
+  "Use black": {
+    "revision": "c0abeb53f3a7b679bef7f03f2df79f0adbaddd615ff3ad135689cd5231ca2b1c",
+    "textHash": "ffdad0e02257cffa4d68a3eb945424b6f52012707a391cb47d9ad0ae0e1b3c5f",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use blue": {
+    "revision": "20e6829573e4218537afa3210bfe35b320ef157a34865da5f62534c75a8ea02c",
+    "textHash": "c5f83c801fa486087147eeb3658e80f5e7119cf2b1da438b63ec3b5f2c32a1df",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use brown": {
+    "revision": "8e921c178628d7a24f1f623d3a2ae415faeb6dc8578489d818a4e9c0061780b5",
+    "textHash": "804d5791e77b49dc49e5844bfd9dbe2e6b7d923c22376cdea55aa9adee2590f4",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use cyan": {
+    "revision": "c07e13dab4f3e08d47c995e7ac410706d5dc8d047606e9ae07531e30780e7e7f",
+    "textHash": "36a4a59ec50f4e75d3ca466df761a500b1e1531638b549ec523a1fde41bf4743",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use gray": {
+    "revision": "591f9641ba6bc8963f1b2cde1312e7ec15d0ae7ea6c28c1a7ec7344e691d2a84",
+    "textHash": "591e000a67b913b91e4f477df560852f8ab5759201b3a06777c26c013a5ddf6a",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use green": {
+    "revision": "728d1c9f3581089012563bf0392a448dc5258792c5f6e1ac076eb658381c156d",
+    "textHash": "eff430b33feb6d1e02e846a38aca3c13099c6e9d948ae0be7dd61a894b850cdf",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use indigo": {
+    "revision": "2206d84c702b6f6a0ffb865809b62c1ee6e3075766242151a52f72871449242d",
+    "textHash": "1352649c7abde29d5b35b7f6166e93539530b8c2e6aff94d1c06c47295f5a59b",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Use lowercase letters, numbers and hyphens. This is also the / command name.": {
     "revision": "c1e799de21abe8191ce96fe40e9545cfbb2539ec3e4d0f0ce85681d9af103b66",
     "textHash": "119f916cdf5509dbca747c0e1e9b41a7ee840a684b4265eaf0eb219cd8130dda",
     "model": "gemini-4-argon-medium"
   },
+  "Use orange": {
+    "revision": "81ac50b9cbc495d461493b857577bc53eceba34efb9472b0047421b783b39c60",
+    "textHash": "70367b5f4931662e444f630234834d6ccc9d5028e71b657737fa4d40d4c1fc31",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use pink": {
+    "revision": "43cad731c8d3875ba4d92909f7c929eee92789ded1b1f6a7e9e07cc8bf019be9",
+    "textHash": "2aa7911b5e05a99b10a00de71417f2616fb0ec1893b487797cd7089ddf91a115",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use purple": {
+    "revision": "fbda7d362d6847aa17f291f09d1e3d4e983f3d164b41819f6c9f24501b88903c",
+    "textHash": "edaeacb1789347b69b19e61b248fec52ad2b7480038256b9e3d744ac4f0220f5",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use red": {
+    "revision": "c4d929149fe54abf381cdbb87694b9e02166040cfd3082987575beab55602308",
+    "textHash": "276216f8ac7eeb3c661cd186f045bad6a08d68a5a6481822b87886263cb72f7d",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use teal": {
+    "revision": "d49cba41fdfa259de78d1947d0b32cac8931b87015596235a4a78c7825055922",
+    "textHash": "9bacf34a05ac6f58640274da2881293afadae5fffcd0a189bbc4e4296add1591",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Use the current {agent} sign-in on the StudyBuddy host": {
     "revision": "35638cf31548d2a32523fceeb1e03174fa5f75a6bb88099ae7f3d35e8a21cdef",
     "textHash": "f334b6fb7fd54ccff39b125fd5f6a6d9b440cf26e5238a88230f65398fb9ce4d",
     "model": "gemini-4-argon-medium + manual StudyBuddy rename"
+  },
+  "Use the plan skill": {
+    "revision": "ff0aae27b4c6e2c4709a384905f5e6429ac137e968c4e74c8e54c24435a53b91",
+    "textHash": "68be0b7e91b18894bfe8267bf2bee85c76e026928c33b85952fd5330e119e5fa",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use white": {
+    "revision": "a64d5c420c33b738822c1cdc3ae6a942cd9f54f12158ee8b5433a8e2c5bd166b",
+    "textHash": "1a5b9fbe846f3c27ed6f4b073f0d8239e0ca66505eeb7910e16fe0ef367e7c5f",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Use yellow": {
+    "revision": "b62eed80f7007cf8a29079be011e6403ca8e9a38c198e61e202eb61f2e51ad87",
+    "textHash": "a0d7104546802840a11caf174ab7c29e6e4aa48efa40b2da8538d9d0b9783942",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "Used for new tasks. Saved in this browser.": {
     "revision": "c6eff58aba293611629c9e0c2b514d85892d966258d59a2f8eea76d3e88423e8",
@@ -4959,11 +5629,6 @@
     "textHash": "8bee48750bafb669731816c113739cbfd47bf8d4ad62114843873765266f8ef1",
     "model": "gemini-4-argon-medium"
   },
-  "What are we revising next?": {
-    "revision": "a3ebc686c792daec3e7de5f08037a4d80b097f9ff072e28970c99edda80276cd",
-    "textHash": "d7cd874322e0ccaab51e2f1186a4caf28c23e0ed6020bbf6157d93e834462eee",
-    "model": "gemini-4-argon-medium"
-  },
   "What changed since the last commit, to stage, revert and commit change by change": {
     "revision": "0b70988b97e98eaa917dce0a0b42df3adca11b1eee1c12cc7deda1f769edb8b2",
     "textHash": "778272135aeaf925b7552cb0eaf1811043db4e89b3293ff6398d036c945b3120",
@@ -5023,6 +5688,11 @@
     "revision": "66e96b268a0cb038d873dbeab12665808072a2f358118a505611c87a78851092",
     "textHash": "755ae41bb6d44e167561b79f6fa913586c0dc3f57dc84a589c77b175a95e8c4c",
     "model": "codex-reviewed"
+  },
+  "Width cannot be changed after partial erasing. Use the selection handles to resize.": {
+    "revision": "d8d1d5bb2fed17e479e14391e37a26d9c3c68acb97dfdb1d79a938eb4732eba7",
+    "textHash": "05d212644bb6958b101b07401504d2bb99a889c4303e12ac6e39726a4a943b86",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "With review feedback": {
     "revision": "9f1534b9ada129c32e789cee11e686f7ca4801958a6ed0d78bec093ab0209e05",
@@ -5084,6 +5754,11 @@
     "textHash": "08cc0870bd508821acc6845c1503180c90f3a330149ac511d1f90f62380ad99b",
     "model": "gemini-4-argon-medium"
   },
+  "Yes, implement this plan": {
+    "revision": "aec3f4a65b9ef38ff4043c19f35513bc0f836430852687fd77548f9a7e8dc639",
+    "textHash": "4f7e6c6fbfeaf4ada629030978299497bd50771a688692bc2691346b2674a2fa",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "You are offline. Your draft is kept in this browser.": {
     "revision": "0fb32cf1a654d8046d72e09c1b255fc1c0cd076b11e70651bac0b5c61d0d06b5",
     "textHash": "3c966cf5a8c716cdd29053df05904353f4e6291a252485e674568981bae43683",
@@ -5109,6 +5784,11 @@
     "textHash": "d15044f526c35d2286c5902458a702b1c60a52859c5bfcbfa6f54ece61f2f74d",
     "model": "gemini-4-argon-medium"
   },
+  "Your changes won't be saved": {
+    "revision": "316e6786869c1ae83a18bf3b35c728c2e6032e1504aaa1c5572569d4757281cd",
+    "textHash": "92d8761bf9d95eb43a93a37a72445e46c07d1e6f891b316cf195282a9e5fa1bf",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "Your note": {
     "revision": "08a3c09799bd6abd8746800cd2cd5766ce3b235d79c7edcdba8f80f9f80658a0",
     "textHash": "419125d6700444e800cbc68a5df0bb3d3e49526f4fa51011373f94690b5662ee",
@@ -5125,7 +5805,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Yours": {
-    "revision": "ce66651ef8e1c90978042aa0efcca402b00da945645659be4228f3f1f441d3af",
+    "revision": "d3f3e889d03069e6ac002c91ec88fe86346c3fce0c2742276d3843b41916fe08",
     "textHash": "c321ac68cb45a57ed72587cc8dd420f7fe5c0c6e4de5190407d70d508c8c8c51",
     "model": "gemini-4-argon-medium"
   },
@@ -5135,7 +5815,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Zoom in": {
-    "revision": "0b225e440eab62e2dfc5cced51b2f6aabacb82a7829c8748cd9dc3f29325d8ef",
+    "revision": "d9f93c4f98974d60aec16b0843489a3198e52ed2915d9112bc12143a5cf11a54",
     "textHash": "11c2e8e755e47360b4abe161451e42dd30a0fd5aec308e5c7ee14f5f224a76ac",
     "model": "gemini-4-argon-medium"
   },
@@ -5145,7 +5825,7 @@
     "model": "gemini-4-argon-medium"
   },
   "Zoom out": {
-    "revision": "bd7aa1aca742bb58bf81c000a1b5a43123c8abc9a65fb154581c4d49e21b0cec",
+    "revision": "8326c7357ae2a0bd7d08d81477fd7ec685b60aa0e9a60568533aae91a7b2f60c",
     "textHash": "69d1c530729872d39529a10ce23373394941aa6423b9ff118d059fa65dc902f4",
     "model": "gemini-4-argon-medium"
   },
@@ -5169,6 +5849,11 @@
     "textHash": "8f40e23516ce1649b8a29806427340408c487c6c2f4717d5e66be3f1e0784448",
     "model": "gemini-4-argon-medium"
   },
+  "connect to the internet": {
+    "revision": "31c3660fe76bf0737ee8f82df026cfa5621bde03c57d60d11137d187878c8969",
+    "textHash": "de0ad75923b376b65f329268d812571d858eca7874ca23a42b941c64eca155d6",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "detached": {
     "revision": "c2ecf4995c60d1b8a12925127a7efff90e13ecdaf8afb51f7218c1bc6eeb785a",
     "textHash": "4eb5624766f8d27b2a715035231373fee57bb6b461e213565f42b62d1232ebf2",
@@ -5178,6 +5863,11 @@
     "revision": "419ba076381c7f2eb56fc37b83c591012ef1a0e1147a74ca67869abc97966315",
     "textHash": "aa86c652a97eecf1d3229c5189b5bea6088163f5ba248bcad553e0b73c1031ac",
     "model": "gemini-4-argon-medium"
+  },
+  "edit the contents of {paths}": {
+    "revision": "e6eca5a18f5be2e9d5bdcd4fb14357e432ad7d9e1fbd1511e58277f903b35b48",
+    "textHash": "79e9a7800ce0b17586dfeeac2260adad148df0e0ea68216fbc66ba33c632e800",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "edited {file}": {
     "revision": "e7e12bb261a2a2590409ccd81d17a9bf8fa734a67aa2337bd240d708e2c12af1",
@@ -5200,7 +5890,7 @@
     "model": "gemini-4-argon-medium"
   },
   "just now": {
-    "revision": "814c222f21ea3f3740411471de94fec9632706d60ee26512bf79ccedcf7c5895",
+    "revision": "58665be6f72e633afbb82965e3f0386960ced91baa6d6c852c506dbeddf11a9d",
     "textHash": "2fd9e7d411752b4601d9d8a4131e1b8cfe244fb97c3e545e0b1df02d82b6c983",
     "model": "gemini-4-argon-medium"
   },
@@ -5228,6 +5918,11 @@
     "revision": "d5f95f604e2b4104e35330253206a7c6876bae37d2c8bf547a5c869b95828721",
     "textHash": "53e82b7e5b81e4736d6bfef58348af9818ca07714ca2d7a5edb4a6133194de3c",
     "model": "gemini-4-argon-medium"
+  },
+  "plan": {
+    "revision": "19636e74899e0912ecce2b85d14da2f3a72bdf58bd370a254bf2b95e0a10a353",
+    "textHash": "125c62ba00540a1ecba0067ddfea69a8ef6c7c5235871d8afe7d1842823aa31d",
+    "model": "openai.chatgpt-26.51111.21308-reference"
   },
   "possibly the same work as {keys} (same title).": {
     "revision": "a195453dd1c4d9e8f19e10c794b24b7cadfeb612421aec5aa01cc917be389130",
@@ -5284,6 +5979,16 @@
     "textHash": "5ca2f07e227aeac2de5e68c1ec101d1e5bc8465f7b7ac9360ecfd1b7bfc4eef1",
     "model": "gemini-4-argon-medium"
   },
+  "view and edit the contents of {paths}": {
+    "revision": "0484730bd1d73d89a4dac2d3e6ab97cac730ad6c46e75b72e762716b72ce73fe",
+    "textHash": "99341b770268520213b0898482ee90b69119d9589ae22d58e48b17801284c824",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "view the contents of {paths}": {
+    "revision": "590447e592d22ad30c60e03fd09e703a36591c3125b35ac0a18044eed4537dc5",
+    "textHash": "6869130804d50d636d69b50c408d5dc9795dcef9f243b72edc8b8b3966d5853c",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "viewed the PDF": {
     "revision": "faa244e9b5fb6664af08b551a8583fb0c52d1de14bda0318e52b5cc3ad73e243",
     "textHash": "46164660a56b93a353c3ba97873a88ffe5bf5dc8097813e6bd19bec71d55ab9d",
@@ -5305,7 +6010,7 @@
     "model": "gemini-4-argon-medium"
   },
   "{agent} is requesting permission for this action.": {
-    "revision": "d41584379ccd17e88d3c5f6144e684fd57dcea77e3ba9e35a395909139c31387",
+    "revision": "fda554dce34fec11a1f837218f262620704d03a6becd0acc846f4c5579fc5309",
     "textHash": "b612c9ea31d8e9f2ffb5961c533a4f93a661611422b2ce79f67d7eca92c02533",
     "model": "gemini-4-argon-medium"
   },
@@ -5345,7 +6050,7 @@
     "model": "gemini-4-argon-medium"
   },
   "{agent} needs your input": {
-    "revision": "38d273c76798ba1b2567c6b2a58cabd0ec9ce967cea1db812ac55a6569b66cdb",
+    "revision": "3c03f50a0229f703ebe3295efeebb0d706f937989b1abb339fd4a16737c8c52f",
     "textHash": "2b24fc2708c2edd5714207d24fcd896e8355040bfbd508cc1c6f74b1db1f66a5",
     "model": "gemini-4-argon-medium"
   },
@@ -5395,7 +6100,7 @@
     "model": "gemini-4-argon-medium"
   },
   "{current} of {total}": {
-    "revision": "00fc34222006bdf526dd70b594d5ee4f18c39550768dc404ab759a34be5a8bf9",
+    "revision": "339374ed433443281d9fb23385cfa30a1c6fb3dfb6b8b503884fe1c1bc51057d",
     "textHash": "5c620d06a765e41b56936797ca2ec8898d2c15bce940d09341eb2e13f9d34c6b",
     "model": "manual"
   },
@@ -5680,17 +6385,17 @@
     "model": "gemini-4-argon-medium"
   },
   "{n}d": {
-    "revision": "024e3d54401ca070de4854146f2009268611fd24dcff195a5322e58785552b61",
+    "revision": "1bf3368d75210cd635444395ea5337e224706a129afcdb26255cf32618949b35",
     "textHash": "3533b4c7ac6dc5bb7f9fb2b87ff0c485250a4373b0049b04d0c014a19c2f86b7",
     "model": "gemini-4-argon-medium"
   },
   "{n}h": {
-    "revision": "6c4ae8bd18ed54e7f09c737535b3dec40d30222d71be629b8c7811f5d9069189",
+    "revision": "71ab42f0081d7a3e1ac611b753ddcc3c96330343b752d82f826be637736e39e7",
     "textHash": "9ca3e06082ca12a37f8fcaf3f83166407e591ea1b66bee06d58a3ebe3eb63f14",
     "model": "gemini-4-argon-medium"
   },
   "{n}m": {
-    "revision": "1870b20c80b6243959233627e716ce4f9d5825419c3a0c49c5e000933588793a",
+    "revision": "4140e9d318736e0bb30ab5f403c5f3df10f9e45e992ac7479b0aadfbdeeabde5",
     "textHash": "4b9a1f6b063f0c6bcc00304c12a79c2298b40859de47d8ba93b3237e19c37fd7",
     "model": "gemini-4-argon-medium"
   },
@@ -5719,8 +6424,13 @@
     "textHash": "9d444af5658ec44871b4dfab1e5e15e6d88d86aab41f444fb984840bcde8674f",
     "model": "gemini-4-argon-medium"
   },
+  "{used} / {budget}": {
+    "revision": "3990f62184ca03d1f57a3995ef5f45fad4fb85da16da271eb675ded62fc645b8",
+    "textHash": "08fa358ed02b1f21e7d6e4c5ceacb5fb4727cc7c5aea6d7a8bd6b062a3393025",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
   "{used}% used": {
-    "revision": "4aea5815630ef0edefdec055854ab78280b8b3fa7dfba78b071883d3b0004f28",
+    "revision": "d6da2b9817cfe3c223674a10a92d102581c5ecb3f9e4cac359b3fa095eefb6c7",
     "textHash": "ecadf2c2e97eedd22969bd7c077931a2a4bfe7f4bea9e63dcf6a02b129bc8bfd",
     "model": "gemini-4-argon-medium"
   }

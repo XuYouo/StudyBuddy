@@ -88,6 +88,22 @@ test('draft files attach to one task, survive restart, and reach Codex as images
   } finally { await f.close(); }
 });
 
+test('project attachment downloads retain native fork paths after the source task is deleted', async () => {
+  const f = await fixture();
+  try {
+    const file = (await f.upload('figure.png', PNG)).json(), forkId = 'task-attachment-fork';
+    f.store.saveTask({ ...f.task, id: forkId, name: 'p-fork' });
+    f.workspace.attachments.claim('paper', [file.id], f.task.id);
+    f.store.transaction(() => f.workspace.attachments.inherit('paper', [file.id], f.task.id, forkId));
+    f.workspace.attachments.removeTask(f.task.id); f.store.deleteTask(f.task.id);
+    const read = await f.app.inject({ url: `/api/projects/paper/attachments/${file.id}`, headers });
+    assert.equal(read.statusCode, 200, read.body); assert.deepEqual(read.rawPayload, PNG);
+    assert.equal((await f.app.inject({ url: `/api/projects/other/attachments/${file.id}`, headers })).statusCode, 400);
+    f.workspace.attachments.removeTask(forkId); f.store.deleteTask(forkId);
+    assert.equal((await f.app.inject({ url: `/api/projects/paper/attachments/${file.id}`, headers })).statusCode, 400);
+  } finally { await f.close(); }
+});
+
 test('new tasks and follow-ups can contain only files; unknown or cross-paper files cannot start work', async () => {
   const f = await fixture();
   try {

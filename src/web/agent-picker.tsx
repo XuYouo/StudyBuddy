@@ -1,4 +1,5 @@
-import { Fragment, type ReactNode, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import type { ComposerInput } from './composer-input.ts';
+import { Fragment, type ReactNode, type Ref, useEffect, useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import type { AgentId, RuntimeStatus, TaskPermissions } from '../shared.ts';
 import { Icon } from './icons.tsx';
 import { BrandIcon } from './brand-icon.tsx';
@@ -88,12 +89,25 @@ function agentState(runtime?: RuntimeStatus) {
 // selected model's reasoning effort, fast mode and permissions sit below the list. Native
 // popovers keep the menu above the PDF and scrolling panels, with
 // outside-click and Escape dismissal.
-export function AgentPicker({ agents, agent, model, effort, fast, reconnecting, onReconnect, onSelect, onChange, disabled, description, permissions, permissionMode, allowUnknownDefault = true, noAgent = false }: {
+export interface AgentPickerNavigation {
+  input?: ComposerInput;
+  onBack?: () => void;
+  onCommit?: () => void;
+  onClose?: (restoreFocus?: boolean) => void;
+  registerSubmit?: (submit: (() => void) | null) => void;
+  registerInput?: (readCommittedInput: (() => void) | null) => void;
+}
+export interface AgentPickerControl { open: (section: 'model' | 'reasoning', navigation?: AgentPickerNavigation) => void; toggleFast?: () => void }
+
+export interface AgentPickerProps {
   agents: AgentOption[]; agent: AgentId; model: string; effort: string; fast: boolean;
   reconnecting: boolean; onReconnect: () => void;
   onSelect: (agent: AgentId, model: string) => void; onChange: (change: Partial<{ effort: string; fast: boolean }>) => void; disabled?: boolean; description?: string; allowUnknownDefault?: boolean;
   permissions?: ReactNode; permissionMode?: TaskPermissions; noAgent?: boolean;
-}) {
+  controlRef?: Ref<AgentPickerControl>;
+}
+
+export function AgentPicker({ agents, agent, model, effort, fast, reconnecting, onReconnect, onSelect, onChange, disabled, description, permissions, permissionMode, controlRef, allowUnknownDefault = true, noAgent = false }: AgentPickerProps) {
   const id = useId(), trigger = useRef<HTMLButtonElement>(null), panel = useRef<HTMLDivElement>(null), search = useRef<HTMLInputElement>(null), list = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false), [query, setQuery] = useState(''), [active, setActive] = useState(''), [recent, setRecent] = useState(readRecent);
   const current = agents.find(item => item.value === agent) || agents[0];
@@ -161,6 +175,11 @@ export function AgentPicker({ agents, agent, model, effort, fast, reconnecting, 
     // Typing filters right away; on a touch screen the keyboard would cover the list, so search waits for a tap.
     if (!window.matchMedia('(pointer: coarse)').matches) search.current?.focus({ preventScroll: true });
   }
+  useImperativeHandle(controlRef, () => ({ open(section) {
+    if (disabled || noAgent) return;
+    show();
+    if (section === 'reasoning') panel.current?.querySelector<HTMLInputElement>('.agent-effort input')?.focus({ preventScroll: true });
+  } }));
   function choose(choice: Choice) {
     onSelect(choice.agent.value, choice.model);
     remember(choice.agent.value, choice.model);
@@ -202,6 +221,7 @@ export function AgentPicker({ agents, agent, model, effort, fast, reconnecting, 
           aria-activedescendant={activeChoice ? `${id}-${activeChoice.key.replace(/\W/g, '_')}` : undefined}
           onChange={event => { setQuery(event.target.value); const terms = event.target.value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean); const first = agents.flatMap(choices).find(choice => terms.every(term => `${choice.agent.label} ${choice.source || ''} ${choice.name} ${choice.model}`.toLocaleLowerCase().includes(term))); setActive(first?.key || ''); }}
           onKeyDown={event => {
+            if (event.nativeEvent.isComposing || event.keyCode === 229) return;
             if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault(); move(event.key === 'ArrowDown' ? 1 : -1); }
             else if (event.key === 'Enter' && activeChoice) { event.preventDefault(); choose(activeChoice); }
           }}/>

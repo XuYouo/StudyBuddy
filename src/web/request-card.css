@@ -1,0 +1,41 @@
+/* Official approval surface: identity, prompt, command preview and split action.
+   Native popover menus retain light dismiss, Escape and keyboard focus recovery. */
+.request-card.codex-approval { container: approval-card / inline-size; padding: 0; margin: 0; border: 1px solid var(--cx-border-subtle); border-radius: 25px; background: var(--cx-surface-elevated); color: var(--cx-text); box-shadow: var(--cx-composer-shadow); font: 13px/1.5 -apple-system, system-ui, sans-serif; overflow: hidden; }
+.approval-heading { padding: 16px 16px 12px; }
+.approval-identity { display: flex; gap: 8px; align-items: center; color: var(--cx-text-secondary); margin-block-end: 8px; font: 12px/20px -apple-system, system-ui, sans-serif; }
+.request-card.codex-approval h3 { display: block; font: 500 13px/20px -apple-system, system-ui, sans-serif; color: inherit; margin: 0; overflow-wrap: anywhere; }
+.request-card.codex-approval p { font: inherit; color: var(--cx-text-secondary); margin: 8px 0 0; }
+.request-card.codex-approval > .inline-error { margin: 12px 16px; color: var(--red); }
+.approval-command { display: flex; flex-direction: column; max-block-size: 320px; margin-inline: 12px; border-radius: 10px; background: transparent; overflow: hidden; }
+.request-card.codex-approval .approval-command pre { flex: 1; margin: 0; padding: 8px; border: 0; border-radius: 0; background: transparent; color: var(--cx-text); font: 500 12px/18px var(--mono); max-block-size: none; white-space: pre-wrap; overflow-wrap: anywhere; }
+.request-card.codex-approval .approval-command pre[data-expanded="false"] { max-block-size: 70px; overflow: hidden; }
+.approval-command > button { align-self: flex-end; margin: 4px; padding: 4px 8px; border-radius: 6px; font-size: 12px; color: var(--cx-text-secondary); }
+.approval-command > button:hover { background: var(--cx-row-hover); }
+.approval-unknown-permissions { margin: 0 16px 4px; }
+.approval-files { margin-inline: 12px; max-block-size: 320px; overflow: auto; }
+.approval-files > details > summary { display: flex; gap: 8px; padding: 8px; cursor: pointer; list-style: none; }
+.approval-files > details > summary::-webkit-details-marker { display: none; }
+.approval-files > details > summary > span:first-child { min-inline-size: 0; flex: 1; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
+.approval-files > details[open] > summary > svg { rotate: 180deg; }
+.approval-files .file-diffs header { display: none; }
+.request-card.codex-approval .approval-files pre { margin: 0; }
+.approval-actions { display: flex; align-items: center; gap: 8px; padding: 8px 16px 16px; }
+.approval-main-actions { display: flex; gap: 8px; margin-inline-start: auto; min-inline-size: 0; }
+.approval-button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-block-size: 28px; padding: 4px 8px; border: 1px solid var(--cx-border); border-radius: 999px; color: var(--cx-text); background: transparent; font: 12px/18px -apple-system, system-ui, sans-serif; white-space: nowrap; }
+.approval-button:hover:not(:disabled) { background: var(--cx-row-hover); }
+.approval-button:disabled { opacity: .5; cursor: default; }
+.approval-primary { background: var(--cx-accent); color: #fff; border-color: transparent; }
+.approval-primary:hover:not(:disabled) { background: color-mix(in srgb, var(--cx-accent) 90%, #000); }
+.approval-button kbd { background: var(--cx-row-hover); border: 0; border-radius: 6px; padding: 0 6px; font: 11px/16px -apple-system, system-ui, sans-serif; }
+.approval-primary kbd { background: #ffffff26; }
+.approval-split { display: flex; min-inline-size: 0; }
+.approval-split:has(.approval-more) > .approval-primary { border-start-end-radius: 0; border-end-end-radius: 0; padding-inline-end: 10px; }
+.approval-more { border-start-start-radius: 0; border-end-start-radius: 0; padding-inline: 7px; border-inline-start: 1px solid color-mix(in srgb, var(--cx-surface-elevated) 25%, transparent); }
+.approval-menu { max-inline-size: min(340px, calc(100vw - 16px)); }
+@container approval-card (width < 448px) {
+  .approval-actions { flex-direction: column; align-items: stretch; }
+  .approval-main-actions { margin: 0; flex-direction: column; }
+  .approval-split { inline-size: 100%; }
+  .approval-split > .approval-primary { flex: 1; }
+  .approval-button kbd { display: none; }
+}

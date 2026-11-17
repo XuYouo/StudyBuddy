@@ -1,0 +1,58 @@
+.codex-sketch {
+  --sketch-bg: #fff; --sketch-fg: #808080; --sketch-border: #eaeaea;
+  padding: 0; border: .5px solid var(--sketch-border); border-radius: 25px; color: var(--sketch-fg); background: var(--sketch-bg);
+  width: min(800px, calc(100vw - 64px), calc(100dvh - 64px)); aspect-ratio: 1; max-width: none; max-height: none; margin: auto; overflow: hidden;
+  box-shadow: 0 4px 12px #0000000d; outline: none; overscroll-behavior: contain; box-sizing: border-box;
+}
+.codex-sketch[data-dark] { --sketch-bg: #212121; --sketch-fg: #bbb; --sketch-border: #ffffff1a; }
+.codex-sketch::backdrop { background: #ffffffc9; overscroll-behavior: contain; overflow: hidden; }
+.codex-sketch[data-dark]::backdrop { background: #171717c9; }
+.codex-sketch-surface { position: relative; width: 100%; height: 100%; min-height: 0; container-type: inline-size; }
+.codex-sketch canvas { display: block; width: 100%; height: 100%; touch-action: none; outline: none; }
+.codex-sketch canvas:focus-visible { box-shadow: inset 0 0 0 2px #2c67c5; }
+.codex-sketch-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.codex-sketch button { display: flex; align-items: center; justify-content: center; flex: 0 0 auto; width: 28px; height: 28px; border: 0; padding: 0; border-radius: 50%; color: inherit; background: transparent; cursor: pointer; }
+.codex-sketch button svg { flex-shrink: 0; }
+.codex-sketch button:hover:not(:disabled), .codex-sketch button[aria-pressed="true"] { background: #00000005; }
+.codex-sketch[data-dark] button:hover:not(:disabled), .codex-sketch[data-dark] button[aria-pressed="true"] { background: #ffffff0d; }
+.codex-sketch button:disabled { opacity: .4; cursor: default; }
+.codex-sketch button:focus-visible, .codex-sketch input:focus-visible { outline: 2px solid #2c67c5; outline-offset: 2px; }
+.codex-sketch-top { position: absolute; inset: 12px 8px auto; height: 28px; display: flex; justify-content: center; align-items: center; pointer-events: none; z-index: 2; }
+.codex-sketch-close { position: absolute; left: 0; top: 0; pointer-events: auto; }
+.codex-sketch-history { position: absolute; right: 0; top: 0; display: flex; gap: 4px; pointer-events: auto; }
+.codex-sketch-tools { display: flex; gap: 2px; margin: 0; padding: 4px; min-width: 0; border: 1px solid var(--sketch-border); border-radius: 999px; background: var(--sketch-bg); box-shadow: 0 1px 2px #00000012; color: #3c3c3c; pointer-events: auto; }
+.codex-sketch[data-dark] .codex-sketch-tools { color: #ddd; }
+.codex-sketch-shapes { position: relative; }
+.codex-sketch-shape-menu { display: grid; grid-template-columns: repeat(4, 28px); gap: 2px; padding: 6px; position: absolute; top: calc(100% + 12px); left: 50%; transform: translateX(-50%); background: var(--sketch-bg); border: 1px solid var(--sketch-border); border-radius: 12px; box-shadow: 0 4px 14px #0000001a; }
+.codex-sketch-size { position: absolute; left: 6px; top: 50%; transform: translateY(-50%); writing-mode: vertical-lr; direction: rtl; width: 32px; height: 160px; padding: 0; margin: 0; appearance: none; background: transparent; cursor: ns-resize; }
+.codex-sketch-size::-webkit-slider-runnable-track { width: 2px; background: #d4d4d4; }
+.codex-sketch-size::-webkit-slider-thumb { appearance: none; width: 16px; height: 16px; margin-left: -7px; background: #fff; border: 1px solid #ccc; border-radius: 50%; box-shadow: 0 2px 4px #0002; }
+.codex-sketch-size::-moz-range-track { width: 2px; background: #d4d4d4; }
+.codex-sketch-size::-moz-range-thumb { width: 14px; height: 14px; background: #fff; border: 1px solid #ccc; border-radius: 50%; box-shadow: 0 2px 4px #0002; }
+.codex-sketch-size:disabled { opacity: .4; cursor: default; }
+.codex-sketch-bottom { position: absolute; inset: auto 8px calc(12px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; gap: 4px; height: 28px; pointer-events: none; }
+.codex-sketch-colors { display: flex; align-items: center; gap: 8px; border: 0; margin: 0; padding: 6px 4px; min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; pointer-events: auto; }
+.codex-sketch-colors button, .codex-sketch-custom { width: 20px; height: 20px; flex-shrink: 0; border: 1px solid #0003; box-shadow: 0 1px 3px #0003; border-radius: 50%; }
+.codex-sketch-colors button[aria-pressed="true"], .codex-sketch-custom[data-selected] { outline: 2px solid #2c67c5; outline-offset: 3px; }
+.codex-sketch-custom { position: relative; display: block; background: conic-gradient(red, #ff0, #0f0, #0ff, #00f, #f0f, red); border: 0; }
+.codex-sketch-custom input { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; padding: 0; }
+.codex-sketch .codex-sketch-attach { margin-left: auto; color: white; background: #005fb8; pointer-events: auto; }
+.codex-sketch .codex-sketch-attach:hover:not(:disabled) { background: #005fb8; }
+.codex-sketch .codex-sketch-attach:disabled { opacity: .45; }
+.codex-sketch-text { position: absolute; resize: none; border: 1px dashed #2c67ff; outline: none; padding: 0; margin: 0; border-radius: 0; background: transparent; line-height: 1.2; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; z-index: 1; overflow: auto; }
+.codex-sketch-error { position: absolute; bottom: 58px; left: 48px; right: 48px; padding: 8px 12px; background: var(--sketch-bg); color: var(--danger, #b42318); font-size: 13px; border: 1px solid currentColor; border-radius: 8px; }
+@container (min-width: 552px) { .codex-sketch-colors { position: absolute; left: 50%; transform: translateX(-50%); } }
+.codex-sketch-discard { margin: auto; border: .5px solid var(--border, #eaeaea); border-radius: 24px; padding: 36px; width: min(420px, calc(100vw - 32px)); background: var(--bg, #fff); color: var(--fg, #3c3c3c); box-sizing: border-box; box-shadow: 0 4px 12px #0000000d; text-align: center; }
+.codex-sketch-discard::backdrop { background: #ffffff80; overscroll-behavior: contain; overflow: hidden; }
+:root[data-theme="dark"] .codex-sketch-discard::backdrop { background: #17171780; }
+.codex-sketch-discard h2 { font-size: 16px; font-weight: 600; line-height: 24px; margin: 0 0 16px; }.codex-sketch-discard p { font-size: 14px; line-height: 24px; color: #808080; margin: 0 0 26px; }
+.codex-sketch-discard > div { display: flex; gap: 12px; flex-direction: column; }
+.codex-sketch-discard button { border: 0; border-radius: 999px; height: 44px; padding: 10px 16px; background: #005fb8; color: #fff; cursor: pointer; font-size: 12px; }
+.codex-sketch-discard button.danger { color: #900; background: #fcdddd; }
+@media (max-width: 639px) {
+  .codex-sketch { width: 100vw; height: calc(70dvh + 16px); max-height: calc(100dvh - 16px); aspect-ratio: auto; margin: auto 0 0; border-radius: 24px 24px 0 0; padding-bottom: 16px; box-sizing: border-box; }
+}
+@media (pointer: coarse) {
+  .codex-sketch button { width: 44px; height: 44px; }.codex-sketch-top { height: 44px; }.codex-sketch-history { gap: 0; }
+  .codex-sketch-colors button { width: 24px; height: 24px; }.codex-sketch-bottom { height: 44px; }.codex-sketch-shape-menu { grid-template-columns: repeat(4, 44px); }
+}

@@ -114,20 +114,55 @@
     "textHash": "d548298f1aab31a5d41f159c7961ea68cb74eb2eef39331b302e6a80fe357c9f",
     "model": "gemini-4-argon-medium"
   },
+  "Check task status before changing collaboration mode.": {
+    "revision": "732ee9b284d4002ef1bfeccf172ca60485e391a7f8d5922ebb85e03642256244",
+    "textHash": "d14daf99c86546c4d8699e0aa9d09de93494618bbbf08d4e33d1a4c10a63babd",
+    "model": "codex-manual"
+  },
+  "Check the current goal operation before changing it.": {
+    "revision": "7301152fdc208a7f209500f422afdaf0487e9e1c4452358e9e95e6d9f3fc85c5",
+    "textHash": "e656ab1ddcf4bf336b8e4da50cbb3f035ebffce39c584418b2cc6c6c7f9910b1",
+    "model": "codex-manual"
+  },
   "Check the task status before pausing this turn.": {
     "revision": "2161f13d9606f43c813a63200bfe8d15321d80a864bdc492d4aba6f229321cef",
     "textHash": "7a25da1e7b4578efc9fcc87ec6e2b30924311d6a96be9dd0073d83fc898f126a",
     "model": "gemini-4-argon-medium"
+  },
+  "Check the task status before resuming queued messages.": {
+    "revision": "bed434b8f889150d062dd47b161473c4d74d0e39cacc0601fedab139e40ab578",
+    "textHash": "f19b55d8529ecd9650e0762e042ed1a015e4e4f3c43e1f3e43e49196652a3283",
+    "model": "codex"
   },
   "Check the task status before sending more instructions.": {
     "revision": "14323da6170de82b6fbd07399643186d14fd284b0f6fec50eed7bd783b78a18a",
     "textHash": "ed62e535c5f2e8307b1a45d7b439dd281201ed24c0abdcc01936ab86ebc60b76",
     "model": "gemini-4-argon-medium"
   },
+  "Check whether this message was delivered before editing it.": {
+    "revision": "cd98d254a8cfff50ce03afd1ef2c5e70181a6a69cf9adf488920ff625a4991b9",
+    "textHash": "7fc50204de2f79089b7d8d2dd233756dcfdfa1922305c68ee118426a535686b3",
+    "model": "codex"
+  },
+  "Check whether this message was delivered before removing it.": {
+    "revision": "fb1d50cff100cdbda1807f528f05e3a0b4f0ee94da841e661c2d6ccc937fc1b2",
+    "textHash": "684763eb945bb3a4cc3d28ff207138272942a329974f9a5e37a50617d8472218",
+    "model": "codex"
+  },
+  "Check whether this message was delivered before retrying.": {
+    "revision": "ac4dd655fbec344d16b5969f2b65e4609e7ea7e30c322f37293dc6964ea3b1ea",
+    "textHash": "472ca8463a7433077d6a259cb93b696155ff0e3b53fd28c8f0a8badcb66ecd14",
+    "model": "codex"
+  },
   "Choose a ZIP smaller than 64 MB.": {
     "revision": "2df033553dc6661f46536c299d56f3a671e17bfd930cf8694ca28ca616a4f9af",
     "textHash": "3174b8dc219866200e76778a4325302c97410691ab184d2df36ec0a19a99fcea",
     "model": "gemini-4-argon-medium"
+  },
+  "Choose a code review target.": {
+    "revision": "85ab5506e4b2e4e7981f11a51df00eaffca7290636bb16a3b05d09dc2ac047a8",
+    "textHash": "f282dd547001a0c450c231b4a06d8097b148675e8316015e6102c24c3d6b24e0",
+    "model": "codex-manual"
   },
   "Choose a file with a valid name.": {
     "revision": "15b5bd88b596f4e81e6c9b6523202988eac7dd3a178e9502c77dc9d8d34c4eff",
@@ -139,6 +174,21 @@
     "textHash": "1151073c8b4bd07c6b8ac974c15acabfc09a5d00a5f5e00852284af65781b5ac",
     "model": "gemini-4-argon-medium"
   },
+  "Choose a model before using Plan mode.": {
+    "revision": "045dcd516f1eae3292dd198fa5072308aa895cd63eccb8406fa7c7277791842b",
+    "textHash": "f4be7cb54769981a22ad2c062b7ff041defb6b0afe4a619c4ab845cd2a72181d",
+    "model": "codex-manual"
+  },
+  "Choose a positive whole token budget.": {
+    "revision": "d537b26d53cbd4301dbbd5571200fb4472a7cf402a7cc4f8d6ea5bea0467f393",
+    "textHash": "7fd16dfbee2aac4f300401dbcbc741635412456828fe40574f418b71ceb58bab",
+    "model": "codex-manual"
+  },
+  "Choose a response to this plan.": {
+    "revision": "4b774b6d155151657fa6a2e2ba418f677475b59daf352c3472cd5b4702c31d56",
+    "textHash": "78c3eba48a76b5271a1b6995c039f5556442dfb4f14fb9eaa45f683d280fd8b8",
+    "model": "codex-manual"
+  },
   "Choose a source file.": {
     "revision": "284b5dbfa12e35f660dc81bcf5eca43be1434a4f2509bff8674e7c8242ba7a9e",
     "textHash": "00b55b20855350af1d583fbc5d6f533e5309dc48c6bf9ed53085a3b7383cc271",
@@ -149,10 +199,30 @@
     "textHash": "1bcdfe3bd3f66efc93138502bf85316cd67e39f6514c7a4a96a0e73eac3cc242",
     "model": "gemini-4-argon-medium"
   },
+  "Choose a valid dictation language.": {
+    "revision": "d1a6a16cb569e9d92f59daa16e391272fb81a2e307dd6a612f660d81528f34bc",
+    "textHash": "757f0e654362ca57131c18a4846a4c5d8a4919c0414828031693e04bf78aed52",
+    "model": "codex-manual"
+  },
+  "Choose a valid queue edit action.": {
+    "revision": "3c854ebbcfcb06e18b7b30cc788d9e4ff381bf3cfe58dd583a4992023be58105",
+    "textHash": "4e048e398f4bc7b238cfc4fa7e0a7964ed49adcee7d06ffe19686dcc82649373",
+    "model": "codex"
+  },
   "Choose a valid update channel.": {
     "revision": "cae0d369c835d5a3d0877b979801615d0cb77967ad40422eb94514b3daeba893",
     "textHash": "5b184368b3380bc193881b66efe7b1b7b01792338a9ed7cd6a19b43b24a5f6c8",
     "model": "gemini-4-argon-medium"
+  },
+  "Choose an available model and reasoning effort.": {
+    "revision": "1072aa3ecacd11f7e75ed6aaf2b23b96b398ab16ed5b8702b0bb9e6d4b0fa423",
+    "textHash": "121011ea730676008c8ebbdbfc7763e391b8deda2354a4d729853667514c3ece",
+    "model": "codex-manual"
+  },
+  "Choose an available model before starting this operation.": {
+    "revision": "13acf80470b369b7cc8edcff73453e7cc1e3a778cae4ce00bf7f1178270c1caa",
+    "textHash": "c24e9e73f611b4f1bbc587582ed35e19190c016fead73d0fe9e731a5546901fe",
+    "model": "codex-manual"
   },
   "Choose an available model for this agent.": {
     "revision": "54b2b8801e87cf31d51d2ab1ee5d74cea8e6d253818c90d46cfe700eea551ba2",
@@ -214,20 +284,115 @@
     "textHash": "000012ced218cba1bc1a85cfda214232a00b3a75a48e4658c6a7397dc2d3e9ea",
     "model": "gemini-4-argon-medium"
   },
+  "Code review is only available for Codex editing tasks.": {
+    "revision": "a89c3deac2e72426c7401b185e5812ccd891f69890506780e1247aa5fb985532",
+    "textHash": "2fc91e244d663cc26d6584ec91ee7be1f8558c74c307cb16638d91de38fb3477",
+    "model": "codex-manual"
+  },
+  "Codex could not confirm the conversation before code review.": {
+    "revision": "b83e8ace8064827f4bc893cc0541d205369018d3cb0953554dfee970e60d9933",
+    "textHash": "2624d765e283341727d4c5dd1fe21bec4174a3d672451373dd15393d6a89e447",
+    "model": "codex-manual"
+  },
+  "Codex could not confirm the forked chat. Check again before retrying.": {
+    "revision": "5a23164e98cac7dc45c332eff3b3b76639a29814b10de03c45f36aa0f3e7ae23",
+    "textHash": "7876816fcbbe1f4dce7f25d95f21fd1b98b320d59733dad7a7469f843594bf55",
+    "model": "codex-manual"
+  },
+  "Codex could not confirm this conversation. Check again before continuing.": {
+    "revision": "fae373e8070444dc9ec3526e805a8f23b471fc1a32a20b3473fd72c79cc22d90",
+    "textHash": "21225386b2147d743c19e4470fb95ddd40b03c8fa962b14194cbde02ae3f9666",
+    "model": "codex-manual"
+  },
+  "Codex could not verify this goal conversation.": {
+    "revision": "61928673cd9cc63dd52a0070b1bd04accf23cea9b142b454f7e3c992a8a8cff8",
+    "textHash": "feb32af80334f2bd8311f2f20b5ce3efe637acd9058c87e54b11a7a828979fd6",
+    "model": "codex-manual"
+  },
+  "Codex did not confirm the goal operation.": {
+    "revision": "85bc36c96a0147dfdebb886686ce8b3ee40df9110ddb971e0b6226738e3d0759",
+    "textHash": "b0937489d6cfac9634d909eff2a82d8bc15fc677773317c77ee569f73abbf8c2",
+    "model": "codex-manual"
+  },
+  "Codex did not identify the code review turn.": {
+    "revision": "1e64e3f81513dfc702dbd0ea47ca2697841130ae9a07cc43d67fb01c46c1e576",
+    "textHash": "057b7502d7df54b6a22f996e05050eec3fac0fb8c0eae3786e1c2ccf53fa078b",
+    "model": "codex-manual"
+  },
+  "Codex did not identify the expected steering turn. Check delivery before retrying.": {
+    "revision": "10d89f293931922cbc1bfde8e6938c71b1aa4077b75c394f0da52664adeee8ba",
+    "textHash": "597e0a0692391de4ba3a006baef95b2d417e12b85473ebbff4a4e1c327f38852",
+    "model": "codex"
+  },
+  "Codex did not identify the forked chat.": {
+    "revision": "b7636bba9c6fefa08b80584fb142cc551c4b8504f68f5c8cf8cf0ef889232b29",
+    "textHash": "4614ea025c2e7bd0db94af636fa48f8451fc0999772fd6ff9d3b6ef89a682b6f",
+    "model": "codex-manual"
+  },
+  "Codex did not receive this message. It remains queued.": {
+    "revision": "dce178735ba8267847221aed480e233717bcf95e8bddd4d3e28f20a8ca204a8e",
+    "textHash": "bf0163418298e37dd7b53e60e6dfd0571363a4eecc18cbb32e616c2d86c97b84",
+    "model": "codex"
+  },
+  "Codex did not return conversation history. Reconnect and retry compaction.": {
+    "revision": "083ae82c874bc3556a50066cfc173e7815d0f77fbfc0fbea4aca6645272cb47e",
+    "textHash": "bfb76851993ef172737cddba147a5679c4f64b9fae1cbbad81221cfa1c664b9a",
+    "model": "codex"
+  },
+  "Codex disconnected before code review was confirmed.": {
+    "revision": "85494669e01d573fd10fd3d60d699f7a98c1f96ad63b6a49fb7e3d2c343c6044",
+    "textHash": "be70b33265c13c8b54e5726f54a10d8c33e04bcf1f9c6d14cf701b02e422c928",
+    "model": "codex-manual"
+  },
+  "Codex disconnected before the goal operation was confirmed.": {
+    "revision": "ecc4edd0b5ec31120c9c4cdfb64c69c4b9218cafb29505073361f7f5cf38d9fa",
+    "textHash": "0b6de987e43406188dea3b3f2b4ce58f7597895f72bc072c81d65795015970a3",
+    "model": "codex-manual"
+  },
+  "Codex disconnected before the goal state was confirmed.": {
+    "revision": "2bb12b06e72c7ce3ea3efc8a61f9e1f99eaaa5d662e018294295221e4ab0fe10",
+    "textHash": "c02f1b7d266d20f34ff29693bc271be9225d509ed58923c62b90798e7bae8314",
+    "model": "codex-manual"
+  },
   "Codex disconnected. Resume the task before retrying.": {
     "revision": "23310bb5e757e6ed51e7a32c9717243196de8bc4f27ff30ad05599198c8534ab",
     "textHash": "05ce4f0857eac697ab1095f57c336855c0ef1eea1b0286e68e5ea3f60984d747",
     "model": "gemini-4-argon-medium"
+  },
+  "Codex has not confirmed this code review yet. Check again in a moment.": {
+    "revision": "a7be032a6eafe05f19627536b4365d55ba7acb443651c09ad43ab69d64007611",
+    "textHash": "a0fa10c529a828424f405a419bc6302416f234b162949f384f850a4d98b4ff4d",
+    "model": "codex-manual"
+  },
+  "Codex has not identified a unique forked chat yet. Check again before retrying.": {
+    "revision": "65e9e9fb7dd044f6683e0db76752efd3046b6397d9624c5cb6be6830913d9bc4",
+    "textHash": "26561b304ba8ed9440c825c4e2284cc560eade14e862c256734517975749dd8c",
+    "model": "codex-manual"
+  },
+  "Codex has not identified the compaction turn. Check its status before interrupting.": {
+    "revision": "15d57f982dc2fbc20f195ecd03744185d87e698ccf3c2f6a8ad0b99c645a733b",
+    "textHash": "c88c4d045acb69801d82a424a06dc7020141f7045a389a3687a9e64d00937975",
+    "model": "codex"
   },
   "Codex is not connected.": {
     "revision": "24f3d2c0e2fea0e76dc35727bde9a7b680314e2b60e1f08482bc5beb73417b2e",
     "textHash": "c9aa5351dcc9d84dd21f767557cce2e12c886e29c1cf2c03dd7b6b0e10a4ade3",
     "model": "gemini-4-argon-medium"
   },
+  "Codex is still processing this conversation. Check its status before compacting.": {
+    "revision": "a2666ea28928861358d671dbf765a8b50020a17f2842474ddc90609a13463bb6",
+    "textHash": "b31d614c976742c318adbe6728e839b16894ddb1e1149562f92deb92376fa860",
+    "model": "codex"
+  },
   "Codex restarted to load the current sign-in.": {
     "revision": "967bc851ee49c00f0387ec3ba652a4a08a2a3ebfa77fca6ad4f53a7d5bde73ff",
     "textHash": "367dee25187223e5d4354b6aadcd993481fff89f1688364ba5e0bc8e0305de68",
     "model": "gemini-4-argon-medium"
+  },
+  "Codex returned an invalid goal state.": {
+    "revision": "eb4b9fcc60c3939b1a5291a010d6ce79030478edc60ef98ee63315b834fe3933",
+    "textHash": "4b1d1ded80e838dddd6abbda73d0765714ea395276888b99121ecbb659b1b82b",
+    "model": "codex-manual"
   },
   "Codex sign-in expired. Select Refresh to load the current sign-in on the StudyBuddy host. If it is still signed out, run studybuddy codex login there first.": {
     "revision": "8bed7b1ff6841f83e0c76d7f6ba75979dd6b3145b62e8f4741e8209acfcfb775",
@@ -238,6 +403,31 @@
     "revision": "b0b88df8c3a06e9e68d19f262fc9db1d3736c019109acd9c95504ac739940c36",
     "textHash": "fb3fb9ef2c351900698d30ffb15c2a2e60d459fb3a457588df0a1064c5b2c07b",
     "model": "gemini-4-argon-medium"
+  },
+  "Connect Codex before compacting this conversation.": {
+    "revision": "84761a439f76ba1a15cb35d51e126e3ac148ea3ed376f2b0b28285362ab4f040",
+    "textHash": "5ae578fd28d272aba149e070c897cf174bdda76c34f33512dec01e5a661ed263",
+    "model": "codex"
+  },
+  "Connect Codex before creating this chat.": {
+    "revision": "5995aff41e623df777ebc14627ee976fbb5f3f4873cbe8321b1b485e1fb1ea7b",
+    "textHash": "f5a87abeb3bd9e5abf2d02b2cf4440fcdf056dfa1e79c231e2d6e2465cbf99e8",
+    "model": "codex-manual"
+  },
+  "Connect Codex before managing this goal.": {
+    "revision": "2124df1fb9605a36eef12dc118c238681730ae989160bdce1fa24fbd67302bbd",
+    "textHash": "0ace562cf72a7b56972f7a9b101de99b88b2d3a1efaa0f80c2d7ae8bc54bc7cd",
+    "model": "codex-manual"
+  },
+  "Connect Codex before starting a code review.": {
+    "revision": "86cfedb4bf72eb1f33b9d4ede241c5236516c39583b5338bcb31272f344d8855",
+    "textHash": "4164ef986b03cd251c01ed46683ef6a748e8889125d4b55af3466c6915f500b9",
+    "model": "codex-manual"
+  },
+  "Connect Codex before steering this turn.": {
+    "revision": "808d316d5b8955c15dd7c65c2a7e94b0524b06d8d93e7c1a3dd2b58e8de9bbf8",
+    "textHash": "87c6d9c19d2687dfadfe1ad2fa9ec8cb17f77c322a9f07c30b9782979fc5bea5",
+    "model": "codex"
   },
   "Could not check for updates.": {
     "revision": "20a8da2f7571f1c5d141dca7b16aea94b6b5189b4732de0bba282ec8eb546f26",
@@ -269,6 +459,16 @@
     "textHash": "42eb76ad91770ea02e4eacf820c27adc3c8129d0c5b1b6dc5543dbe10cb44c2f",
     "model": "gemini-4-argon-medium"
   },
+  "Describe how to revise this plan.": {
+    "revision": "dcda4c9a6ae7073c828e5f7c06456a24b942739c8dd486d24219fbc5f7bcb6fb",
+    "textHash": "00ca2b5105c35160f4e86e2aeeb5a22170481411304a883345654033d8276aa2",
+    "model": "codex-manual"
+  },
+  "Describe the goal.": {
+    "revision": "01ef222896f7d30843890491daa5164d8a2ee554e293326c41fefd24732d0e36",
+    "textHash": "32ea33807c07afb1c1b0da1a758ac85f5f9687c6192cdf1ef99b8c97379fa3ef",
+    "model": "codex-manual"
+  },
   "Describe the revision, choose a skill, or add a PDF note.": {
     "revision": "39a18bc206ef2796f0873fc6dd09cc56d6250579e17c460db7c5713b7c74fb7a",
     "textHash": "ab3bd7da996c99b4bb15a57ac6fd37ceac568c84a71521cb3159cc6d7409773b",
@@ -279,6 +479,21 @@
     "textHash": "c15f695f4e8a78c173843ddf6c66972bd2402dd596e3db8c47b22080c6888ba6",
     "model": "gemini-4-argon-medium"
   },
+  "Dictation is not available for this ChatGPT account.": {
+    "revision": "1bbdd5003e19d5327fc2d8e1bbb738016ed8936c88298330bce730cf444147ee",
+    "textHash": "7296b34937bcd1feb5af90b964d8778e98415402d8859b69b4804e2f6e1e199e",
+    "model": "codex-manual"
+  },
+  "Dictation timed out. Try again.": {
+    "revision": "fdc9f265dfb943a982cd064f2951e7bff48a159404f420febc08012f13db6296",
+    "textHash": "a1775b38b825a75c6a79beeb08806b86ebdd5f9c96f3c9f9e193c777d054faff",
+    "model": "codex-manual"
+  },
+  "Dictation was cancelled.": {
+    "revision": "19a7f6423639126e9caebfae6051dda6489e5fcfa36fa626bc6c2e24dd901262",
+    "textHash": "86344ab30fb48b595c8e104ba6e9db63dc608e02a3a0a8af6d54ca30a652a068",
+    "model": "codex-manual"
+  },
   "Download desktop updates from GitHub Releases.": {
     "revision": "48277ef66e700b68828a8d554b2185cf30dc65c440846a29c4e64d3caa465716",
     "textHash": "0431e4cc3aed2e99304ac2fb7315b97398bea1054d5886c29fde4bf895352bcf",
@@ -288,6 +503,11 @@
     "revision": "ad67a1b5b829f85e42ff1124653f85b94a97f55279dd2a8606483a1d0324fe7e",
     "textHash": "ad506b3e27ca8fd22892c83666fa1a50dd63a434fbdbfdf7537a04fa860ef141",
     "model": "gemini-4-argon-medium"
+  },
+  "Enter a message before saving.": {
+    "revision": "28c4799da7bbe8af06b916867536bf7faa1bad7784c24b7d7d06530f24bf5ac7",
+    "textHash": "be5e66a7e3471f17bb759f6952f67bdb4adfdc687ee94175f283e30f138b284b",
+    "model": "codex"
   },
   "Enter a paper name under 120 characters.": {
     "revision": "6c051051e35e8827712d7238e15e70088d6b45db0875f41e0313b0f0e15afbcc",
@@ -303,6 +523,16 @@
     "revision": "4f4cde8044e87e63dddc69e733548bc518eeff2c115ca149930ea5ca67e929ae",
     "textHash": "6e217f11b036258f8a6449ea9adf436c2b4da919721f8d60b7caa14243a0d3f3",
     "model": "gemini-4-argon-medium"
+  },
+  "Finish editing or checking queued messages before resuming.": {
+    "revision": "20cba3f3eb6d8d7e649c3d34b1cc0250e92ef7b10084f3ff145cc906c7c32be8",
+    "textHash": "8141f4100592c2b461a9c3d5403386224c43e6ce1409db262b38162eccad5071",
+    "model": "codex"
+  },
+  "Finish editing this message before steering.": {
+    "revision": "34c28b9c395077c15d28d0933aed2b292e5a3d51282dfc5d95a592436cf98d88",
+    "textHash": "f9ec9119f4f603e5c0c55b2d8bb3da6de133c6c781d13e38150edcef645959af",
+    "model": "codex"
   },
   "Finish or abort the merge before committing other changes.": {
     "revision": "4ffb149e5e8040ab81d58d125ce2c148a2ef1e9394ead9f8166f1c73579d18bf",
@@ -329,10 +559,55 @@
     "textHash": "f69df8411e98292dd243246054257121012c60146e0f473745e2027df9528c57",
     "model": "gemini-4-argon-medium"
   },
+  "Forking requires a separate detached worktree in the same repository.": {
+    "revision": "6bd0ded1018795e88fcab8b847ff965e18b7b5bc3aab3ea445f14cf419cf7aa4",
+    "textHash": "677d30e4cb9abc332c9b4d72fa1f1bc17a0de98867efb0e2480571f6c12ef661",
+    "model": "codex-manual"
+  },
+  "Forking this worktree requires unsupported Git entries.": {
+    "revision": "f213ae26b36117925efea587829340e64310ebc1abb67e3f99e4423f119bbafc",
+    "textHash": "3058f2c99e2acf905c271c5e73be881d2bb21d7e4393f48a4841adf76e1a35e1",
+    "model": "codex-manual"
+  },
   "GLM does not report usage to StudyBuddy.": {
     "revision": "9dd57ad20c9bece66d7174c4c831add38156058c2e8f9293977ccc7122be7159",
     "textHash": "ec92e70872d2886141ff9e03ee19638fc950e30e5b25bdc679e114ae9e383bdb",
     "model": "gemini-4-argon-medium + manual StudyBuddy rename"
+  },
+  "Goal objective file reference is too long.": {
+    "revision": "ed3acf28a858013f8a87b80862fbd19d552eb67da13fa64f002944b6ae227eb5",
+    "textHash": "1108a00008c1d92981f69c64cdfd318f9092ab035453d906d677d8bea290f622",
+    "model": "codex-manual"
+  },
+  "Goal objective must not be empty.": {
+    "revision": "318c5bdf9a730e04433995d8f47306fb4a5979fd83e711401b9b7e7bc5f6e7b8",
+    "textHash": "8f5ade8d6d9fcaef390da8301d7f10d5a7ffce06b230aa748317fb3c16e2654d",
+    "model": "codex-manual"
+  },
+  "Goals accept your objective, file references, text files and images. Send PDF notes and skills in a separate message.": {
+    "revision": "965865440f8d14173efeedee7193691d33cdaf8a0fb931a0b61f01f57cff6270",
+    "textHash": "c5024444c1d3c20759166a48129145ab1cddede5b49eacdca6e3926bd1b6fa8d",
+    "model": "codex-manual"
+  },
+  "Goals are not available for PDF review tasks.": {
+    "revision": "39546430d59f71b93f28145e909a9daee1b1ec1c7c51492108d6ae663242304a",
+    "textHash": "8ff7b3de924271d7120b7cbbb632cd9c285216ce673188a33ed2335e7f0d4417",
+    "model": "codex-manual"
+  },
+  "Goals are not enabled in this Codex runtime.": {
+    "revision": "10df9cc750ca9b07c9fe4e15257e4411453ab973b5531889804b4c5efb69055d",
+    "textHash": "8b46b6cc2622dd3cdd486da37784c30c9ccb945a4c0f5f3cec5a424be68f1da8",
+    "model": "codex-manual"
+  },
+  "Goals are only available for Codex.": {
+    "revision": "64b029daacf03aeee5242363e2e38df219a1223f486f096083626d3bf7ab12a4",
+    "textHash": "98c85b61feb1ebe9529d9ade43274e6a001f523307c72bdd72f433551f58ceba",
+    "model": "codex-manual"
+  },
+  "Goals support only text files and images.": {
+    "revision": "ae1be5c436c1f635b6b5999204f2342f48d84722d746c6854a98198eab8f4f07",
+    "textHash": "b7c282aad2d527613a77c0c7f96202b4bdd7373b9dc7797b4f08da1db4427d18",
+    "model": "codex-manual"
   },
   "Group instructions must refer to selected PDF notes.": {
     "revision": "97db9cc7920c80232274308768aa44ad6fba9a26db27ee7365c908d39c40268e",
@@ -359,6 +634,16 @@
     "textHash": "382c7182c9513e3e16bd81cc3cc530961b0b182f00ea2ac4056aaf16e2fe94f3",
     "model": "gemini-4-argon-medium"
   },
+  "Invalid code review request ID.": {
+    "revision": "83fa1901bd738983ada0d3bb6d64686ed2b8f6ccef3f5f378b74f9d9f37cd662",
+    "textHash": "02eb20b90a0f81ad4fd9fe463c9880ef9d7c24a926dce470056dbdbbea4b4bef",
+    "model": "codex-manual"
+  },
+  "Invalid collaboration mode.": {
+    "revision": "bbd9f84c206b59d4bbb9e78f918ef969489a7b33aa62109465a745df19ee8209",
+    "textHash": "06197bef9ca02643268cb97b8874fdc7424e4b308b06b26b96ba775f15f1d423",
+    "model": "codex-manual"
+  },
   "Invalid development revision.": {
     "revision": "61ef3d785f3c50be7d0a743173297287d24029f1abb84a9fe6e27738dbcf6542",
     "textHash": "f3ceee0a3a89c64a8d8156a0a0643e8756bcc5868ba3ea622dd46bf8065880f2",
@@ -383,6 +668,31 @@
     "revision": "7fa546625befe408bb0f5cfde7f66b86824ced7b132252bd03a35d94c38b548d",
     "textHash": "152aa518619e4ad8acf2a879ef99bd2f81e28612cd0846dd80314d5d71c908a7",
     "model": "gemini-4-argon-medium"
+  },
+  "Invalid fork operation.": {
+    "revision": "57ac66900374a168e8acf2ef9492ff29deb03e44d01e65c77834adeb5e5fefa3",
+    "textHash": "5487922ea1d91eefe7fdc37dcbd2a7c8eb6f6946ae13f3a0bf6553c6e15735b0",
+    "model": "codex-manual"
+  },
+  "Invalid fork task ID.": {
+    "revision": "f4e24186de03f3f98805d91f123e16d85c7bbc0716cb5f8175a80bd5cf998630",
+    "textHash": "4c2523fed744082164c894afb4a2654ff858ba00229205e68c036d657b0ad8fc",
+    "model": "codex-manual"
+  },
+  "Invalid goal attachment directory.": {
+    "revision": "588bb2d28da9c963eae86ce8c2d87e72b2b2065e95c4250f20149cd5561cad1c",
+    "textHash": "e80c9740f4a984951ca4c60207780e1f805eecd2dbba464b70e94c3dbcf4987f",
+    "model": "codex-manual"
+  },
+  "Invalid goal attachments.": {
+    "revision": "b926fd60431401ba3263e0e506a32b5acd11dc4093c80f14648d84531f743d1b",
+    "textHash": "376b121a21e5d0d60e8c5ff3e671b5decd0596ae2441ab8c9042d483d218f782",
+    "model": "codex-manual"
+  },
+  "Invalid goal request.": {
+    "revision": "724b7d80602ac9a847bd5170f25e0aa1232faec81a7674d0f571e2743ee3eba0",
+    "textHash": "fc5ac0aea510deae14571f962c34ba15e72afe1b103e44e46a963b0e3b718c43",
+    "model": "codex-manual"
   },
   "Invalid kind of mark.": {
     "revision": "31d92e7d266b5bb9eabaad2f625a225cc57c55f980d73e39fdcb544b92c81171",
@@ -494,6 +804,26 @@
     "textHash": "664c3caead78066b4a3b4083b78b1abd7731b9a88629cb0fe4bb42b859fa4a2b",
     "model": "gemini-4-argon-medium"
   },
+  "Notes requesting alternative edits need their own turn. Leave this message queued.": {
+    "revision": "3a61c864a0071584842341c64a4ba37dd3b49635eac5de3dab7e5a12eb14a1a7",
+    "textHash": "173689dece2ebabaecfb0363ab159e9e04aa399b27e8924438fc73a9395f28b6",
+    "model": "codex"
+  },
+  "Only code review settings can be changed.": {
+    "revision": "9273a59742e12bc5d8086598fcc87fdb6a38f269851c57256869f304632b5a27",
+    "textHash": "3f5f9698a7d7808dc1037a6e401211b4725f8255db856ac7e3acb50cbcb9a92e",
+    "model": "codex-manual"
+  },
+  "Only the code review target can be changed.": {
+    "revision": "1872f2f4c78c17cbad9163c86da81917f25fb4f5a2951bb2a915f7a38d4a6e28",
+    "textHash": "d5be5f686ac0fad34978b244564ef3358cbb6126e73ad8198908b5cf54bc23ac",
+    "model": "codex-manual"
+  },
+  "Only the fork task ID can be supplied.": {
+    "revision": "8d3e25b35b07883f0539bc908569c7f3cad2a54da079d0c8cd1e0d6b73e9798d",
+    "textHash": "3d394d5af6d3e82c629a6b07eefe9c27d0af53d533f0421e64868406bdd3731f",
+    "model": "codex-manual"
+  },
   "Only the model and its settings can be changed.": {
     "revision": "d1a4f4b593afecf61f6490fdf710123b82bde61ef2f1ad40ea5a991386f6a4d7",
     "textHash": "c70649ee35a8978fb3e9d0bdbb57dc392404274a0eea89a2629ac57aefd7a4fa",
@@ -509,25 +839,30 @@
     "textHash": "dedccfa003ac68b189dd256a9e5d2e3e8b3ff7d1089883ae2e3afd09766f75fc",
     "model": "gemini-4-argon-medium"
   },
-  "StudyBuddy did not finish shutting down.": {
-    "revision": "1cc39c373b73dfa5ec6e4d07bc12c93294a74c5a59e5eb689db16b1758f7515b",
-    "textHash": "4e2af3e0d2d0e943ff68d6f0f25a9c94bc1380da28c1ddc3557079b6c5fe8a36",
-    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
-  },
-  "StudyBuddy is restarting after an update. Please wait a moment.": {
-    "revision": "cad253f1b8603cfec31df022004f03cdd97c9cc1345862c3801846b35f2fa368",
-    "textHash": "35ed74bfd221a0cf7ac7de22e0337f146f3f49fae2d1dc9670a7109746a69ce2",
-    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
-  },
-  "StudyBuddy restarted. Retry compilation to continue this import.": {
-    "revision": "0dbb3366daad5f29a0568c001d9e4c00ffef3864f3e51ef83c6bd8d91ada614c",
-    "textHash": "b973de07fbb3fc06b0cab826196b48264bdef6682cad4b0aedbbf9114422d3a8",
-    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
-  },
   "Pause Codex before building a review.": {
     "revision": "1f07f15066facd7284af6139813adb39c4acf7aca1579f699a35fdf0eef3f2ba",
     "textHash": "5fc3bffb6e7724b5f4a2583b11ef00d5ab4950d40376ef880b20bc23a1a4310d",
     "model": "gemini-4-argon-medium"
+  },
+  "Pause the goal before changing collaboration mode.": {
+    "revision": "8b1cedbafb690efb82f804b9071a9e6b8ecb5b7c8fcab0201e6e549bfeabeaa1",
+    "textHash": "9852d558d537775135b4622af045011a81f29337898276d8046ba67c6f94c584",
+    "model": "codex-manual"
+  },
+  "Pause the goal before changing its model.": {
+    "revision": "1261f44d0da844fb2b27d9ce8d93591e19ff2e6b4f8c91d6d6e9491a3fe8ebd6",
+    "textHash": "685a41d133e31526ecc6a1b5822ab753bea2627c387d3b0ce106af6c550ed534",
+    "model": "codex-manual"
+  },
+  "Pause the goal before forking this chat.": {
+    "revision": "dda80f600b027bf9fc547caa630fa2e6029b7693f313189c351d255f8beb22f8",
+    "textHash": "e4c24c9e15448f4e69c3ec479be4ae851e68e2514e70cdf5330ed18b70ecda68",
+    "model": "codex-manual"
+  },
+  "Pause the goal before starting a code review.": {
+    "revision": "8d6b9c1a2535805a70a624283181006ad72a2a7c1a00f2eff47a59f99c7be5b7",
+    "textHash": "54d38b85dfb04b0c7ad452452baa25b0ddd7e2e28651bc78b545eaaeff5792a7",
+    "model": "codex-manual"
   },
   "Pause the task and wait for its current work or review action to finish before deleting it. Resolve any uncertain action first.": {
     "revision": "0ddeabd6d1517197345fe4c9e74faafa09b9fe26a99be10156a8b41e535117d8",
@@ -543,6 +878,21 @@
     "revision": "ab3f068abe6759289af34fb62805ea48faba44d740a76d0b2d8b3726d3335fa4",
     "textHash": "df6544e1fb3f97b5675e2e6eb631f2f360418d05895398581ca0f5c3083cf78f",
     "model": "gemini-4-argon-medium"
+  },
+  "Plan mode is not available for this task.": {
+    "revision": "d44ad82c1390dcb682c970774db9f95d2dd66beb98ad292fbbad43015079cf83",
+    "textHash": "30e62e34271d84e4707ab9b61e57c2c5d617f75e8e26b8b4554d11cb41fe899d",
+    "model": "codex-manual"
+  },
+  "Record some audio before transcribing.": {
+    "revision": "9d6da20af6bba5627d3e835acfefe8a7b176325ca9c8bdce5d48cc52ab7325ae",
+    "textHash": "92ec5649b76a6951e49d7a95f8fdb237171a08bcabe8bb6ee647e25ab47c10a1",
+    "model": "codex-manual"
+  },
+  "Recordings must be 25 MB or smaller.": {
+    "revision": "3168d738fb98243dfcad3072f6f88d58b60a71081902527c0b8fffa88cfc5b9d",
+    "textHash": "b9a701ae8bc841ca2562d660115125c16a4dca94e2fb91379aca968dafbb6ac7",
+    "model": "codex-manual"
   },
   "Resolve the merge conflicts in the selected files before committing.": {
     "revision": "53421f4ad60e5149c3eb5234bd059584c4b49611faa847c1c6f665c204ef8f00",
@@ -619,6 +969,11 @@
     "textHash": "bc6963281f1a08190329452006f9c17277c1e633f57ad222446c8e5973467761",
     "model": "gemini-4-argon-medium"
   },
+  "Select the root of the source worktree.": {
+    "revision": "6ca011da726806cd6b6d21ff892c860bda7dd29fe703a9915f8b386018d45af6",
+    "textHash": "806d69dcf0ff671905df40d32b38489e2039ac28479eef1f24373931ad064209",
+    "model": "codex-manual"
+  },
   "Select up to 10 valid attachments.": {
     "revision": "288fc7ded55d58b30da376ce13e77fb82636bd1ae02a78834e303368448473de",
     "textHash": "f1698bbcca9be8db420778199a112b43ca914689beebfb92e0736c469b0a78a7",
@@ -633,6 +988,11 @@
     "revision": "7422fbf250920ea5050d5b5b250846bc578fc56d55533d1c4eb77ff328f78cff",
     "textHash": "5b3c961c28133297f94e9e1e2f51f4958c7f818c309110637ff805d4594751f9",
     "model": "gemini-4-argon-medium"
+  },
+  "Send a message before compacting this conversation.": {
+    "revision": "93dac00c20062a2becbbaf726f86cd27e175e5fb36b7fb7dfc08d2748848b532",
+    "textHash": "5ebead92da6134660a001402d0710f82e41bca498119afcb9a13be2a6ae9aaab",
+    "model": "codex"
   },
   "Send attachments with a message, separately from review feedback.": {
     "revision": "8d0a44c8a8fd0bb43cf835c85f74b56a7593ee70c355bcaf008e3698b4dcbf76",
@@ -649,6 +1009,11 @@
     "textHash": "849e7054e66fab198c3bf220aca182b170ed876e9fb33a92615160df61c95d27",
     "model": "gemini-4-argon-medium"
   },
+  "Sign in to Codex with ChatGPT to use dictation.": {
+    "revision": "00261f974693be747713e0c9f1b08eb7cae4d5661db029c44b9c0c49b2008914",
+    "textHash": "2b3a21248ba4b57353ccc96fc0911560b445cb69ed69798b064c8065dbd6fde9",
+    "model": "codex-manual"
+  },
   "Stage at least one change to commit.": {
     "revision": "fe63c9a955ba2347ae7b2fb8db33605b4fdf2d021d55481cb077e4335709b3a4",
     "textHash": "bc39d01580891875efab14978858b9d0f1d8cf0509d78d8cc29f295c68deabb1",
@@ -659,6 +1024,11 @@
     "textHash": "d5b0b15e29896d372e5726b1a4a1b6d215b6015c0fccddd9dfc4e3544cb41ebd",
     "model": "gemini-4-argon-medium"
   },
+  "Start a new recording before changing its audio.": {
+    "revision": "7e3527d2209320a9fb375585d5035124f75cff135b3f5aea516e61b20cd71646",
+    "textHash": "32ae6aaf053abf46f3e0fdec8c9ffbf3c13c0fdf566ebe2bb4cdb134c7557c73",
+    "model": "codex-manual"
+  },
   "Start a new task to run the AI review skill on the current PDF.": {
     "revision": "6315c575d77aa7c17e96f707a50f02db7e017d34143537dc1de78e75cc15aa2e",
     "textHash": "a2a7ccc4f2efc60785c6e1dd78c75c29e422a737b0dac5ccf2070432f9e639e6",
@@ -668,6 +1038,26 @@
     "revision": "003ffaeac46a1e06ff5132d083f3639ccdc48e3c1bdb066ae3493fc1f9df881a",
     "textHash": "79eff41dd22c7c3ed95b0c261f2d656dd1a144bb0eb4818c6a1b9c15c9754223",
     "model": "gemini-4-argon-medium"
+  },
+  "Start this chat before forking it.": {
+    "revision": "c7231c676b21f90c0b62bc37cad3ba000d1f41ca79b64ddca196af090a5ef9f6",
+    "textHash": "3e92956eafd6d7115431064acc49389624492b4fc41ea0adf8d369c492d0c635",
+    "model": "codex-manual"
+  },
+  "StudyBuddy did not finish shutting down.": {
+    "revision": "1cc39c373b73dfa5ec6e4d07bc12c93294a74c5a59e5eb689db16b1758f7515b",
+    "textHash": "4e2af3e0d2d0e943ff68d6f0f25a9c94bc1380da28c1ddc3557079b6c5fe8a36",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
+  },
+  "StudyBuddy is restarting after an update. Please wait a moment.": {
+    "revision": "cad253f1b8603cfec31df022004f03cdd97c9cc1345862c3801846b35f2fa368",
+    "textHash": "35ed74bfd221a0cf7ac7de22e0337f146f3f49fae2d1dc9670a7109746a69ce2",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
+  },
+  "StudyBuddy restarted. Retry compilation to continue this import.": {
+    "revision": "0dbb3366daad5f29a0568c001d9e4c00ffef3864f3e51ef83c6bd8d91ada614c",
+    "textHash": "b973de07fbb3fc06b0cab826196b48264bdef6682cad4b0aedbbf9114422d3a8",
+    "model": "gemini-4-argon-medium + manual StudyBuddy rename"
   },
   "Task not found.": {
     "revision": "3ec89ea72e3ba6707f223e880f97cd696d47f51bf8d0d332f0d562b45026d024",
@@ -689,6 +1079,11 @@
     "textHash": "0bdc0200743f63113252d11e0029292441623a37590e453d382d25c64dd8d68e",
     "model": "gemini-4-argon-medium"
   },
+  "The ChatGPT account changed. Start a new recording.": {
+    "revision": "eeb49440d3efb4913ad4cc7cd1e03dda9657ba27e29f9c22fe1439fc8a42eb49",
+    "textHash": "f3ed7a9836ac8475ec85f8595bd3faf2252db27db80e92310d22a5b7b1c299b0",
+    "model": "codex-manual"
+  },
   "The PDF copy for this review is unavailable. Start a new AI review.": {
     "revision": "353234b5336152f2fe4dc777dcb0ae0f3eb2eb5e050a135960ee95add4170d0c",
     "textHash": "4a8e6887d7f8f9f88047e28a0f14bfbca371162278c9fb40d8e79ef4b6e53d2d",
@@ -709,10 +1104,20 @@
     "textHash": "e62eaa6958d47ef439a564add0aa05897ad1e969ba8b14968d5fa3169ae7f942",
     "model": "gemini-4-argon-medium"
   },
+  "The agent disconnected before delivery was confirmed.": {
+    "revision": "c94bedba7857bab0ea809fc29ff00d7b746a72d999f26b098c749a5c9a5b2e9b",
+    "textHash": "c63b22112e9d6b43f1690dd91cf3ef79f26a775ef24edffa77836dc21f79c438",
+    "model": "codex"
+  },
   "The agent is editing this task's files. Pause the task before rejecting or editing changes.": {
     "revision": "b674c01825fd46eeadfab0c49779a1aaf10105de72250193f107d5088aea1c22",
     "textHash": "a97adf5ea99315055cfd3c5065a0814d9db12da4c1bacdf965bbb2db1e35b423",
     "model": "gemini-4-argon-medium"
+  },
+  "The code review is not connected. Reconnect Codex and check its status.": {
+    "revision": "2581eee38966c4bb7a0e1e2a6ed729460dc76afacd4c5768c2addc843436b601",
+    "textHash": "14d6d85d0b92d894cac5e1f3d4941c0701dde11511aaac019ae5a508a9b03e68",
+    "model": "codex-manual"
   },
   "The dev build needs at least 2 GB of free disk space. Free some space and retry.": {
     "revision": "cb74cd1cbd911c82260d5220ad4060f774bf9ae5b30bc1d04a1c0f7c8aabd404",
@@ -739,6 +1144,56 @@
     "textHash": "39c0ae890012df6def93a12d498b579c5f79d6df55c78b6503277e6851a3f669",
     "model": "gemini-4-argon-medium"
   },
+  "The fork destination HEAD changed. It was not overwritten.": {
+    "revision": "88da2ae66ed52584a1270a431e7bfb3bde77fc9ab923f75adc77a965713b5742",
+    "textHash": "0daa55aaa1d71a1f9e480653b53a875f0000c762ff13d6d6f0e41f4cde7922dc",
+    "model": "codex-manual"
+  },
+  "The fork destination belongs to another operation.": {
+    "revision": "970e7583f4bc2eebd0dd01961fb73af21ed3fed0a219464a69cb2b8489059cf1",
+    "textHash": "54740cb0fe2e7ca9a3bf41c5dabed9ab33e696f93035abb375e3ec5df923290a",
+    "model": "codex-manual"
+  },
+  "The fork destination changed. Its files were not overwritten.": {
+    "revision": "1fce474c1fd68d24a86743fc6096a13627971f74f33e5dded2028b5317b73318",
+    "textHash": "2ffc974974a9885f082e4feca5e4eb93f16b6b798b54b7cddbe424e20c12592d",
+    "model": "codex-manual"
+  },
+  "The fork destination contains an unsupported file.": {
+    "revision": "91f0691010ad1a9673c5737033f2c5d29207caebaeaa9ed01c3adc664f2e620b",
+    "textHash": "c55523ff994157db0289d8e762020d403ac3d35e4c8a22a717ffe304e6f7bb65",
+    "model": "codex-manual"
+  },
+  "The fork destination index changed. Its staged files were not overwritten.": {
+    "revision": "9e1162225df2c04f2f9b5105a3826e51112c66f543d982328c8d8a533cc7a7bc",
+    "textHash": "e5a1d946ed15de7b189a2da346940d3341c4fbb8bd99e7bfcf495ccfaa014e5e",
+    "model": "codex-manual"
+  },
+  "The fork destination is not a fresh review worktree.": {
+    "revision": "3dc612e6768d6eabeccf074d33d6c44da18012e6540698b4affb21a8ce4f024f",
+    "textHash": "946ca6ce63fa16d9cb4e0914972a1ce8eaa5c78fff38f10578a4b4733e79bed5",
+    "model": "codex-manual"
+  },
+  "The fork snapshot is unavailable.": {
+    "revision": "8956babc384c83df02a58b6fe4cdcfa90cf7c080df77bd42a544b5fca608f995",
+    "textHash": "4e5f54c7a8da721b2f245224c47c99d5a8e49120b268f5ca6113803c6856c130",
+    "model": "codex-manual"
+  },
+  "The goal changed. Refresh its status before trying again.": {
+    "revision": "10aa2a2eb6743f4d17bbdbb62bdb11f76ef7e1786562f2a627da16e0d57579c6",
+    "textHash": "a74b1921b54fdb5382c82a58a8246613af5973ccbb56518d9b971d16edc766d1",
+    "model": "codex-manual"
+  },
+  "The goal operation is no longer current.": {
+    "revision": "ec143ca23b8acab549e62ae69b1ca3207717d3415a17342c5bd84bb5d0a85a25",
+    "textHash": "0177fab01438671553a72b984cfa4c38b38bbf902f94217fa8ea0ac8e4da298e",
+    "model": "codex-manual"
+  },
+  "The goal operation is still running.": {
+    "revision": "fd0379a32b1c7d5949c7d8a6e17ae28fd2d8e2124e6d4bfb467e9d96a1436785",
+    "textHash": "d3ea0e368c9cdf8ed029aef913c7f7b12f99e9719e22061d6cacc45024aec1b0",
+    "model": "codex-manual"
+  },
   "The manuscript changed while copying this suggestion. Try again.": {
     "revision": "1ae036461f4e24f72bdff99aabe82e75a2efee3a762bb985bf4bbc2101999406",
     "textHash": "fc533f02f6d68887ea96d022bee2c6885caceefb9c905892fcfff208f369b5eb",
@@ -763,6 +1218,16 @@
     "revision": "b4d9da9f3b8cff59be668117ec05eb6c8f73af06772afc560a436faecbe83fc4",
     "textHash": "847c4528ef4f07a04bc6747d287ad9216d148f312fea266d2a5440371436ae1e",
     "model": "gemini-4-argon-medium"
+  },
+  "The pending code review could not be identified.": {
+    "revision": "df1212918574db88bf66bc79c145fe038cf768e1518d417adcca2c4e7b17a609",
+    "textHash": "1fec302a64da837e75fa943cfad051a5d72d0b741bd8d0fa1d693cf95665d63b",
+    "model": "codex-manual"
+  },
+  "The pending compaction could not be identified.": {
+    "revision": "38dcfa04d015090883c1085687357534427cb7b60ac6ffc5ede8d8084b4815f3",
+    "textHash": "3b6e265d479b29a8f92927d165424cc4ba8d1fd3746840b274224fa3a0f69e49",
+    "model": "codex"
   },
   "The review action is still being checked. Wait for it to finish.": {
     "revision": "fd72fa0a693b81387b740814a86564f8ba1b7ab4b3119f0834482af0fd5ae86a",
@@ -819,6 +1284,31 @@
     "textHash": "ccce7f793567811fd293cccbd9406a737df7751a53f5cb2395f1b29f75cf0cc3",
     "model": "gemini-4-argon-medium"
   },
+  "The server restarted before code review was confirmed.": {
+    "revision": "a6cb00720d3bd01d1453fd01dd9d55655709700565c0d875de173fdbb44d1401",
+    "textHash": "c55a69fafb4c9dc12a4e4bcbc9da8137671bd4d792fbf53fa22610a5d0321cb6",
+    "model": "codex-manual"
+  },
+  "The server restarted before context compaction was confirmed.": {
+    "revision": "b69d1b12f345929fe0029031b5fd55d3ff57c37e275ce4f9e038ce14aa0871e6",
+    "textHash": "c45576c606207b12f848333a9d0062f2a05f830034dfec785c5d5d1880072b37",
+    "model": "codex"
+  },
+  "The server restarted before delivery was confirmed.": {
+    "revision": "9da7ef642a1a120ac482302de94ddfc4e58fae5837b3d66a8de0e70def05816f",
+    "textHash": "542f95d8b7d797b1eacdc48a3e2d3ff015ba7240912e36ea3ee601c0ee227835",
+    "model": "codex"
+  },
+  "The server restarted before the fork was confirmed. Check its status before continuing.": {
+    "revision": "58a138ebb296b10da3798891da82b6bf55083209b98330e7a6e03587c21e894f",
+    "textHash": "45c313b3e6cdbaf6b9144c1fc9d114a49d197565d6f029e7b65312323015f13a",
+    "model": "codex-manual"
+  },
+  "The server restarted before the goal state was confirmed.": {
+    "revision": "3b280b56506d78fa5118f2ee654e6c61727373b63b3746a77b7c0e38f6020301",
+    "textHash": "e69731ac4fab657c75f5ff3f8c1b98d2c45edf07d1abca81618640dede74dc2e",
+    "model": "codex-manual"
+  },
   "The server restarted during deletion. Retry deletion to confirm cleanup.": {
     "revision": "418a271a16cd6782d02c0266b835064a3bd173a16e15b9e57d4456ec1241f484",
     "textHash": "de58b8b88e1931eedf759fe285f6e0901d4b68bb7ff068de3738e67c149325ac",
@@ -829,15 +1319,35 @@
     "textHash": "81a16b64be8ec2c7709c940e2146b4d416064e05b2f87d92edbe8489db6cd949",
     "model": "gemini-4-argon-medium"
   },
+  "The source changed while preparing the fork. Retry after it stops.": {
+    "revision": "efdcc90acabf8017db3f596b7000fee7132790d23c414d044dc983a38a172b3f",
+    "textHash": "ac2fbfeb1a90fc427096c1c4101a1e9b946b2ccfb9f02e747f8f3a4e00ddb857",
+    "model": "codex-manual"
+  },
   "The source edit could not be confirmed. Check task status before retrying.": {
     "revision": "3a54087e6db332faeff57a9ca7a2eb39df044b0c0a9edf3027d15f1e868482f3",
     "textHash": "c032150b59a16c9fa0735a544683cd1eee71abeabaa3a51e31d793b2e25258ec",
     "model": "gemini-4-argon-medium"
   },
+  "The steering turn could not be identified.": {
+    "revision": "b7e77db29f31c7fc5f3fbcb2df79aa1f6344b33578e5f1ce39d8ff02f10f10c0",
+    "textHash": "6f9bf971a271a4003dfb1563a197c2a2dde0a5ca418570c3f994caf667fa63c8",
+    "model": "codex"
+  },
+  "The task changed while its thread was loading.": {
+    "revision": "6ff09108363452466faf0586050c59a2bc94c870369368f15da36884203f0ce4",
+    "textHash": "b8e86b25bdbcb61385ef138e531eccfc966d18635cd19b994b4e659cba9257c7",
+    "model": "codex-manual"
+  },
   "The task was paused before these instructions were queued. Your draft has been kept.": {
     "revision": "52ad0f3321f141725e19a1d17abb2bc440b9a84ed9f4056fcb3ec7e6dfce015e",
     "textHash": "6c95764eeedc8a12c48f23e0858a61a32e4f8ed0f7398ebcc2c77a8aeddebe21",
     "model": "gemini-4-argon-medium"
+  },
+  "The turn ended before message delivery was confirmed. Check its status.": {
+    "revision": "e203613e30eab6312fb1790c67a56e4e66c90d8b117d6d3914521fc0d69a7e0f",
+    "textHash": "acc3e19eaf6c9eb35bb79da4b166809805b7a1c2fc45042d299decff8030d10d",
+    "model": "codex"
   },
   "The update download timed out.": {
     "revision": "e66e13db2da4ffca4143ad1c3c7e70a4083fcf1a76bbb4366d457381020c0b13",
@@ -864,6 +1374,16 @@
     "textHash": "7a1008ab71aac2f0cc96f6f87fee49d1112c8ce7dd29509d625bab738b433b6e",
     "model": "gemini-4-argon-medium"
   },
+  "This Codex version does not support native context compaction.": {
+    "revision": "7ccddf0b0fd64916f36b618b392792127002ef8d03086ef3fee1964bfd703370",
+    "textHash": "e4a89689879116092ae57795e7e42116fe86ee7fa71f22b770c754980c70392c",
+    "model": "codex"
+  },
+  "This Codex version does not support steering a running turn.": {
+    "revision": "48ce0efdb5fddfed31fa945034666f93706fd86bfd19c70aa95cdfa563d773a9",
+    "textHash": "5cf9634ff5d131470f2da8743a828fd06978792e8216a9fab47ed441d3d19804",
+    "model": "codex"
+  },
   "This PDF has no selectable text to review.": {
     "revision": "8f5c414c7698db67e3987a934fa91e7dfd36ce4d02f78341a78ed569dd9fab72",
     "textHash": "f5dbf2ab0d9b6520f2a5b07a4b8f7eaf7e4dbc8c5a53c921b0739e442581ff1c",
@@ -884,6 +1404,16 @@
     "textHash": "5724be04c3d46d8f5aa364aae0727374eebd79ce1818d725ba036106ea30399d",
     "model": "gemini-4-argon-medium"
   },
+  "This agent does not support native context compaction.": {
+    "revision": "8004a7ce16ed59ac183687f548bd901005bed416ce724652632414a7697e5cb1",
+    "textHash": "6e5fd8e3f3d466415ddf25f8472142edf23f2a3d882383b918fcf3f174b8f6d6",
+    "model": "codex"
+  },
+  "This agent does not support steering a running turn.": {
+    "revision": "e4a5f4a6c8da920887c77e098e51b6a34f5cdd6cb97085caa0c8981323cd2ea5",
+    "textHash": "1229f6b414d1e7e62130fc54854fc6faa87c43ba829eb15f8951be9bdbe697a3",
+    "model": "codex"
+  },
   "This attachment is not available for this task.": {
     "revision": "0fb1c3e667ee50c02c621a862aac79c0ca2a8432eb0a0f4db20f5d8f329426b3",
     "textHash": "eff32471f9d8027c4a3b81ad7be06d4edf2b28dd2d6574336698e79ac86faf27",
@@ -894,6 +1424,26 @@
     "textHash": "552a9862766e0cee6b4b23a5d5461e4c059e3dec0c912d675bb28650fcc90746",
     "model": "gemini-4-argon-medium"
   },
+  "This branch is no longer available. Choose another branch.": {
+    "revision": "1ad77067f937ac4a7cb6505683ef56db02b13d457e908cc7a8bff21c938a183c",
+    "textHash": "9e26838aa4a16bee090141f7fb89b6fd83227a41624547398fd4c6c7f46a09f9",
+    "model": "codex-manual"
+  },
+  "This chat preparation is no longer active.": {
+    "revision": "fb6737a36fe3f14784b4c9e4db898f0f1ae049d6eb66ab365844360d55aa883f",
+    "textHash": "f5ee98b9be4046bcf1ab191c33730c857194c8b283f2b18d9c0df71c7c4f8007",
+    "model": "codex-manual"
+  },
+  "This code review request ID is already in use.": {
+    "revision": "fa8355a65eb4d53a63083f4c280d212a443b76f6862f76f1932a6a76fa7edd6a",
+    "textHash": "973334ee01a8a405ad9625b67b794a31f603d9a064afdfef1867e0f9c5ebafe0",
+    "model": "codex-manual"
+  },
+  "This compaction request is no longer current.": {
+    "revision": "f9e61c2b9268a47705ab78dcdfc71d976fc4c1d7534cf4389db0738eafa959c6",
+    "textHash": "5b3e5cf1f6a5010e4441f9d7f334d10d42e95219c8763b87a496cb48652b9612",
+    "model": "codex"
+  },
   "This comparison is out of date. Refresh the page.": {
     "revision": "88668251a7914f8c64835adf77d75407be2b01cf25d06221ac410c3509cf09d8",
     "textHash": "aad16ec083daf1ea8c1dbac8a49eb2d29292a4ca4523b0aa2f3e61a059369b25",
@@ -903,6 +1453,11 @@
     "revision": "8433d6d06e33889e19be6ba999f773fa6b006d7ae271f5f8d4347216f533e67b",
     "textHash": "fef2e3ea2770ce8259093e17a10afe0c67691d9d534fc91ca2d734359d666118",
     "model": "gemini-4-argon-medium"
+  },
+  "This edit is no longer current. Reopen the queued message.": {
+    "revision": "ce3ee75ae75d28f8bbdd224a43122bb540a8b1ba8676cfdf12dd5edd6b4d2e30",
+    "textHash": "f8a69e5a992a984245f8287493983622fdf9472da72bc4ccd7565314195c0b79",
+    "model": "codex"
   },
   "This entry is no longer among the changes. Refresh the page.": {
     "revision": "8585c59ba0ff43f5953776f172fa237abbeb1fcce63056dc412cf11dbae0f539",
@@ -934,6 +1489,16 @@
     "textHash": "80dded711a536af8ccc63c911ac31d525bdbc298c7e548cb1968c598e39c9e8e",
     "model": "gemini-4-argon-medium"
   },
+  "This goal cannot be resumed.": {
+    "revision": "92cf5f075e22d7b42967faf6f41ea4e0fa379ae324e90846e69c10f012ef83ea",
+    "textHash": "42b1bc2cd97c15672fc448b7d56d8204434efe55e3d4815d1532e9c8de8de4a8",
+    "model": "codex-manual"
+  },
+  "This goal request ID is already in use.": {
+    "revision": "93b96570ecc8b36ca35591915634c6e35ebc5bc60bd69232c362816e72811b49",
+    "textHash": "d6cd7380849cf35593373de3608d66a6655ee0dd5bc18cfe026760f5f5ea9526",
+    "model": "codex-manual"
+  },
   "This image format is not supported.": {
     "revision": "735f3ffa17688c703b4a45de76f5650b1d8514a3612123e340a7178111edb2bd",
     "textHash": "f40505331a8e4d240a65bbdc70c7f02c401f1d449eb970bec944533c383b372d",
@@ -943,6 +1508,21 @@
     "revision": "671d55cc1225a5e5086e11aba0d39b5084c5b1f859820ab00effcb5b801a4254",
     "textHash": "c858ebfd08b18a6eeecd755535e354adcdcb00c982e3262456b74cf5f7547b0f",
     "model": "gemini-4-argon-medium"
+  },
+  "This message contains an automatic instruction and cannot be edited.": {
+    "revision": "5c9a32b91f0329ed839c73da15ecb2b58b37dc7adbcb7d5342307f6f7e01c97b",
+    "textHash": "5233bedcbc63b74e0957f955797c14a5ec269feb152bb51f1b3bed56271b20b2",
+    "model": "codex"
+  },
+  "This message is already being edited.": {
+    "revision": "35492c771821258769725e8afe403f46e479b1bec042313830a485259d832b66",
+    "textHash": "a7045b7ae207d4f34f9ce626ec2bc55c41e2d349e662c2d54a3a617ea89763fd",
+    "model": "codex"
+  },
+  "This message is being edited. Finish that edit before removing it.": {
+    "revision": "94cb199e10b74f902366e3b733e5d2dc683d7e7bedb051a0a9b6f62d5e3d064b",
+    "textHash": "450a6d84841c03b67c0a9851e43b950f82985e6fd8d0d20de28fae2480368f35",
+    "model": "codex"
   },
   "This model does not support that reasoning effort.": {
     "revision": "b40abccbf154f1765222e8fb674fe80830853013c1ab287b79db11c1f56657d0",
@@ -983,6 +1563,36 @@
     "revision": "171d6d073af1e4fc17a2a5c05f067bf0c63f2bce993388b1e9c426a36c15b0a9",
     "textHash": "a0c8a17dcf78177e98e0043cacff5f290c14f225a08fe74a3a5992a9065cba19",
     "model": "gemini-4-argon-medium"
+  },
+  "This plan is no longer awaiting a response.": {
+    "revision": "27a5263a791966d688f2c316f825883ecf3beb0130cb8e20ffc0594bffa9702f",
+    "textHash": "bd8573c84541135f88c0696be28eb1b014c8af2678de2380e1153ef1d3c1bfb4",
+    "model": "codex-manual"
+  },
+  "This queued message is no longer available.": {
+    "revision": "bb26e9c50c366b1f0f606364a6134f438a3ac9c8da329e30c7a12a437da767d1",
+    "textHash": "b727b65e550d09ded9684d5106fc060df16f9f9b34788a65c3122562eed0a24c",
+    "model": "codex"
+  },
+  "This queued message uses a different collaboration mode. Let it run in its own turn.": {
+    "revision": "c2c05d5b4626da7062fe01a7e2b871f119305baa37320ab19dcf1bcf72880f23",
+    "textHash": "1cdac3ba516c70e0434e1a0d11ffac375cdb6e6d806b49ebff014afecf16b627",
+    "model": "codex-manual"
+  },
+  "This recording format is not supported.": {
+    "revision": "21d69f7f4d2483b95527fce066f983e3320acd88569a565ea09b82dc4fec30ce",
+    "textHash": "c56776cfc6df1827d51d5ed85edbe9df6654fc2d2b3b7bc45e3bcd51f87abdab",
+    "model": "codex-manual"
+  },
+  "This recording is already being transcribed.": {
+    "revision": "bb31b7be562d97b0282377ccad8b3b4c5eb0096086a11e9678b8356081ef02aa",
+    "textHash": "a8473edbe7305e253e68d9f02bd03e8f0b48a259c501bdc8e751da57f343d531",
+    "model": "codex-manual"
+  },
+  "This recording session has expired. Start a new recording.": {
+    "revision": "08e670ef484b3be611802c360e468062785d893a61e097febcf9522bb3ada2da",
+    "textHash": "3ea8b17932e243b39ded481c295d7a81524780024ddca0f4ddab7f66ab8be0e5",
+    "model": "codex-manual"
   },
   "This repository has no commits yet. Commit once to compare later changes in the PDF.": {
     "revision": "40a2ac0b5a143cd637f2f70ac0153b551caceea42630920ecb71c38376b09776",
@@ -1044,15 +1654,25 @@
     "textHash": "9ebd804257671e6138fd2313f7767d1cbebe09a1ba87fd870a4a04da9895ecbc",
     "model": "gemini-4-argon-medium"
   },
-  "This task already has queued instructions. Wait or pause it first.": {
-    "revision": "8ba9afcc890d40a300c76b288b30cc5d2d3282e3ed6c1f620a5f7ab42b810f35",
-    "textHash": "61ab40be3fec7ac8001628aa6f5558df4ea0f42a2f128de40ba34e973dac0800",
-    "model": "gemini-4-argon-medium"
+  "This task has no Codex conversation.": {
+    "revision": "be235b849789bf301047815c33d7bed89271efb13952c3935c6b79b19787fe63",
+    "textHash": "4ed766f627df6fe7b1344dab70658eff6e4250ee9f263de2d92b6b24ca6f8076",
+    "model": "codex-manual"
   },
   "This task has no accepted changes left to commit.": {
     "revision": "1bfa3367eb1d593898d8cbe5ddf86f30339f867345fa68ae8e47fe5dfb485d2b",
     "textHash": "01116c6dfd6f8eadf51b890371696a13fc83bcf1f4cec328955a080e80fef503",
     "model": "gemini-4-argon-medium"
+  },
+  "This task has no goal to pause.": {
+    "revision": "3be04414c80040b0928f26b955c58269fc5ff63d8fe3eed3b4a134a799785b59",
+    "textHash": "3740aee09ebf34d9c59e9e2a55a67cbd6065b0af90d11c52c4ff2257301e3496",
+    "model": "codex-manual"
+  },
+  "This task has no running turn to steer.": {
+    "revision": "dd97543e0ba80e9e5936b6f43023ac53741725a33e02ff59c0257b525d35a038",
+    "textHash": "acb8443d1dbbaf0b907d9634213c6a1eb87f6bd25410b1a1ef7dc19a1a9818bd",
+    "model": "codex"
   },
   "This task has not started yet.": {
     "revision": "354b4885c779513923d2d1220a25938cfdd4b6ea2730165955845a3bc8eda2b8",
@@ -1093,6 +1713,26 @@
     "revision": "374b25e4e969ef85c7f48b415c3cad49e3cd3c74d391a1f9f21643c62ed0b572",
     "textHash": "f28d159e025783811c2f2ceccda0846e2284686b748c2b64a0b5dd1bbb1a057e",
     "model": "gemini-4-argon-medium"
+  },
+  "Unable to load MCP status": {
+    "revision": "634d21b922558223b3c767295b93cfe9657dc057f330b290e911edb9270981c4",
+    "textHash": "759bd3e7288c5f798f9476ca35e2d736c55933627116872b208bd219e8ae5576",
+    "model": "openai.chatgpt-26.51111.21308-reference"
+  },
+  "Unable to load branches": {
+    "revision": "f0ff871018b31a8f5097c280722dc770b2aec455568976981b48d6db54cfdcd9",
+    "textHash": "a7b43ffe95a353f08f658a94e985e9c2bff0bcd81136d9c9ccb266cd8a39de7e",
+    "model": "codex-manual"
+  },
+  "Unable to transcribe this recording. Try again.": {
+    "revision": "02330fcb8398ee917ea1009c27bc4cbf32131772831d2e84e7664c7008e71f73",
+    "textHash": "7f9c7d7c8424a57f61d3fb987c5c952ee36000ba60f354879a2d20a8c829fedc",
+    "model": "codex-manual"
+  },
+  "Unable to update goal": {
+    "revision": "1633c5149eeebda90367c65f80358e934929873e5d62cd62c32a1a7b84e61a25",
+    "textHash": "0e00ecbb7b6e6f264089dc3e62805a7dc332396dcd7c0f3c10211c656170bd6f",
+    "model": "codex-manual"
   },
   "Unknown Git action.": {
     "revision": "e3151523cb290acda6f05a77fed31d612961550ffa0c0a946d464578480fbaa9",
@@ -1154,20 +1794,50 @@
     "textHash": "4927260e6fff1be635ae90d62329809d63c1fa72064f59ac32e3fa05c1ef64bf",
     "model": "gemini-4-argon-medium"
   },
+  "Wait for the current task operation before changing the goal.": {
+    "revision": "a16b80b1be2cc89e4868d1058e13dbf2f9827f0a6700a5fa0e9988f8082f7e7c",
+    "textHash": "7b85a286ec2cbcda09330b5f10c8b8d0bafbf9731f034bb46afcaf4d8aeb3f80",
+    "model": "codex-manual"
+  },
+  "Wait for the current task operation before compacting context.": {
+    "revision": "58847defce0f14eeb5cb522baa27d4713196d80cb2a0853315bb7f075ab3279c",
+    "textHash": "7c3dceec388dffc8cd914f57b0cd35f1cc62d9e3d2ef0f208b7e79e7bbb8de4f",
+    "model": "codex"
+  },
   "Wait for the current update to finish before changing channels.": {
     "revision": "e25cdce0460b1450161cb76b1265336cedb373ca075e1fca0458526b0deb6a54",
     "textHash": "74f319cb79e0acc7ebfd6644f19c45cc57b00154069f4439d5e211fc3a76a5ee",
     "model": "gemini-4-argon-medium"
+  },
+  "Wait for the original chat to finish before forking.": {
+    "revision": "b91f859df868b7b8e83535d8eec8cd3c9ce2b84681b31f856497eb7014112524",
+    "textHash": "7f6abe93c7eccd208c4cd1ec9a0943e4bbc2f748b950544c06d50cfacd768a4f",
+    "model": "codex-manual"
   },
   "Wait for the task and review actions to finish before applying changes.": {
     "revision": "5b298a1ad57ea91efab51aefc173ddb716c0a39f636e48d458bfc3e74630ea37",
     "textHash": "4a06768f76a0c1ff531a4902819beba6871b54749c2c68e7088a6ecd8122631f",
     "model": "gemini-4-argon-high"
   },
+  "Wait for the task to finish before responding to this plan.": {
+    "revision": "43eb80247892995770031ee664134d183c9e330e60d3d60a441c31664a6e4dac",
+    "textHash": "5ddbc3ed9cff5e09dc177baca9e827455ee03ea369e83243eeef4d42b9d38eba",
+    "model": "codex-manual"
+  },
+  "Wait for this chat to finish copying.": {
+    "revision": "25d06ef83d13e03adfd95bdf87e5f221b753857b1ea655517a17f50fdb6c1227",
+    "textHash": "bb4b173b08bb38845c2795d3cf533168d4d7725c60f336f3cfe156f96f3fcbd5",
+    "model": "codex-manual"
+  },
   "Wait for this paper’s PDF build to finish before changing its path or removing it.": {
     "revision": "e2d8c154d260c5246bb382ce418709d42c27d2d998aed7f15004c77fd8a4546b",
     "textHash": "e09c0f6638b8d96387eda6b24caf6d7d869f1767d57d82f39c0b1c1bd16f04da",
     "model": "gemini-4-argon-medium"
+  },
+  "Wait for this task to finish before starting a code review.": {
+    "revision": "b5e2eba591e24c44ea55295793858c18a99e6a8d0aab6096e4961ba88ba124a1",
+    "textHash": "872076932a1735b1e28d587e9a84670d93c276cfe0d11a5f17bfccc8f9f06d78",
+    "model": "codex-manual"
   },
   "ZIP links and special files are not supported.": {
     "revision": "1199ddcf958b8b9f777daf1bfc053d2d816d0e0a3ae1f37c92c872eda497926d",

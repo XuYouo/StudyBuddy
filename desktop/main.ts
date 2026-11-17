@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { backendEnvironment, refreshWindowsPath, startBackend, startServer, switchServer, type Bundle } from './runtime.js';
 import { desktopNotifications } from './notifications.js';
+import { microphoneRequest, workspacePermissionCheck } from './media-permissions.js';
 import { chooseEnvironment } from './environment-window.js';
 import { readEnvironment, saveEnvironment, startWsl, linuxPath, type Environment } from './wsl.js';
 
@@ -153,7 +154,11 @@ else {
       if (bundle.fingerprint) { env.PAPILOT_DESKTOP_BUNDLE = root; env.PAPILOT_DESKTOP_FINGERPRINT = bundle.fingerprint; }
       return env;
     };
-    session.defaultSession.setPermissionRequestHandler((_contents, _permission, callback) => callback(false));
+    session.defaultSession.setPermissionRequestHandler((contents, permission, callback, details) => {
+      callback(microphoneRequest(!!window && contents === window.webContents, origin, permission, details));
+    });
+    session.defaultSession.setPermissionCheckHandler((contents, permission, requestingOrigin, details) =>
+      workspacePermissionCheck(!!window && contents === window.webContents, origin, permission, requestingOrigin, details));
     Menu.setApplicationMenu(Menu.buildFromTemplate([
       { label: 'StudyBuddy', submenu: [{ role: 'about' }, { label: nix ? 'Updates managed by Nix' : 'Download Updates…', enabled: !nix, click: () => external(releases) }, { type: 'separator' }, { role: 'hide' }, { role: 'hideOthers' }, { role: 'unhide' }, { type: 'separator' }, { role: 'quit' }] },
       { label: 'File', submenu: [{ id: 'open-folder', label: 'Open Folder…', accelerator: 'CmdOrCtrl+O', click: () => void openFolder() }, { type: 'separator' }, process.platform === 'darwin' ? { role: 'close' } : { role: 'quit' }] },

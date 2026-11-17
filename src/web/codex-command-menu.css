@@ -1,0 +1,102 @@
+.codex-command-menu {
+  position: absolute;
+  z-index: 30;
+  inset-inline: 0;
+  inset-block-end: calc(100% + 6px);
+  max-block-size: min(320px, 50dvh);
+  overflow-y: auto;
+  padding: 5px;
+  border: 1px solid var(--line-strong);
+  border-radius: 22px;
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: none;
+}
+
+.composer.large .codex-command-menu {
+  inset-block-start: calc(100% + 6px);
+  inset-block-end: auto;
+}
+
+.codex-command-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-block-size: 25px;
+  padding: 4px 8px;
+  border-radius: 15px;
+  font: 12px/1.428571 var(--sans);
+  cursor: pointer;
+}
+
+.codex-command-option[aria-selected="true"] {
+  background: var(--bg-hover);
+}
+
+.codex-command-option > span {
+  min-inline-size: 0;
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.codex-command-option > svg {
+  flex: none;
+}
+
+.codex-mcp-menu { border-radius: 20px; padding: 4px; }
+.codex-command-option[aria-disabled="true"] { display: block; cursor: default; opacity: .5; }
+.codex-command-option small { display: block; color: var(--muted); font: inherit; }
+.codex-command-option .codex-mcp-heading { display: flex; gap: 8px; }
+
+@media (pointer: coarse) {
+  .codex-command-option { min-block-size: 44px; }
+}
+
+@media (forced-colors: active) {
+  .codex-command-option[aria-selected="true"] {
+    outline: 1px solid Highlight;
+    outline-offset: -1px;
+  }
+}
+
+.codex-model-picker { display: inline-flex; min-inline-size: 0; }
+.codex-model-trigger { display: flex; align-items: center; gap: 5px; min-inline-size: 0; min-block-size: 28px; border: 0; padding: 4px 6px; border-radius: 999px; background: transparent; color: inherit; font: inherit; }
+.codex-model-trigger > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.codex-model-trigger > svg { flex: none; }
+.codex-model-effort { color: var(--text-2); }
+.codex-model-trigger:hover:not(:disabled), .codex-model-trigger[aria-expanded="true"] { background: var(--bg-hover); }
+.codex-model-menu { position: fixed; margin: 0; inset: auto; z-index: 40; box-sizing: border-box; inline-size: min(254px, calc(100vw - 16px)); max-block-size: calc(100dvh - 16px); padding: 6px; overflow: auto; border: 1px solid var(--line); border-radius: 20px; background: var(--bg); color: var(--text); box-shadow: var(--float); font: 13px/1.5 var(--sans); }
+.codex-model-menu[data-open="false"] { display: none; }
+.codex-model-menu[data-open="true"] { display: block; }
+@supports (position-area: block-start span-inline-start) {
+  .codex-model-menu[data-slash="false"] { position-area: block-start span-inline-start; position-try-fallbacks: flip-block, flip-inline; margin-block: 8px; }
+}
+.codex-model-menu[data-slash="true"] { box-shadow: none; padding: 4px; }
+.codex-model-menu[data-level="effort"] { inline-size: min(246px, calc(100vw - 16px)); padding: 10px 12px 12px; }
+.codex-effort-value { text-align: center; color: #3f82cc; font-size: 14px; font-weight: 500; line-height: 20px; }
+.codex-effort-model { display: flex; align-items: center; justify-content: center; gap: 2px; margin-inline: auto; min-block-size: 20px; color: var(--text-3); font-size: 11px; }
+.codex-effort-track { position: relative; block-size: 24px; margin-block-start: 12px; border-radius: 999px; background: linear-gradient(to right, #3f82cc var(--effort-fill), var(--bg-muted) var(--effort-fill)); box-shadow: inset 0 0 0 1px var(--line); }
+.codex-effort-track > i { position: absolute; inset-block-start: 10px; inline-size: 4px; block-size: 4px; transform: translateX(-50%); border-radius: 50%; background: var(--text-3); opacity: .6; pointer-events: none; }
+.codex-effort-track input { appearance: none; position: absolute; inset: 0; inline-size: 100%; block-size: 24px; margin: 0; border: 0; border-radius: inherit; background: transparent; cursor: pointer; }
+.codex-effort-track input::-webkit-slider-thumb { appearance: none; inline-size: 26px; block-size: 26px; border-radius: 50%; border: 1px solid #0001; background: #fff; box-shadow: 0 0 2px #0002; }
+.codex-effort-track input::-moz-range-thumb { inline-size: 26px; block-size: 26px; border-radius: 50%; border: 1px solid #0001; background: #fff; box-shadow: 0 0 2px #0002; }
+.codex-menu-heading { padding: 1px 6px 7px; font-size: 13px; font-weight: 400; color: var(--text); }
+.codex-model-menu[data-slash="true"] .codex-menu-heading { padding: 6px 8px 10px; }
+.codex-menu-list { max-block-size: min(320px, 45dvh); overflow-y: auto; overscroll-behavior: contain; }
+.codex-menu-group { padding: 7px 9px; color: var(--text-2); font-size: 12px; font-weight: 500; }
+.codex-menu-option { display: flex; align-items: center; gap: 8px; inline-size: 100%; min-block-size: 26px; padding: 3px 6px; border: 0; border-radius: 999px; color: inherit; background: transparent; text-align: start; font: inherit; }
+.codex-menu-option-label { min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.codex-menu-option > svg:last-child { flex: none; margin-inline-start: auto; }
+.codex-menu-option > svg:first-child { margin-inline-start: 2px; }
+.codex-model-menu[data-slash="true"] .codex-menu-option { min-block-size: 25px; color: var(--text-2); }
+.codex-model-menu[data-slash="true"] .codex-menu-option.active, .codex-menu-option:hover { background: var(--bg-hover); color: var(--text); }
+.codex-model-number { display: grid; place-items: center; inline-size: 16px; block-size: 16px; flex: none; border-radius: 50%; background: var(--bg-muted); color: var(--text-2); font-size: 12px; }
+.codex-model-config-effort { flex: none; }
+.codex-model-tier { margin-inline-start: auto; color: var(--text-2); }
+.codex-service-trigger { display: flex; align-items: center; gap: 6px; inline-size: 100%; min-block-size: 28px; margin-block-start: 4px; padding: 5px 6px; border-block-start: 1px solid var(--line); font: inherit; }
+.codex-service-trigger > span:first-child { flex: 1; text-align: start; }
+.codex-menu-empty { padding: 18px 10px; text-align: center; color: var(--text-2); }
+.codex-menu-description { padding: 6px 9px; margin: 0; color: var(--text-2); font-size: 12px; }
+.codex-model-menu :is(button, input):focus-visible, .codex-model-trigger:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+@media (pointer: coarse) { .codex-menu-option, .codex-service-trigger { min-block-size: 44px; } }
+@media (forced-colors: active) { .codex-menu-option.active { outline: 1px solid Highlight; outline-offset: -1px; } .codex-effort-track input { appearance: auto; } }

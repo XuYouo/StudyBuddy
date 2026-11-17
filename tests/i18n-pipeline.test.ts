@@ -43,6 +43,12 @@ test('incremental work preserves curated, locked, and hand-edited translations',
   assert.equal(revision(messages[0], 'zh-Hant', config), revision({ ...messages[0], occurrences: [{ ...messages[0].occurrences[0], line: 400 }] }, 'zh-Hant', config));
   assert.notEqual(revision(messages[0], 'zh-Hant', config), revision(messages[0], 'zh-Hant', { ...config, glossary: { note: '註解' } }));
 });
+test('contextual labels have distinct catalog identities and reject dynamic contexts', () => {
+  const result = extractSource("import { t, tc as contextual } from './i18n.ts'; import * as i18n from './i18n.ts'; t('Light'); contextual('Light', 'reasoning effort'); i18n.tc('Open {name}', 'action', {name}); contextual('Light', meaning);", 'src/web/contextual.tsx');
+  assert.deepEqual(result.messages.map(message => message.source), ['Light', 'Light [reasoning effort]', 'Open {name} [action]']);
+  assert.match(result.messages[1].occurrences[0].context, /Translate only the display text/);
+  assert.deepEqual(result.dynamic.map(message => message.expression), ['meaning']);
+});
 
 test('validation accepts reordered IDs and isolates missing or damaged translations', () => {
   const messages = ['Delete {name}?', '{n} of {n}', 'Settings', 'Missing'].map(message);

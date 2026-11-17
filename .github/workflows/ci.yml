@@ -293,6 +293,27 @@ jobs:
       - name: ui
         if: ${{ !cancelled() }}
         run: node --import tsx scripts/check-ui.mjs
+      - name: codex-chat
+        if: ${{ !cancelled() }}
+        run: node scripts/check-codex-chat.mjs
+      - name: composer-editor
+        if: ${{ !cancelled() }}
+        run: node scripts/check-composer-editor.mjs
+      - name: codex-plan
+        if: ${{ !cancelled() }}
+        run: node scripts/check-codex-plan.mjs
+      - name: codex-goal
+        if: ${{ !cancelled() }}
+        run: node scripts/check-codex-goal.mjs
+      - name: codex-review
+        if: ${{ !cancelled() }}
+        run: node scripts/check-codex-review.mjs
+      - name: codex-sketch
+        if: ${{ !cancelled() }}
+        run: node scripts/check-codex-sketch.mjs
+      - name: codex-dictation
+        if: ${{ !cancelled() }}
+        run: node scripts/check-codex-dictation.mjs
       - name: unified-review
         if: ${{ !cancelled() }}
         run: node --import tsx scripts/check-unified-review.mjs

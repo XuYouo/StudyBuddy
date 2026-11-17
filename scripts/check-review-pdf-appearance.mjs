@@ -52,7 +52,7 @@ try {
   const frame = page.frameLocator('.review-frame');
   await expect(frame.getByText('Other changes', { exact: true })).toBeVisible();
   for (const theme of ['Dark', 'Light']) for (const pdf of ['light', 'theme']) for (const review of ['pdf', 'theme', 'light']) {
-    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    await page.locator('.settings-link').click();
     const dialog = page.locator('.settings-dialog');
     await dialog.getByRole('button', { name: 'Appearance', exact: true }).click();
     await dialog.getByRole('radiogroup', { name: 'Mode', exact: true }).getByRole('radio', { name: theme, exact: true }).check();

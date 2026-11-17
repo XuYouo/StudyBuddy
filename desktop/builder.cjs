@@ -16,6 +16,7 @@ module.exports = {
   npmRebuild: false,
   artifactName: 'StudyBuddy-${version}-${os}-${arch}.${ext}',
   mac: { category: 'public.app-category.productivity', icon: 'desktop/assets/icon.icns', target: ['dmg', 'zip'],
+    extendInfo: { NSMicrophoneUsageDescription: 'StudyBuddy uses the microphone to transcribe speech you choose to record.' },
     // Local builds are ad hoc signed. Only opt into a certificate explicitly.
     identity: process.env.CSC_NAME || (process.env.CSC_LINK ? undefined : '-'),
     sign: process.env.CSC_NAME || process.env.CSC_LINK ? undefined : 'scripts/sign-macos.cjs',

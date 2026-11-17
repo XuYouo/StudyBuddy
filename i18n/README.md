@@ -10,6 +10,8 @@ npm run i18n -- translate --locale zh-CN --dry-run
 
 `extract` writes a deterministic catalog with file, line and component context to `test-results/i18n/workspace.json`. Single/double quotes, static template literals, conditional strings, nested folders, aliases and plural calls are supported. Built-in skill metadata, annotation groups and icon labels are included as explicit data sources. Unknown dynamic arguments fail extraction rather than silently disappearing. Use literal messages where possible; register additional finite data sources in the extractor when needed. Add an `// i18n: ...` comment immediately above a call to give translators more context.
 
+When identical English labels have different meanings, use `tc('Light', 'reasoning effort')`. Its catalog key is `Light [reasoning effort]`, while its English fallback stays `Light`. Translate only the label; the bracketed text supplies context. Both arguments must be static, and existing `t('Light')` translations stay unchanged.
+
 ## Try Argon
 
 Sign in to `agy` beforehand. Model discovery is available through `agy models`; the default for this experiment is `gemini-4-argon-medium`. The command accepts `--model` and respects `PAPILOT_AGY_BIN`, standard proxy environment variables, and `PAPILOT_AGY_PROXY` (an HTTP proxy applied only to the child process).
@@ -52,6 +54,8 @@ Each batch uses a fresh temporary working directory and asks for structured JSON
 Run `npm run build` for the app, `npm --prefix engine run build` for the viewer, and `npm run site` for the website after updating translations. The website and README languages match `i18n/config.json`; native language names live in `i18n/languages.json`. The website build emits English at `/` and translations at `/<locale>/`, with localized metadata, canonical URLs, reciprocal hreflang links and a sitemap. It restores a saved language only when visiting `/`; explicit language paths always win, and browser language does not redirect visitors. The app passes its selected language to the embedded review viewer.
 
 Workspace extraction finds explicitly marked messages; it does not yet lint unwrapped JSX text. The error catalog covers literal product errors; external compiler and provider diagnostics remain verbatim. More complex plural systems need locale-aware plural handling before adding those languages.
+
+For a named server error message used across multiple failure paths, put `// i18n: error` immediately above its `const` declaration. The extractor registers its literal string values without evaluating application code or resolving potentially shadowed identifiers. Marked dynamic expressions fail extraction; keep provider diagnostics unmarked.
 
 ```sh
 node --import tsx --test tests/i18n.test.ts tests/i18n-pipeline.test.ts tests/i18n-scopes.test.ts

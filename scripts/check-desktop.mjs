@@ -214,7 +214,7 @@ try {
   await paperDialog.screenshot({ path: 'test-results/desktop-paper-dialog.png' });
   await paperDialog.getByRole('button', { name: /^(Cancel|取消)$/ }).click();
   await application.evaluate(({ dialog }) => { dialog.showOpenDialog = globalThis.originalOpenDialog; delete globalThis.originalOpenDialog; });
-  const settings = page.getByRole('button', { name: /^(Settings|设置)$/ });
+  const settings = page.locator('.settings-link');
   await checkDesktopNotifications(application, page, await (await fetch(`${origin}/api/state`)).json());
   await settings.click();
   await page.getByRole('button', { name: /^(Updates|版本更新)$/ }).click();
@@ -303,7 +303,7 @@ try {
     const running = async address => (await (await fetch(`${address}/api/health`)).json()).version;
     try {
       const { view, address } = await opened();
-      await view.getByRole('button', { name: /^(Settings|设置)$/ }).click();
+      await view.locator('.settings-link').click();
       await view.getByRole('button', { name: /^(Updates|版本更新)$/ }).click();
       const channel = view.getByRole('combobox', { name: /Update channel|更新通道/ });
       if (await selectedValue(channel) === 'dev') await view.getByRole('button', { name: /^(Check for updates|检查更新)$/ }).click();

@@ -1,0 +1,21 @@
+{
+  "source": "OpenAI.chatgpt 26.51111.21308 darwin-arm64",
+  "vsixSha256": "6cbfc1bba9237e9d3287ab18f246041c0746b19b1c5cbf674a04b74849f840ae",
+  "capturedAt": "2026-11-17",
+  "theme": "Default Light Modern",
+  "viewport": { "width": 537, "height": 794, "deviceScaleFactor": 2 },
+  "evidence": "docs/codex-chat-reference.md",
+  "paneBackground": "rgb(248, 248, 248)",
+  "fontSize": "13px",
+  "messageLineHeight": "21.125px",
+  "bubbleRadius": "22px",
+  "bubblePadding": "10px 16px",
+  "composerRadius": "22px",
+  "composerEmptyHeight": 98,
+  "editorLineHeight": "20px",
+  "editorMinHeight": "40px",
+  "navigationHeight": 30,
+  "footerButtonSize": 28,
+  "modelMenuWidth": 254,
+  "modelMenuRadius": "20px"
+}

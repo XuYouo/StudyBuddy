@@ -33,14 +33,14 @@ function literals(node: Node | null | undefined): string[] | null {
 // Parse syntax, never execute application source to discover its messages.
 export function extractSource(source: string, file: string) {
   const ast = parse(source, { sourceType: 'module', plugins: ['typescript', 'jsx'] });
-  const names = new Map<string, 't' | 'tn'>(), namespaces = new Set<string>();
+  const names = new Map<string, 't' | 'tn' | 'tc'>(), namespaces = new Set<string>();
   for (const node of ast.program.body) {
     if (node.type !== 'ImportDeclaration' || !/(?:^|\/)i18n(?:\.ts)?$/.test(node.source.value)) continue;
     for (const specifier of node.specifiers) {
       if (specifier.type === 'ImportNamespaceSpecifier') namespaces.add(specifier.local.name);
       if (specifier.type !== 'ImportSpecifier') continue;
       const imported = specifier.imported.type === 'Identifier' ? specifier.imported.name : specifier.imported.value;
-      if (imported === 't' || imported === 'tn') names.set(specifier.local.name, imported);
+      if (imported === 't' || imported === 'tn' || imported === 'tc') names.set(specifier.local.name, imported);
     }
   }
   const messages: Message[] = [], dynamic: DynamicMessage[] = [];
@@ -51,11 +51,20 @@ export function extractSource(source: string, file: string) {
     const kind = callee.type === 'Identifier' ? names.get(callee.name)
       : callee.type === 'MemberExpression' && !callee.computed && callee.object.type === 'Identifier' && namespaces.has(callee.object.name) && callee.property.type === 'Identifier'
         ? callee.property.name : null;
-    if (kind !== 't' && kind !== 'tn') return;
+    if (kind !== 't' && kind !== 'tn' && kind !== 'tc') return;
     const line = node.loc!.start.line;
     const hint = comments.find(comment => comment.loc!.end.line >= line - 1 && comment.loc!.end.line <= line)?.value.trim();
     const context = [path.basename(file, path.extname(file)), hint].filter(Boolean).join(': ');
     const occurrence = { file, line, context };
+    if (kind === 'tc') {
+      const texts = literals(node.arguments[0]), contexts = literals(node.arguments[1]);
+      if (texts && contexts) for (const text of texts) for (const meaning of contexts) messages.push({ source: `${text} [${meaning}]`, occurrences: [{ ...occurrence, context: `${context}: Display text: ${text}. Meaning: ${meaning}. Translate only the display text; omit the bracketed context.` }] });
+      else for (const index of [0, 1]) if (!literals(node.arguments[index])) {
+        const argument = node.arguments[index];
+        dynamic.push({ ...occurrence, expression: argument ? source.slice(argument.start!, argument.end!) : '(missing argument)' });
+      }
+      return;
+    }
     for (const index of kind === 't' ? [0] : [1, 2]) {
       const argument = node.arguments[index];
       const texts = literals(argument);
@@ -117,9 +126,22 @@ export function collectErrorCatalog(root: string) {
   for (const file of sourceFiles(path.join(root, 'src/server'))) {
     const ast = parse(fs.readFileSync(file, 'utf8'), { sourceType: 'module', plugins: ['typescript'] });
     walk(ast, node => {
+      // Named product-error constants need an explicit finite data source.
+      // Never evaluate identifiers (which may be shadowed) or application code.
+      if (node.type === 'VariableDeclaration' && node.leadingComments?.some(comment => /\bi18n:\s*error\b/.test(comment.value))) {
+        for (const declaration of node.declarations) {
+          const values = literals(declaration.init);
+          if (node.kind !== 'const' || !values) throw new Error(`${path.relative(root, file)}:${node.loc!.start.line}: i18n: error requires a const with static message values.`);
+          for (const source of values) {
+            const entry = all.get(source) || { source, occurrences: [] };
+            entry.occurrences.push({ file: path.relative(root, file), line: declaration.loc!.start.line, context: 'Product error or validation message shown to the author.' });
+            all.set(source, entry);
+          }
+        }
+      }
       let value: Node | undefined;
       if (node.type === 'NewExpression' && node.callee.type === 'Identifier' && /Error$/.test(node.callee.name)) value = node.arguments[0];
-      if (node.type === 'ObjectProperty' && ((node.key.type === 'Identifier' && node.key.name === 'error') || (node.key.type === 'StringLiteral' && node.key.value === 'error'))) value = node.value;
+      if (node.type === 'ObjectProperty' && ((node.key.type === 'Identifier' && ['error', 'queueError'].includes(node.key.name)) || (node.key.type === 'StringLiteral' && ['error', 'queueError'].includes(node.key.value)))) value = node.value;
       if (node.type === 'CallExpression' && node.callee.type === 'Identifier' && node.callee.name === 'deny') value = node.arguments[2];
       // An agent adapter ends a failed turn with this.finish(turn, 'failed', error).
       if (node.type === 'CallExpression' && node.callee.type === 'MemberExpression' && node.callee.object.type === 'ThisExpression' && node.callee.property.type === 'Identifier' && node.callee.property.name === 'finish') value = node.arguments[2] as Node | undefined;

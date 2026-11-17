@@ -65,3 +65,39 @@ test('upgrading restores an account-scoped file draft without replacing a curren
   assert.deepEqual(new AttachmentDraft(key, storage).getSnapshot().files, [uploaded]);
   assert.equal(saved.has('papilot:files:old-account:task:task-1'), true);
 });
+
+test('saving a drawing replaces its attachment atomically and keeps the original on failure', async () => {
+  const { draft, storage } = setup();
+  await draft.add([file()], async () => uploaded);
+  const key = draft.getSnapshot().entries[0].key;
+  let finish!: (attachment: Attachment) => void;
+  const save = draft.saveFile(new File(['png'], 'Sketch.png', { type: 'image/png' }), async () => new Promise<Attachment>(resolve => { finish = resolve; }), key);
+  assert.equal(draft.getSnapshot().blocked, true);
+  assert.deepEqual(draft.getSnapshot().files, [uploaded]);
+  assert.deepEqual(new AttachmentDraft('files', storage).getSnapshot().files, [uploaded]);
+  const replacement = { ...uploaded, id: 'drawing', name: 'Sketch.png', size: 3, mime: 'image/png' };
+  finish(replacement);
+  assert.deepEqual(await save, { key, attachment: replacement, previous: uploaded });
+  assert.equal(draft.getSnapshot().blocked, false);
+  await assert.rejects(draft.saveFile(file(), async () => { throw new Error('Offline'); }, key), /Offline/);
+  assert.deepEqual(draft.getSnapshot().files, [replacement]);
+  assert.equal(draft.getSnapshot().blocked, false, 'a failed edit does not invalidate the saved drawing');
+  assert.deepEqual(new AttachmentDraft('files', storage).getSnapshot().files, [replacement]);
+});
+
+test('cancelled or removed drawing uploads never replace or restore another draft attachment', async () => {
+  const { draft } = setup();
+  const controller = new AbortController();
+  let finish!: (attachment: Attachment) => void, uploadSignal!: AbortSignal;
+  const initial = draft.saveFile(file(), async (_file, signal) => { uploadSignal = signal; return new Promise<Attachment>(resolve => { finish = resolve; }); }, undefined, controller.signal);
+  controller.abort(); assert.equal(uploadSignal.aborted, true); finish(uploaded);
+  await assert.rejects(initial, { name: 'AbortError' });
+  assert.deepEqual(draft.getSnapshot().entries, []);
+  await draft.add([file()], async () => uploaded);
+  const key = draft.getSnapshot().entries[0].key;
+  const replacement = draft.saveFile(file(), async () => new Promise<Attachment>(resolve => { finish = resolve; }), key);
+  draft.remove(key); finish({ ...uploaded, id: 'late' });
+  await assert.rejects(replacement, { name: 'AbortError' });
+  assert.deepEqual(draft.getSnapshot().entries, []);
+  await assert.rejects(draft.saveFile(file(), async () => uploaded, key), /no longer in the draft/);
+});

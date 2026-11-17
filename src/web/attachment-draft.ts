@@ -5,6 +5,16 @@ export type UploadAttachment = (file: File, signal: AbortSignal) => Promise<Atta
 export interface DraftAttachment { key: string; name: string; size: number; file?: File; attachment?: Attachment; uploading: boolean; error?: string }
 type Storage = Pick<globalThis.Storage, 'getItem' | 'setItem' | 'removeItem'> & { keys?: () => string[] };
 
+const attachmentKey = () => crypto.randomUUID?.() || Array.from(crypto.getRandomValues(new Uint8Array(16)), n => n.toString(16).padStart(2, '0')).join('');
+function fileError(file: File, entries: DraftAttachment[]) {
+  if (entries.length >= MAX_ATTACHMENTS) return t('Attach up to 10 files per message.');
+  if (!file.size) return t('The file “{name}” is empty.', { name: file.name });
+  if (file.size > MAX_ATTACHMENT_BYTES) return t('Files must be 25 MB or smaller.');
+  if (['image/png', 'image/jpeg', 'image/gif', 'image/webp'].includes(file.type) && file.size > MAX_IMAGE_BYTES) return t('Images must be 5 MB or smaller.');
+  if (entries.reduce((sum, entry) => sum + entry.size, 0) + file.size > MAX_ATTACHMENT_TOTAL) return t('Attachments must total 100 MB or less.');
+  return '';
+}
+
 function savedDraft(key: string, storage: Storage) {
   const saved = storage.getItem(key);
   if (saved !== null) return saved;
@@ -46,17 +56,40 @@ export class AttachmentDraft {
     this.error = '';
     const added: DraftAttachment[] = [];
     for (const file of files) {
-      const total = this.entries.reduce((sum, entry) => sum + entry.size, 0);
-      if (this.entries.length >= MAX_ATTACHMENTS) { this.error = t('Attach up to 10 files per message.'); break; }
-      if (!file.size) { this.error = t('The file “{name}” is empty.', { name: file.name }); continue; }
-      if (file.size > MAX_ATTACHMENT_BYTES) { this.error = t('Files must be 25 MB or smaller.'); continue; }
-      if (['image/png', 'image/jpeg', 'image/gif', 'image/webp'].includes(file.type) && file.size > MAX_IMAGE_BYTES) { this.error = t('Images must be 5 MB or smaller.'); continue; }
-      if (total + file.size > MAX_ATTACHMENT_TOTAL) { this.error = t('Attachments must total 100 MB or less.'); continue; }
-      const entry: DraftAttachment = { key: crypto.randomUUID?.() || Array.from(crypto.getRandomValues(new Uint8Array(16)), n => n.toString(16).padStart(2, '0')).join(''), name: file.name, size: file.size, file, uploading: true };
+      const error = fileError(file, this.entries);
+      if (error) { this.error = error; if (this.entries.length >= MAX_ATTACHMENTS) break; continue; }
+      const entry: DraftAttachment = { key: attachmentKey(), name: file.name, size: file.size, file, uploading: true };
       this.entries = [...this.entries, entry]; added.push(entry);
     }
     this.changed();
     await Promise.all(added.map(entry => this.upload(entry.key, upload)));
+  }
+  // A drawing edit keeps its old attachment until the replacement upload has
+  // succeeded. Failure/cancel restores that original; removing the entry while
+  // saving never resurrects it when a late network response arrives.
+  async saveFile(file: File, upload: UploadAttachment, replaceKey?: string, signal?: AbortSignal) {
+    const previous = replaceKey ? this.entries.find(entry => entry.key === replaceKey) : undefined;
+    if (replaceKey && !previous?.attachment) throw new Error(t('This attachment is no longer in the draft.'));
+    if (previous && this.requests.has(previous.key)) throw new Error(t('Wait for the attachment upload to finish.'));
+    const error = fileError(file, this.entries.filter(entry => entry !== previous));
+    if (error) throw new Error(error);
+    if (signal?.aborted) throw new DOMException('Aborted', 'AbortError');
+    const key = previous?.key || attachmentKey(), controller = new AbortController();
+    const abort = () => controller.abort(); signal?.addEventListener('abort', abort, { once: true });
+    this.requests.set(key, controller); this.error = '';
+    const pending = { ...previous, key, name: file.name, size: file.size, file, uploading: true, error: undefined };
+    this.entries = previous ? this.entries.map(entry => entry === previous ? pending : entry) : [...this.entries, pending]; this.changed();
+    try {
+      const attachment = await upload(file, controller.signal);
+      if (controller.signal.aborted || !this.entries.some(entry => entry.key === key)) throw new DOMException('Aborted', 'AbortError');
+      this.entries = this.entries.map(entry => entry.key === key ? { key, name: attachment.name, size: attachment.size, attachment, uploading: false } : entry);
+      return { key, attachment, previous: previous?.attachment };
+    } catch (failure) {
+      this.entries = this.entries.flatMap(entry => entry.key !== key ? [entry] : previous ? [previous] : []);
+      throw failure;
+    } finally {
+      signal?.removeEventListener('abort', abort); this.requests.delete(key); this.changed();
+    }
   }
   async upload(key: string, send: UploadAttachment) {
     const entry = this.entries.find(entry => entry.key === key);

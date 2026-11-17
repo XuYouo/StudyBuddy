@@ -26,7 +26,7 @@ export function permissionText(text: string) {
 }
 
 // Keep the provider's approval behavior explicit without displaying long tool descriptions.
-function permissionDetail(detail: string) {
+export function permissionDetail(detail: string) {
   const messages: Record<string, string> = {
     "Ask before tools": t("Ask before tools"),
     "Approve edits": t("Approve edits"),

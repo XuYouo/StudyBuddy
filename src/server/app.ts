@@ -39,6 +39,10 @@ import { registerAiReviewRoutes } from './ai-review-routes.ts';
 import { detectLatex } from './latex-installation.ts';
 import { systemRequirements } from './system-requirements.ts';
 import { findExecutable } from '../../bin/agent-paths.mjs';
+import { mcpStatus } from './mcp-status.ts';
+import { composerFiles } from './composer-files.ts';
+import { initInstructionsStatus } from './init-instructions.ts';
+import { CodexDictation, registerDictationRoutes } from './dictation.ts';
 
 const importsByWorkspace = new WeakMap<Workspace, PaperImports>();
 const creationsByWorkspace = new WeakMap<Workspace, PaperCreations>();
@@ -190,7 +194,16 @@ export async function buildApp(options: AppOptions) {
   registerSkillRoutes(app, store);
   registerAiReviewRoutes(app, store, manuscripts);
   const project = (param = 'id') => ({ config: { resource: { project: param } } }), task = { config: { resource: { task: 'id' } } };
+  app.get<{ Params: { id: string } }>('/api/projects/:id/init', project(), request => initInstructionsStatus(store.project(request.params.id).path));
+  app.get<{ Params: { id: string } }>('/api/tasks/:id/init', task, request => {
+    const current = store.task(request.params.id);
+    if (!current.worktree) throw new Error(current.status === 'preparing' ? 'This task is still being prepared. Send more instructions once it starts.' : 'Retry preparing this task before sending more instructions.');
+    return initInstructionsStatus(current.worktree);
+  });
+  app.get<{ Params: { id: string }; Querystring: { query?: string } }>('/api/projects/:id/files', project(), request => composerFiles(store.project(request.params.id).path, request.query.query));
+  app.get<{ Params: { id: string }; Querystring: { query?: string } }>('/api/tasks/:id/files', task, request => composerFiles(store.task(request.params.id).worktree, request.query.query));
   app.addContentTypeParser('application/octet-stream', { parseAs: 'buffer' }, (_request, body, done) => done(null, body));
+  registerDictationRoutes(app, new CodexDictation(workspace.agents.codex));
   app.post<{ Params: { id: string } }>('/api/projects/:id/attachments', { ...project(), bodyLimit: MAX_ATTACHMENT_BYTES }, async request => {
     if (!Buffer.isBuffer(request.body)) throw new Error('Upload a file as binary data.');
     const header = request.headers['x-papilot-filename'];
@@ -310,6 +323,7 @@ export async function buildApp(options: AppOptions) {
     });
   });
   app.post('/api/reconnect', async request => { await workspace.connect(); return workspace.snapshot().runtime; });
+  app.get('/api/runtime/codex/mcp', async () => ({ servers: await mcpStatus(workspace.agents.codex) }));
   // StudyBuddy Writer's model providers: subscription sign-ins and API keys.
   const writer = async () => {
     const runtime = workspace.agents.papilot as WriterAgent;
@@ -355,6 +369,10 @@ export async function buildApp(options: AppOptions) {
   const skillName = (value: unknown) => typeof value === 'string' && /^[a-z0-9][a-z0-9-]{0,47}$/.test(value) ? value : undefined;
   // Text the author may leave empty when a skill or review feedback says enough.
   const optional = (value: unknown, name: string, max?: number) => value === undefined || value === '' ? '' : string(value, name, max);
+  const composerText = (value: unknown, name: string, references: unknown, empty = false) => {
+    const checked = empty ? optional(value, name) : string(value, name);
+    return references !== undefined && typeof value === 'string' ? value : checked;
+  };
   // Each new note's source lookup while it runs, by note ID.
   const locating = new Map<string, Promise<void>>();
   app.get<{ Params: { id: string } }>('/api/projects/:id/skills', project(), request => ({ skills: loadSkills(store.project(request.params.id).path).map(listedSkill) }));
@@ -382,7 +400,7 @@ export async function buildApp(options: AppOptions) {
         if (context) noteContexts[note.id] = { note, context };
       }
     }
-    return workspace.createTask({ id, projectId, noteContexts, ...(reviewing ? { prepareReview: (worktree: string) => manuscripts.captureReview(store.project(projectId).path, worktree, id) } : {}), title: string(b.title, 'Task title', 120), permissions: b.permissions, instructions: skill || annotations?.length || attachments.length ? optional(b.instructions, 'Instructions') : string(b.instructions, 'Instructions'), skill, annotations, groupInstructions, attachments, agent: agent(b.agent), model: typeof b.model === 'string' ? b.model : undefined, effort: effort(b.effort), serviceTier: b.serviceTier === undefined ? undefined : string(b.serviceTier, 'Service tier', 64) });
+    return workspace.createTask({ id, projectId, noteContexts, ...(b.goal === undefined ? {} : { goal: b.goal }), collaborationMode: b.collaborationMode, ...(reviewing ? { prepareReview: (worktree: string) => manuscripts.captureReview(store.project(projectId).path, worktree, id) } : {}), title: string(b.title, 'Task title', 120), permissions: b.permissions, instructions: composerText(b.instructions, 'Instructions', b.references, Boolean(skill || annotations?.length || attachments.length)), references: b.references, skill, annotations, groupInstructions, attachments, agent: agent(b.agent), model: typeof b.model === 'string' ? b.model : undefined, effort: effort(b.effort), serviceTier: b.serviceTier === undefined ? undefined : string(b.serviceTier, 'Service tier', 64) });
   });
   // Retry for a task whose preparation failed; it answers at once as well.
   app.post<{ Params: { id: string } }>('/api/tasks/:id/prepare', task, request => workspace.retryTask(request.params.id));
@@ -395,6 +413,22 @@ export async function buildApp(options: AppOptions) {
       serviceTier: typeof body.serviceTier === 'string' ? body.serviceTier : undefined, stop: body.stop === true, draftAttachments: attachmentIds(body.draftAttachments) });
   });
   app.get<{ Params: { id: string }; Querystring: { since?: string } }>('/api/tasks/:id/items', task, request => { store.task(request.params.id); return store.itemsSince(request.params.id, typeof request.query.since === 'string' ? request.query.since : undefined); });
+  app.get<{ Params: { id: string } }>('/api/tasks/:id/goal', task, request => workspace.checkGoal(request.params.id));
+  app.post<{ Params: { id: string } }>('/api/tasks/:id/goal', task, request => workspace.changeGoal(request.params.id, request.body));
+  app.post<{ Params: { id: string } }>('/api/tasks/:id/goal/check', task, request => workspace.checkGoal(request.params.id));
+  app.get<{ Params: { id: string } }>('/api/tasks/:id/queue', task, request => workspace.queue(request.params.id));
+  app.post<{ Params: { id: string } }>('/api/tasks/:id/queue/pause', task, request => workspace.pauseQueue(request.params.id));
+  app.post<{ Params: { id: string } }>('/api/tasks/:id/queue/resume', task, request => workspace.resumeQueue(request.params.id));
+  app.post<{ Params: { id: string; runId: string } }>('/api/tasks/:id/queue/:runId/edit', task, request => {
+    const body = (request.body || {}) as any;
+    if (!['begin', 'save', 'cancel'].includes(body.action)) throw new Error('Choose a valid queue edit action.');
+    return workspace.editQueued(request.params.id, request.params.runId, { action: body.action, ...(body.lease !== undefined ? { lease: string(body.lease, 'Edit lease', 64) } : {}), ...(body.action === 'save' ? { text: composerText(body.text, 'Message', body.references, true), references: body.references } : {}) });
+  });
+  app.post<{ Params: { id: string; runId: string } }>('/api/tasks/:id/queue/:runId/remove', task, request => workspace.removeQueued(request.params.id, request.params.runId, (request.body as any)?.lease === undefined ? undefined : string((request.body as any).lease, 'Edit lease', 64)));
+  app.post<{ Params: { id: string; runId: string } }>('/api/tasks/:id/queue/:runId/steer', task, request => workspace.steerQueued(request.params.id, request.params.runId));
+  app.post<{ Params: { id: string; runId: string } }>('/api/tasks/:id/queue/:runId/check', task, request => workspace.checkSteering(request.params.id, request.params.runId));
+  app.post<{ Params: { id: string } }>('/api/tasks/:id/compact', task, async (request, reply) => reply.code(202).send(await workspace.compact(request.params.id)));
+  app.post<{ Params: { id: string } }>('/api/tasks/:id/compact/check', task, request => workspace.checkCompaction(request.params.id));
   app.get<{ Params: { id: string } }>('/api/tasks/:id/note-results', task, async request => {
     const task = store.task(request.params.id), client = await connectReview(store.project(task.projectId).path);
     return { notes: await taskNoteResults(task, store.items(task.id), store.runs().filter(run => run.taskId === task.id), client) };
@@ -565,7 +599,7 @@ export async function buildApp(options: AppOptions) {
         return { ...(paper ? { paper } : {}), ...(note.id ? { id: string(note.id, 'Note ID', 100) } : {}), where: string(note.where, 'Note location'), quote: optional(note.quote, 'PDF text'), comment, ...(note.group ? { group: note.group } : {}), ...(note.kind ? { kind: note.kind } : {}), ...(stamp ? { stamp } : {}), ...(anchor ? { anchor: { sources, ...(anchor.round ? { round: anchor.round } : {}) } } : {}) };
       });
     }
-    const text = feedback || skill || reviewNotes || attachments.length ? optional(b.text, 'Revision instructions') : string(b.text, 'Revision instructions');
+    const text = composerText(b.text, 'Revision instructions', b.references, Boolean(feedback || skill || reviewNotes || attachments.length));
     // A comment on the task's PDF brings its page as an image, and its source lines.
     if (reviewNotes?.some(note => note.paper)) {
       const project = store.project(task.projectId);
@@ -582,7 +616,7 @@ export async function buildApp(options: AppOptions) {
       }, MAX_ATTACHMENTS - attachments.length);
       reviewNotes = pages.notes; attachments.push(...pages.attachments);
     }
-    return workspace.enqueue(task.id, text, string(b.requestKey, 'Request ID', 100), true, { skill, feedback, reviewNotes, attachments });
+    return workspace.enqueue(task.id, text, string(b.requestKey, 'Request ID', 100), true, { references: b.references, skill, feedback, reviewNotes, attachments });
   });
   // Applying writes the manuscript only once its delivery is complete: not
   // for a confirmation, a merge suggestion, a pending delivery or a branch.
@@ -599,6 +633,30 @@ export async function buildApp(options: AppOptions) {
     return workspace.commitMessage(task.projectId, task.review?.files || [], { taskId: task.id, agent: task.agent, fresh: (request.body as any)?.fresh === true });
   });
   app.post<{ Params: { id: string } }>('/api/tasks/:id/permissions', task, request => workspace.updateTaskPermissions(request.params.id, (request.body as any)?.permissions));
+  app.post<{ Params: { id: string } }>('/api/tasks/:id/collaboration', task, request => workspace.updateCollaborationMode(request.params.id, (request.body as any)?.mode));
+  app.post<{ Params: { id: string } }>('/api/tasks/:id/plan', task, request => {
+    const body = (request.body || {}) as Record<string, unknown>;
+    return workspace.answerPlan(request.params.id, { turnId: string(body.turnId, 'Turn ID', 100), action: string(body.action, 'Plan response', 32), ...(body.requestKey === undefined ? {} : { requestKey: string(body.requestKey, 'Request ID', 100) }), ...(body.text === undefined ? {} : { text: string(body.text, 'Plan response') }) });
+  });
+  app.get<{ Params: { id: string } }>('/api/tasks/:id/code-review', task, request => workspace.codeReviewOptions(request.params.id));
+  app.get<{ Params: { id: string } }>('/api/projects/:id/code-review', project(), request => workspace.projectCodeReviewOptions(request.params.id));
+  app.post<{ Params: { id: string } }>('/api/projects/:id/code-review', project(), request => {
+    const body = (request.body || {}) as Record<string, unknown>;
+    if (Object.keys(body).some(key => !['id', 'target', 'model', 'effort', 'serviceTier', 'permissions'].includes(key))) throw new Error('Only code review settings can be changed.');
+    return workspace.createCodeReviewTask(request.params.id, { id: string(body.id, 'Task ID', 64), target: body.target,
+      ...(body.model === undefined ? {} : { model: string(body.model, 'Model', 200) }), ...(body.effort === undefined ? {} : { effort: string(body.effort, 'Reasoning effort', 32) }),
+      ...(body.serviceTier === undefined ? {} : { serviceTier: string(body.serviceTier, 'Service tier', 64) }), ...(body.permissions === undefined ? {} : { permissions: string(body.permissions, 'Permissions', 100) }) });
+  });
+  app.post<{ Params: { id: string } }>('/api/tasks/:id/fork', task, request => {
+    const body = (request.body || {}) as Record<string, unknown>;
+    if (Object.keys(body).some(key => key !== 'id')) throw new Error('Only the fork task ID can be supplied.');
+    return workspace.forkTask(request.params.id, string(body.id, 'Task ID', 64));
+  });
+  app.post<{ Params: { id: string } }>('/api/tasks/:id/code-review', task, request => {
+    const body = (request.body || {}) as Record<string, unknown>;
+    if (Object.keys(body).some(key => key !== 'target' && key !== 'requestKey')) throw new Error('Only the code review target can be changed.');
+    return workspace.startCodeReview(request.params.id, body.target, string(body.requestKey, 'Request ID', 100));
+  });
   app.post<{ Params: { id: string } }>('/api/tasks/:id/model', task, request => {
     const b = (request.body || {}) as Record<string, unknown>;
     if (Object.keys(b).some(key => !['model', 'effort', 'serviceTier'].includes(key))) throw new Error('Only the model and its settings can be changed.');
@@ -609,7 +667,7 @@ export async function buildApp(options: AppOptions) {
   app.post<{ Params: { id: string } }>('/api/tasks/:id/rename', task, request => workspace.renameTask(request.params.id, string((request.body as any).title, 'Task title', 120)));
   app.post<{ Params: { id: string } }>('/api/tasks/:id/title', task, request => workspace.requestTaskTitle(request.params.id));
   app.post<{ Params: { id: string } }>('/api/tasks/:id/archive', task, request => workspace.archiveTask(request.params.id, (request.body as any)?.archived, (request.body as any)?.finished === true));
-  app.post<{ Params: { id: string } }>('/api/tasks/:id/interrupt', task, request => workspace.interrupt(request.params.id).then(() => ({ ok: true })));
+  app.post<{ Params: { id: string } }>('/api/tasks/:id/interrupt', task, request => workspace.interrupt(request.params.id, (request.body as any)?.preserveQueue === true).then(() => ({ ok: true })));
   // Deleting a task that is already gone succeeds, so a lost response can be retried; a hidden one answers the same.
   // A page an agent looked at, as the chat shows it with that tool call.
   app.get<{ Params: { id: string; file: string } }>('/api/tasks/:id/pages/:file', task, (request, reply) => {

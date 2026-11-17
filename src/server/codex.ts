@@ -8,7 +8,7 @@ import { codexBinary } from './codex-binary.ts';
 import { codexInstallations, codexWorkingDirectory } from '../../bin/codex-lookup.mjs';
 import { taskAccessInstructions } from './task-permissions.ts';
 
-export class RpcResponseError extends Error {}
+export class RpcResponseError extends Error { constructor(message: string, public readonly code?: number) { super(message); } }
 
 export class Codex extends EventEmitter {
   permissionOptions(): TaskPermissionOption[] {
@@ -54,6 +54,7 @@ export class Codex extends EventEmitter {
   private starting: Promise<void> | null = null;
   private launchAbort: AbortController | null = null;
   ready = false;
+  userAgent?: string;
   stderr = '';
   // Without a binary of its own, this host's Codex is used (see codex-binary.ts).
   constructor(private binary?: string, private args = ['app-server', '--listen', 'stdio://'], private env: NodeJS.ProcessEnv = process.env, private platform = process.platform) { super(); }
@@ -78,6 +79,7 @@ export class Codex extends EventEmitter {
   private generation = 0;
   private async launch() {
     this.stderr = '';
+    this.userAgent = undefined;
     const controller = new AbortController();
     this.launchAbort = controller;
     const generation = this.generation;
@@ -98,8 +100,9 @@ export class Codex extends EventEmitter {
     child.once('error', failed);
     child.once('exit', (code, signal) => failed(new Error(`Codex exited (${signal || code})`)));
     // The experimental API carries the tools StudyBuddy gives its threads (see VIEW_PDF_TOOL).
-    await this.request('initialize', { clientInfo: { name: 'papilot', title: 'StudyBuddy', version: VERSION }, capabilities: { experimentalApi: true } });
+    const initialized = await this.request('initialize', { clientInfo: { name: 'papilot', title: 'StudyBuddy', version: VERSION }, capabilities: { experimentalApi: true } });
     if (generation !== this.generation) throw new Error('Codex is not connected.');
+    if (typeof initialized?.userAgent === 'string' && /^[\x20-\x7e]{1,1024}$/.test(initialized.userAgent)) this.userAgent = initialized.userAgent;
     this.notify('initialized', {});
     this.threadConfig = {};
     if (this.platform === 'win32') {
@@ -116,7 +119,7 @@ export class Codex extends EventEmitter {
     const wait = this.pending.get(message.id);
     if (!wait) return;
     clearTimeout(wait.timer); this.pending.delete(message.id);
-    if (message.error) wait.reject(new RpcResponseError(message.error.message || JSON.stringify(message.error)));
+    if (message.error) wait.reject(new RpcResponseError(message.error.message || JSON.stringify(message.error), message.error.code));
     else wait.resolve(message.result);
   }
   request(method: string, params: unknown, timeout = 60000): Promise<any> {
@@ -136,7 +139,7 @@ export class Codex extends EventEmitter {
   respond(id: string | number, result: unknown) { if (!this.child) throw new Error('Codex disconnected. Resume the task before retrying.'); this.child.stdin!.write(JSON.stringify({ id, result }) + '\n'); }
   reject(id: string | number, message: string) { this.child?.stdin?.write(JSON.stringify({ id, error: { code: -32601, message } }) + '\n'); }
   close() {
-    this.generation++; this.launchAbort?.abort(); this.launchAbort = null; this.starting = null; this.ready = false;
+    this.generation++; this.launchAbort?.abort(); this.launchAbort = null; this.starting = null; this.ready = false; this.userAgent = undefined;
     for (const wait of this.pending.values()) { clearTimeout(wait.timer); wait.reject(new Error('Codex is not connected.')); }
     this.pending.clear();
     this.child?.stdin?.end(); this.child?.kill('SIGTERM'); this.child = null;

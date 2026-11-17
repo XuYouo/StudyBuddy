@@ -15,6 +15,8 @@ import type { ReviewClient } from '../src/server/review.ts';
 import { AGENT_IDS, type PendingReview, type Run, type Task } from '../src/shared.ts';
 import { visibleTimeline } from '../src/web/refresh.ts';
 import { noteOptionsKey } from '../src/server/note-options.ts';
+import { approvalChoices } from '../src/server/approvals.ts';
+import { referenceText } from '../src/composer-reference.ts';
 
 function deferred<T>() {
   let resolve!: (value: T) => void;
@@ -131,6 +133,122 @@ test('the editing response carries prepared choices into publication without put
 });
 const feedback = { cursor: 7, feedback: [{ body: 'Preserve the boundary condition.' }] };
 const summary = { state: 'reviewing', round: 1, counts: { pending: 1 } };
+
+test('Plan mode is captured per queued turn and sends native settings including explicit exit', async () => {
+  const f=fixture();
+  try {
+    f.workspace.runtime.collaborationModes=[{name:'Plan',mode:'plan',model:null,reasoningEffort:null}];
+    f.workspace.runtime.models=[{id:'chosen',name:'Chosen',isDefault:true,efforts:['medium'],defaultEffort:'medium'}];
+    f.store.updateTask(f.task.id,{model:'chosen'});
+    f.workspace.updateCollaborationMode(f.task.id,'plan');
+    const plan=await f.workspace.enqueue(f.task.id,'Plan the revision.','plan-turn',false);
+    f.workspace.updateCollaborationMode(f.task.id,'default');
+    const normal=await f.workspace.enqueue(f.task.id,'Implement the agreed changes.','default-turn',false);
+    assert.equal(f.store.runByKey('plan-turn')?.collaborationMode,'plan');
+    assert.equal(f.store.runByKey('default-turn')?.collaborationMode,'default');
+    for(const run of [plan,normal]) {
+      (f.workspace as any).active.set(f.task.id,run);
+      await (f.workspace as any).startRun(run);
+      assert.deepEqual(f.codex.calls.findLast(call=>call.method==='turn/start')?.params.collaborationMode,{mode:run.collaborationMode,settings:{model:'chosen',reasoning_effort:'medium',developer_instructions:null}});
+    }
+    assert.equal(f.codex.calls.filter(call=>call.method==='turn/start').length,2);
+  } finally {f.close();}
+});
+
+test('native completed Plan becomes a durable decision and implementation retries enqueue exactly once', async()=>{
+  const f=fixture();
+  try {
+    f.workspace.runtime.collaborationModes=[{name:'Plan',mode:'plan',model:null,reasoningEffort:null}];
+    f.store.updateTask(f.task.id,{model:'chosen',collaborationMode:'plan'});
+    const run=await f.workspace.enqueue(f.task.id,'Make a plan.','make-plan',false);
+    (f.workspace as any).active.set(f.task.id,run); await (f.workspace as any).startRun(run);
+    const notify=(method:string,params:any)=>(f.workspace as any).notification({method,params:{threadId:'thread',turnId:'turn-new',...params}});
+    await notify('item/plan/delta',{itemId:'native-plan',delta:'# Proposed plan\n'});
+    await notify('item/completed',{item:{id:'native-plan',type:'plan',text:'# Proposed plan\n1. Read the paper.\n2. Verify the assumptions.'}});
+    await notify('turn/completed',{turn:{id:'turn-new',status:'completed'}});
+    const pending=f.store.task(f.task.id).pendingPlan!;
+    assert.equal(pending.itemId,`${f.task.id}:turn-new:native-plan`); assert.match(pending.text,/Read the paper/);
+    assert.equal(f.store.item(f.task.id,pending.itemId)?.type,'plan');
+    f.store.updateTask(f.task.id,{status:'reviewing'});
+    const first=await f.workspace.answerPlan(f.task.id,{turnId:pending.turnId,action:'implement',requestKey:'implement-plan'});
+    const retry=await f.workspace.answerPlan(f.task.id,{turnId:pending.turnId,action:'implement',requestKey:'implement-plan'});
+    assert.equal(first.id,retry.id);
+    assert.equal(f.store.runByKey('implement-plan')?.prompt,'Please implement the plan.');
+    assert.equal(f.store.runByKey('implement-plan')?.collaborationMode,'default');
+    assert.equal(f.store.task(f.task.id).collaborationMode,'default'); assert.equal(f.store.task(f.task.id).pendingPlan,null);
+    assert.equal(f.codex.calls.filter(call=>call.method==='turn/start').length,1,'the decision is queued through the normal dispatcher');
+  }finally{f.close();}
+});
+
+test('Plan feedback stays in Plan, edited implementation uses exact prompt, and Escape does not start a turn',async()=>{
+  const f=fixture();
+  try{
+    f.workspace.runtime.collaborationModes=[{name:'Plan',mode:'plan',model:null,reasoningEffort:null}];
+    const pending={turnId:'plan-turn',itemId:'plan-item',text:'# Original plan'};
+    f.store.updateTask(f.task.id,{collaborationMode:'plan',pendingPlan:pending});
+    await f.workspace.answerPlan(f.task.id,{turnId:pending.turnId,action:'feedback',requestKey:'feedback-plan',text:'Keep the theorem unchanged.'});
+    assert.equal(f.store.runByKey('feedback-plan')?.collaborationMode,'plan');
+    assert.equal(f.store.runByKey('feedback-plan')?.prompt,'Keep the theorem unchanged.');
+    f.store.updateTask(f.task.id,{status:'reviewing',pendingPlan:pending});
+    await f.workspace.answerPlan(f.task.id,{turnId:pending.turnId,action:'implement',requestKey:'edited-plan',text:'# Edited plan\nKeep notation.'});
+    assert.equal(f.store.runByKey('edited-plan')?.prompt,'PLEASE IMPLEMENT THIS PLAN:\n# Edited plan\nKeep notation.');
+    f.store.updateTask(f.task.id,{status:'reviewing',collaborationMode:'plan',pendingPlan:pending});
+    const count=f.store.runs().length;
+    await f.workspace.answerPlan(f.task.id,{turnId:pending.turnId,action:'dismiss'});
+    assert.equal(f.store.runs().length,count); assert.equal(f.store.task(f.task.id).collaborationMode,'default');
+    await assert.rejects(f.workspace.answerPlan(f.task.id,{turnId:'old',action:'implement',requestKey:'stale'}),/no longer/);
+    assert.equal(f.store.runByKey('stale'),undefined);
+  }finally{f.close();}
+});
+
+test('Plan Skip keeps planning while Escape exits without sending, including after reload state', async () => {
+  const f = fixture();
+  try {
+    f.workspace.runtime.collaborationModes = [{ name: 'Plan', mode: 'plan', model: null, reasoningEffort: null }];
+    const pending = { turnId: 'plan-turn', itemId: 'plan-item', text: '# Plan' };
+    f.store.updateTask(f.task.id, { collaborationMode: 'plan', pendingPlan: pending });
+    await f.workspace.answerPlan(f.task.id, { turnId: pending.turnId, action: 'skip' });
+    assert.equal(f.store.task(f.task.id).collaborationMode, 'plan');
+    assert.equal(f.store.task(f.task.id).pendingPlan, null);
+    f.store.updateTask(f.task.id, { pendingPlan: pending });
+    await f.workspace.answerPlan(f.task.id, { turnId: pending.turnId, action: 'dismiss' });
+    assert.equal(f.store.task(f.task.id).collaborationMode, 'default');
+    assert.equal(f.store.runs().length, 0);
+    assert.equal(f.codex.calls.length, 0);
+  } finally { f.close(); }
+});
+
+test('Plan recovery replays native plan output before a missed turn completion', async () => {
+  const f = fixture();
+  try {
+    f.workspace.runtime.collaborationModes = [{ name: 'Plan', mode: 'plan', model: null, reasoningEffort: null }];
+    f.store.updateTask(f.task.id, { collaborationMode: 'plan' });
+    const run = await f.workspace.enqueue(f.task.id, 'Plan the work.', 'recover-plan', false);
+    f.store.saveRun({ ...run, status: 'running' });
+    (f.workspace as any).active.set(f.task.id, { ...run, status: 'running' });
+    f.store.updateTask(f.task.id, { status: 'uncertain', turnId: 'lost-turn', pendingRunId: run.id });
+    f.codex.handler = async () => ({ thread: { id: 'thread', turns: [{ id: 'lost-turn', status: 'completed', items: [{ id: 'plan-output', type: 'plan', text: '# Recovered plan' }] }] } });
+    await f.workspace.reconcile(f.task.id);
+    assert.equal(f.store.task(f.task.id).pendingPlan?.text, '# Recovered plan');
+    assert.equal(f.store.runByKey('recover-plan')?.status, 'completed');
+  } finally { f.close(); }
+});
+
+test('native Plan questions preserve exact offered labels and explicitly skipped answers', () => {
+  const claude = new FakeCodex(), f = fixture(undefined, { claude });
+  try {
+    const request = { id: 'native-question', rpcId: 21, agent: 'codex' as const, taskId: f.task.id, method: 'item/tool/requestUserInput', params: { questions: [
+      { id: 'scope', isOther: false, options: [{ label: 'Introduction (Recommended)' }] }, { id: 'detail', isOther: true },
+    ] }, createdAt: 1 };
+    (f.workspace as any).requests.set(request.id, request);
+    assert.throws(() => f.workspace.answer(request.id, { answers: { scope: 'Introduction (Recommended)' } }), /Answer every/);
+    f.workspace.answer(request.id, { answers: { scope: 'Introduction (Recommended)' }, skipped: ['detail'] });
+    assert.deepEqual(f.codex.replies.at(-1)?.result, { answers: { scope: { answers: ['Introduction (Recommended)'] }, detail: { answers: [] } } });
+    (f.workspace as any).requests.set(request.id, { ...request, agent: 'claude' });
+    assert.throws(() => f.workspace.answer(request.id, { answers: { scope: 'Introduction (Recommended)' }, skipped: ['detail'] }), /Answer every/);
+    assert.deepEqual(claude.replies, []);
+  } finally { f.close(); }
+});
 
 class FakeCodex extends EventEmitter {
   permissionOptions = Codex.prototype.permissionOptions;
@@ -587,7 +705,7 @@ test('concurrent retries with one request key persist only one run and message',
   } finally { f.close(); }
 });
 
-test('parallel distinct messages cannot both occupy the one queued slot', async () => {
+test('parallel distinct messages persist in the same task queue without losing either instruction', async () => {
   const gate = deferred<typeof feedback>();
   const f = fixture(async () => gate.promise);
   try {
@@ -596,10 +714,10 @@ test('parallel distinct messages cannot both occupy the one queued slot', async 
     const results = Promise.allSettled([first, second]);
     gate.resolve(feedback);
     const settled = await results;
-    assert.equal(settled.filter(result => result.status === 'fulfilled').length, 1);
-    assert.equal(settled.filter(result => result.status === 'rejected').length, 1);
-    assert.equal(f.store.runs().length, 1);
-    assert.equal(f.store.items(f.task.id).length, 1);
+    assert.equal(settled.filter(result => result.status === 'fulfilled').length, 2);
+    assert.equal(settled.filter(result => result.status === 'rejected').length, 0);
+    assert.equal(f.store.runs().length, 2);
+    assert.deepEqual(f.workspace.queue(f.task.id).messages.map(message => message.text), ['First instruction.', 'Second instruction.']);
   } finally { f.close(); }
 });
 
@@ -2504,6 +2622,22 @@ for (const stage of ['reviewed', 'interrupted', 'waiting_input'] as const) test(
 
 const failedTurn = (error: { message: string; codexErrorInfo: unknown }) => ({ method: 'turn/completed', params: { threadId: 'thread', turn: { id: 'turn-new', status: 'failed', error } } });
 
+test('dictation runtime capability uses native ChatGPT account type without retrieving credentials', async () => {
+  const f = fixture();
+  (f.codex as any).start = async () => { f.codex.ready = true; };
+  try {
+    for (const [type, requiresOpenaiAuth, expected] of [['chatgpt', true, true], ['apiKey', true, false], ['chatgpt', false, false], ['Local configuration', false, false]] as const) {
+      f.codex.handler = async method => {
+        assert.notEqual(method, 'getAuthStatus', 'The coarse state projection does not retrieve a token');
+        return method === 'account/read' ? { account: { type, email: 'fixture@example.test' }, requiresOpenaiAuth } : { data: [] };
+      };
+      await (f.workspace as any).connectAgent('codex');
+      assert.equal(f.workspace.runtime.dictationAvailable, expected);
+      assert.equal(f.workspace.snapshot().runtime.dictationAvailable, expected);
+    }
+  } finally { f.close(); }
+});
+
 test('a Codex turn that lost its sign-in shows Codex signed out, and Refresh restarts it with the host\'s current sign-in', async () => {
   const f = fixture();
   let closes = 0, starts = 0;
@@ -3439,4 +3573,680 @@ test('restart excludes an in-flight follow-up and rejects project removal or sta
     assert.equal(f.store.tasks().length, 1);
     assert.equal(f.store.runByKey('racing-followup'), undefined);
   } finally { feedbackGate.resolve(); copyGate.resolve(); f.close(); }
+});
+
+test('queue edit leases preserve feedback, notes, attachments and FIFO until the edit is saved', async () => {
+  const f = fixture();
+  try {
+    const run = await f.workspace.enqueue(f.task.id, 'First instruction.', 'queue-edit', true, { reviewNotes: [{ where: 'main.tex line 1', quote: 'First instruction.', comment: 'Keep this exact quotation.' }] });
+    const attachment = { id: 'attachment', projectId: f.task.projectId, name: 'reference.pdf', mime: 'application/pdf', size: 10 };
+    f.store.saveRun({ ...run, attachments: [attachment] });
+    const item = f.store.item(f.task.id, run.id)!;
+    f.store.saveItem({ ...item, meta: { ...item.meta, attachments: [attachment] } });
+    await f.workspace.enqueue(f.task.id, 'Second instruction.', 'queue-edit-next', false);
+    const editing = f.workspace.editQueued(f.task.id, run.id, { action: 'begin' });
+    const lease = editing.messages[0].editLease!;
+    f.codex.ready = true;
+    await tick();
+    assert.equal(f.codex.calls.filter(call => call.method === 'turn/start').length, 0);
+    assert.throws(() => f.workspace.editQueued(f.task.id, run.id, { action: 'save', lease: 'stale', text: 'Wrong.' }), /no longer current/);
+    assert.throws(() => f.workspace.removeQueued(f.task.id, run.id), /being edited/);
+    f.workspace.pauseQueue(f.task.id);
+    f.workspace.editQueued(f.task.id, run.id, { action: 'save', lease, text: 'Revised instruction.' });
+    const saved = f.store.runByKey('queue-edit')!;
+    assert.equal(saved.prompt, run.editablePrompt!.before + 'Revised instruction.' + run.editablePrompt!.after);
+    assert.match(saved.prompt, /First instruction\./, 'quoted note text is not replaced');
+    assert.match(saved.prompt, /Preserve the boundary condition/);
+    assert.equal(saved.feedbackCursor, run.feedbackCursor);
+    assert.deepEqual(saved.attachments, [attachment]);
+    assert.deepEqual(f.store.item(f.task.id, run.id)!.meta, { ...item.meta, attachments: [attachment] });
+    await tick();
+    assert.equal(f.codex.calls.filter(call => call.method === 'turn/start').length, 0);
+    f.workspace.resumeQueue(f.task.id);
+    await tick();
+    const starts = f.codex.calls.filter(call => call.method === 'turn/start');
+    assert.equal(starts.length, 1);
+    assert.equal(starts[0].params.clientUserMessageId, run.id);
+    assert.match(starts[0].params.input[0].text, /Revised instruction/);
+    assert.equal(f.workspace.queue(f.task.id).messages[0].text, 'Second instruction.');
+    const timing = f.workspace.snapshot().tasks[0].chatTurns![0];
+    assert.equal(timing.id, 'turn-new');
+    assert.equal(timing.runId, run.id);
+    assert.ok(timing.startedAt >= run.createdAt);
+    assert.equal(timing.finishedAt, null);
+  } finally { f.close(); }
+});
+
+test('queue deletion invalidates incremental timeline reads and stop preserves queued drafts on request', async () => {
+  const f = fixture();
+  try {
+    const first = await f.workspace.enqueue(f.task.id, 'First.', 'queue-delete-first', false);
+    const next = await f.workspace.enqueue(f.task.id, 'Next.', 'queue-delete-next', false);
+    const before = f.store.itemsSince(f.task.id);
+    f.workspace.removeQueued(f.task.id, first.id);
+    const after = f.store.itemsSince(f.task.id, before.revision);
+    assert.equal(after.partial, undefined);
+    assert.deepEqual(after.items.map(item => item.id), [next.id]);
+    assert.equal(f.store.runByKey('queue-delete-first')?.status, 'interrupted');
+    await f.workspace.interrupt(f.task.id, true);
+    assert.equal(f.workspace.queue(f.task.id).paused, 'interrupted');
+    assert.equal(f.workspace.queue(f.task.id).messages[0].id, next.id);
+    await f.workspace.interrupt(f.task.id);
+    assert.equal(f.workspace.queue(f.task.id).messages.length, 0);
+  } finally { f.close(); }
+});
+
+test('native compact acknowledges pending, ignores replay, and waits for explicit completion without publishing', async () => {
+  const f = fixture();
+  try {
+    f.codex.ready = true;
+    f.codex.handler = async method => method === 'thread/read' ? { thread: { id: 'thread', status: { type: 'idle' }, turns: [{ id: 'old-compact', status: 'completed', items: [{ type: 'contextCompaction', id: 'old' }] }] } } : {};
+    let publishes = 0;
+    f.workspace.publish = async () => { publishes++; };
+    const accepted = await f.workspace.compact(f.task.id);
+    assert.equal(accepted.accepted, true);
+    assert.equal(f.store.task(f.task.id).compaction?.state, 'pending');
+    assert.deepEqual(f.codex.calls.find(call => call.method === 'thread/compact/start')!.params, { threadId: 'thread' });
+    assert.equal(f.codex.calls.some(call => call.method === 'turn/start'), false);
+    await assert.rejects(f.workspace.compact(f.task.id), /current task operation/);
+    const notify = (method: string, params: any) => (f.workspace as any).notification({ method, params: { threadId: 'thread', ...params } });
+    await notify('item/completed', { turnId: 'old-compact', item: { type: 'contextCompaction', id: 'old' } });
+    assert.equal(f.store.task(f.task.id).compaction?.state, 'pending');
+    await notify('turn/started', { turn: { id: 'compact-turn' } });
+    await notify('item/started', { turnId: 'compact-turn', item: { type: 'contextCompaction', id: 'new' } });
+    assert.equal(f.store.task(f.task.id).compaction?.state, 'running');
+    await notify('turn/completed', { turn: { id: 'compact-turn', status: 'completed' } });
+    assert.equal(f.store.task(f.task.id).compaction?.state, 'unknown');
+    await notify('item/completed', { turnId: 'compact-turn', item: { type: 'contextCompaction', id: 'new' } });
+    assert.equal(f.store.task(f.task.id).compaction?.state, 'completed');
+    assert.equal(publishes, 0);
+    assert.equal(f.store.runs().length, 0);
+    assert.deepEqual(f.workspace.snapshot().tasks[0].chatTurns, []);
+    assert.equal(f.store.items(f.task.id).filter(item => item.id === accepted.compaction!.id).length, 1);
+  } finally { f.close(); }
+});
+
+test('native compact gates unsupported agents and withdraws missing native methods', async () => {
+  const f = fixture();
+  try {
+    f.store.updateTask(f.task.id, { agent: 'claude' });
+    assert.equal(f.workspace.queue(f.task.id).capabilities.compact, false);
+    await assert.rejects(f.workspace.compact(f.task.id), /does not support/);
+    assert.equal(f.codex.calls.length, 0);
+    f.store.updateTask(f.task.id, { agent: 'codex' });
+    f.codex.ready = true;
+    f.codex.handler = async method => {
+      if (method === 'thread/compact/start') throw new RpcResponseError('Method not found', -32601);
+      return { thread: { turns: [] } };
+    };
+    await assert.rejects(f.workspace.compact(f.task.id), /does not support/);
+    assert.equal(f.workspace.queue(f.task.id).capabilities.compact, false);
+    assert.equal(f.store.task(f.task.id).compaction?.state, 'failed');
+    const count = f.codex.calls.length;
+    await assert.rejects(f.workspace.compact(f.task.id), /does not support/);
+    assert.equal(f.codex.calls.length, count);
+  } finally { f.close(); }
+});
+
+test('uncertain compaction blocks queued delivery and recovers from native persisted evidence', async () => {
+  const f = fixture();
+  try {
+    f.codex.ready = true;
+    f.codex.handler = async method => {
+      if (method === 'thread/compact/start') throw new Error('Transport lost');
+      return { thread: { status: { type: 'idle' }, turns: [] } };
+    };
+    await assert.rejects(f.workspace.compact(f.task.id), /Transport lost/);
+    assert.equal(f.store.task(f.task.id).compaction?.state, 'unknown');
+    await f.workspace.enqueue(f.task.id, 'Keep this queued.', 'compact-queued', false);
+    await tick();
+    assert.equal(f.codex.calls.some(call => call.method === 'turn/start'), false);
+    f.codex.handler = async method => method === 'turn/start' ? { turn: { id: 'after-compact' } } : { thread: { status: { type: 'idle' }, turns: [{ id: 'recovered-compact', status: 'completed', items: [{ id: 'compaction', type: 'contextCompaction' }] }] } };
+    await f.workspace.checkCompaction(f.task.id);
+    assert.equal(f.store.task(f.task.id).compaction?.state, 'completed');
+    await tick();
+    assert.equal(f.codex.calls.filter(call => call.method === 'turn/start').length, 1);
+  } finally { f.close(); }
+});
+
+test('store recovery preserves compaction uncertainty and releases abandoned queue edit leases while paused', async () => {
+  const f = fixture();
+  try {
+    const run = await f.workspace.enqueue(f.task.id, 'Keep this draft.', 'recover-edited', false);
+    f.workspace.editQueued(f.task.id, run.id, { action: 'begin' });
+    f.store.updateTask(f.task.id, { compaction: { id: 'pending-compact', state: 'running', requestedAt: 1, turnId: 'native-compact', previousTurns: [] } });
+    f.store.recover();
+    assert.equal(f.store.task(f.task.id).compaction?.state, 'unknown');
+    assert.equal(f.workspace.queue(f.task.id).paused, 'restarted');
+    assert.equal(f.workspace.queue(f.task.id).messages[0].status, 'queued');
+    assert.equal(f.workspace.queue(f.task.id).messages[0].text, 'Keep this draft.');
+  } finally { f.close(); }
+});
+
+test('reasoning activity retains provider summaries and never raw reasoning content', async () => {
+  const f = fixture();
+  try {
+    const notify = (method: string, params: any) => (f.workspace as any).notification({ method, params: { threadId: 'thread', turnId: 'reasoning-turn', ...params } });
+    await notify('item/reasoning/summaryTextDelta', { itemId: 'summary', summaryIndex: 1, delta: 'Check boundary conditions.' });
+    await notify('item/reasoning/summaryTextDelta', { itemId: 'summary', summaryIndex: 0, delta: 'Review the derivation.' });
+    (f.workspace as any).flush();
+    assert.equal(f.store.items(f.task.id)[0].text, 'Review the derivation.\n\nCheck boundary conditions.');
+    await notify('item/completed', { item: { id: 'summary', type: 'reasoning', summary: ['Reviewed the derivation.', 'Checked boundary conditions.'], content: ['Private internal trace.'], encryptedContent: 'secret' } });
+    await notify('item/completed', { item: { id: 'raw-only', type: 'reasoning', summary: [], content: ['Private internal trace.'] } });
+    const items = f.store.items(f.task.id);
+    assert.equal(items.length, 1);
+    assert.equal(items[0].type, 'reasoning');
+    assert.equal(items[0].status, 'completed');
+    assert.equal(items[0].text, 'Reviewed the derivation.\n\nChecked boundary conditions.');
+    assert.doesNotMatch(JSON.stringify(items), /Private internal trace|secret|encryptedContent/);
+  } finally { f.close(); }
+});
+
+test('steering sends only the selected queued input into the active turn and publishes it once', async () => {
+  const f = fixture();
+  try {
+    f.codex.ready = true;
+    f.codex.handler = async method => method === 'turn/steer' ? { turnId: 'turn-new' } : { turn: { id: 'turn-new', startedAt: 100 } };
+    const original = await f.workspace.enqueue(f.task.id, 'Original work.', 'steer-original', false);
+    await tick();
+    const selected = await f.workspace.enqueue(f.task.id, 'Check the captions.', 'steer-selected', true);
+    const attachment = { id: 'figure', projectId: f.task.projectId, name: 'figure.png', mime: 'image/png', size: 10 };
+    f.store.saveRun({ ...selected, attachments: [attachment] });
+    const other = await f.workspace.enqueue(f.task.id, 'Keep this for later.', 'steer-other', false);
+    const queue = await f.workspace.steerQueued(f.task.id, selected.id);
+    assert.deepEqual(queue.messages.map(message => message.id), [other.id]);
+    const steer = f.codex.calls.find(call => call.method === 'turn/steer')!;
+    assert.equal(steer.params.expectedTurnId, 'turn-new');
+    assert.equal(steer.params.clientUserMessageId, selected.id);
+    assert.equal(steer.params.input[0].text, selected.prompt);
+    assert.equal(steer.params.input[1].type, 'localImage');
+    assert.match(steer.params.input[1].path, /figure\.png$/);
+    assert.equal(f.store.runByKey('steer-selected')?.steeredInto, original.id);
+    assert.equal(f.store.task(f.task.id).feedbackCursor, 7);
+    await f.workspace.steerQueued(f.task.id, selected.id);
+    assert.equal(f.codex.calls.filter(call => call.method === 'turn/steer').length, 1, 'HTTP retry does not send the prompt twice');
+    let publishes = 0;
+    f.workspace.publish = async () => { publishes++; };
+    await (f.workspace as any).notification({ method: 'turn/completed', params: { threadId: 'thread', turn: { id: 'turn-new', status: 'completed', startedAt: 100, completedAt: 112, durationMs: 12345 } } });
+    assert.equal(publishes, 1);
+    assert.equal(f.store.runByKey('steer-selected')?.status, 'completed');
+    assert.equal(f.store.runByKey('steer-other')?.status, 'queued');
+    assert.deepEqual(f.workspace.snapshot().tasks[0].chatTurns, [{ id: 'turn-new', runId: original.id, startedAt: 100000, finishedAt: 112000, durationMs: 12345, status: 'completed' }]);
+    assert.equal(f.codex.calls.filter(call => call.method === 'turn/start').length, 1);
+  } finally { f.close(); }
+});
+
+test('steering uncertainty retains and locks the queued message until native client ID evidence confirms delivery', async () => {
+  const f = fixture();
+  try {
+    f.codex.ready = true;
+    f.codex.handler = async method => { if (method === 'turn/steer') throw new Error('Lost response'); return { turn: { id: 'turn-new' } }; };
+    await f.workspace.enqueue(f.task.id, 'Original.', 'steer-unknown-original', false);
+    await tick();
+    const selected = await f.workspace.enqueue(f.task.id, 'One additional instruction.', 'steer-unknown', false);
+    await assert.rejects(f.workspace.steerQueued(f.task.id, selected.id), /Lost response/);
+    assert.equal(f.workspace.queue(f.task.id).messages[0].status, 'unconfirmed');
+    await assert.rejects(f.workspace.steerQueued(f.task.id, selected.id), /Check whether/);
+    assert.throws(() => f.workspace.editQueued(f.task.id, selected.id, { action: 'begin' }), /Check whether/);
+    assert.throws(() => f.workspace.removeQueued(f.task.id, selected.id), /Check whether/);
+    assert.throws(() => f.workspace.resumeQueue(f.task.id), /checking/);
+    f.codex.handler = async () => ({ thread: { turns: [{ id: 'turn-new', status: 'inProgress', items: [{ type: 'userMessage', clientId: selected.id }] }] } });
+    await f.workspace.checkSteering(f.task.id, selected.id);
+    assert.equal(f.workspace.queue(f.task.id).messages.length, 0);
+    assert.equal(f.workspace.queue(f.task.id).paused, null);
+    assert.equal(f.codex.calls.filter(call => call.method === 'turn/steer').length, 1);
+  } finally { f.close(); }
+});
+
+test('native steering item acknowledgment wins over a later lost RPC reply', async () => {
+  const f = fixture(), reply = deferred<void>();
+  try {
+    f.codex.ready = true;
+    f.codex.handler = async method => { if (method === 'turn/steer') { await reply.promise; throw new Error('Lost response'); } return { turn: { id: 'turn-new' } }; };
+    await f.workspace.enqueue(f.task.id, 'Original.', 'steer-early-original', false);
+    await tick();
+    const selected = await f.workspace.enqueue(f.task.id, 'Steer once.', 'steer-early', false);
+    const sending = f.workspace.steerQueued(f.task.id, selected.id);
+    assert.equal(f.workspace.queue(f.task.id).messages[0].status, 'sending');
+    await (f.workspace as any).notification({ method: 'item/started', params: { threadId: 'thread', turnId: 'turn-new', item: { type: 'userMessage', clientId: selected.id, id: 'native-user' } } });
+    reply.resolve();
+    await sending;
+    assert.equal(f.workspace.queue(f.task.id).messages.length, 0);
+    assert.equal(f.store.runByKey('steer-early')?.status, 'running');
+  } finally { f.close(); }
+});
+
+test('known steering rejection remains retryable and unsupported native method withdraws the control', async () => {
+  const f = fixture();
+  try {
+    f.codex.ready = true;
+    f.codex.handler = async method => { if (method === 'turn/steer') throw new RpcResponseError('The active turn changed'); return { turn: { id: 'turn-new' } }; };
+    await f.workspace.enqueue(f.task.id, 'Original.', 'steer-reject-original', false);
+    await tick();
+    const selected = await f.workspace.enqueue(f.task.id, 'Preserve me.', 'steer-reject', false);
+    await assert.rejects(f.workspace.steerQueued(f.task.id, selected.id), /active turn changed/);
+    assert.equal(f.workspace.queue(f.task.id).messages[0].status, 'queued');
+    assert.match(f.workspace.queue(f.task.id).messages[0].error!, /active turn changed/);
+    f.codex.handler = async () => { throw new RpcResponseError('Method not found', -32601); };
+    await assert.rejects(f.workspace.steerQueued(f.task.id, selected.id), /does not support/);
+    assert.equal(f.workspace.queue(f.task.id).capabilities.steer, false);
+    assert.equal(f.workspace.queue(f.task.id).messages[0].text, 'Preserve me.');
+  } finally { f.close(); }
+});
+
+test('steering recovery rejoins a still-running native turn after restart without resending', async () => {
+  const f = fixture();
+  try {
+    f.codex.ready = true;
+    f.codex.handler = async method => { if (method === 'turn/steer') throw new Error('Lost response'); return { turn: { id: 'turn-new' } }; };
+    const original = await f.workspace.enqueue(f.task.id, 'Original.', 'steer-restart-original', false);
+    await tick();
+    const selected = await f.workspace.enqueue(f.task.id, 'Still the same instruction.', 'steer-restart', false);
+    await assert.rejects(f.workspace.steerQueued(f.task.id, selected.id));
+    (f.workspace as any).active.clear();
+    f.store.recover();
+    f.codex.handler = async () => ({ thread: { turns: [{ id: 'turn-new', status: 'inProgress', items: [{ type: 'userMessage', clientId: selected.id }] }] } });
+    await f.workspace.checkSteering(f.task.id, selected.id);
+    assert.equal(f.store.task(f.task.id).status, 'running');
+    assert.equal((f.workspace as any).active.get(f.task.id).id, original.id);
+    assert.equal(f.store.runByKey('steer-restart')?.status, 'running');
+    assert.equal(f.codex.calls.filter(call => call.method === 'turn/start').length, 1);
+    assert.equal(f.codex.calls.filter(call => call.method === 'turn/steer').length, 1);
+  } finally { f.close(); }
+});
+
+test('steering absence requires complete correlated history, and note alternatives remain in their own turn', async () => {
+  const f = fixture();
+  try {
+    f.codex.ready = true;
+    f.codex.handler = async method => { if (method === 'turn/steer') throw new Error('Unconfirmed'); return { turn: { id: 'turn-new' } }; };
+    const original = await f.workspace.enqueue(f.task.id, 'Original.', 'steer-proof-original', false);
+    await tick();
+    const selected = await f.workspace.enqueue(f.task.id, 'Pending proof.', 'steer-proof', false);
+    await assert.rejects(f.workspace.steerQueued(f.task.id, selected.id));
+    for (const response of [
+      { status: 'completed', itemsView: 'summary', items: [] },
+      { status: 'completed', itemsView: 'full', items: [{ type: 'userMessage', clientId: null }] },
+      { status: 'completed', itemsView: 'full' },
+    ]) {
+      f.codex.handler = async () => ({ thread: { turns: [{ id: 'turn-new', ...response }] } });
+      await f.workspace.checkSteering(f.task.id, selected.id);
+      assert.equal(f.workspace.queue(f.task.id).messages[0].status, 'unconfirmed');
+    }
+    f.codex.handler = async () => ({ thread: { turns: [{ id: 'turn-new', status: 'completed', itemsView: 'full', items: [{ type: 'userMessage', clientId: original.id }] }] } });
+    await f.workspace.checkSteering(f.task.id, selected.id);
+    assert.equal(f.workspace.queue(f.task.id).messages[0].status, 'queued');
+    assert.equal(f.workspace.queue(f.task.id).messages[0].text, 'Pending proof.');
+    f.store.savePreference('note-alternatives', true);
+    const note = await f.workspace.enqueue(f.task.id, '', 'steer-note-alternatives', false, { reviewNotes: [{ where: 'line 1', quote: 'fast', comment: 'Clarify.' }] });
+    const row = f.workspace.queue(f.task.id).messages.find(message => message.id === note.id)!;
+    assert.equal(row.steerable, false);
+    assert.equal(row.steerUnavailable, 'note-alternatives');
+    assert.equal(row.editable, true, 'note-only requests can acquire an overall instruction');
+    const lease = f.workspace.editQueued(f.task.id, note.id, { action: 'begin' }).messages.find(message => message.id === note.id)!.editLease;
+    f.workspace.editQueued(f.task.id, note.id, { action: 'save', lease, text: 'Keep the tone formal.' });
+    assert.match(f.store.runByKey('steer-note-alternatives')!.prompt, /Keep the tone formal/);
+    assert.match(f.store.runByKey('steer-note-alternatives')!.prompt, /Clarify/);
+    await assert.rejects(f.workspace.steerQueued(f.task.id, note.id), /own turn/);
+  } finally { f.close(); }
+});
+
+test('an idle native snapshot without compaction evidence does not guess that an uncertain request stopped', async () => {
+  const f = fixture();
+  try {
+    f.codex.ready = true;
+    f.codex.handler = async method => { if (method === 'thread/compact/start') throw new Error('Lost acknowledgment'); return { thread: { status: { type: 'idle' }, turns: [] } }; };
+    await assert.rejects(f.workspace.compact(f.task.id));
+    await f.workspace.checkCompaction(f.task.id);
+    assert.equal(f.store.task(f.task.id).compaction?.state, 'unknown');
+    await assert.rejects(f.workspace.deleteTask(f.task.id), /current work/);
+  } finally { f.close(); }
+});
+
+test('a rejected unbound manual compaction never claims a later automatic compaction', async () => {
+  const f = fixture();
+  try {
+    f.codex.ready = true;
+    f.codex.handler = async method => { if (method === 'thread/compact/start') throw new RpcResponseError('Compaction rejected'); return { thread: { turns: [] } }; };
+    await assert.rejects(f.workspace.compact(f.task.id), /Compaction rejected/);
+    const rejected = f.store.task(f.task.id).compaction;
+    await (f.workspace as any).notification({ method: 'item/completed', params: { threadId: 'thread', turnId: 'future-work', item: { id: 'automatic', type: 'contextCompaction' } } });
+    assert.deepEqual(f.store.task(f.task.id).compaction, rejected);
+    assert.equal(f.store.items(f.task.id).find(item => item.id === rejected?.id)?.status, 'failed');
+    assert.equal(f.store.items(f.task.id).find(item => item.id === `${f.task.id}:future-work:automatic`)?.status, 'completed');
+  } finally { f.close(); }
+});
+
+test('compaction status checks require a baseline and never regress newer native completion evidence', async () => {
+  const f = fixture(), history = deferred<any>();
+  try {
+    f.codex.ready = true;
+    f.store.updateTask(f.task.id, { compaction: { id: 'preflight', state: 'pending', requestedAt: 1 } });
+    f.codex.handler = async () => { throw new Error('Must not read history before baseline'); };
+    assert.equal((await f.workspace.checkCompaction(f.task.id)).compaction?.state, 'pending');
+    assert.equal(f.codex.calls.length, 0);
+    f.store.updateTask(f.task.id, { compaction: { id: 'bounded', state: 'running', requestedAt: 1, previousTurns: [], turnId: 'compact-turn' } });
+    f.codex.handler = async () => history.promise;
+    const checking = f.workspace.checkCompaction(f.task.id);
+    await (f.workspace as any).notification({ method: 'item/completed', params: { threadId: 'thread', turnId: 'compact-turn', item: { id: 'compact-item', type: 'contextCompaction' } } });
+    await (f.workspace as any).notification({ method: 'turn/completed', params: { threadId: 'thread', turn: { id: 'compact-turn', status: 'completed' } } });
+    history.resolve({ thread: { turns: [{ id: 'compact-turn', status: 'inProgress', items: [{ type: 'contextCompaction' }] }] } });
+    await checking;
+    assert.equal(f.store.task(f.task.id).compaction?.state, 'completed');
+    assert.equal(f.store.task(f.task.id).compaction?.turnFinished, true);
+  } finally { f.close(); }
+});
+
+test('queued work waits for the compact turn to end after its item completes', async () => {
+  const f = fixture();
+  try {
+    f.codex.ready = true;
+    f.codex.handler = async method => method === 'thread/read' ? { thread: { turns: [] } } : method === 'turn/start' ? { turn: { id: 'next-turn' } } : {};
+    await f.workspace.compact(f.task.id);
+    await f.workspace.enqueue(f.task.id, 'Run after compact.', 'compact-order', false);
+    const notify = (method: string, params: any) => (f.workspace as any).notification({ method, params: { threadId: 'thread', ...params } });
+    await notify('item/completed', { turnId: 'compact-turn', item: { id: 'compact-item', type: 'contextCompaction' } });
+    await tick();
+    assert.equal(f.store.task(f.task.id).compaction?.state, 'completed');
+    assert.equal(f.codex.calls.some(call => call.method === 'turn/start'), false);
+    await notify('turn/completed', { turn: { id: 'compact-turn', status: 'completed' } });
+    await tick();
+    assert.equal(f.codex.calls.filter(call => call.method === 'turn/start').length, 1);
+  } finally { f.close(); }
+});
+
+test('native compaction reserves project identity, permissions and worktree review writes', async () => {
+  const f = fixture();
+  try {
+    for (const state of ['pending', 'running', 'unknown', 'completed'] as const) {
+      f.store.updateTask(f.task.id, { compaction: { id: 'reserved-compact', requestedAt: 1, state, turnFinished: false } });
+      assert.throws(() => f.workspace.removeProject(f.task.projectId), /current work/);
+      assert.throws(() => f.workspace.updateTaskPermissions(f.task.id, 'full'), /before changing permissions/);
+      await assert.rejects(f.workspace.reviewWrite(f.task.id, true, async () => {}), /Pause the task/);
+      assert.throws(() => f.workspace.publish(f.task.id), /Pause Codex/);
+    }
+    f.store.updateTask(f.task.id, { compaction: { id: 'reserved-compact', requestedAt: 1, state: 'completed', turnFinished: true } });
+    assert.equal(f.workspace.updateTaskPermissions(f.task.id, 'full').permissions, 'full');
+  } finally { f.close(); }
+});
+
+test('queue edits can clear only authored text while retained notes keep their original instructions', async () => {
+  const f = fixture();
+  try {
+    const notes = [{ where: 'line 1', quote: 'quick', comment: 'Clarify this.' }];
+    const empty = await f.workspace.enqueue(f.task.id, '', 'empty-note-template', false, { reviewNotes: notes });
+    const written = await f.workspace.enqueue(f.task.id, 'Use a formal tone.', 'written-note-template', false, { reviewNotes: notes });
+    const lease = f.workspace.editQueued(f.task.id, written.id, { action: 'begin' }).messages.find(message => message.id === written.id)!.editLease;
+    f.workspace.editQueued(f.task.id, written.id, { action: 'save', lease, text: '' });
+    assert.equal(f.store.runByKey('written-note-template')!.prompt, empty.prompt);
+    assert.equal(f.store.item(f.task.id, written.id)?.text, '');
+    assert.deepEqual(f.store.item(f.task.id, written.id)?.meta?.notes, notes);
+    const plain = await f.workspace.enqueue(f.task.id, 'Plain text.', 'empty-plain-text', false);
+    const plainLease = f.workspace.editQueued(f.task.id, plain.id, { action: 'begin' }).messages.find(message => message.id === plain.id)!.editLease;
+    assert.throws(() => f.workspace.editQueued(f.task.id, plain.id, { action: 'save', lease: plainLease, text: '' }), /Enter a message/);
+  } finally { f.close(); }
+});
+
+test('a bound compaction never adopts another new turn during reconciliation', async () => {
+  const f = fixture();
+  try {
+    f.store.updateTask(f.task.id, { compaction: { id: 'bound', state: 'unknown', requestedAt: 1, previousTurns: [], turnId: 'expected' } });
+    f.codex.handler = async () => ({ thread: { turns: [{ id: 'other-new-turn', status: 'completed', items: [{ type: 'contextCompaction' }] }] } });
+    await f.workspace.checkCompaction(f.task.id);
+    assert.equal(f.store.task(f.task.id).compaction?.turnId, 'expected');
+    assert.equal(f.store.task(f.task.id).compaction?.state, 'unknown');
+  } finally { f.close(); }
+});
+
+test('removing queued notes releases only orphaned live claims owned by that task', async () => {
+  const f = fixture();
+  try {
+    const note = (id: string) => ({ id, projectId: f.task.projectId, key: 'pdf', page: 0, rect: [0, 0, 1, 1] as [number, number, number, number], quote: 'A sentence.', comment: 'Clarify.', source: null, createdAt: 1 });
+    const orphan = note('orphan'), retained = note('retained'), transferred = note('transferred'), deleted = note('deleted');
+    for (const entry of [orphan, retained, transferred, deleted]) f.store.saveAnnotation(entry);
+    const first = await f.workspace.enqueue(f.task.id, 'Edit the notes.', 'remove-claimed-notes', false, { notes: [orphan, retained, transferred, deleted] });
+    const second = await f.workspace.enqueue(f.task.id, 'Keep this note too.', 'retain-claimed-note', false, { notes: [retained] });
+    f.store.saveAnnotation({ ...transferred, taskId: 'another-task' });
+    f.store.saveAnnotation({ ...deleted, taskId: f.task.id, deletedAt: 2 });
+    f.workspace.removeQueued(f.task.id, first.id);
+    assert.deepEqual(f.store.annotation(f.task.projectId, orphan.id), orphan, 'the unsent note returns intact to the paper library');
+    assert.equal(f.store.annotation(f.task.projectId, retained.id).taskId, f.task.id, 'another retained message still owns the note');
+    assert.equal(f.store.annotation(f.task.projectId, transferred.id).taskId, 'another-task');
+    assert.equal(f.store.annotations(f.task.projectId).some(note => note.id === deleted.id), false, 'deleted notes stay deleted');
+    f.workspace.removeQueued(f.task.id, second.id);
+    assert.equal(f.store.annotation(f.task.projectId, retained.id).taskId, undefined, 'the last removed reference releases the note');
+  } finally { f.close(); }
+});
+
+const commandApproval = 'item/commandExecution/requestApproval';
+async function approvalFixture(method: string, params: Record<string, unknown> = {}) {
+  const f = fixture();
+  f.codex.ready = true;
+  await f.workspace.enqueue(f.task.id, 'Review the introduction.', 'approval-run', false);
+  await tick();
+  f.codex.emit('request', { id: 'approval-rpc', method, params: { threadId: 'thread', turnId: 'turn-new', ...params } });
+  return { ...f, request: f.workspace.snapshot().requests[0] };
+}
+
+test('Codex approval choices preserve the native offered order and reject unoffered scopes', async () => {
+  const f = await approvalFixture(commandApproval, { availableDecisions: ['decline', 'acceptForSession'] });
+  try {
+    assert.deepEqual(f.request.approvalChoices?.map(choice => choice.kind), ['decline', 'session']);
+    for (const input of [{ decision: 'accept' }, { choice: 'accept' }, { choice: 'cancel' }, { decision: 'acceptForSession' }]) {
+      assert.throws(() => f.workspace.answer(f.request.id, input), /Invalid approval decision/);
+    }
+    assert.equal(f.workspace.snapshot().requests.length, 1);
+    assert.equal(f.store.task(f.task.id).status, 'waiting_input');
+    assert.deepEqual(f.codex.replies, []);
+    f.workspace.answer(f.request.id, { choice: f.request.approvalChoices![1].id });
+    assert.deepEqual(f.codex.replies, [{ id: 'approval-rpc', result: { decision: 'acceptForSession' } }]);
+    assert.equal(f.workspace.snapshot().requests.length, 0);
+    assert.equal(f.store.task(f.task.id).status, 'running');
+    assert.throws(() => f.workspace.answer(f.request.id, { choice: 'acceptForSession' }), /request has ended/);
+  } finally { f.close(); }
+});
+
+test('Codex scoped approvals return exactly the advertised rule and ignore client policy payloads', async () => {
+  const cases = [
+    { kind: 'rule', decision: { acceptWithExecpolicyAmendment: { execpolicy_amendment: ['git', 'diff'] } } },
+    { kind: 'network', decision: { applyNetworkPolicyAmendment: { network_policy_amendment: { host: 'docs.example.test', action: 'allow' } } } },
+    { kind: 'network', decision: { applyNetworkPolicyAmendment: { network_policy_amendment: { host: 'blocked.example.test', action: 'deny' } } } },
+  ];
+  for (const { kind, decision } of cases) {
+    const f = await approvalFixture(commandApproval, { availableDecisions: [decision, 'cancel'], proposedExecpolicyAmendment: ['unrelated'] });
+    try {
+      const choice = f.request.approvalChoices![0];
+      assert.equal(choice.kind, kind);
+      if ('applyNetworkPolicyAmendment' in decision) assert.equal(choice.networkAction, decision.applyNetworkPolicyAmendment?.network_policy_amendment.action);
+      f.workspace.answer(f.request.id, { choice: choice.id, permissions: { network: { enabled: true } }, amendment: ['sh'] } as any);
+      assert.deepEqual(f.codex.replies, [{ id: 'approval-rpc', result: { decision } }]);
+      assert.equal(f.store.task(f.task.id).permissions, undefined, 'an individual approval never changes the task permission setting');
+    } finally { f.close(); }
+  }
+});
+
+test('legacy Codex approval choices derive scoped actions from the native context only', () => {
+  const kinds = (method: string, params: Record<string, unknown>) => approvalChoices('codex', method, params)?.map(choice => choice.kind);
+  assert.deepEqual(kinds(commandApproval, {}), ['once', 'decline', 'cancel']);
+  assert.deepEqual(kinds(commandApproval, { proposedExecpolicyAmendment: ['git', 'status'] }), ['once', 'rule', 'decline', 'cancel']);
+  assert.deepEqual(kinds(commandApproval, { proposedExecpolicyAmendment: ['git', 'status'], additionalPermissions: { network: { enabled: true } } }), ['once', 'decline', 'cancel']);
+  assert.deepEqual(kinds(commandApproval, { networkApprovalContext: { host: 'example.test', protocol: 'https' }, proposedNetworkPolicyAmendments: [{ host: 'example.test', action: 'deny' }, { host: 'example.test', action: 'allow' }] }), ['once', 'session', 'network', 'decline', 'cancel']);
+  assert.deepEqual(kinds('item/fileChange/requestApproval', {}), ['once', 'session', 'decline', 'cancel']);
+  for (const proposedExecpolicyAmendment of [[], [''], ['git\nsh'], ['git\0sh'], 'git', [42]]) {
+    assert.deepEqual(kinds(commandApproval, { proposedExecpolicyAmendment }), ['once', 'decline', 'cancel']);
+  }
+  for (const availableDecisions of [[], {}, ['constructor', { acceptWithExecpolicyAmendment: { execpolicy_amendment: [] } }, { applyNetworkPolicyAmendment: { network_policy_amendment: { host: '*', action: 'allow', extra: true } } }]]) {
+    assert.deepEqual(kinds(commandApproval, { availableDecisions }), [], 'invalid or empty native offers do not fall back to broader actions');
+  }
+});
+
+test('file approvals support the conversation scope with the native decision', async () => {
+  const f = await approvalFixture('item/fileChange/requestApproval', { grantRoot: '/paper' });
+  try {
+    f.workspace.answer(f.request.id, { choice: f.request.approvalChoices!.find(choice => choice.kind === 'session')!.id });
+    assert.deepEqual(f.codex.replies, [{ id: 'approval-rpc', result: { decision: 'acceptForSession' } }]);
+  } finally { f.close(); }
+});
+
+test('permission approvals retain exact requested paths and choose only turn or session scope', async () => {
+  const profile = { network: { enabled: true }, fileSystem: { read: ['/reference'], write: ['/paper/output'], entries: [{ path: { type: 'path', path: '/paper/output' }, access: 'write' }] } };
+  for (const [kind, scope] of [['once', 'turn'], ['session', 'session'], ['decline', 'turn']] as const) {
+    const f = await approvalFixture('item/permissions/requestApproval', { permissions: profile });
+    try {
+      const choice = f.request.approvalChoices!.find(choice => choice.kind === kind)!;
+      f.workspace.answer(f.request.id, { choice: choice.id, permissions: { network: { enabled: true }, fileSystem: { write: ['/'] } }, scope: 'session' } as any);
+      assert.deepEqual(f.codex.replies, [{ id: 'approval-rpc', result: { permissions: kind === 'decline' ? {} : profile, scope } }]);
+    } finally { f.close(); }
+  }
+  const f = await approvalFixture('item/permissions/requestApproval', { permissions: { network: null, fileSystem: profile.fileSystem } });
+  try {
+    f.workspace.answer(f.request.id, { choice: 'accept' });
+    assert.deepEqual(f.codex.replies[0].result, { permissions: { fileSystem: profile.fileSystem }, scope: 'turn' });
+  } finally { f.close(); }
+});
+
+test('failed approval delivery keeps the request and other pending approvals keep the task waiting', async () => {
+  const f = await approvalFixture(commandApproval);
+  try {
+    f.codex.emit('request', { id: 'second-rpc', method: commandApproval, params: { threadId: 'thread', turnId: 'turn-new' } });
+    const original = f.codex.respond;
+    f.codex.respond = () => { throw new Error('transport closed'); };
+    assert.throws(() => f.workspace.answer(f.request.id, { choice: 'accept' }), /transport closed/);
+    assert.equal(f.workspace.snapshot().requests.length, 2);
+    assert.equal(f.store.task(f.task.id).status, 'waiting_input');
+    f.codex.respond = original;
+    f.workspace.answer(f.request.id, { decision: 'accept' });
+    assert.equal(f.workspace.snapshot().requests.length, 1);
+    assert.equal(f.store.task(f.task.id).status, 'waiting_input');
+    f.workspace.answer(f.workspace.snapshot().requests[0].id, { choice: 'decline' });
+    assert.equal(f.store.task(f.task.id).status, 'running');
+  } finally { f.close(); }
+});
+
+test('generic provider approvals do not acquire Codex scopes from similarly shaped parameters', async () => {
+  const claude = new FakeCodex(), f = fixture(undefined, { claude });
+  try {
+    claude.ready = true;
+    f.workspace.runtimes.claude.authenticated = true;
+    f.store.updateTask(f.task.id, { agent: 'claude', threadId: 'claude-thread' });
+    (f.workspace as any).loaded.add('claude-thread');
+    await f.workspace.enqueue(f.task.id, 'Review this.', 'generic-approval', false);
+    await tick();
+    claude.emit('request', { id: 'generic-rpc', method: commandApproval, params: { threadId: 'claude-thread', turnId: 'turn-new', availableDecisions: ['acceptForSession'], proposedExecpolicyAmendment: ['git'] } });
+    const request = f.workspace.snapshot().requests[0];
+    assert.deepEqual(request.approvalChoices?.map(choice => choice.kind), ['once', 'decline', 'cancel']);
+    assert.throws(() => f.workspace.answer(request.id, { choice: 'acceptForSession' }), /Invalid approval decision/);
+    f.workspace.answer(request.id, { choice: 'accept' });
+    assert.deepEqual(claude.replies, [{ id: 'generic-rpc', result: { decision: 'accept' } }]);
+    assert.deepEqual(f.codex.replies, []);
+  } finally { f.close(); }
+});
+
+test('file references survive queue editing and cancellation with exact whitespace and retained attachments and notes', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'studybuddy-reference-queue-')), f = fixture();
+  try {
+    fs.writeFileSync(path.join(root, 'main.tex'), 'Current paper.');
+    f.store.updateTask(f.task.id, { worktree: root });
+    const file = { path: 'main.tex', label: 'main.tex', kind: 'file' as const }, token = referenceText(file), prefix = '  🙂 Review ';
+    const text = prefix + token + '  ', references = [{ ...file, from: prefix.length, to: prefix.length + token.length }];
+    const attachment = await f.workspace.attachments.upload(f.task.projectId, 'context.txt', Buffer.from('Context'));
+    const notes = [{ where: 'main.tex:1', quote: 'Current', comment: 'Clarify.' }];
+    const run = await f.workspace.enqueue(f.task.id, text, 'reference-queue', true, { references, attachments: [attachment.id], reviewNotes: notes });
+    assert.equal(f.store.item(f.task.id, run.id)?.text, text);
+    assert.deepEqual(f.workspace.queue(f.task.id).messages[0].references, references);
+    let queue = f.workspace.editQueued(f.task.id, run.id, { action: 'begin' });
+    f.workspace.editQueued(f.task.id, run.id, { action: 'cancel', lease: queue.messages[0].editLease });
+    assert.deepEqual(f.store.item(f.task.id, run.id)?.meta?.references, references);
+    queue = f.workspace.editQueued(f.task.id, run.id, { action: 'begin' });
+    const lease = queue.messages[0].editLease, edited = 'Please ' + text, shifted = references.map(reference => ({ ...reference, from: reference.from + 7, to: reference.to + 7 }));
+    assert.throws(() => f.workspace.editQueued(f.task.id, run.id, { action: 'save', lease, text: edited }), /Update file references/);
+    assert.equal(f.workspace.queue(f.task.id).messages[0].editLease, lease);
+    f.workspace.editQueued(f.task.id, run.id, { action: 'save', lease, text: edited, references: shifted });
+    const item = f.store.item(f.task.id, run.id)!;
+    assert.equal(item.text, edited); assert.deepEqual(item.meta?.references, shifted);
+    assert.deepEqual(item.meta?.notes, notes); assert.equal(item.meta?.attachments?.[0].id, attachment.id);
+    assert.ok(f.store.runByKey(run.requestKey)?.prompt.includes(edited));
+    assert.match(f.store.runByKey(run.requestKey)!.prompt, /Preserve the boundary condition/);
+    queue = f.workspace.editQueued(f.task.id, run.id, { action: 'begin' });
+    f.workspace.editQueued(f.task.id, run.id, { action: 'save', lease: queue.messages[0].editLease, text: '', references: [] });
+    assert.deepEqual(f.store.item(f.task.id, run.id)?.meta?.references, []);
+    assert.equal(f.store.item(f.task.id, run.id)?.meta?.attachments?.[0].id, attachment.id);
+    assert.ok(f.store.runByKey(run.requestKey)!.prompt.includes('Clarify.'));
+  } finally { f.close(); fs.rmSync(root, { recursive: true, force: true }); }
+});
+
+test('native file mentions stay Markdown and are revalidated before steering after a symlink change', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'studybuddy-reference-native-')), f = fixture();
+  try {
+    const paper = path.join(root, 'paper'); fs.mkdirSync(paper); fs.writeFileSync(path.join(paper, 'main.tex'), 'Paper.');
+    fs.writeFileSync(path.join(root, 'outside.tex'), 'Outside.');
+    f.store.updateTask(f.task.id, { worktree: paper });
+    const file = { path: 'main.tex', label: 'main.tex', kind: 'file' as const }, text = '  ' + referenceText(file) + '  ';
+    const references = [{ ...file, from: 2, to: text.length - 2 }];
+    f.codex.ready = true;
+    await f.workspace.enqueue(f.task.id, text, 'native-references', false, { references });
+    await tick();
+    const started = f.codex.calls.find(call => call.method === 'turn/start')!;
+    assert.deepEqual(started.params.input[0], { type: 'text', text, text_elements: [] });
+    const queued = await f.workspace.enqueue(f.task.id, text, 'steer-references', false, { references });
+    fs.unlinkSync(path.join(paper, 'main.tex')); fs.symlinkSync(path.join(root, 'outside.tex'), path.join(paper, 'main.tex'));
+    await assert.rejects(f.workspace.steerQueued(f.task.id, queued.id), /outside this project/);
+    assert.equal(f.codex.calls.some(call => call.method === 'turn/steer'), false);
+    assert.equal(f.workspace.queue(f.task.id).messages[0].status, 'queued');
+  } finally { f.close(); fs.rmSync(root, { recursive: true, force: true }); }
+});
+
+test('new task preparation and retry preserve relative file references in the copied dirty manuscript', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'studybuddy-reference-create-')), paper = path.join(root, 'paper'), copy = path.join(root, 'copy');
+  fs.mkdirSync(paper); fs.writeFileSync(path.join(paper, 'new draft.tex'), 'Uncommitted manuscript content.');
+  let copies = 0;
+  const f = fixture(async (_method, route) => {
+    if (route === '/api/tasks') { copies++; fs.cpSync(paper, copy, { recursive: true }); return { worktree: copy, deferred: true }; }
+    return summary;
+  });
+  try {
+    f.store.saveProject({ ...f.store.project(f.task.projectId), path: paper });
+    const file = { path: 'new draft.tex', label: 'new draft.tex', kind: 'file' as const }, text = '  Review ' + referenceText(file) + '  ';
+    const references = [{ ...file, from: 9, to: text.length - 2 }];
+    const input = { id: 'new-reference-task-01', projectId: f.task.projectId, title: 'Review the draft', instructions: text, references };
+    const created = await f.workspace.createTask(input); await f.workspace.prepareTask(created.id);
+    assert.equal(fs.readFileSync(path.join(copy, file.path), 'utf8'), 'Uncommitted manuscript content.');
+    const initial = f.store.runByKey('initial-' + created.id)!;
+    assert.equal(initial.prompt, text);
+    assert.deepEqual(f.store.item(created.id, initial.id)?.meta?.references, references);
+    assert.equal((await f.workspace.createTask(input)).id, created.id); assert.equal(copies, 1);
+    assert.equal(f.workspace.queue(created.id).messages[0].references?.[0].path, 'new draft.tex');
+  } finally { f.close(); fs.rmSync(root, { recursive: true, force: true }); }
+});
+
+test('restarting a task keeps original reference spans relative instead of rebasing them to the old worktree', async () => {
+  const f = restartFixture();
+  try {
+    const file = { path: 'sections/main.tex', label: 'main.tex', kind: 'file' as const }, text = referenceText(file), references = [{ ...file, from: 0, to: text.length }];
+    f.store.saveItem({ ...f.store.item(f.task.id, f.run.id)!, text, meta: { references } });
+    f.store.saveRun({ ...f.run, prompt: text });
+    const restarted = await f.workspace.restartTask(f.task.id, f.choice); await f.workspace.prepareTask(restarted.id);
+    const initial = f.store.runByKey('initial-' + restarted.id)!;
+    assert.equal(initial.prompt, text);
+    assert.deepEqual(f.store.item(restarted.id, initial.id)?.meta?.references, references);
+  } finally { f.close(); }
+});
+
+test('a queued file reference that escapes before dispatch fails locally without starting a model turn', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'studybuddy-reference-dispatch-')), f = fixture();
+  try {
+    const paper = path.join(root, 'paper'); fs.mkdirSync(paper); fs.writeFileSync(path.join(paper, 'main.tex'), 'Paper.');
+    fs.writeFileSync(path.join(root, 'outside.tex'), 'Outside.');
+    f.store.updateTask(f.task.id, { worktree: paper });
+    const file = { path: 'main.tex', label: 'main.tex', kind: 'file' as const }, text = referenceText(file), references = [{ ...file, from: 0, to: text.length }];
+    const queued = await f.workspace.enqueue(f.task.id, text, 'dispatch-reference', false, { references });
+    fs.unlinkSync(path.join(paper, 'main.tex')); fs.symlinkSync(path.join(root, 'outside.tex'), path.join(paper, 'main.tex'));
+    f.codex.ready = true;
+    (f.workspace as any).schedule();
+    for (let i = 0; i < 10 && f.store.runByKey(queued.requestKey)?.status === 'queued'; i++) await tick();
+    assert.equal(f.store.runByKey(queued.requestKey)?.status, 'failed');
+    assert.match(f.store.task(f.task.id).error || '', /outside this project/);
+    assert.equal(f.codex.calls.some(call => call.method === 'turn/start'), false);
+    assert.deepEqual(f.store.item(f.task.id, queued.id)?.meta?.references, references, 'the failed request remains recoverable');
+  } finally { f.close(); fs.rmSync(root, { recursive: true, force: true }); }
 });

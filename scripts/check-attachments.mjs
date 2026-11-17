@@ -117,6 +117,29 @@ try {
   assert.equal(creates[1].attachments.length, 3);
   await page.locator('.task-link').filter({ hasText: 'Update Figure 3' }).click();
   await expect(page.locator('.message-attachments .attachment')).toHaveCount(3);
+  const thumbnail = page.locator('.image-attachment').first();
+  assert.deepEqual(await thumbnail.evaluate(element => ({ width: element.offsetWidth, height: element.offsetHeight })), { width: 96, height: 96 });
+  await thumbnail.click();
+  const preview = page.getByRole('dialog', { name: 'Image preview', exact: true });
+  await expect(preview).toBeVisible();
+  const previewImage = preview.locator('img');
+  await expect(previewImage).toHaveJSProperty('complete', true);
+  const initialWidth = await previewImage.evaluate(element => element.getBoundingClientRect().width);
+  await preview.getByRole('button', { name: 'Zoom in', exact: true }).click();
+  await expect.poll(() => previewImage.evaluate(element => element.getBoundingClientRect().width)).toBeGreaterThan(initialWidth);
+  await preview.getByRole('button', { name: 'Zoom out', exact: true }).click();
+  await expect.poll(() => previewImage.evaluate(element => element.getBoundingClientRect().width)).toBe(initialWidth);
+  const download = page.waitForEvent('download');
+  await preview.getByRole('link', { name: 'Download image', exact: true }).click();
+  assert.equal((await download).suggestedFilename(), '实验结果.png');
+  await page.screenshot({ path: 'test-results/attachment-image-preview.png' });
+  await page.keyboard.press('Escape');
+  await expect(preview).not.toBeVisible();
+  await expect(thumbnail).toBeFocused();
+  await thumbnail.click();
+  await page.mouse.click(1, 1);
+  await expect(preview).not.toBeVisible();
+  await expect(page.locator('.message-attachments a.attachment').first()).toHaveAttribute('target', '_blank');
   const chat = page.getByRole('textbox', { name: 'Instructions for Codex' });
   await chat.evaluate((element, bytes) => {
     const transfer = new DataTransfer(); transfer.items.add(new File([new Uint8Array(bytes)], 'pasted.png', { type: 'image/png' }));
@@ -149,6 +172,12 @@ try {
   await page.screenshot({ path: 'test-results/attachments-mobile.png' });
   await page.emulateMedia({ colorScheme: 'dark' });
   await page.screenshot({ path: 'test-results/attachments-dark.png' });
+  await page.locator('.image-attachment').first().click();
+  await expect(page.locator('.attachment-preview')).toBeVisible();
+  assert.equal(await page.locator('.attachment-preview').evaluate(element => element.getBoundingClientRect().width <= innerWidth), true);
+  await page.screenshot({ path: 'test-results/attachment-image-preview-mobile-dark.png' });
+  await page.locator('.attachment-preview-actions button').click();
+  await expect(page.locator('.attachment-preview')).not.toBeVisible();
   assert.deepEqual(errors, []);
-  console.log('Attachment UI passed: pick, drop, paste, reload, paper isolation, retry, message previews and mobile layout.');
+  console.log('Attachment UI passed: pick, drop, paste, reload, paper isolation, retry, thumbnails, image preview zoom/download/dismissal, file links and mobile layout.');
 } finally { await browser.close(); await server.close(); }

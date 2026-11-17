@@ -1,5 +1,18 @@
 # Changelog
 
+## StudyBuddy — Unreleased
+
+- Port the core Codex conversation UI using measurements and interactions captured from the official VS Code extension: history, effort slider, model menus, slash submenus, status card, image preview and per-turn timing. Keep StudyBuddy's multi-agent and manuscript/review controls connected to the existing tasks.
+- Add an editable message queue with preview, removal, pause/resume, draft recovery and native Codex steering. Check uncertain delivery before retrying to avoid duplicate instructions.
+- Add native Codex context compaction with separate acknowledgment/completion states and recovery checks. Preserve per-agent model preferences, permission descriptions, attachments and review instructions.
+- Add atomic file and folder references with project-scoped drafts, queue recovery and validated paths. Match the native Markdown submission format and preserve IME composition and clipboard behavior.
+- Add native approval cards with request-scoped decisions, a read-only MCP status menu, capability-gated Fast mode and `/init` with an existing-guide check.
+- Add native Plan mode, editable implementation decisions and question cards; integrate autonomous Goal controls with queue, reconnect and manuscript publication handling.
+- Add Sketch drawing attachments with editable drafts, selection, shapes, text, erasing and undo/redo.
+- Add native code review and conversation forks. Preserve source files, turn history and shared attachments in independent task worktrees, and reconcile lost replies without repeating native actions.
+- Add buffered Codex dictation for ChatGPT sign-ins, with draft preservation, cancellation, retry, account-bound transcription and scoped desktop microphone permissions.
+- Document the official reference, deterministic regression evidence and remaining host-command parity gaps in [Codex chat integration](docs/codex-chat-integration.md).
+
 ## StudyBuddy 0.1.0 — 2026-11-16
 
 - Initialize the StudyBuddy fork with its own application name, bundle identifier and version.

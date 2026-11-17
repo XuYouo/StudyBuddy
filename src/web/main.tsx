@@ -1,5 +1,21 @@
+import { useComposerSketch } from './composer-sketch.tsx';
+import { ComposerEditor } from './composer-editor.tsx';
+import { useCodexInit, type InitTarget } from './codex-init.tsx';
+import { ComposerMessage } from './composer-message.tsx';
+import { useComposerFiles } from './composer-file-menu.tsx';
+import type { ComposerInput } from './composer-input.ts';
+import { decodeDocument, encodeDocument, editDocument, type ComposerDocument } from '../composer-reference.ts';
+import type { ComposerFile, ComposerReference } from '../shared.ts';
 import '../../engine/src/web/legacy-storage.ts';
 import { TaskDocument } from './task-document.tsx';
+import { RequestCard } from './request-card.tsx';
+import { CodexReviewPicker, type CodeReviewControl } from './codex-review-picker.tsx';
+import { CodexForkPicker } from './codex-fork-picker.tsx';
+import type { CodeReviewBranches, CodeReviewTarget } from '../code-review.ts';
+import { useTaskGoal } from './codex-goal-host.tsx';
+import { CodexGoalMode, CodexGoalSent } from './codex-goal.tsx';
+import { useComposerDictation, dictationApi } from './composer-dictation.tsx';
+import { NativePlan, NativeQuestions, PlanDecision, PlanModeButton, planDraft } from './codex-plan.tsx';
 import { requestApi, requestState } from './api.ts';
 import { agentsSettled, chosenAgent, noAgent, offeredAgents } from './agent-choice.ts';
 import { isPlayground, pdfAsset, wordAsset, requestPlaygroundDownload } from './playground-mode.ts';
@@ -18,7 +34,7 @@ import { aiReviewSummary, isFeedbackPrompt } from '../conversation.ts';
 import { ignorePattern } from '../commit.ts';
 import { AGENT_IDS, AGENT_NAMES, isAgentId, taskFinished } from '../shared.ts';
 import type { TaskCommitReview, LatexInstallation, AgentId, Annotation, NoteSection, BuildRepairResult, MarkKind, Author, FeedbackSummary, GitDiff, GitFile, GitOverview, GitStatus, Manuscript, ManuscriptProblems, PendingRequest, Project, RuntimeStatus, Skill, Snapshot, Task, TimelineItem } from '../shared.ts';
-import { SkillChip, SkillMenu, SkillPicker, matchSkills, skillName, skillQuery } from './skills.tsx';
+import { SkillChip, SkillPicker, skillName } from './skills.tsx';
 import { reviewDraft, useReviewDraft, reviewNoteSummary, reviewSubmission } from './review-draft.ts';
 import { ReviewDraftCards } from './review-draft-cards.tsx';
 import { ComposerDraft, sendsMessage, taskTitle, pendingReviewFeedback } from './composer.ts';
@@ -41,6 +57,14 @@ import { ActionMenu } from './action-menu.tsx';
 import { Icon } from './icons.tsx';
 import { toolIcon, toolNote, toolSentence, toolSummary } from './tool-calls.ts';
 import { ContextMeter } from './context-meter.tsx';
+import { useCodexCommands } from './codex-command-menu.tsx';
+import { CodexChatHeader, CodexEmptyMark, type CodexChatNavigation } from './codex-chat-chrome.tsx';
+import { CodexIcon } from './codex-icons.tsx';
+import { CodexQueue, CodexCompaction } from './codex-queue.tsx';
+import { CodexStatus } from './codex-status.tsx';
+import { CodexTurn } from './codex-turn.tsx';
+import { CodexModelPicker } from './codex-model-picker.tsx';
+import type { ComposerModelConfiguration } from './codex-model-config.ts';
 import { ChangeSummary, FileDiffs } from './file-changes.tsx';
 import { UpdateNotice, versionLabel } from './update-notice.tsx';
 import { chooseDirectory, DesktopWindowChrome, nativeFolders } from './desktop-chrome.tsx';
@@ -79,9 +103,9 @@ import { notificationState, notify, notifying, subscribeNotifications, taskAlert
 import { Markdown } from './markdown.tsx';
 import { ComparisonProgress } from './comparison-progress.tsx';
 import logo from './logo.svg';
-import { AgentConnectionNotice, AgentPicker, NoAgentNotice, WriterSuggestion } from './agent-picker.tsx';
+import { AgentConnectionNotice, type AgentPickerControl, type AgentPickerNavigation, NoAgentNotice, WriterSuggestion } from './agent-picker.tsx';
 import { taskEffort } from './task-effort.ts';
-import { PermissionOptions, TaskPermissionOptions } from './task-permissions.tsx';
+import { CodexPermissionPicker } from './codex-permission-picker.tsx';
 import { type TaskPermissions } from '../shared.ts';
 import { TaskModelPicker } from './task-model-picker.tsx';
 import { TaskFlight, type TaskFlightData } from './task-flight.tsx';
@@ -98,6 +122,7 @@ const PlaygroundProgress = import.meta.env.MODE === 'playground' ? lazy(() => im
 const PdfView = lazy(() => import('./pdf-view.tsx').then(module => ({ default: module.PdfView })));
 import './style.css';
 import './note-controls.css';
+import './codex-chat.css';
 
 let token = '';
 const uuid = () => crypto.randomUUID?.() || Array.from(crypto.getRandomValues(new Uint8Array(20)), b => b.toString(16).padStart(2, '0')).join('');
@@ -105,12 +130,14 @@ async function api<T = any>(route: string, body?: unknown, signal?: AbortSignal)
   if (import.meta.env.MODE === 'playground') return (await import('./playground/api.ts')).playgroundApi<T>(route, body, signal);
   return requestApi<T>(route, token, body, signal);
 }
+const composerDictationApi = dictationApi(() => token);
 connectStamps(api);
 connectIndirectChanges(api);
 connectNoteAlternatives(api);
 connectNoteLocation(api);
 const uploadAttachment = (projectId: string, file: File, signal: AbortSignal) => api<Attachment>(`/projects/${projectId}/attachments`, file, signal);
 const detectLatexInstallation = (signal: AbortSignal) => api<LatexInstallation | null>('/runtime/latex', undefined, signal);
+const loadMcpStatus = (signal: AbortSignal) => api<{ servers: import('../shared.ts').McpServerStatus[] }>('/runtime/codex/mcp', undefined, signal).then(result => result.servers);
 const loadRequirements = (signal: AbortSignal) => api<SystemRequirements>('/runtime/requirements', undefined, signal);
 const checkDiagnostics = (projectId: string | undefined, signal: AbortSignal) => api<DiagnosticReport>('/diagnostics', { projectId }, signal);
 const AGENT_LABELS = AGENT_NAMES;
@@ -150,60 +177,52 @@ function useMedia(query: string) {
 // Enter (see sendsMessage), and keeps its actions inside the same surface.
 // With skills, "/" opens the skill menu; the chosen skill sits above the text
 // as a chip, the text becomes optional, and Backspace in an empty box removes it.
-function Composer({ label, value, placeholder, onChange, onSubmit, readOnly, autoFocus, inputRef, footer, action, large, skills, skill, onSkill, attachments, upload, filesDisabled, imageHint, reviewContent }: { reviewContent?: React.ReactNode; label: string; value: string; placeholder: string; onChange: (value: string) => void; onSubmit: () => void; readOnly?: boolean; autoFocus?: boolean; inputRef?: React.RefObject<HTMLTextAreaElement | null>; footer: React.ReactNode | ((attach: () => void) => React.ReactNode); action: React.ReactNode; attachments?: AttachmentDraft; upload?: UploadAttachment; filesDisabled?: boolean; imageHint?: boolean; large?: boolean; skills?: Skill[]; skill?: Skill | null; onSkill?: (skill: Skill | null) => void }) {
-  const fallback = useRef<HTMLTextAreaElement>(null), input = inputRef || fallback;
+type ComposerCommands = { onFork?: (navigation?: AgentPickerNavigation) => void; onGoal?: () => void; onReview?: (navigation?: AgentPickerNavigation) => void; onPlan?: () => void; planMode?: boolean; onFast?: () => void; fastServiceTier?: string; onModel?: (navigation?: AgentPickerNavigation) => void; onReasoning?: (navigation?: AgentPickerNavigation) => void; onStatus?: () => void; onCompact?: () => void; onStop?: () => void; loadMcp?: typeof loadMcpStatus; disabled?: boolean };
+
+function Composer({ dictationKey, init, commands, onOpenReference, references = [], filesUrl, label, value, placeholder, onChange, onSubmit, readOnly, autoFocus, inputRef, footer, action, large, skills, skill, onSkill, attachments, upload, filesDisabled, imageHint, reviewContent }: { dictationKey?: string; init?: InitTarget; onOpenReference?: (file: ComposerFile) => void; references?: ComposerReference[]; filesUrl?: string; commands?: ComposerCommands; reviewContent?: React.ReactNode; label: string; value: string; placeholder: string; onChange: (value: string, references?: ComposerReference[]) => void; onSubmit: () => void; readOnly?: boolean; autoFocus?: boolean; inputRef?: React.RefObject<ComposerInput | null>; footer: React.ReactNode | ((attach: () => void, sketch?: () => void) => React.ReactNode); action: React.ReactNode; attachments?: AttachmentDraft; upload?: UploadAttachment; filesDisabled?: boolean; imageHint?: boolean; large?: boolean; skills?: Skill[]; skill?: Skill | null; onSkill?: (skill: Skill | null) => void }) {
+  const fallback = useRef<ComposerInput>(null), input = inputRef || fallback;
+  const initialization = useCodexInit(init, (url, signal) => api(url, undefined, signal));
+  readOnly = readOnly || initialization.busy;
+  const dictation = useComposerDictation({ inputRef: input, contextKey: dictationKey, enabled: !!dictationKey && !readOnly && !commands?.disabled, api: composerDictationApi, onSubmit: submit });
+  readOnly = readOnly || dictation.busy || dictation.retained;
+  const changeText = (text: string) => onChange(text, editDocument({ text: value, references }, text).references);
+  const fileMenu = useComposerFiles({ inputRef: input, url: filesUrl, disabled: readOnly });
   const fileInput = useRef<HTMLInputElement>(null), dragDepth = useRef(0);
   const [dragging, setDragging] = useState(false);
   const canAttach = Boolean(attachments && upload && !readOnly && !filesDisabled);
+  const discard = (file: Attachment) => { void api(`/projects/${file.projectId}/attachments/${file.id}/discard`, {}).catch(() => {}); };
+  const sketch = useComposerSketch({ draft: attachments, upload, enabled: canAttach, onClose: () => input.current?.focus(), discard });
+const commandMenu = useCodexCommands({ value, onChange: changeText, inputRef: input, skills, onSkill: onSkill ? pick : undefined, onPlanSkill: onSkill ? chosen => onSkill(chosen) : undefined, onSketch: canAttach ? sketch.open : undefined, onInit: init ? () => void initialization.run() : undefined, ...commands, disabled: readOnly || commands?.disabled || fileMenu.open });
   function addFiles(files: File[]) { if (canAttach && files.length) { void attachments!.add(files, upload!); input.current?.focus(); } }
-  const menuId = useId(), [dismissed, setDismissed] = useState<string | null>(null), [active, setActive] = useState(0);
-  const query = skills?.length && onSkill && !readOnly ? skillQuery(value) : null;
-  const open = query !== null && dismissed !== value, matches = open ? matchSkills(skills!, query) : [];
-  useEffect(() => setActive(0), [query]);
-  // Escape closes the menu until the text changes.
-  useEffect(() => { if (dismissed !== null && value !== dismissed) setDismissed(null); }, [value, dismissed]);
-  useLayoutEffect(() => { const element = input.current; if (!element) return; element.style.height = 'auto'; element.style.height = `${element.scrollHeight}px`; }, [input, value]);
   useEffect(() => { if (autoFocus && !touch()) input.current?.focus(); }, [autoFocus, input]);
-  function pick(chosen: Skill) { onSkill?.(chosen); onChange(''); input.current?.focus(); }
-  function keyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-    if (open && !e.nativeEvent.isComposing && e.keyCode !== 229) {
-      if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && matches.length) { e.preventDefault(); setActive(index => (index + (e.key === 'ArrowDown' ? 1 : matches.length - 1)) % matches.length); return; }
-      if ((e.key === 'Enter' || e.key === 'Tab') && !e.shiftKey && matches.length) { e.preventDefault(); pick(matches[Math.min(active, matches.length - 1)]); return; }
-      if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); setDismissed(value); return; }
-    }
+  function pick(chosen: Skill) { onSkill?.(chosen); onChange('', []); input.current?.focus(); }
+  function keyDown(e: KeyboardEvent) {
+    if (fileMenu.onKeyDown(e) || commandMenu.onKeyDown(e)) return;
+    if (e.key === 'Escape' && !e.isComposing && e.keyCode !== 229 && commands?.onStop) { e.preventDefault(); e.stopPropagation(); commands.onStop(); return; }
     if (e.key === 'Backspace' && skill && onSkill && !value && !readOnly) { e.preventDefault(); onSkill(null); return; }
-    if (sendsMessage(e.nativeEvent, touch())) { e.preventDefault(); onSubmit(); }
+    if (sendsMessage(e, touch())) { e.preventDefault(); submit(); }
   }
-  return <form className={'composer' + (large ? ' large' : '') + (dragging ? ' dragging' : '')}
+  function submit() { if (dictation.busy || dictation.retained || input.current?.composing) return; if (!fileMenu.interceptSubmit() && !commandMenu.interceptSubmit()) onSubmit(); }
+  return <><form className={'composer codex-composer' + (large ? ' large' : '') + (dragging ? ' dragging' : '')}
     onDragEnter={event => { if (!event.dataTransfer.types.includes('Files')) return; event.preventDefault(); if (canAttach && ++dragDepth.current === 1) setDragging(true); }}
     onDragOver={event => { if (event.dataTransfer.types.includes('Files')) { event.preventDefault(); event.dataTransfer.dropEffect = canAttach ? 'copy' : 'none'; } }}
     onDragLeave={event => { if (!event.dataTransfer.types.includes('Files')) return; event.preventDefault(); if (--dragDepth.current <= 0) { dragDepth.current = 0; setDragging(false); } }}
     onDrop={event => { if (!event.dataTransfer.types.includes('Files')) return; event.preventDefault(); dragDepth.current = 0; setDragging(false); addFiles(Array.from(event.dataTransfer.files)); }}
-    onPaste={event => { const files = Array.from(event.clipboardData.files); if (files.length) { event.preventDefault(); addFiles(files); const text = event.clipboardData.getData('text/plain'); if (canAttach && text && input.current) { const area = input.current; onChange(value.slice(0, area.selectionStart) + text + value.slice(area.selectionEnd)); } } }}
-    onSubmit={e => { e.preventDefault(); onSubmit(); }} onPointerDown={e => { if (e.target === e.currentTarget) { e.preventDefault(); input.current?.focus(); } }}>
+    onSubmit={e => { e.preventDefault(); submit(); }} onPointerDown={e => { if (e.target === e.currentTarget) { e.preventDefault(); input.current?.focus(); } }}>
+    {initialization.notice}
     {reviewContent}
-    {attachments && upload && <><input ref={fileInput} type="file" multiple hidden aria-label={t('Choose attachments')} disabled={!canAttach} onChange={event => { addFiles(Array.from(event.target.files || [])); event.target.value = ''; }}/><DraftAttachments draft={attachments} upload={upload} discard={file => { void api(`/projects/${file.projectId}/attachments/${file.id}/discard`, {}).catch(() => {}); }} disabled={readOnly || filesDisabled}/></>}
+    {attachments && upload && <><input ref={fileInput} type="file" multiple hidden aria-label={t('Choose attachments')} disabled={!canAttach} onChange={event => { addFiles(Array.from(event.target.files || [])); event.target.value = ''; }}/><DraftAttachments draft={attachments} upload={upload} discard={discard} edit={sketch} disabled={readOnly || filesDisabled}/></>}
     {dragging && <div className="attachment-drop-hint">{t('Drop files to attach')}</div>}
     {imageHint && <p className="attachment-agent-hint">{t('Antigravity opens images through its file tools. For direct image input, choose Codex or Claude.')}</p>}
-    {open && <SkillMenu id={menuId} skills={matches} active={active} onActive={setActive} onPick={pick}/>}
+    {commandMenu.menu}{fileMenu.menu}
     {skill && <div className="composer-skill"><SkillChip skill={skill} onRemove={onSkill && !readOnly ? () => { onSkill(null); input.current?.focus(); } : undefined}/></div>}
-    <textarea ref={input} rows={1} aria-label={label} placeholder={skill ? (skill.source !== 'builtin' && skill.hint) || t('Details (optional)') : placeholder} value={value} readOnly={readOnly} onChange={e => onChange(e.target.value)} onKeyDown={keyDown}
-      {...(onSkill && skills?.length ? { 'aria-autocomplete': 'list' as const, 'aria-controls': open ? menuId : undefined, 'aria-activedescendant': open && matches.length ? `${menuId}-${Math.min(active, matches.length - 1)}` : undefined } : {})}/>
-    <div className="composer-footer">{typeof footer === 'function' ? footer(() => fileInput.current?.click()) : footer}{action}</div>
-  </form>;
-}
-
-function RequestCard({ request, agent, answerDrafts, onDone }: { request: PendingRequest; agent: string; answerDrafts: Map<string, Record<string, string>>; onDone: () => void }) {
-  const [answers, updateAnswers] = useState<Record<string, string>>(() => answerDrafts.get(request.id) || {});
-  function setAnswers(next: Record<string, string>) { answerDrafts.set(request.id, next); updateAnswers(next); }
-  const [busy, setBusy] = useState(false), [error, setError] = useState('');
-  const questions = request.method.endsWith('requestUserInput') ? request.params.questions || [] : [];
-  async function respond(decision?: string) { setBusy(true); setError(''); try { await api('/requests/' + request.id, { decision, answers }); answerDrafts.delete(request.id); onDone(); } catch (e) { setError((e as Error).message); } finally { setBusy(false); } }
-  return <div className="request-card"><h3><Icon name={questions.length ? 'chat' : 'alert'} size={16}/>{questions.length ? t('{agent} needs your input', { agent }) : t('Approve this action')}</h3>
-    {questions.map((q: any) => <fieldset className="question" key={q.id}><legend>{q.question || q.header}</legend>{q.options?.length > 0 && <div className="answer-options">{q.options.map((option: any) => <button type="button" disabled={busy} aria-pressed={answers[q.id] === option.label} className={answers[q.id] === option.label ? 'selected' : ''} key={option.label} onClick={() => setAnswers({ ...answers, [q.id]: option.label })}>{option.label}{option.description && <small>{option.description}</small>}</button>)}</div>}{!(q.isOther === false && q.options?.length > 0) && <input disabled={busy} aria-label={q.question || q.header} placeholder={t('Or type your own answer')} value={answers[q.id] || ''} onChange={e => setAnswers({ ...answers, [q.id]: e.target.value })}/>}</fieldset>)}
-    {!questions.length && <><p>{request.params.reason || t('{agent} is requesting permission for this action.', { agent })}</p><pre>{request.params.command || (request.params.permissions ? JSON.stringify(request.params.permissions, null, 2) : request.params.grantRoot || t('Apply file changes'))}</pre></>}
-    {error && <p className="inline-error" role="alert">{error}</p>}<div className="button-row">{!questions.length && <button disabled={busy} className="button secondary" onClick={() => void respond('decline')}>{t('Decline')}</button>}<button disabled={busy || questions.some((q: any) => !answers[q.id]?.trim())} className="button primary" onClick={() => void respond(questions.length ? undefined : 'accept')}>{busy ? t('Submitting…') : questions.length ? t('Reply to {agent}', { agent }) : t('Allow this action')}</button></div>
-  </div>;
+    <div hidden={dictation.busy}>{/* Keep the native editor mounted so recording preserves its document and undo history. */}
+    <ComposerEditor onOpenReference={onOpenReference} inputRef={input} label={label} placeholder={skill ? (skill.source !== 'builtin' && skill.hint) || t('Details (optional)') : placeholder} value={{ text: value, references }} readOnly={readOnly}
+      onChange={next => onChange(next.text, next.references)} onKeyDown={keyDown} attributes={{ ...commandMenu.inputProps, ...fileMenu.inputProps }}
+      onPasteFiles={(files, text) => { addFiles(files); const area = input.current; if (canAttach && text && area) area.replaceRange(area.selectionStart, area.selectionEnd, text); }}/>
+    </div>{dictation.panel}
+    <div className="composer-footer" hidden={dictation.busy || dictation.retained}>{typeof footer === 'function' ? footer(() => fileInput.current?.click(), canAttach ? sketch.open : undefined) : footer}<div className="composer-dictation-launch">{dictation.button}{action}</div></div>
+  </form>{sketch.editor}</>;
 }
 
 // Clipboard access needs a secure context; Tailscale HTTP falls back to a hidden selection.
@@ -237,7 +256,7 @@ const senderLabel = (sender: { mine: boolean; name: string }, at: number) => sen
 const SenderName = ({ sender }: { sender: { mine: boolean; name: string } }) => sender.mine ? null : <div className="message-author">{sender.name}</div>;
 
 // A first message built from PDF notes shows the notes, not the instructions around them.
-function NotesMessage({ item, notes }: { item: TimelineItem; notes: NoteSummary[] }) {
+function NotesMessage({ item, notes, onOpenReference }: { item: TimelineItem; notes: NoteSummary[]; onOpenReference?: (file: ComposerFile) => void }) {
   const sender = senderOf(item.meta?.author);
   const results = useNoteResults();
   const renderNote = (note: NoteSummary, index: number) => <li key={index} data-note-result={`${item.id}:${index}`} tabIndex={0}
@@ -249,7 +268,7 @@ function NotesMessage({ item, notes }: { item: TimelineItem; notes: NoteSummary[
     </li>;
   return <article className="message user notes-message" aria-label={senderLabel(sender, item.createdAt)}><SenderName sender={sender}/><div className="message-body" title={time(item.createdAt)}>
     {item.meta?.skill && <SkillChip skill={item.meta.skill}/>}
-    {item.meta?.notes && item.text && <p className="notes-request">{item.text}</p>}
+    {item.meta?.notes && item.text && <p className="notes-request"><ComposerMessage text={item.text} references={item.meta.references} onOpenReference={onOpenReference}/></p>}
     <div className="sent-notes-head"><Icon name="notes" size={14}/>{notes.some(note => note.group) ? t('PDF annotations') : tn(notes.length, 'Note on the PDF', '{n} notes on the PDF')}</div>
     {noteGroups(notes).map(({ group, entries }) => <GroupCard key={group} group={group} count={entries.length} active={entries.some(({ index }) => results?.selected === `${item.id}:${index}`)}>
       {item.meta?.groupInstructions?.[group] && <p className="group-instruction-sent">{item.meta.groupInstructions[group]}</p>}
@@ -270,10 +289,10 @@ function FeedbackDetails({ feedback }: { feedback: FeedbackSummary }) {
   </>;
 }
 
-function UserMessage({ item, agent }: { item: TimelineItem; agent: string }) {
+function UserMessage({ item, agent, onOpenReference }: { item: TimelineItem; agent: string; onOpenReference?: (file: ComposerFile) => void }) {
   const sender = senderOf(item.meta?.author);
   const notes = item.meta?.notes || readNotesInstructions(item.text);
-  if (notes) return <NotesMessage item={item} notes={notes}/>;
+  if (notes) return <NotesMessage item={item} notes={notes} onOpenReference={onOpenReference}/>;
   const { skill, feedback, sendsFeedback, build } = item.meta || {};
   // StudyBuddy sent the agent a build its own edits broke.
   if (build) return <article className="message user notes-message build-message" aria-label={t('StudyBuddy sent the build error to {agent}, {time}', { agent, time: time(item.createdAt) })}><div className="message-body" title={time(item.createdAt)}>
@@ -284,11 +303,10 @@ function UserMessage({ item, agent }: { item: TimelineItem; agent: string }) {
     <div className="sent-notes-head"><Icon name="paper" size={14}/>{t('Review feedback')}</div>
     {feedback && <FeedbackDetails feedback={feedback}/>}
   </div></article>;
-  return <article className="message user" aria-label={senderLabel(sender, item.createdAt)}><SenderName sender={sender}/><div className="message-body" title={time(item.createdAt)}>
-    {skill && <SkillChip skill={skill}/>}{skill && item.text ? '\n' : ''}{item.text}
-    <MessageAttachments files={item.meta?.attachments}/>
+  return <article className="message user" aria-label={senderLabel(sender, item.createdAt)}><SenderName sender={sender}/><MessageAttachments files={item.meta?.attachments}/>{(item.text || skill || feedback) && <div className="message-body" title={time(item.createdAt)}>
+    {skill && <SkillChip skill={skill}/>}{skill && item.text ? '\n' : ''}<ComposerMessage text={item.text} references={item.meta?.references} onOpenReference={onOpenReference}/>
     {feedback && <details className="feedback-attachment"><summary><Icon name="paper" size={13}/>{t('With review feedback')}</summary><FeedbackDetails feedback={feedback}/></details>}
-  </div></article>;
+  </div>}{item.meta?.goal && <CodexGoalSent/>}</article>;
 }
 
 // Memoized: polling and typing re-render the thread, and unchanged items can skip it.
@@ -302,12 +320,15 @@ function PageStrip({ items }: { items: TimelineItem[] }) {
   })}</div>;
 }
 
-const TimelineEntry = memo(function TimelineEntry({ item, agent, root, pages = true }: { item: TimelineItem; agent: string; root: string; pages?: boolean }) {
+const TimelineEntry = memo(function TimelineEntry({ item, agent, root, pages = true, onOpenReference }: { item: TimelineItem; agent: string; root: string; pages?: boolean; onOpenReference?: (file: ComposerFile) => void }) {
   // Memoized, so it follows a language change itself rather than through App.
   useLanguage();
   if (PlaygroundProgress && item.type === 'demo-progress') return <Suspense fallback={null}><PlaygroundProgress item={item}/></Suspense>;
-  if (item.type === 'user') return <UserMessage item={item} agent={agent}/>;
+  if (item.type === 'user') return <UserMessage item={item} agent={agent} onOpenReference={onOpenReference}/>;
+  if (item.type === 'plan') return <NativePlan text={item.text}/>;
   if (item.type === 'assistant') return <article className="message assistant" aria-label={`${agent}, ${time(item.createdAt)}`}><div className="message-body markdown"><Markdown text={item.text}/></div><div className="message-actions"><CopyButton text={item.text}/><time dateTime={new Date(item.createdAt).toISOString()}>{time(item.createdAt)}</time></div></article>;
+  if (item.type === 'contextCompaction') return <CodexCompaction operation={{ id: item.id, requestedAt: item.createdAt, state: (['completed', 'failed', 'interrupted', 'unknown'] as const).find(state => state === item.status) || 'running', error: item.detail || undefined }}/>;
+  if (item.type === 'reasoning') return <details className="reasoning"><summary>{t('Thinking')}<CodexIcon name="chevronDown" size={12}/></summary><Markdown text={item.text}/></details>;
   const files = item.type === 'files' ? editedFiles(item, root) : [];
   const label = item.type === 'command' ? shellCommand(item.text) || t('Run command') : item.type === 'files' ? (files.length === 1 ? t('Edited {file}', { file: files[0] }) : t('Edited {n} files', { n: files.length })) : item.type === 'pdf' ? (item.text ? t('Viewed the PDF: {places}', { places: item.text }) : t('Viewed the PDF')) : toolSentence(item) || item.text || t('Run tool');
   const detail = item.type === 'files' ? null : item.detail;
@@ -330,7 +351,7 @@ function ToolGroup({ items, agent, root }: { items: TimelineItem[]; agent: strin
 
 function timelineEntries(items: TimelineItem[]) {
   const entries: TimelineItem[][] = [];
-  const message = (item: TimelineItem) => item.type === 'user' || item.type === 'assistant' || (isPlayground && item.type === 'demo-progress');
+  const message = (item: TimelineItem) => item.type === 'user' || item.type === 'assistant' || item.type === 'plan' || item.type === 'reasoning' || item.type === 'contextCompaction' || (isPlayground && item.type === 'demo-progress');
   for (const item of items) {
     const last = entries[entries.length - 1];
     if (!message(item) && last && !message(last[0])) last.push(item); else entries.push([item]);
@@ -338,12 +359,121 @@ function timelineEntries(items: TimelineItem[]) {
   return entries;
 }
 
-function Activity({ runtimes, relatedTasks, onOpenTask, onRestarted, source, onRevealQuote, task, runtime, reconnecting, onReconnect, skills, composer, answerDrafts, items, loading, loadError, retry, requests, refresh, onTaskSaved, reportError, pause, pausing, openReview, feedback, connection, tools, lead, errorActions }: { runtimes: Partial<Record<AgentId, RuntimeStatus>>; relatedTasks: Task[]; onOpenTask: (id: string) => void; onRestarted: (task: Task) => void; source?: { tabs: React.ReactNode; panel: React.ReactNode; selected: boolean }; errorActions?: React.ReactNode; tools?: React.ReactNode; lead?: React.ReactNode; onRevealQuote: () => void; task: Task; runtime?: RuntimeStatus; reconnecting: boolean; onReconnect: () => void; skills: Skill[]; composer: ComposerDraft; answerDrafts: Map<string, Record<string, string>>; items: TimelineItem[]; loading: boolean; loadError: string; retry: () => void; requests: PendingRequest[]; refresh: () => void; onTaskSaved: (task: Task) => void; reportError: (e: unknown) => void; pause: () => void; pausing: boolean; openReview?: () => void; feedback?: React.ReactNode; connection?: React.ReactNode }) {
-  const input = useRef<HTMLTextAreaElement>(null);
+function Activity({ onOpenReference, navigation, runtimes, relatedTasks, onOpenTask, onRestarted, source, onRevealQuote, task, runtime, reconnecting, onReconnect, skills, composer, answerDrafts, items, loading, loadError, retry, requests, refresh, onTaskSaved, reportError, pause, pausing, openReview, feedback, connection, tools, lead, errorActions }: { onOpenReference?: (file: ComposerFile) => void; navigation: CodexChatNavigation; runtimes: Partial<Record<AgentId, RuntimeStatus>>; relatedTasks: Task[]; onOpenTask: (id: string) => void; onRestarted: (task: Task) => void; source?: { tabs: React.ReactNode; panel: React.ReactNode; selected: boolean }; errorActions?: React.ReactNode; tools?: React.ReactNode; lead?: React.ReactNode; onRevealQuote: () => void; task: Task; runtime?: RuntimeStatus; reconnecting: boolean; onReconnect: () => void; skills: Skill[]; composer: ComposerDraft; answerDrafts: Map<string, Record<string, string>>; items: TimelineItem[]; loading: boolean; loadError: string; retry: () => void; requests: PendingRequest[]; refresh: () => void; onTaskSaved: (task: Task) => void; reportError: (e: unknown) => void; pause: () => void; pausing: boolean; openReview?: () => void; feedback?: React.ReactNode; connection?: React.ReactNode }) {
+  const input = useRef<ComposerInput>(null);
+  const activityMounted = useRef(true);
+  useEffect(() => { activityMounted.current = true; return () => { activityMounted.current = false; }; }, []);
+  const modelPicker = useRef<AgentPickerControl>(null);
   const reviewNotes = reviewDraft(task.id), notes = useReviewDraft(task.id);
+  const codeReviewPicker = useRef<CodeReviewControl>(null), forkPicker = useRef<CodeReviewControl>(null);
+  const [startingCodeReview, setStartingCodeReview] = useState(false), [forking, setForking] = useState(false);
+  async function forkChat() {
+    const key = `studybuddy:fork:${task.id}`, id = requestId(browserStorage, key, task.threadId || '', uuid), submitted = JSON.stringify([composer.text, composer.references]);
+    setForking(true);
+    try {
+      const created = await api<Task>(`/tasks/${task.id}/fork`, { id });
+      onTaskSaved(created);
+      if (created.status === 'uncertain') throw new Error(created.error || t('Check task status before sending'));
+      browserStorage.removeItem(key);
+      if (activityMounted.current) { if (JSON.stringify([composer.text, composer.references]) === submitted) composer.edit('', []); onRestarted(created); }
+    } finally { setForking(false); refresh(); }
+  }
+  async function startCodeReview(target: CodeReviewTarget) {
+    const key = `studybuddy:code-review:${task.id}`, requestKey = requestId(browserStorage, key, JSON.stringify(target), uuid);
+    setStartingCodeReview(true);
+    try { const result = await api<Task>(`/tasks/${task.id}/code-review`, { target, requestKey }); onTaskSaved(result); if (result.status === 'uncertain') throw new Error(result.error || t('Check task status before sending')); browserStorage.removeItem(key); }
+    finally { setStartingCodeReview(false); refresh(); }
+  }
   const [savingModel, setSavingModel] = useState(false);
   const [savingPermissions, setSavingPermissions] = useState(false);
-  const { text: draft, sending } = useSyncExternalStore(composer.subscribe, composer.getSnapshot);
+  const [savingMode, setSavingMode] = useState(false);
+  const modeLock = useRef(false);
+  const [goalMode, setGoalMode] = useState(() => browserStorage.getItem(`studybuddy:goal-mode:${task.id}`) === 'true');
+  function rememberGoalMode(value: boolean) { setGoalMode(value); browserStorage.setItem(`studybuddy:goal-mode:${task.id}`, String(value)); }
+  const [editedPlan, setEditedPlan] = useState<{ id: string; text: string }>();
+  const pendingPlan = task.pendingPlan;
+  const planText = pendingPlan ? editedPlan?.id === pendingPlan.itemId ? editedPlan.text : planDraft(task.id, pendingPlan) : '';
+  const canPlan = (task.agent || 'codex') === 'codex' && task.mode !== 'review' && runtime?.collaborationModes?.some(mode => mode.mode === 'plan');
+  async function togglePlan() {
+    if (modeLock.current) return;
+    modeLock.current = true; setSavingMode(true); rememberGoalMode(false);
+    try { onTaskSaved(await api<Task>(`/tasks/${task.id}/collaboration`, { mode: task.collaborationMode === 'plan' ? 'default' : 'plan' })); }
+    catch (error) { reportError(error); }
+    finally { modeLock.current = false; setSavingMode(false); refresh(); }
+  }
+  const [showStatus, setShowStatus] = useState(false);
+  const [checkingCompaction, setCheckingCompaction] = useState(false);
+  const [queueBusy, setQueueBusy] = useState(false);
+  // Show an acknowledged mutation until the polling snapshot catches up.
+  const [queueReceipt, setQueueReceipt] = useState<Task['queue']>();
+  const queue = queueReceipt && queueReceipt.revision > (task.queue?.revision ?? -1) ? queueReceipt : task.queue;
+  const queueLock = useRef(false), mounted = useRef(true);
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
+  const editKey = 'studybuddy:queue-edit:' + task.id;
+  const recoveryKey = editKey + ':recovery';
+  const [recoveredDraft, setRecoveredDraft] = useState<ComposerDocument | null>(() => { const raw = browserStorage.getItem(recoveryKey); return raw === null ? null : decodeDocument(raw); });
+  const [queueEdit, setQueueEdit] = useState<{ id: string; lease: string; draft: string; references?: ComposerReference[] } | null>(() => {
+    try { const saved = JSON.parse(browserStorage.getItem(editKey) || 'null'); return saved && typeof saved.id === 'string' && typeof saved.lease === 'string' && typeof saved.draft === 'string' ? saved : null; } catch { return null; }
+  });
+  function rememberQueueEdit(value: typeof queueEdit) {
+    setQueueEdit(value);
+    if (value) browserStorage.setItem(editKey, JSON.stringify(value)); else browserStorage.removeItem(editKey);
+  }
+  function rememberRecoveredDraft(value: ComposerDocument | null) {
+    setRecoveredDraft(value);
+    if (value === null) browserStorage.removeItem(recoveryKey); else browserStorage.setItem(recoveryKey, encodeDocument(value));
+  }
+  const lostEditLease = Boolean(queueEdit && queue && !queue.messages.some(message => message.id === queueEdit.id && message.status === 'editing' && message.editLease === queueEdit.lease));
+  async function queueAction(route: string, body: object = {}) {
+    if (queueLock.current) return;
+    queueLock.current = true;
+    setQueueBusy(true);
+    try {
+      const result = await api<NonNullable<Task['queue']>>(`/tasks/${task.id}/queue${route}`, body);
+      if (!mounted.current) {
+        if (route.endsWith('/edit') && 'action' in body && body.action === 'begin') {
+          const row = result.messages.find(message => route === `/${message.id}/edit` && message.editLease);
+          if (row) await api(`/tasks/${task.id}/queue/${row.id}/edit`, { action: 'cancel', lease: row.editLease });
+        }
+        return;
+      }
+      setQueueReceipt(current => !current || result.revision >= current.revision ? result : current);
+      return result;
+    }
+    catch (error) { reportError(error); }
+    finally { queueLock.current = false; if (mounted.current) setQueueBusy(false); refresh(); }
+  }
+  async function editQueued(id: string) {
+    if (queueEdit) return;
+    const next = await queueAction(`/${id}/edit`, { action: 'begin' });
+    const message = next?.messages.find(message => message.id === id);
+    if (message?.editLease) { rememberQueueEdit({ id, lease: message.editLease, draft: composer.text, references: composer.references }); composer.edit(message.text, message.references || []); input.current?.focus(); }
+  }
+  async function cancelQueueEdit(id: string, lease?: string) {
+    if (queueEdit?.id === id && lostEditLease) {
+      rememberRecoveredDraft({ text: composer.text, references: composer.references }); composer.edit(queueEdit.draft, queueEdit.references || []); rememberQueueEdit(null); input.current?.focus(); return;
+    }
+    const next = await queueAction(`/${id}/edit`, { action: 'cancel', lease });
+    if (next && queueEdit?.id === id) { composer.edit(queueEdit.draft, queueEdit.references || []); rememberQueueEdit(null); input.current?.focus(); }
+  }
+  async function savePermissions(permissions: TaskPermissions) {
+    setSavingPermissions(true);
+    try { onTaskSaved(await api<Task>(`/tasks/${task.id}/permissions`, { permissions })); }
+    catch (error) { reportError(error); }
+    finally { setSavingPermissions(false); refresh(); }
+  }
+  async function compact() {
+    try { await api(`/tasks/${task.id}/compact`, {}); refresh(); }
+    catch (error) { reportError(error); }
+  }
+  async function checkCompaction() {
+    if (checkingCompaction) return;
+    setCheckingCompaction(true);
+    try { await api(`/tasks/${task.id}/compact/check`, {}); refresh(); }
+    catch (error) { reportError(error); }
+    finally { setCheckingCompaction(false); }
+  }
+  const { text: draft, references: draftReferences, sending } = useSyncExternalStore(composer.subscribe, composer.getSnapshot);
   const files = useAttachmentDraft(`papilot:files:task:${task.id}`);
   const [skill, setSkill] = useState<Skill | null>(() => skills.find(item => item.id === browserStorage.getItem('papilot:draft-skill:' + task.id)) || null);
   const restoringSkill = useRef(browserStorage.getItem('papilot:draft-skill:' + task.id));
@@ -381,9 +511,36 @@ function Activity({ runtimes, relatedTasks, onOpenTask, onRestarted, source, onR
   const feedbackCount = task.mode === 'review' ? 0 : pendingReviewFeedback(task.review);
   const readyReview = reviewSubmission(notes, draft, skill?.id);
   const emptyNotes = notes.notes.length - readyReview.notes.length;
+  const canGoalInput = !skill && !notes.notes.length && !feedbackCount && task.mode !== 'review' && !queueEdit;
+  const canGoal = (task.agent || 'codex') === 'codex' && runtime?.goalAvailable === true && !isPlayground && canGoalInput;
+  const goal = useTaskGoal({ task, disabled: sending || savingMode || savingModel || savingPermissions || task.status === 'deleting' || task.status === 'uncertain' && !task.goalControl?.resumeRequired || Boolean(task.preparation) || Boolean(queueEdit), api, saved: onTaskSaved, refresh });
+  async function enableGoal() {
+    if (!canGoal || goal.locked || modeLock.current) return;
+    if (task.collaborationMode === 'plan') {
+      modeLock.current = true; setSavingMode(true);
+      try { onTaskSaved(await api<Task>(`/tasks/${task.id}/collaboration`, { mode: 'default' })); }
+      catch (error) { reportError(error); return; }
+      finally { modeLock.current = false; setSavingMode(false); refresh(); }
+    }
+    rememberGoalMode(true);
+  }
   const canSend = Boolean(draft.trim() || skill || files.files.length || readyReview.notes.length || readyReview.instructions.trim() || feedbackCount);
   async function submit() {
-    if (savingPermissions || savingModel || composer.sending || ['uncertain', 'deleting'].includes(task.status) || task.preparation || files.draft.getSnapshot().blocked) return;
+    if (queueBusy || goal.busy || startingCodeReview || forking) return;
+    if (goalMode) {
+      if (!canGoal || goal.locked || files.draft.getSnapshot().blocked || !composer.text.trim() && !files.draft.getSnapshot().files.length) return;
+      const text = composer.text, references = composer.references, attached = files.draft.getSnapshot().files;
+      try { await goal.submit({ objective: text, ...(references.length ? { references } : {}), ...(attached.length ? { attachments: attached.map(file => file.id) } : {}) }, () => { if (composer.text === text && JSON.stringify(composer.references) === JSON.stringify(references)) composer.edit('', []); files.draft.clear(attached); rememberGoalMode(false); input.current?.focus(); }); }
+      catch (error) { reportError(error); }
+      return;
+    }
+    if (queueEdit) {
+      if (lostEditLease) return;
+      const next = await queueAction(`/${queueEdit.id}/edit`, { action: 'save', lease: queueEdit.lease, text: composer.text, references: composer.references });
+      if (next) { composer.edit(queueEdit.draft, queueEdit.references || []); rememberQueueEdit(null); input.current?.focus(); }
+      return;
+    }
+    if (savingMode || modeLock.current || savingPermissions || savingModel || composer.sending || ['uncertain', 'deleting'].includes(task.status) || task.preparation || files.draft.getSnapshot().blocked) return;
     if (isPlayground && canSend) { requestPlaygroundDownload(); return; }
     const submitted = reviewSubmission(reviewNotes.getSnapshot(), composer.text, skill?.id), attached = files.draft.getSnapshot().files;
     const source = !composer.text.trim() && !skill && !attached.length && !submitted.notes.length && !submitted.instructions.trim() && feedbackCount ? 'feedback' : 'draft';
@@ -397,30 +554,55 @@ function Activity({ runtimes, relatedTasks, onOpenTask, onRestarted, source, onR
     } catch (e) { reportError(e); }
     finally { reviewNotes.setBusy(false); }
   }
-  const active = ACTIVE.includes(task.status), blocked = ['uncertain', 'deleting'].includes(task.status);
+  const compacting = task.compaction?.state === 'pending' || task.compaction?.state === 'running' || task.compaction?.state === 'completed' && task.compaction.turnFinished === false;
+  const active = ACTIVE.includes(task.status) || compacting, blocked = ['uncertain', 'deleting'].includes(task.status);
+  const canCodeReview = (task.agent || 'codex') === 'codex' && task.mode !== 'review' && !isPlayground && !active && !blocked && !task.preparation && !queueEdit && !skill && !files.entries.length && !notes.notes.length && !feedbackCount && !goalMode && !goal.locked && task.goal?.status !== 'active' && !task.goalControl?.awaitingIdle && !task.initialGoal;
+  const canFork = canCodeReview && Boolean(task.threadId) && !task.pendingPlan;
   // The draft re-renders this panel on every keystroke; the same elements let
   // React skip the conversation until its items change.
   const agent = agentName(task), review = task.mode === 'review', root = task.worktree;
-  const thread = useMemo(() => timelineEntries(visibleTimeline(items).filter(item => item.type !== 'reviewOutput').map(item => review && item.type === 'assistant' ? { ...item, text: aiReviewSummary(item.text) } : item))
-    .flatMap((entry, index, all) => {
-      const shown = entry.length > 1 ? <ToolGroup key={entry[0].id} items={entry} agent={agent} root={root}/> : <TimelineEntry key={entry[0].id} item={entry[0]} agent={agent} root={root}/>;
+  const thread = useMemo(() => {
+    const visible = visibleTimeline(items).filter(item => item.type !== 'reviewOutput' && item.id !== task.compaction?.id && !queue?.messages.some(message => message.id === item.id)).map(item => review && item.type === 'assistant' ? { ...item, text: aiReviewSummary(item.text) } : item);
+    const groups: { id: string | null; items: TimelineItem[] }[] = [];
+    for (const item of visible) {
+      // Legacy and non-Codex items can lack a native turn ID. Keep consecutive
+      // items together so their tool calls still fold into one activity group.
+      const id = turnOf(item), last = groups.at(-1);
+      if (last?.id === id) last.items.push(item); else groups.push({ id, items: [item] });
+    }
+    return groups.map((group, groupIndex) => <CodexTurn key={group.items[0].id} turn={groups.findIndex(other => other.id === group.id) === groupIndex ? task.chatTurns?.find(turn => turn.id === group.id) : undefined}>{timelineEntries(group.items).flatMap((entry, index, all) => {
+      const shown = entry[0].type === 'plan' && entry[0].id === pendingPlan?.itemId ? <NativePlan key={entry[0].id} text={planText} editable onEdit={text => { setEditedPlan({ id: entry[0].id, text }); browserStorage.setItem(`studybuddy:plan:${task.id}:${entry[0].id}`, text); }}/> : entry.length > 1 ? <ToolGroup key={entry[0].id} items={entry} agent={agent} root={root}/> : <TimelineEntry key={entry[0].id} item={entry[0]} agent={agent} root={root} onOpenReference={onOpenReference}/>;
       // A finished turn that changed files ends with where it changed the paper.
       const turn = turnOf(entry[0]), next = all[index + 1];
       if (!turn || (next && (next[0].type !== 'user' && turnOf(next[0]) === turn)) || (!next && active)) return [shown];
       const edits = all.filter(other => turnOf(other[0]) === turn).flat().filter(item => item.type === 'files' && item.changes?.length);
       return edits.length ? [shown, <ChangeSummary key={turn + ':changes'} items={edits}/>] : [shown];
-    }), [items, review, agent, root, active]);
+    })}</CodexTurn>);
+  }, [items, review, agent, root, active, task.chatTurns, task.compaction?.id, queue, onOpenReference, pendingPlan?.itemId, planText]);
   const hint = task.status === 'deleting' ? t('This task is being deleted') : task.status === 'uncertain' ? t('Check task status before sending') : task.preparation ? t('Send more instructions once the task has started.') : sending ? t('Sending…')
     : emptyNotes ? canSend ? tn(emptyNotes, '{n} empty comment will stay in drafts', '{n} empty comments will stay in drafts') : t('Write a comment or message to send.') : active ? t('{agent} is working · new instructions run next', { agent: agentName(task) }) : '';
+  const approval = (task.agent || 'codex') === 'codex' ? requests.find(request => !request.method.endsWith('requestUserInput')) : undefined;
+  const question = requests.find(request => (task.agent || 'codex') === 'codex' && request.method.endsWith('requestUserInput') && Array.isArray(request.params.questions) && request.params.questions.length > 0);
+  const decision = !approval && !question && pendingPlan;
+  const responding = Boolean(approval || question || decision);
+  const wasApproving = useRef(false);
+  useEffect(() => {
+    if (wasApproving.current && !responding && !touch()) input.current?.focus({ preventScroll: true });
+    wasApproving.current = responding;
+  }, [responding]);
+  const requestCard = (request: PendingRequest, keyboard = false) => <RequestCard key={request.id} request={request} keyboard={keyboard} agent={agentName(task)} changes={items.find(item => request.params.itemId && (item.id === request.params.itemId || item.id.endsWith(`:${request.params.itemId}`)))?.changes} answerDrafts={answerDrafts} respond={(id, body) => api('/requests/' + id, body)} onDone={refresh}/>;
   // A source tab beside the chat hides the chat while it is selected; both stay as they were.
-  return <section id="conversation-panel" className="activity-panel" data-side={source?.selected ? 'source' : undefined} aria-label={t('{agent} conversation', { agent: agentName(task) })}><div className="panel-heading">{lead}{source?.tabs}{tools && <div className="panel-tools">{tools}</div>}</div>
+  return <section id="conversation-panel" className="activity-panel codex-chat-panel" data-side={source?.selected ? 'source' : undefined} aria-label={t('{agent} conversation', { agent: agentName(task) })}>
+    {(lead || source?.tabs || tools) && <div className="panel-heading codex-host-tools">{lead}{source?.tabs}{tools && <div className="panel-tools">{tools}</div>}</div>}
+    <CodexChatHeader agent={agent} title={task.title} navigation={{ ...navigation, actions: [...navigation.actions || [], ...(canFork ? [{ label: t('Fork chat'), disabled: startingCodeReview || forking || sending || savingModel || savingPermissions || Boolean(draft.trim()), select: () => forkPicker.current?.open({ input: input.current || undefined, onClose: focus => { if (focus) input.current?.focus(); } }) }] : []), { label: t('Restart with another agent…'), disabled: sending || savingModel || savingPermissions || files.blocked || notes.busy || !!queueEdit, select: () => isPlayground ? requestPlaygroundDownload() : setRestarting(true) }] }}/>
     {source && <div className="side-pane" hidden={!source.selected}>{source.panel}</div>}
     <div className="conversation-history"><div className="messages" ref={scroller} onScroll={() => { if (scroller.current && back.current === undefined) { const el = scroller.current; shouldFollow.current = el.scrollHeight - el.scrollTop - el.clientHeight < 90; setFollowing(shouldFollow.current); savePlace(place, shouldFollow.current ? undefined : Math.round(el.scrollTop)); } }}><div className="thread">
       {loading && <p className="muted" role="status">{t('Loading conversation…')}</p>}
       {loadError && <div className="conversation-error" role="alert"><p>{loadError}</p><button className="button secondary compact" onClick={retry}>{t('Retry conversation')}</button></div>}
       {relatedTasks.map(related => <p className="restart-link" key={related.id}>{related.id === task.restart?.taskId ? t('Restarted from') : t('Replacement task')}: <button type="button" onClick={() => onOpenTask(related.id)}>{related.title}</button></p>)}
       {thread}
-      {requests.map(r => <RequestCard key={r.id} request={r} agent={agentName(task)} answerDrafts={answerDrafts} onDone={refresh}/>)}
+      <CodexCompaction operation={task.compaction} busy={checkingCompaction} check={() => void checkCompaction()}/>
+      {requests.filter(request => request !== approval && request !== question).map(request => requestCard(request))}
       {task.status === 'running' && <div className="working"><span className="working-dots"><i/><i/><i/></span>{t('{agent} is working on this task', { agent: agentName(task) })}</div>}
       {task.status === 'queued' && <p className="muted">{t('Task saved. Waiting for an available {agent} session.', { agent: agentName(task) })}</p>}
       {task.status === 'preparing' && <p className="muted" role="status">{preparingLabel(task)}</p>}
@@ -430,25 +612,40 @@ function Activity({ runtimes, relatedTasks, onOpenTask, onRestarted, source, onR
     </div></div>{!following && <button className="jump-latest" onClick={latest}><Icon name="arrowDown" size={14}/>{t('Latest messages')}</button>}</div>
     <div className="composer-wrap">
       {connection}
-      <Composer reviewContent={<ReviewDraftCards task={task} feedbackCount={feedbackCount} onReveal={onRevealQuote}/>} attachments={task.mode === 'review' ? undefined : files.draft} upload={(file, signal) => uploadAttachment(task.projectId, file, signal)} filesDisabled={sending || blocked} imageHint={task.agent === 'antigravity' && files.files.some(file => file.mime.startsWith('image/'))} inputRef={input} label={t('Instructions for {agent}', { agent: agentName(task) })} value={draft} onChange={value => composer.edit(value)} onSubmit={() => void submit()} placeholder={task.mode === 'review' ? t('Ask for another review of this PDF version…') : active ? t('Queue instructions for the next turn…') : notes.notes.length || feedbackCount ? t('Add overall instructions (optional)') : t('Ask a question or request changes…')} skills={task.mode === 'review' ? [] : skills.filter(skill => skill.output !== 'annotations')} skill={skill} onSkill={setSkill}
-        footer={attach => <div className="composer-options">
-          {task.mode !== 'review' && <SkillPicker onAttach={attach} skills={skills.filter(skill => skill.output !== 'annotations')} selected={skill} disabled={sending || blocked} onPick={value => { setSkill(value); input.current?.focus(); }}/>}
-          <TaskModelPicker task={task} runtime={runtime} disabled={sending || blocked || savingPermissions} reconnecting={reconnecting} onReconnect={onReconnect} save={settings => api<Task>(`/tasks/${task.id}/model`, settings)} onSaving={setSavingModel} refresh={refresh} reportError={reportError}
-            restart={<button type="button" className="restart-task-action" disabled={sending || savingModel || savingPermissions || files.blocked || notes.busy} onClick={event => { event.currentTarget.closest<HTMLElement>('[popover]')?.hidePopover(); if (isPlayground) requestPlaygroundDownload(); else setRestarting(true); }}>{t('Restart with another agent…')}</button>}
-            permissions={<TaskPermissionOptions task={task} runtime={runtime} disabled={sending || blocked || savingModel} save={permissions => api<Task>(`/tasks/${task.id}/permissions`, { permissions })} onSaved={onTaskSaved} onSaving={setSavingPermissions} refresh={refresh} reportError={reportError}/>}/>
+      <CodexForkPicker controlRef={forkPicker} disabled={!canFork || startingCodeReview || savingModel} fork={forkChat}/>
+      <CodexReviewPicker controlRef={codeReviewPicker} disabled={!canCodeReview || forking || savingMode || savingPermissions || savingModel} load={signal => api<CodeReviewBranches>(`/tasks/${task.id}/code-review`, undefined, signal)} review={startCodeReview}/>
+      {goal.card}
+      {responding && <div className="codex-chat-status"><CodexIcon name="laptop" size={16}/><span>{t('Work locally')}</span><span className="codex-chrome-spacer"/><Status task={task}/></div>}
+      {approval ? requestCard(approval, true) : question ? <NativeQuestions key={question.id} request={question} answerDrafts={answerDrafts} respond={(id, body) => api('/requests/' + id, body)} onDone={refresh} onDismiss={async () => { await api(`/tasks/${task.id}/interrupt`, {}); refresh(); }}/> : decision ? <PlanDecision key={decision.turnId} task={task} text={planText} disabled={active || blocked || savingMode} submit={body => api(`/tasks/${task.id}/plan`, body)} onDone={refresh}/> : <>
+      <CodexQueue queue={queue} busy={queueBusy} active={['running', 'waiting_input'].includes(task.status)} steer={id => void queueAction(`/${id}/steer`)} check={id => void queueAction(`/${id}/check`)} editingId={queueEdit?.id} edit={id => void editQueued(id)} cancelEdit={(id, lease) => void cancelQueueEdit(id, lease)} remove={id => void queueAction(`/${id}/remove`)} resume={() => void queueAction('/resume')}/>
+      {showStatus && <CodexStatus task={task} runtime={runtime} onClose={() => { setShowStatus(false); input.current?.focus(); }}/>}
+      <div className="codex-chat-status"><CodexIcon name="laptop" size={16}/><span>{t('Work locally')}</span><span className="codex-chrome-spacer"/><Status task={task}/></div>
+      <Composer dictationKey={task.agent === 'codex' && runtime?.dictationAvailable === true && runtime.connected && runtime.authenticated && !isPlayground ? `task:${task.id}:${task.agent}:${runtime.account || ''}` : undefined} init={task.agent === 'codex' && !isPlayground && !active && !goalMode && !blocked && !sending && !savingModel && !savingPermissions && !queueEdit && !task.preparation && !review && !skill && !files.entries.length && !notes.notes.length && !feedbackCount ? { url: `/tasks/${task.id}/init`, submit: async prompt => { composer.edit(prompt, []); await submit(); } } : undefined} onOpenReference={onOpenReference} commands={{ disabled: sending || blocked || savingPermissions || savingMode || goal.busy || startingCodeReview || forking || !!queueEdit, onFork: canFork ? navigation => forkPicker.current?.open(navigation || {}) : undefined, onReview: canCodeReview ? navigation => codeReviewPicker.current?.open(navigation || {}) : undefined, onGoal: canGoal && !goal.locked ? () => void enableGoal() : undefined, onPlan: canPlan ? () => void togglePlan() : undefined, planMode: task.collaborationMode === 'plan', onFast: task.agent === 'codex' && runtime?.models.find(model => task.model ? model.id === task.model : model.isDefault)?.fastMode ? () => modelPicker.current?.toggleFast?.() : undefined, fastServiceTier: runtime?.models.find(model => task.model ? model.id === task.model : model.isDefault)?.fastMode?.serviceTier, onModel: navigation => modelPicker.current?.open('model', navigation), onReasoning: runtime?.models.find(model => task.model ? model.id === task.model : model.isDefault)?.efforts.length ? navigation => modelPicker.current?.open('reasoning', navigation) : undefined, onStatus: () => setShowStatus(true), loadMcp: task.agent === 'codex' && !isPlayground ? loadMcpStatus : undefined, onCompact: task.queue?.capabilities.compact && task.threadId && !active && task.compaction?.state !== 'unknown' && !task.preparation ? compact : undefined, onStop: queueBusy ? undefined : queueEdit ? () => void cancelQueueEdit(queueEdit.id, queueEdit.lease) : undefined }} reviewContent={<>
+        {queueEdit ? <div className="codex-queue-editing"><span>{lostEditLease ? t('This queued message is no longer editable. Your draft is kept.') : t('Editing queued message')}</span>{lostEditLease && <button type="button" onClick={() => { rememberRecoveredDraft({ text: queueEdit.draft, references: queueEdit.references || [] }); rememberQueueEdit(null); }}>{t('Use edited draft')}</button>}<button type="button" disabled={queueBusy} onClick={() => void cancelQueueEdit(queueEdit.id, queueEdit.lease)}>{lostEditLease ? t('Restore previous draft') : t('Cancel editing')}</button></div> : <ReviewDraftCards task={task} feedbackCount={feedbackCount} onReveal={onRevealQuote}/>}
+        {recoveredDraft !== null && !queueEdit && <div className="codex-queue-editing"><span>{t('A previous draft is saved.')}</span><button type="button" onClick={() => { const current = { text: composer.text, references: composer.references }; composer.edit(recoveredDraft.text, recoveredDraft.references); rememberRecoveredDraft(current); input.current?.focus(); }}>{t('Swap drafts')}</button></div>}</>}
+        attachments={task.mode === 'review' || queueEdit ? undefined : files.draft} upload={(file, signal) => uploadAttachment(task.projectId, file, signal)} filesDisabled={sending || blocked || !!queueEdit} imageHint={!queueEdit && task.agent === 'antigravity' && files.files.some(file => file.mime.startsWith('image/'))} inputRef={input} label={t('Instructions for {agent}', { agent: agentName(task) })} value={draft} references={draftReferences} filesUrl={!isPlayground && task.mode !== 'review' ? `/api/tasks/${task.id}/files` : undefined} onChange={(value, references) => composer.edit(value, references)} readOnly={queueBusy || savingMode || goal.busy} onSubmit={() => void submit()} placeholder={task.mode === 'review' ? t('Ask for another review of this PDF version…') : active ? t('Queue instructions for the next turn…') : notes.notes.length || feedbackCount ? t('Add overall instructions (optional)') : t('Ask for follow-up changes')} skills={task.mode === 'review' || queueEdit || goalMode ? [] : skills.filter(skill => skill.output !== 'annotations')} skill={queueEdit ? null : skill} onSkill={setSkill}
+        footer={(attach, sketch) => <div className="composer-options">
+          {task.mode !== 'review' && <SkillPicker onSketch={sketch} onAttach={attach} skills={goalMode ? [] : skills.filter(skill => skill.output !== 'annotations')} selected={skill} disabled={sending || blocked || !!queueEdit} onPick={value => { setSkill(value); input.current?.focus(); }}/>}
+          {task.mode !== 'review' && <CodexPermissionPicker runtime={runtime} value={task.permissions || 'workspace'} disabled={sending || blocked || savingModel || savingPermissions} canChange={!active && task.compaction?.state !== 'unknown' && !task.preparation} hint={task.compaction?.state === 'unknown' ? statusNames().uncertain : undefined} onChange={value => void savePermissions(value)}/>}
+          {goalMode && <CodexGoalMode disabled={goal.busy || savingMode} onClear={() => rememberGoalMode(false)}/>}
+          {task.collaborationMode === 'plan' && <PlanModeButton disabled={savingMode || sending || blocked || !!queueEdit} onExit={() => void togglePlan()}/>}
+          <span className="codex-chrome-spacer"/>
+          <ContextMeter usage={task.context}/>
+          <TaskModelPicker variant="composer" controlRef={modelPicker} task={task} runtime={runtime} disabled={sending || blocked || savingPermissions || !!queueEdit} reconnecting={reconnecting} onReconnect={onReconnect} save={settings => api<Task>(`/tasks/${task.id}/model`, settings)} onSaving={setSavingModel} refresh={refresh} reportError={reportError}/>
         </div>}
         action={<div className="composer-actions">
-          <ContextMeter usage={task.context}/>
-          {active && <button type="button" className="send-button stop" aria-label={t('Pause task')} title={t('Pause {agent}', { agent: agentName(task) })} disabled={pausing} aria-busy={pausing} onClick={pause}><Icon name="stop" size={18}/></button>}
-          {(!active || draft.trim() || skill || files.entries.length || notes.notes.length || feedbackCount || sending) && <button aria-label={t('Send instructions')} title={t('Send (Enter) · New line (Shift+Enter)')} disabled={!canSend || files.blocked || sending || savingModel || savingPermissions || blocked || Boolean(task.preparation)} className="send-button" type="submit"><Icon name="arrowUp" size={18}/></button>}
+          {active && !queueEdit && <button type="button" className="send-button stop" aria-label={t('Pause task')} title={t('Pause {agent}', { agent: agentName(task) })} disabled={pausing} aria-busy={pausing} onClick={pause}><CodexIcon name="stop" size={18}/></button>}
+          {(!active || queueEdit || draft.trim() || skill || files.entries.length || notes.notes.length || feedbackCount || sending) && <button aria-label={queueEdit ? t('Save queued message') : t('Send instructions')} title={t('Send (Enter) · New line (Shift+Enter)')} disabled={queueEdit ? queueBusy || lostEditLease : !canSend || goal.busy || goalMode && (!canGoal || !draft.trim() && !files.files.length) || files.blocked || sending || savingMode || savingModel || savingPermissions || blocked || Boolean(task.preparation)} className="send-button" type="submit"><CodexIcon name="send" size={18}/></button>}
         </div>}/>
       {hint && <p className="composer-hint" role="status">{hint}</p>}
+      </>}
+      {(question || decision) && <div className="codex-question-settings"><TaskModelPicker variant="composer" controlRef={modelPicker} task={task} runtime={runtime} disabled={blocked || savingMode || savingPermissions} reconnecting={reconnecting} onReconnect={onReconnect} save={settings => api<Task>(`/tasks/${task.id}/model`, settings)} onSaving={setSavingModel} refresh={refresh} reportError={reportError}/></div>}
     </div>
     {restarting && <RestartTaskDialog task={task} runtimes={runtimes} reconnecting={reconnecting} onReconnect={onReconnect} onClose={() => setRestarting(false)}
       submit={settings => api<Task>(`/tasks/${task.id}/restart`, { ...settings, draftAttachments: files.draft.getSnapshot().files.map(file => file.id) })}
       onDone={replacement => {
         const pending = reviewNotes.getSnapshot();
-        browserStorage.setItem('papilot:draft:' + replacement.id, restartDraftText(composer.text, pending.instructions, pending.notes.map(reviewNoteSummary)));
+        browserStorage.setItem('papilot:draft:' + replacement.id, encodeDocument(editDocument(composer, restartDraftText(composer.text, pending.instructions, pending.notes.map(reviewNoteSummary)))));
         if (skill) browserStorage.setItem('papilot:draft-skill:' + replacement.id, skill.id);
         if (replacement.restart?.draftAttachments?.length) browserStorage.setItem('papilot:files:task:' + replacement.id, JSON.stringify(replacement.restart.draftAttachments));
         setRestarting(false); onRestarted(replacement);
@@ -993,7 +1190,7 @@ function PreparingTask({ task }: { task: Task }) {
 }
 
 type ManuscriptPanel = 'pdf' | 'task' | 'source';
-function ManuscriptView({ notesRequest, taskCards, navigationGuard, collapsed, setCollapsed, project, data, error, view, setView, region, setRegion, active, setActive, actions, newTask, tools, share, navigation, onGit, writer, reportError, onFixProblems, diagnoseBuild }: { notesRequest?: number; navigationGuard: React.Ref<NotesHandle>; collapsed: boolean; setCollapsed: React.Dispatch<React.SetStateAction<boolean>>; taskCards: ReturnType<typeof useNoteCards>; onFixProblems?: (request: string) => void; diagnoseBuild?: (failureId: string) => Promise<BuildRepairResult>; navigation?: React.ReactNode; newTask: (notes: React.ReactNode) => React.ReactNode; tools?: React.ReactNode; share?: React.ReactNode; onGit: (status: GitStatus) => void; writer: CommitWriter; reportError: (error: unknown) => void; project: Project; data: Manuscript | null; error: string; view: ManuscriptPanel; setView: (view: ManuscriptPanel) => void; region: boolean; setRegion: (on: boolean) => void; active: string; setActive: (id: string) => void; actions: NoteActions }) {
+function ManuscriptView({ notesRequest, taskCards, navigationGuard, collapsed, setCollapsed, project, data, error, view, setView, region, setRegion, active, setActive, actions, newTask, tools, share, navigation, onGit, writer, reportError, onFixProblems, diagnoseBuild }: { notesRequest?: number; navigationGuard: React.Ref<NotesHandle>; collapsed: boolean; setCollapsed: React.Dispatch<React.SetStateAction<boolean>>; taskCards: ReturnType<typeof useNoteCards>; onFixProblems?: (request: string) => void; diagnoseBuild?: (failureId: string) => Promise<BuildRepairResult>; navigation?: React.ReactNode; newTask: (notes: React.ReactNode, onOpenReference?: (file: ComposerFile) => void) => React.ReactNode; tools?: React.ReactNode; share?: React.ReactNode; onGit: (status: GitStatus) => void; writer: CommitWriter; reportError: (error: unknown) => void; project: Project; data: Manuscript | null; error: string; view: ManuscriptPanel; setView: (view: ManuscriptPanel) => void; region: boolean; setRegion: (on: boolean) => void; active: string; setActive: (id: string) => void; actions: NoteActions }) {
   const build = data?.build, notes = data?.annotations || [], git = data?.git;
   const pdf = useRef<PdfHandle>(null);
   const [readingNotes, setReadingNotes] = useState(false);
@@ -1096,7 +1293,7 @@ function ManuscriptView({ notesRequest, taskCards, navigationGuard, collapsed, s
         </div>
         {!hidden && sideBySide && share}
       </div>
-      <div className="side-pane" hidden={side !== 'task'}>{newTask(<TaskNotes cards={taskCards} controller={taskNotes} notes={notes} currentKey={build?.key} actions={actions} onShow={show}/>)}</div>
+      <div className="side-pane" hidden={side !== 'task'}>{newTask(<TaskNotes cards={taskCards} controller={taskNotes} notes={notes} currentKey={build?.key} actions={actions} onShow={show}/>, isPlayground || phone() ? undefined : async file => { if (file.kind !== 'file' || !await closeReadingNotes()) return; source.reveal(file.path, [1, 1], []); setView('source'); setCollapsed(false); })}</div>
       {source.panel && <div className="side-pane" hidden={side !== 'source'}>{source.panel}</div>}
     </aside>
     {committing && <CommitDialog branch={git?.branch ?? null} files={staged} staged remote={Boolean(git?.remote)} agent={AGENT_LABELS[writer.agent]} onClose={() => setCommitting(false)}
@@ -1136,14 +1333,29 @@ function App() {
   const folderRequest = useRef(false);
   // Commit drafts survive switching tasks or moving between review and chat.
   const applyStates = useRef(new Map<string, TaskApplyState>());
-  const newTaskInput = useRef<HTMLTextAreaElement>(null);
-  const [newDraft, setNewDraft] = useState(() => browserStorage.getItem('papilot:new-task') || '');
+  const newTaskInput = useRef<ComposerInput>(null);
+  const newModelPicker = useRef<AgentPickerControl>(null);
+  const newCodeReviewPicker = useRef<CodeReviewControl>(null);
+  const [newDraftState, setNewDraftState] = useState(() => ({ projectId: browserStorage.getItem('papilot:new-task-project'), document: decodeDocument(browserStorage.getItem('papilot:new-task')) }));
+  const newDocument = newDraftState.document, newDraft = newDocument.text;
+  const legacyNewDraft = useRef(newDraftState.projectId || newDocument.references.length ? { text: '', references: [] } : newDocument);
+  function projectDraft(id: string) { const saved = browserStorage.getItem(`papilot:new-task:${id}`); return saved === null ? legacyNewDraft.current : decodeDocument(saved); }
+  function setNewDraft(value: string | ((previous: string) => string), references?: ComposerReference[]) {
+    const target = project?.id || projectId;
+    setNewDraftState(previous => {
+      const document = !previous.projectId || previous.projectId === target ? previous.document : projectDraft(target);
+      return { projectId: target, document: editDocument(document, typeof value === 'function' ? value(document.text) : value, references) };
+    });
+  }
+  const [newGoalChoice, setNewGoalChoice] = useState<{ projectId: string; enabled: boolean }>();
+  const [newPlanChoice, setNewPlanChoice] = useState<{ projectId: string; enabled: boolean }>();
   const [newSkill, setNewSkill] = useState<Skill | null>(null);
   const [skills, setSkills] = useState<{ projectId: string; list: Skill[] }>({ projectId: '', list: [] });
   const [skillsRevision, setSkillsRevision] = useState(0);
   // The agent, and each agent's model and reasoning effort, are remembered for
   // every new task, whether it starts from the composer or from PDF notes.
   const [newPermissions, setNewPermissions] = useState<TaskPermissions>('workspace');
+  const [showNewStatus, setShowNewStatus] = useState(false);
   const [savedAgent, setAgentChoice] = useState<AgentId | null>(() => { const saved = browserStorage.getItem('papilot:agent'); return isAgentId(saved) ? saved : null; });
   const [agentPrefs, setAgentPrefs] = useState(() => Object.fromEntries(AGENT_IDS.map(id => [id, {
     model: browserStorage.getItem(`papilot:model:${id}`) ?? '',
@@ -1224,6 +1436,9 @@ function App() {
     return () => { window.removeEventListener('papilot:open-shortcuts', shortcuts); window.removeEventListener('papilot:open-quick-notes', quickNotes); };
   }, []);
   const selectedRef = useRef(selected); selectedRef.current = selected;
+  const actionNavigation = useRef({ context: '', revision: 0 });
+  const actionContext = JSON.stringify([projectId, selected, page]);
+  if (actionNavigation.current.context !== actionContext) actionNavigation.current = { context: actionContext, revision: actionNavigation.current.revision + 1 };
   const loaded = useRef(false);
   useEffect(() => {
     if (!narrow || !sidebar) return;
@@ -1237,7 +1452,11 @@ function App() {
   // Earlier versions saved the view and reopened it at every start.
   useEffect(() => { browserStorage.removeItem('papilot:layout'); }, []);
   useEffect(() => { if (chatWidth) browserStorage.setItem('papilot:chat-width', String(chatWidth)); else browserStorage.removeItem('papilot:chat-width'); }, [chatWidth]);
-  useEffect(() => { if (newDraft) browserStorage.setItem('papilot:new-task', newDraft); else browserStorage.removeItem('papilot:new-task'); }, [newDraft]);
+  useEffect(() => {
+    const { document, projectId: owner } = newDraftState;
+    if (document.text) browserStorage.setItem('papilot:new-task', encodeDocument(document)); else browserStorage.removeItem('papilot:new-task');
+    if (owner) { browserStorage.setItem('papilot:new-task-project', owner); browserStorage.setItem(`papilot:new-task:${owner}`, encodeDocument(document)); }
+  }, [newDraftState]);
   useEffect(() => {
     const viewport = window.visualViewport;
     const sync = () => {
@@ -1373,6 +1592,10 @@ function App() {
   if (task && !composers.current.has(task.id)) composers.current.set(task.id, new ComposerDraft('papilot:draft:' + task.id, browserStorage, uuid));
   const fullPdfUrl = task?.status !== 'deleting' && task?.review?.round ? pdfAsset(`/api/tasks/${task.id}/pdf?round=${task.review.round}`) : '';
   const project = state?.projects.find(p => p.id === (task?.projectId || projectId)) || state?.projects[0];
+  useLayoutEffect(() => {
+    if (!project || newDraftState.projectId === project.id) return;
+    setNewDraftState(previous => ({ projectId: project.id, document: previous.projectId ? projectDraft(project.id) : previous.document }));
+  }, [project?.id]);
   // Remember the paper even when its manuscript is open, and replace stale
   // paper IDs only after the host has returned the accessible papers.
   useEffect(() => {
@@ -1444,6 +1667,14 @@ function App() {
   const dismissWriter = () => { setWriterDismissed(true); browserStorage.setItem('papilot:writer-suggestion', 'dismissed'); };
   const writerReady = Boolean(runtimes.papilot?.connected && runtimes.papilot.authenticated);
   const suggestWriter = !writerDismissed && !missingAgent && savedAgent !== null && agentChoice !== 'papilot' && offered.includes('papilot');
+  const planProject = project?.id || projectId;
+  const newPlan = newPlanChoice?.projectId === planProject ? newPlanChoice.enabled : browserStorage.getItem(`studybuddy:new-plan:${planProject}`) === 'true';
+  const canNewPlan = agentChoice === 'codex' && !isPlayground && newSkill?.output !== 'annotations' && runtimes.codex?.collaborationModes?.some(mode => mode.mode === 'plan');
+  const newGoal = newGoalChoice?.projectId === planProject ? newGoalChoice.enabled : browserStorage.getItem(`studybuddy:new-goal:${planProject}`) === 'true';
+  const canNewGoal = agentChoice === 'codex' && !isPlayground && !newSkill && runtimes.codex?.goalAvailable === true;
+  function rememberNewGoal(enabled: boolean) { browserStorage.setItem(`studybuddy:new-goal:${planProject}`, String(enabled)); setNewGoalChoice({ projectId: planProject, enabled }); }
+  function enableNewGoal() { browserStorage.setItem(`studybuddy:new-plan:${planProject}`, 'false'); setNewPlanChoice({ projectId: planProject, enabled: false }); rememberNewGoal(true); }
+  function toggleNewPlan() { rememberNewGoal(false); browserStorage.setItem(`studybuddy:new-plan:${planProject}`, String(!newPlan)); setNewPlanChoice({ projectId: planProject, enabled: !newPlan }); }
   const effectivePermissions = runtimes[agentChoice]?.permissionOptions?.some(option => option.value === newPermissions) ? newPermissions : 'workspace';
   const models = runtimes[agentChoice]?.models || [], pref = agentPrefs[agentChoice];
   const chosenModel = models.length && !models.some(m => m.id === pref.model) ? '' : pref.model;
@@ -1458,11 +1689,14 @@ function App() {
     setAgentChoice(id); browserStorage.setItem('papilot:agent', id);
     setAgentPrefs(current => ({ ...current, [id]: { ...current[id], model } })); browserStorage.setItem(`papilot:model:${id}`, model);
   };
-  const agentOptions = (disabled: boolean) => <AgentPicker disabled={disabled} noAgent={missingAgent} agent={agentChoice} model={agent.model} effort={agent.effort} fast={pref.fast}
+  const chooseConfiguration = ({ agent: id, model, effort, fast }: ComposerModelConfiguration) => {
+    setAgentChoice(id); browserStorage.setItem('papilot:agent', id);
+    setAgentPrefs(current => ({ ...current, [id]: { model, effort, fast } }));
+    for (const [key, value] of Object.entries({ model, effort, fast })) browserStorage.setItem(`papilot:${key}:${id}`, String(value));
+  };
+  const agentOptions = (disabled: boolean) => <CodexModelPicker preferences={agentPrefs} controlRef={newModelPicker} disabled={disabled} noAgent={missingAgent} agent={agentChoice} model={agent.model} effort={agent.effort} fast={pref.fast}
     agents={offered.map(id => ({ value: id, label: AGENT_LABELS[id], runtime: runtimes[id] }))}
-    permissionMode={newSkill?.output !== 'annotations' ? effectivePermissions : undefined}
-    permissions={newSkill?.output !== 'annotations' && <PermissionOptions runtime={runtimes[agentChoice]} value={effectivePermissions} disabled={disabled} onChange={setNewPermissions}/>}
-    reconnecting={pendingActions.has('/reconnect')} onReconnect={() => void action('/reconnect')} onSelect={chooseModel} onChange={remember}/>;
+    reconnecting={pendingActions.has('/reconnect')} onReconnect={() => void action('/reconnect')} onConfigurationSelect={chooseConfiguration}/>;
   async function openPreparedTask(preset?: string, annotations?: string[]) {
     if (creating) return;
     setCreating(true); setCreateError('');
@@ -1475,10 +1709,30 @@ function App() {
     } catch (e) { if (!(e instanceof Error && e.name === 'PlaygroundDownloadRequired')) setCreateError(e instanceof Error ? e.message : String(e)); }
     finally { setCreating(false); }
   }
-  async function createTask() {
+  async function startNewCodeReview(target: CodeReviewTarget) {
+    if (!project || !canNewCodeReview || creating) return;
+    const projectId = project.id, key = `studybuddy:new-code-review:${projectId}`, submitted = encodeDocument(newDocument), navigationRevision = actionNavigation.current.revision;
+    const body = { target, model: agent.model, effort: agent.effort, serviceTier: agent.serviceTier, permissions: effectivePermissions };
+    const id = requestId(browserStorage, key, JSON.stringify(body), uuid);
+    setCreating(true); setCreateError('');
+    try {
+      const created = await api<Task>(`/projects/${projectId}/code-review`, { ...body, id });
+      acceptSavedTask(created);
+      if (created.status === 'uncertain') throw new Error(created.error || t('Check task status before sending'));
+      browserStorage.removeItem(key);
+      if (browserStorage.getItem(`papilot:new-task:${projectId}`) === submitted) browserStorage.setItem(`papilot:new-task:${projectId}`, '');
+      setNewDraftState(previous => previous.projectId === projectId && encodeDocument(previous.document) === submitted ? { projectId, document: { text: '', references: [] } } : previous);
+      if (actionNavigation.current.revision === navigationRevision) { setTaskSearch(''); setShowArchived(false); setSelected(created.id); setPage('manuscript'); setMobileTab('conversation'); setSidebar(false); }
+      void refresh(true);
+    } finally { setCreating(false); }
+  }
+  async function createTask(prompt?: string) {
     if (missingAgent) return;
-    const text = newDraft.trim(), target = project?.id || projectId, skill = newSkill;
+    const submittedValue = prompt === undefined ? newDocument : { text: prompt, references: [] };
+    const text = submittedValue.references.length ? submittedValue.text : submittedValue.text.trim(), target = project?.id || projectId, skill = newSkill;
     const reviewing = skill?.output === 'annotations';
+    const pursuingGoal = Boolean(canNewGoal && newGoal);
+    if (pursuingGoal && (noteSelection.selected.length || !text.trim() && !newFiles.files.length)) return;
     const attached = reviewing ? [] : noteSelection.selected, files = reviewing ? [] : newFiles.draft.getSnapshot().files;
     const groupInstructions = groupDrafts.forNotes(attached);
     if ((!text && !skill && !files.length && !attached.some(actionable) && !Object.keys(groupInstructions).length) || (!text && !skill && groupsWithoutInstructions(attached, groupInstructions).length > 0) || (!reviewing && newFiles.draft.getSnapshot().blocked) || creating || marking || noteEditing || reviewNoteBusy || history.busy || !target) return;
@@ -1487,19 +1741,25 @@ function App() {
       else requestPlaygroundDownload();
       return;
     }
-    const input = newTaskInput.current, submittedNotes = new Set(attached.map(note => note.id));
+    const input = newTaskInput.current?.element, submittedNotes = new Set(attached.map(note => note.id));
     const restoreFocus = input?.closest('form')?.contains(document.activeElement);
     setCreating(true); setCreateError('');
     try {
       // The ID is kept until creation succeeds, so a retried request cannot create a second task.
       const title = skill ? (text ? `${skillName(skill)}: ${taskTitle(text)}` : skillName(skill)).slice(0, 120) : text ? taskTitle(text) : attached.length === 1 ? taskTitle(attached[0].comment || (attached[0].group && groupInstructions[canonicalGroup(attached[0].group)]) || '') : attached.length ? t('Address {n} PDF notes', { n: attached.length }) : files[0].name.slice(0, 120);
-      const body = { projectId: target, title, instructions: text, ...(skill ? { skill: skill.id } : {}), ...(attached.length ? { annotations: [...submittedNotes] } : {}), ...(Object.keys(groupInstructions).length ? { groupInstructions } : {}), ...(files.length ? { attachments: files.map(file => file.id) } : {}), agent: agent.agent, model: agent.model, effort: agent.effort, serviceTier: agent.serviceTier, permissions: !reviewing && runtimes[agent.agent]?.permissionOptions?.some(option => option.value === newPermissions) ? newPermissions : 'workspace' };
-      const id = requestId(browserStorage, 'papilot:new-task-request', JSON.stringify([target, text, skill?.id || '', [...submittedNotes], groupInstructions, files.map(file => file.id)]), uuid);
+      const body = { ...(pursuingGoal ? { goal: {} } : {}), ...(canNewPlan && newPlan && !reviewing ? { collaborationMode: 'plan' as const } : {}), projectId: target, title, instructions: text, ...(submittedValue.references.length ? { references: submittedValue.references } : {}), ...(skill ? { skill: skill.id } : {}), ...(attached.length ? { annotations: [...submittedNotes] } : {}), ...(Object.keys(groupInstructions).length ? { groupInstructions } : {}), ...(files.length ? { attachments: files.map(file => file.id) } : {}), agent: agent.agent, model: agent.model, effort: agent.effort, serviceTier: agent.serviceTier, permissions: !reviewing && runtimes[agent.agent]?.permissionOptions?.some(option => option.value === newPermissions) ? newPermissions : 'workspace' };
+      const id = requestId(browserStorage, 'papilot:new-task-request', JSON.stringify([target, text, ...(pursuingGoal ? ['goal'] : []), ...(canNewPlan && newPlan && !reviewing ? ['plan'] : []), skill?.id || '', [...submittedNotes], groupInstructions, files.map(file => file.id), ...(submittedValue.references.length ? [submittedValue.references] : [])]), uuid);
       // The task answers at once and gets its manuscript copy in the background.
       const created = await api<Task>('/tasks', { ...body, id });
       const source = input?.getBoundingClientRect();
       browserStorage.removeItem('papilot:new-task-request');
-      newFiles.draft.clear(files); setNewDraft(''); setNewSkill(null); setTaskSearch(''); setShowArchived(false);
+      if (pursuingGoal) rememberNewGoal(false);
+      newFiles.draft.clear(files);
+      // A response from a previous project must not clear or reopen the current draft.
+      const submittedDocument = encodeDocument(submittedValue), savedDocument = browserStorage.getItem(`papilot:new-task:${target}`);
+      if (savedDocument === submittedDocument) browserStorage.setItem(`papilot:new-task:${target}`, '');
+      setNewDraftState(previous => previous.projectId === target && encodeDocument(previous.document) === submittedDocument ? { projectId: target, document: { text: '', references: [] } } : previous);
+      setNewSkill(null); setTaskSearch(''); setShowArchived(false);
       // Add the confirmed task without moving the author away from their draft.
       // Cancel older snapshots before inserting it, so they cannot erase the row.
       snapshotRequest.cancel();
@@ -1889,7 +2149,7 @@ function App() {
       <SourceTab tab={taskSource.tab} selected={taskSide === 'source'} onSelect={() => setTaskSide('source')} onClose={taskSource.close}/>
     </div>,
   } : undefined;
-  const pause = () => { if (task) void action('/tasks/' + task.id + '/interrupt'); };
+  const pause = () => { if (task) void action('/tasks/' + task.id + '/interrupt', { preserveQueue: true }); };
   // With only the chat in view, the feedback bar moves to the end of the conversation.
   const chatOnly = mobile ? taskTab === 'conversation' : taskLayout === 'conversation';
   const saved = task ? taskSaveStatus(task) : null;
@@ -1999,19 +2259,38 @@ function App() {
         </div>
     {manuscriptView === 'pdf' && <div className="workspace-nav-end">{manuscriptTools}{manuscriptShare}</div>}
   </>;
-  const newTaskPanel = (attachments: React.ReactNode) => <section className={'new-task-panel' + (noteSelection.selected.length ? ' has-notes' : '')} aria-label={t('New task')}>
+  const chatNavigation = (target?: Task): CodexChatNavigation => ({
+    tasks, onOpenTask: id => void switchWorkspace(id),
+    onNew: () => { void switchWorkspace('').then(() => { setManuscriptView('task'); setMobileTab('conversation'); newTaskInput.current?.focus(); }); },
+    onSettings: () => setSettings('agents'), onShortcuts: () => setSettings('shortcuts'), onExpand: () => selectLayout(layout === 'conversation' ? 'split' : 'conversation'), expanded: layout === 'conversation',
+    actions: target ? [
+      { label: t('Rename…'), icon: 'pencil', select: () => { setRenaming(target.id); if (narrow) setSidebar(true); else setSidebarVisible(true); } },
+      { label: t('Archive task'), icon: 'archive', select: () => void archiveTask(target) },
+      { label: t('Delete task…'), icon: 'trash', danger: true, select: () => setDeleteTarget(target) },
+    ] : [],
+  });
+  const canNewCodeReview = Boolean(project && agentChoice === 'codex' && !isPlayground && !missingAgent && !newGoal && !newSkill && !newFiles.entries.length && !noteSelection.selected.length && !marking && !noteEditing && !reviewNoteBusy && !history.busy);
+  const newTaskPanel = (attachments: React.ReactNode, onOpenReference?: (file: ComposerFile) => void) => <section className={'new-task-panel codex-new-chat' + (noteSelection.selected.length ? ' has-notes' : '')} aria-label={t('New task')}>
+    <CodexChatHeader agent={AGENT_LABELS[agentChoice]} navigation={chatNavigation()}/>
+    {!noteSelection.selected.length && <div className="codex-empty-state" aria-hidden="true"><CodexEmptyMark/></div>}
     <div className="new-task-start">
-    {!noteSelection.selected.length && <div className="new-task-welcome"><img src={logo} alt=""/><h2>{t('What are we revising next?')}</h2></div>}
     {newSkill?.output !== 'annotations' && attachments}
     {missingAgent && <NoAgentNotice reconnecting={pendingActions.has('/reconnect')} onReconnect={() => void action('/reconnect')} onAdd={() => setSettings('agents')}/>}
     {suggestWriter && <WriterSuggestion ready={writerReady} onUse={() => { chooseModel('papilot', runtimes.papilot?.models.find(model => model.isDefault)?.id || ''); dismissWriter(); }} onSetUp={() => setSettings('agents')} onDismiss={dismissWriter}/>}
-    <Composer attachments={newSkill?.output === 'annotations' ? undefined : newFiles.draft} upload={(file, signal) => uploadAttachment(project!.id, file, signal)} imageHint={agentChoice === 'antigravity' && newFiles.files.some(file => file.mime.startsWith('image/'))} autoFocus inputRef={newTaskInput} label={t('Describe the revision')} value={newDraft} onChange={setNewDraft} readOnly={creating} onSubmit={() => void createTask()} placeholder={noteSelection.selected.length ? t('Add overall instructions (optional)') : t('Describe the revision')}
-      skills={projectSkills} skill={newSkill} onSkill={setNewSkill}
-      footer={attach => <div className="composer-options">
-        <SkillPicker onAttach={newSkill?.output === 'annotations' ? undefined : attach} skills={projectSkills} selected={newSkill} disabled={creating} onPick={skill => { setNewSkill(skill); newTaskInput.current?.focus(); }}/>
+    <>{showNewStatus && <CodexStatus runtime={runtimes[agentChoice]} onClose={() => { setShowNewStatus(false); newTaskInput.current?.focus(); }}/>}</>
+    <div className="codex-chat-status"><CodexIcon name="laptop" size={16}/><span>{t('Work locally')}</span></div>
+    {project && <CodexReviewPicker controlRef={newCodeReviewPicker} disabled={!canNewCodeReview || creating} load={signal => api<CodeReviewBranches>(`/projects/${project.id}/code-review`, undefined, signal)} review={startNewCodeReview}/>}
+    <Composer dictationKey={project && agentChoice === 'codex' && runtimes.codex?.dictationAvailable === true && runtimes.codex.connected && runtimes.codex.authenticated && !isPlayground ? `project:${project.id}:${agentChoice}:${runtimes.codex.account || ''}` : undefined} init={project && agentChoice === 'codex' && !isPlayground && !creating && !newGoal && !missingAgent && !newSkill && !newFiles.entries.length && !noteSelection.selected.length && !marking && !noteEditing && !reviewNoteBusy && !history.busy ? { url: `/projects/${project.id}/init`, submit: async prompt => { setNewDraft(prompt, []); await createTask(prompt); } } : undefined} commands={{ disabled: creating || missingAgent, onReview: canNewCodeReview ? navigation => newCodeReviewPicker.current?.open(navigation || {}) : undefined, onGoal: canNewGoal && !noteSelection.selected.length ? enableNewGoal : undefined, onPlan: canNewPlan ? toggleNewPlan : undefined, planMode: Boolean(canNewPlan && newPlan), onStatus: () => setShowNewStatus(true), loadMcp: agentChoice === 'codex' && !isPlayground ? loadMcpStatus : undefined, onFast: agentChoice === 'codex' && modelInfo?.fastMode ? () => newModelPicker.current?.toggleFast?.() : undefined, fastServiceTier: modelInfo?.fastMode?.serviceTier, onModel: navigation => newModelPicker.current?.open('model', navigation), onReasoning: modelInfo?.efforts.length ? navigation => newModelPicker.current?.open('reasoning', navigation) : undefined }} attachments={newSkill?.output === 'annotations' ? undefined : newFiles.draft} upload={(file, signal) => uploadAttachment(project!.id, file, signal)} imageHint={agentChoice === 'antigravity' && newFiles.files.some(file => file.mime.startsWith('image/'))} autoFocus inputRef={newTaskInput} label={t('Describe the revision')} value={newDraft} references={newDocument.references} onOpenReference={onOpenReference} filesUrl={!isPlayground && project ? `/api/projects/${project.id}/files` : undefined} onChange={setNewDraft} readOnly={creating} onSubmit={() => void createTask()} placeholder={noteSelection.selected.length ? t('Add overall instructions (optional)') : t('Do anything')}
+      skills={newGoal ? [] : projectSkills} skill={newSkill} onSkill={setNewSkill}
+      footer={(attach, sketch) => <div className="composer-options">
+        <SkillPicker onSketch={sketch} onAttach={newSkill?.output === 'annotations' ? undefined : attach} skills={newGoal ? [] : projectSkills} selected={newSkill} disabled={creating} onPick={skill => { setNewSkill(skill); newTaskInput.current?.focus(); }}/>
+        {newSkill?.output !== 'annotations' && <CodexPermissionPicker runtime={runtimes[agentChoice]} value={effectivePermissions} disabled={creating} onChange={setNewPermissions}/>}
+        <span className="codex-chrome-spacer"/>
+        {newGoal && <CodexGoalMode disabled={creating} onClear={() => rememberNewGoal(false)}/>}
+        {canNewPlan && newPlan && <PlanModeButton disabled={creating} onExit={toggleNewPlan}/>}
         {agentOptions(creating)}
       </div>}
-      action={<button className="send-button" type="submit" aria-label={t('Start task')} title={missingGroupDirections ? t('Add instructions to the selected color groups above.') : t('Start task (Enter)')} disabled={missingAgent || creating || reviewNoteBusy || noteEditing || history.busy || (newSkill?.output !== 'annotations' && (newFiles.blocked || marking > 0 || missingGroupDirections)) || (!newDraft.trim() && !newSkill && !newFiles.files.length && !noteSelection.selected.some(actionable) && !Object.keys(groupDirections).length)} aria-busy={creating}>{creating ? <span className="spinner light"/> : <Icon name="arrowUp" size={18}/>}</button>}/>
+      action={<button className="send-button" type="submit" aria-label={t('Start task')} title={missingGroupDirections ? t('Add instructions to the selected color groups above.') : t('Start task (Enter)')} disabled={missingAgent || creating || newGoal && (!canNewGoal || noteSelection.selected.length > 0 || !newDraft.trim() && !newFiles.files.length) || reviewNoteBusy || noteEditing || history.busy || (newSkill?.output !== 'annotations' && (newFiles.blocked || marking > 0 || missingGroupDirections)) || (!newDraft.trim() && !newSkill && !newFiles.files.length && !noteSelection.selected.some(actionable) && !Object.keys(groupDirections).length)} aria-busy={creating}>{creating ? <span className="spinner light"/> : <CodexIcon name="send" size={18}/>}</button>}/>
     {createError && <p className="inline-error" role="alert">{createError}</p>}
     {PlaygroundPresets && <Suspense fallback={null}><PlaygroundPresets selected={noteSelection.selected} open={id => openPreparedTask(id)} disabled={creating}/></Suspense>}
     {runtimes[agentChoice]?.usage && <UsageSummary agent={AGENT_LABELS[agentChoice]} usage={runtimes[agentChoice]!.usage!}/>}
@@ -2058,7 +2337,7 @@ function App() {
             ...(row.status === 'deleting' ? [] : [{ label: t('Rename…'), icon: 'pencil', select: () => setRenaming(row.id) }]),
             ...(row.status === 'deleting' ? [] : [{ label: row.titleGeneration === 'pending' ? t('Generating task title…') : row.titleGeneration === 'failed' ? t('Retry title generation') : t('Generate task title'), icon: 'spark', disabled: row.titleGeneration === 'pending' || pendingActions.has('/tasks/' + row.id), select: () => void action('/tasks/' + row.id + '/title') }]),
             ...(row.status === 'deleting' ? [] : [{ label: row.archivedAt ? t('Restore task') : t('Archive task'), icon: row.archivedAt ? 'restore' : 'archive', disabled: pendingActions.has('/tasks/' + row.id), select: () => void archiveTask(row) }]),
-            ...(ACTIVE.includes(row.status) ? [{ label: t('Pause task'), icon: 'pause', disabled: pendingActions.has('/tasks/' + row.id), select: () => void action('/tasks/' + row.id + '/interrupt') }] : []),
+            ...(ACTIVE.includes(row.status) ? [{ label: t('Pause task'), icon: 'pause', disabled: pendingActions.has('/tasks/' + row.id), select: () => void action('/tasks/' + row.id + '/interrupt', { preserveQueue: true }) }] : []),
             ...(row.status === 'uncertain' ? [{ label: t('Check status'), icon: 'refresh', disabled: pendingActions.has('/tasks/' + row.id), select: () => void action('/tasks/' + row.id + '/reconcile') }] : []),
             { label: row.status === 'deleting' ? t('Retry deletion…') : t('Delete task…'), icon: 'trash', danger: true, select: () => setDeleteTarget(row) },
           ]}/>
@@ -2094,7 +2373,7 @@ function App() {
           {!mobile && !chatOnly && task.status === 'deleting' && (sidebarToggle || !conversationVisible) && <div className="review-placeholder-toolbar">{sidebarToggle}{!conversationVisible && workspaceViews}<div className="panel-tools">{!conversationVisible && taskStateActions}</div></div>}
           {(task.review?.state === 'build_failed' || task.status === 'failed' && task.review?.job?.status === 'failed') && <div className="review-build-error" role="status"><Icon name="alert" size={15}/><span>{t('Could not generate the PDF comparison.')}</span><button className="button secondary compact" disabled={taskActionBusy} onClick={() => void action('/tasks/' + task.id + '/publish')}>{t('Retry build')}</button></div>}
           {task.status === 'deleting' ? <div className="review-placeholder"><div className="placeholder-icon"><Icon name="trash" size={22}/></div><h2>{t('Deletion is in progress')}</h2><p>{t('This task is reserved until its worktree cleanup is confirmed. Use Retry deletion if the connection was interrupted.')}</p></div> : !task.preparation && task.mode === 'review' ? <AiReviewView key={task.id} task={task} api={api} onCopied={() => void loadManuscript(task.projectId)} lead={!mobile && !chatOnly && (sidebarToggle || !conversationVisible) ? <>{sidebarToggle}{!conversationVisible && workspaceViews}</> : null} tools={!mobile && !conversationVisible ? taskStateActions : null}/> : <TaskDocument key={task.id} projectId={task.projectId} manuscript={manuscriptData.data} placeholder={task.preparation ? <PreparingTask task={task}/> : <PendingComparison task={task} busy={taskActionBusy} onBuild={() => void action('/tasks/' + task.id + '/publish')}/>} task={task} sources={taskReview} onOpenSource={openTaskSource} onChanges={next => setTaskChanges(current => JSON.stringify(current) === JSON.stringify(next) ? current : next)} onCurrentChange={change => { if (taskSource.editing && taskSide === 'source') void taskSource.follow(change, () => undefined); }} onDecided={() => void refresh(true)} lead={!mobile && !chatOnly && (sidebarToggle || !conversationVisible) ? <>{sidebarToggle}{!conversationVisible && workspaceViews}</> : null} tools={<>{reviewTools}{!mobile && !conversationVisible && <>{taskStateActions}{reviewOpen}</>}</>} completion={chatOnly ? null : applicationStep} onComment={() => { setMobileTab('conversation'); setTaskSide('chat'); setLayout(current => current === 'review' ? 'split' : current); }}/>}
-        </section><Activity key={task.id} runtimes={runtimes} relatedTasks={state?.tasks.filter(other => other.id === task.restart?.taskId || other.restart?.taskId === task.id) || []} onOpenTask={id => { setSelected(id); setSidebar(false); }} onRestarted={replacement => { acceptSavedTask(replacement); setSelected(replacement.id); void refresh(true); }} source={taskSourceSide} onRevealQuote={() => { setMobileTab('review'); setLayout(current => current === 'conversation' ? 'split' : current); }} task={task} lead={!mobile && chatOnly ? sidebarToggle : null} tools={!mobile && conversationVisible ? <>{taskControls}{reviewOpen}</> : null} connection={<AgentConnectionNotice name={agentName(task)} runtime={runtimes[task.agent || 'codex']} reconnecting={pendingActions.has('/reconnect')} onReconnect={() => void action('/reconnect')}/>} runtime={runtimes[task.agent || 'codex']} reconnecting={pendingActions.has('/reconnect')} onReconnect={() => void action('/reconnect')} composer={composers.current.get(task.id)!} answerDrafts={answerDrafts.current} items={timeline.taskId === task.id ? timeline.items : timelineCache.current.get(task.id) || []} loading={timeline.taskId === task.id ? itemsLoading : !timelineCache.current.has(task.id)} loadError={timelineError.taskId === task.id ? timelineError.message : ''} retry={() => void refreshTimeline(task.id)} requests={taskRequests} refresh={() => void refresh(true)} errorActions={task.preparation && task.status === 'failed' ? <div className="task-error-actions">
+        </section><Activity key={task.id} onOpenReference={openTaskSource ? file => { if (file.kind === 'file') { taskSource.reveal(file.path, [1, 1], []); setTaskSide('source'); setLayout(current => current === 'review' ? 'split' : current); } } : undefined} navigation={chatNavigation(task)} runtimes={runtimes} relatedTasks={state?.tasks.filter(other => other.id === task.restart?.taskId || other.restart?.taskId === task.id) || []} onOpenTask={id => { setSelected(id); setSidebar(false); }} onRestarted={replacement => { acceptSavedTask(replacement); setSelected(replacement.id); void refresh(true); }} source={taskSourceSide} onRevealQuote={() => { setMobileTab('review'); setLayout(current => current === 'conversation' ? 'split' : current); }} task={task} lead={!mobile && chatOnly ? sidebarToggle : null} tools={!mobile && conversationVisible ? <>{taskControls}{reviewOpen}</> : null} connection={<AgentConnectionNotice name={agentName(task)} runtime={runtimes[task.agent || 'codex']} reconnecting={pendingActions.has('/reconnect')} onReconnect={() => void action('/reconnect')}/>} runtime={runtimes[task.agent || 'codex']} reconnecting={pendingActions.has('/reconnect')} onReconnect={() => void action('/reconnect')} composer={composers.current.get(task.id)!} answerDrafts={answerDrafts.current} items={timeline.taskId === task.id ? timeline.items : timelineCache.current.get(task.id) || []} loading={timeline.taskId === task.id ? itemsLoading : !timelineCache.current.has(task.id)} loadError={timelineError.taskId === task.id ? timelineError.message : ''} retry={() => void refreshTimeline(task.id)} requests={taskRequests} refresh={() => void refresh(true)} errorActions={task.preparation && task.status === 'failed' ? <div className="task-error-actions">
             <button type="button" className="button secondary compact" disabled={taskActionBusy} aria-busy={taskActionBusy} onClick={() => void action('/tasks/' + task.id + '/prepare')}><Icon name="refresh" size={14}/>{t('Retry')}</button>
             <button type="button" className="button secondary compact" onClick={() => setDeleteTarget(task)}><Icon name="trash" size={14}/>{t('Delete task…')}</button>
           </div> : chatOnly && task.mode !== 'review' && ['failed', 'interrupted'].includes(task.status) ? <div className="task-error-actions">

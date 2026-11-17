@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
-import { browserLanguage, errorText, locale, setLanguage, t, tn } from '../src/web/i18n.ts';
+import { browserLanguage, errorText, locale, setLanguage, t, tn, tc } from '../src/web/i18n.ts';
 import { zhCN } from '../src/web/zh-CN.ts';
 import generatedZhCN from '../src/web/locales/zh-CN.json';
 import zhHant from '../src/web/locales/zh-Hant.json';
@@ -26,6 +26,17 @@ test('messages fill placeholders and pick English plurals', () => {
   assert.equal(tn(1, '{n} comment', '{n} comments'), '1 comment');
   assert.equal(tn(3, '{n} comment', '{n} comments'), '3 comments');
   assert.equal(t('An untranslated message'), 'An untranslated message');
+});
+test('contextual labels preserve English fallback and keep reasoning distinct from appearance', () => {
+  try {
+    setLanguage('en');
+    assert.equal(tc('Light', 'reasoning effort'), 'Light');
+    assert.equal(tc('Open {name}', 'action', { name: 'paper' }), 'Open paper');
+    setLanguage('zh-Hans');
+    assert.equal(t('Light'), zhCN.Light);
+    assert.equal(tc('Light', 'reasoning effort'), generatedZhCN['Light [reasoning effort]']);
+    assert.notEqual(tc('Light', 'reasoning effort'), t('Light'));
+  } finally { setLanguage('system'); }
 });
 
 test('every supported language covers the workspace catalog with intact placeholders', () => {

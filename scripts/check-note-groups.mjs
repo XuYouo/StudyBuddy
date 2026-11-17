@@ -1,3 +1,4 @@
+import { expectComposerText } from './composer-fixture.mjs';
 import { readyRequirements } from './required-tools-fixture.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -198,7 +199,7 @@ try {
   await page.getByRole('button', { name: 'Start task', exact: true }).click();
   await expect.poll(() => requests.length).toBe(1);
   await expect(page.locator('.annotation-group')).toHaveCount(0);
-  await expect(page.getByRole('textbox', { name: 'Describe the revision' })).toHaveValue('');
+  await expectComposerText(page.getByRole('textbox', { name: 'Describe the revision' }), '');
   await page.locator('.task-link').first().click();
   await expect(page.locator('.thread .annotation-group')).toHaveCount(2);
   await expect(page.locator('.notes-request')).toHaveText('Explain yellow selections. Shorten purple selections.');

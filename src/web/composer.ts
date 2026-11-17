@@ -1,11 +1,12 @@
-import type { NoteSummary, ReviewSummary } from '../shared.ts';
+import type { ComposerReference, NoteSummary, ReviewSummary } from '../shared.ts';
+import { decodeDocument, encodeDocument, editDocument } from '../composer-reference.ts';
 import { requestId } from './request-id.ts';
 export { reviewInstructions } from '../conversation.ts';
 export { sendsMessage } from '../../engine/src/web/send-key.ts';
 
 type DraftStorage = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
 // Feedback sends the unsent review updates on their own; a skill runs with or without text.
-export type Message = { text: string; requestKey: string; feedback?: true; skill?: string; attachments?: string[]; notes?: NoteSummary[] };
+export type Message = { text: string; requestKey: string; feedback?: true; skill?: string; attachments?: string[]; references?: ComposerReference[]; notes?: NoteSummary[] };
 
 // The server counts undelivered feedback events, excluding those already queued.
 // Older summaries only report decision totals; a confirmed zero takes precedence.
@@ -22,51 +23,53 @@ export const pendingReviewFeedback = (review: ReviewSummary | null) => {
 // is in flight. Feedback is its own submission and never consumes the draft.
 export class ComposerDraft {
   text: string;
+  references: ComposerReference[] = [];
   sending = false;
   sendingSource: 'draft' | 'feedback' | null = null;
   private revision = 0;
   private requestKeys: Record<'draft' | 'feedback', string>;
   private listeners = new Set<() => void>();
-  private snapshot: { text: string; sending: boolean; sendingSource: 'draft' | 'feedback' | null };
+  private snapshot: { text: string; references: ComposerReference[]; sending: boolean; sendingSource: 'draft' | 'feedback' | null };
   subscribe = (listener: () => void) => { this.listeners.add(listener); return () => { this.listeners.delete(listener); }; };
   getSnapshot = () => this.snapshot;
-  private changed() { this.snapshot = { text: this.text, sending: this.sending, sendingSource: this.sendingSource }; for (const listener of this.listeners) listener(); }
+  private changed() { this.snapshot = { text: this.text, references: this.references, sending: this.sending, sendingSource: this.sendingSource }; for (const listener of this.listeners) listener(); }
 
   constructor(private key: string, private storage: DraftStorage, private newId: () => string) {
-    this.text = storage.getItem(key) || '';
+    const saved = decodeDocument(storage.getItem(key)); this.text = saved.text; this.references = saved.references;
     this.requestKeys = { draft: newId(), feedback: newId() };
-    this.snapshot = { text: this.text, sending: this.sending, sendingSource: this.sendingSource };
+    this.snapshot = { text: this.text, references: this.references, sending: this.sending, sendingSource: this.sendingSource };
   }
 
-  edit(text: string) {
-    this.text = text;
+  edit(text: string, references?: ComposerReference[]) {
+    const next = editDocument(this, text, references); this.text = next.text; this.references = next.references;
     this.revision++;
     this.requestKeys.draft = this.newId();
-    this.storage.setItem(this.key, text);
+    this.storage.setItem(this.key, encodeDocument(this));
     this.changed();
   }
 
   async submit(source: 'draft' | 'feedback', send: (message: Message) => Promise<unknown>, skill?: string, attachments: string[] = [], notes: NoteSummary[] = [], instructions = ''): Promise<boolean> {
-    const draftText = this.text;
-    const text = source === 'draft' ? [draftText.trim(), instructions.trim()].filter(Boolean).join('\n\n') : '';
+    const draftText = this.text, draftReferences = this.references, draftRecord = encodeDocument(this);
+    const references = source === 'draft' ? draftReferences : [];
+    const text = source === 'draft' ? [references.length ? draftText : draftText.trim(), instructions.trim()].filter(Boolean).join('\n\n') : '';
     if (this.sending || (source === 'draft' && !text.trim() && !skill && !attachments.length && !notes.length)) return false;
     const requestStorage = this.key + (source === 'draft' ? ':request' : ':feedback-request');
-    this.requestKeys[source] = requestId(this.storage, requestStorage, JSON.stringify([text.trim(), skill || '', attachments, notes]), this.newId);
+    this.requestKeys[source] = requestId(this.storage, requestStorage, JSON.stringify([references.length ? text : text.trim(), skill || '', attachments, notes, ...(references.length ? [references] : [])]), this.newId);
     this.sending = true; this.sendingSource = source;
     this.changed();
     const revision = this.revision;
     const requestKey = this.requestKeys[source], savedRequest = this.storage.getItem(requestStorage);
     try {
-      await send({ text: text.trim(), requestKey, ...(source === 'feedback' ? { feedback: true as const } : {}), ...(notes.length ? { notes } : {}), ...(skill ? { skill } : {}), ...(source === 'draft' && attachments.length ? { attachments } : {}) });
+      await send({ text: references.length ? text : text.trim(), requestKey, ...(references.length ? { references } : {}), ...(source === 'feedback' ? { feedback: true as const } : {}), ...(notes.length ? { notes } : {}), ...(skill ? { skill } : {}), ...(source === 'draft' && attachments.length ? { attachments } : {}) });
       if (this.storage.getItem(requestStorage) === savedRequest) this.storage.removeItem(requestStorage);
       if (source === 'draft' && this.revision === revision) {
         // A task can be reopened while its previous request is still pending.
         // Preserve a newer draft saved by that mounted composer or another tab.
         const saved = this.storage.getItem(this.key);
-        if (saved === draftText || saved === null) {
-          this.text = '';
+        if (saved === draftRecord || saved === null) {
+          this.text = ''; this.references = [];
           this.storage.removeItem(this.key);
-        } else this.text = saved;
+        } else { const next = decodeDocument(saved); this.text = next.text; this.references = next.references; }
       }
       if (source === 'feedback' || this.revision === revision) this.requestKeys[source] = this.newId();
       return true;

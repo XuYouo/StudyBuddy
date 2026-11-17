@@ -172,7 +172,7 @@ try {
   await indirect().getByRole('button', { name: '2 related PDF changes' }).click();
   await expect(indirect().locator('.place')).toHaveCount(0);
 
-  await page.getByRole('button', { name: 'Settings', exact: true }).click();
+  await page.locator('.settings-link').click();
   const settings = () => page.locator('dialog').filter({ has: page.locator('.settings-dialog') });
   await settings().getByRole('button', { name: 'Review preferences', exact: true }).click();
   const expandEffects = () => settings().getByRole('switch', { name: 'Track indirect changes', exact: true });
@@ -196,7 +196,7 @@ try {
   assert.equal(writes.length, 0, 'Changing disclosure must not send review decisions');
   await page.reload();
   await expect(indirect().locator('.place')).toHaveCount(1);
-  await page.getByRole('button', { name: 'Settings', exact: true }).click();
+  await page.locator('.settings-link').click();
   await settings().getByRole('button', { name: 'Review preferences', exact: true }).click();
   await expect(expandEffects()).toBeChecked();
   await expandEffects().uncheck();
@@ -292,7 +292,7 @@ try {
   await expect(viewer().getByRole('button', { name: 'Keyboard shortcuts', exact: true })).toBeHidden();
   // Shortcut settings update the running review, survive reload, and retain
   // the browser's editing keys. The old key must stop making decisions.
-  await page.getByRole('button', { name: 'Settings', exact: true }).click();
+  await page.locator('.settings-link').click();
   await page.getByRole('dialog', { name: 'Settings', exact: true }).getByRole('button', { name: 'Keyboard shortcuts', exact: true }).click();
   const shortcuts = page.getByRole('dialog', { name: 'Keyboard shortcuts', exact: true });
   const acceptKey = shortcuts.getByRole('button', { name: 'Change shortcut: Accept change', exact: true });
@@ -313,7 +313,7 @@ try {
   assert.equal(writes.length, beforeDisabledKey, 'disabled shortcuts do not change the review');
   await page.reload();
   await expect(viewer().locator('.change.current button.accept')).toHaveAttribute('aria-keyshortcuts', '');
-  await page.getByRole('button', { name: 'Settings', exact: true }).click();
+  await page.locator('.settings-link').click();
   await page.getByRole('dialog', { name: 'Settings', exact: true }).getByRole('button', { name: 'Keyboard shortcuts', exact: true }).click();
   await expect(acceptToggle).not.toBeChecked();
   await expect(acceptKey).toHaveText('B');

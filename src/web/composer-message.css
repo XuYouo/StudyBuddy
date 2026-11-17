@@ -1,0 +1,5 @@
+.message-file-reference { display: inline; padding: 0; border: 0; border-radius: 2px; background: none; color: var(--accent); font: inherit; font-weight: 500; text-align: inherit; white-space: normal; }
+.message-file-reference svg { display: inline-block; margin-inline-end: 2px; vertical-align: baseline; }
+button.message-file-reference { cursor: pointer; }
+button.message-file-reference:hover { text-decoration: underline; }
+button.message-file-reference:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }

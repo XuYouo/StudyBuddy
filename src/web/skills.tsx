@@ -1,5 +1,6 @@
 import type { Skill } from '../shared.ts';
 import { Icon } from './icons.tsx';
+import { CodexIcon } from './codex-icons.tsx';
 import { t } from './i18n.ts';
 import { ActionMenu } from './action-menu.tsx';
 import { resolveSkillIcon as skillIcon } from '../skill-icons.ts';
@@ -37,8 +38,8 @@ export function SkillChip({ skill, onRemove }: { skill: Pick<Skill, 'id' | 'name
 }
 
 // Skills stay behind the composer's plus button; "/" remains the keyboard shortcut.
-export function SkillPicker({ skills, selected, onPick, disabled, onAttach }: { skills: Skill[]; selected: Skill | null; onPick: (skill: Skill | null) => void; disabled?: boolean; onAttach?: () => void }) {
-  if (!skills.length && !onAttach) return null;
-  return <ActionMenu label={onAttach ? t('Add files or skills') : t('Add skill')} className="icon-button composer-plus" menuClassName="skills-picker-menu" align="start" disabled={disabled}
-    actions={[...(onAttach ? [{ label: t('Add files…'), icon: 'attachment', select: onAttach }] : []), ...skills.map((skill, index) => ({ id: skill.id, label: skillName(skill), title: skillDescription(skill), icon: skillIcon(skill), divider: Boolean(onAttach && index === 0), checked: selected?.id === skill.id, select: () => onPick(selected?.id === skill.id ? null : skill) }))]}><Icon name="plus" size={19}/></ActionMenu>;
+export function SkillPicker({ skills, selected, onPick, disabled, onAttach, onSketch }: { onSketch?: () => void; skills: Skill[]; selected: Skill | null; onPick: (skill: Skill | null) => void; disabled?: boolean; onAttach?: () => void }) {
+  if (!skills.length && !onAttach && !onSketch) return null;
+  return <ActionMenu label={onAttach ? t('Add files or skills') : t('Add skill')} className="icon-button composer-plus" menuClassName="skills-picker-menu codex-action-menu" align="start" disabled={disabled}
+    actions={[...(onSketch ? [{ label: t('Sketch'), icon: 'pencil', select: onSketch }] : []), ...(onAttach ? [{ label: t('Add files…'), icon: 'attachment', select: onAttach }] : []), ...skills.map((skill, index) => ({ id: skill.id, label: skillName(skill), title: skillDescription(skill), icon: skillIcon(skill), divider: Boolean(onAttach && index === 0), checked: selected?.id === skill.id, select: () => onPick(selected?.id === skill.id ? null : skill) }))]}><CodexIcon name="plus" size={20}/></ActionMenu>;
 }

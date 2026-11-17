@@ -54,6 +54,13 @@ export function t(text: string, values?: Record<string, string | number>) {
   const template = Object.hasOwn(messages[state.language], text) ? messages[state.language][text] : text;
   return interpolateMessage(template, state.language, values);
 }
+// Separate identical English labels with different meanings without changing
+// their English display text (for example, Light reasoning versus Light theme).
+export function tc(text: string, context: string, values?: Record<string, string | number>) {
+  const key = `${text} [${context}]`;
+  const template = Object.hasOwn(messages[state.language], key) ? messages[state.language][key] : text;
+  return interpolateMessage(template, state.language, values);
+}
 export function errorText(text: string) {
   return Object.hasOwn(errorMessages[state.language], text) ? errorMessages[state.language][text] : t(text);
 }
